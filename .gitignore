@@ -1,6 +1,7 @@
 .omx/
 .omx-state-locks/
 .omx-state-locks.identity.json
+.build/
 .codex/*
 !.codex/agents/
 !.codex/agents/**
