@@ -1,0 +1,37 @@
+Xcode version: 27.0 (27A266a)
+09:41:35.134 xcodebuild[74683:7802424] Beginning test session WattTests-CAC6DE33-5E88-4EC7-9102-6660F250EC64 at 2026-09-23 09:41:35.133 on target <DVTLocalComputer: 0x78ad547d40 (My Mac | arm64e)> (27.0 (26A428))
+09:41:35.134 xcodebuild[74683:7802424] 	/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild
+-project
+Watt.xcodeproj
+-scheme
+Watt
+-configuration
+Debug
+-destination
+platform=macOS
+-derivedDataPath
+/tmp/watt-g082-debug
+CODE_SIGNING_ALLOWED=NO
+test-without-building
+-only-testing:WattTests/StatusPanelVoiceOverSummaryTests
+-only-testing:WattTests/UpdateOfferInstallTests
+-parallel-testing-enabled
+NO
+09:41:35.134 xcodebuild[74683:7802424] Test standard output and standard error is at /tmp/watt-g082-debug/Logs/Test/Test-Watt-2026.09.23_09-41-35-+1000.xcresult/Staging/1_Test/Diagnostics/WattTests-4C6426CF-7831-47EE-8339-204EB2821419-Configuration-Test Scheme Action-Iteration-1/WattTests-880C4944-E326-4B3A-BF0A-E960B9DB5FBD/StandardOutputAndStandardError.txt
+09:41:35.135 xcodebuild[74683:7802424] Setting up test runner session
+09:41:35.135 xcodebuild[74683:7802424] Requesting a socket for communication with testmanagerd.
+09:41:35.135 xcodebuild[74683:7802424] Registering/updating daemon-based crash report observer for process names (
+    WindowServer,
+    Watt,
+    "WattUITests-Runner",
+    xctest,
+    DTServiceHub,
+    debugserver,
+    testmanagerd
+)
+09:41:35.135 xcodebuild[74683:7802445] Got socket for DTX-layer communication.
+09:41:35.135 xcodebuild[74683:7802444] Received connection for test runner session
+09:41:35.135 xcodebuild[74683:7802444] Listening for proxy connection request from the test bundle
+09:41:35.135 xcodebuild[74683:7802445] XPC connection for control was invalidated.
+09:41:35.135 xcodebuild[74683:7802424] Test runner session acquired connection.
+09:41:35.135 xcodebuild[74683:7802444] Initiating session with identifier: CAC6DE33-5E88-4EC7-9102-6660F250EC64

@@ -1,0 +1,37 @@
+Building for debugging...
+[1 / 4]
+Build complete! (0.31 sec.)
+Test Suite 'Selected tests' started at 2026-09-23 09:43:47.938.
+Test Suite 'WattTests.xctest' started at 2026-09-23 09:43:47.939.
+Test Suite 'StatusPanelVoiceOverSummaryTests' started at 2026-09-23 09:43:47.939.
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testChargingPreservesJ111Phrase]' started.
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testChargingPreservesJ111Phrase]' passed (0.001 seconds).
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testDesktopDoesNotAnnounceBatteryFlow]' started.
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testDesktopDoesNotAnnounceBatteryFlow]' passed (0.000 seconds).
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testDischargingPreservesOnBatteryPhrase]' started.
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testDischargingPreservesOnBatteryPhrase]' passed (0.000 seconds).
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testFullOnAdapterDoesNotAnnounceBatteryFlow]' started.
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testFullOnAdapterDoesNotAnnounceBatteryFlow]' passed (0.000 seconds).
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testGenericHoldDoesNotAnnounceBatteryFlow]' started.
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testGenericHoldDoesNotAnnounceBatteryFlow]' passed (0.000 seconds).
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testLegacyFullDoesNotAnnounceBatteryFlow]' started.
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testLegacyFullDoesNotAnnounceBatteryFlow]' passed (0.000 seconds).
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testOptimisedHoldDoesNotAnnounceBatteryFlow]' started.
+Test Case '-[WattTests.StatusPanelVoiceOverSummaryTests testOptimisedHoldDoesNotAnnounceBatteryFlow]' passed (0.000 seconds).
+Test Suite 'StatusPanelVoiceOverSummaryTests' passed at 2026-09-23 09:43:47.943.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'UpdateOfferInstallTests' started at 2026-09-23 09:43:47.943.
+Test Case '-[WattTests.UpdateOfferInstallTests testBothCheckboxChoicesAreSavedBeforeDownloadAdmission]' started.
+Test Case '-[WattTests.UpdateOfferInstallTests testBothCheckboxChoicesAreSavedBeforeDownloadAdmission]' passed (0.005 seconds).
+Test Case '-[WattTests.UpdateOfferInstallTests testPersistenceFailureRetainsOfferAndAllowsChangedChoiceOnRetry]' started.
+Test Case '-[WattTests.UpdateOfferInstallTests testPersistenceFailureRetainsOfferAndAllowsChangedChoiceOnRetry]' passed (0.003 seconds).
+Test Case '-[WattTests.UpdateOfferInstallTests testReceiptWriteFailureAfterChoiceSaveDoesNotStartService]' started.
+Test Case '-[WattTests.UpdateOfferInstallTests testReceiptWriteFailureAfterChoiceSaveDoesNotStartService]' passed (0.003 seconds).
+Test Case '-[WattTests.UpdateOfferInstallTests testStaleWrongVersionAndUnconfiguredOfferCannotStartDownload]' started.
+Test Case '-[WattTests.UpdateOfferInstallTests testStaleWrongVersionAndUnconfiguredOfferCannotStartDownload]' passed (0.000 seconds).
+Test Suite 'UpdateOfferInstallTests' passed at 2026-09-23 09:43:47.954.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.011 (0.012) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-23 09:43:47.954.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.014 (0.015) seconds
+Test Suite 'Selected tests' passed at 2026-09-23 09:43:47.954.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.014 (0.016) seconds
