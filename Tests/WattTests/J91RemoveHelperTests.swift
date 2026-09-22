@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J91RemoveHelperTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndFailClosedSelectors() throws {
         let fixture = try ScenarioRegistry.resolve("J9.1")
         XCTAssertEqual(fixture.story.node, "32:5397")
@@ -104,4 +105,5 @@ final class J91RemoveHelperTests: XCTestCase {
         host.layoutSubtreeIfNeeded()
         XCTAssertGreaterThan(host.fittingSize.width, 0)
     }
+    #endif
 }

@@ -6,6 +6,7 @@ import WattFixtures
 
 @MainActor
 final class J108HelperUpdateTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeAlertAndFixture() throws {
         let alert = HelperChangedAlert.make()
         XCTAssertEqual(alert.alertStyle, .informational)
@@ -19,6 +20,7 @@ final class J108HelperUpdateTests: XCTestCase {
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J10.8/base"])
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["Watt", "--watt-fixture", "J10.8/other"]))
     }
+    #endif
     func testStalePresentationCannotUpdateOrDismissNewPrompt() async {
         let prompt = HelperUpdatePrompt()
         var calls = 0

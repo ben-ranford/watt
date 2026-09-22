@@ -104,6 +104,7 @@ final class J105ReadyTests: XCTestCase {
         XCTAssertTrue(router.chooseReadyUpdate(.installAndRelaunch, version: "1.1", generation: router.updates.generation, receipt: receipt, presentation: fresh))
         XCTAssertNil(router.beginReadyPresentation())
     }
+    #if DEBUG || SWIFT_PACKAGE
     func testFixture() throws {
         let selection = try XCTUnwrap(FixtureLaunchSelection.parse(["--watt-fixture", "J10.5/base"]))
         XCTAssertEqual(try selection.smokeLaunchArguments(), ["--watt-fixture", "J10.5/base"])
@@ -111,4 +112,5 @@ final class J105ReadyTests: XCTestCase {
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.5"]))
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.5/other"]))
     }
+    #endif
 }

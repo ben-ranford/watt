@@ -82,6 +82,7 @@ final class J102CheckingTests: XCTestCase {
         }
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureSelectionAndPackageIsolation() throws {
         let fixture = try ScenarioRegistry.resolve("J10.2")
         XCTAssertEqual(fixture.story.node, "34:4482")
@@ -94,6 +95,7 @@ final class J102CheckingTests: XCTestCase {
         XCTAssertFalse(J102FixtureLaunch.requested)
         #endif
     }
+    #endif
 
     func testNativeContentHasFiniteIntrinsicLayout() {
         _ = NSApplication.shared

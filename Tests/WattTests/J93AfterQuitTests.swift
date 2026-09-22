@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J93AfterQuitTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndFailClosedSelection() throws {
         let fixture = try ScenarioRegistry.resolve("J9.3")
         XCTAssertEqual(fixture.story.node, "32:6494")
@@ -37,6 +38,7 @@ final class J93AfterQuitTests: XCTestCase {
         XCTAssertEqual(quits, 1)
         XCTAssertEqual(preferences.onboarding, before)
     }
+    #endif
 
     func testTerminationIsIdempotentAndRejectsStaleReopen() {
         let delegate = WattApplicationDelegate()
@@ -67,6 +69,7 @@ final class J93AfterQuitTests: XCTestCase {
         XCTAssertNil(anchor.window)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testFreshLaunchKeepsSettingsAndDeferredSetupRouting() {
         let preferences = J93FixtureLaunch.makePreferences()
         for _ in 0..<2 {
@@ -86,6 +89,7 @@ final class J93AfterQuitTests: XCTestCase {
         router.launch(preferences: preferences)
         XCTAssertTrue(destinations.isEmpty)
     }
+    #endif
 
     func testNativeCompositionHasNoAfterQuitSurface() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()

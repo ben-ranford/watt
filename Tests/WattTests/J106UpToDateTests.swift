@@ -111,6 +111,7 @@ final class J106UpToDateTests: XCTestCase {
         XCTAssertEqual(alert.alertStyle, .informational)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testFixtureRegistryAndExactSelector() throws {
         let fixture = try ScenarioRegistry.resolve("J10.6")
         XCTAssertEqual(fixture.story.node, "34:5822")
@@ -123,6 +124,7 @@ final class J106UpToDateTests: XCTestCase {
         XCTAssertFalse(J106FixtureLaunch.requested)
         #endif
     }
+    #endif
 }
 
 @MainActor

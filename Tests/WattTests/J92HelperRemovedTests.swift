@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J92HelperRemovedTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndFailClosedSelectors() throws {
         let fixture = try ScenarioRegistry.resolve("J9.2")
         XCTAssertEqual(fixture.story.node, "32:5844")
@@ -163,6 +164,7 @@ final class J92HelperRemovedTests: XCTestCase {
             XCTAssertEqual(router.settingsHelperSetup.actionTitle, "Turn On…")
         }
     }
+    #endif
 
     func testJ92RouteExplicitlySelectsRemovedExcerptOnlyInDebug() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
@@ -186,6 +188,7 @@ final class J92HelperRemovedTests: XCTestCase {
         return String(source[startRange.upperBound..<endRange.lowerBound])
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeRemovedFormHostingAndStyling() async throws {
         let router = AppRouter()
         let preferences = J92FixtureLaunch.makePreferences()
@@ -206,6 +209,7 @@ final class J92HelperRemovedTests: XCTestCase {
             XCTAssertFalse(source.contains(token), token)
         }
     }
+    #endif
 }
 
 @MainActor

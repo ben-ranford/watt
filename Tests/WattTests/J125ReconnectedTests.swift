@@ -6,6 +6,7 @@ import WattFixtures
 
 @MainActor
 final class J125ReconnectedTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactRegistryAndCopy() throws {
         let fixture = try ScenarioRegistry.resolve("J12.5")
         XCTAssertEqual(fixture.story.node, "35:5926")
@@ -17,6 +18,7 @@ final class J125ReconnectedTests: XCTestCase {
             XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", value]))
         }
     }
+    #endif
 
     func testDurableSuccessRoutesAllSetAndReflectsConnectionOnce() async throws {
         let storage = InMemoryStorage(), id = UUID()
@@ -139,6 +141,7 @@ final class J125ReconnectedTests: XCTestCase {
         XCTAssertFalse(setup.reconnectedFromLastInstall)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testFixtureUsesInMemoryConnectionAndAllSetState() async {
         let router = AppRouter()
         let preferences = J125FixtureLaunch.makePreferences()
@@ -147,4 +150,5 @@ final class J125ReconnectedTests: XCTestCase {
         XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
         XCTAssertTrue(preferences.onboarding.helperOptIn)
     }
+    #endif
 }

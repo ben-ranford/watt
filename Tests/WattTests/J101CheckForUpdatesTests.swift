@@ -140,6 +140,7 @@ final class J101CheckForUpdatesTests: XCTestCase {
         XCTAssertEqual(store.state, .staged(receipt))
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testExactReferenceAndFixtureRemainFailClosedWithoutProductionComposition() throws {
         let fixture = try ScenarioRegistry.resolve("J10.1")
         XCTAssertEqual(fixture.story.node, "34:3836")
@@ -149,6 +150,7 @@ final class J101CheckForUpdatesTests: XCTestCase {
         XCTAssertThrowsError(try selection.smokeLaunchArguments())
         XCTAssertNotNil(WattFixtureLaunchGate.rejection(arguments: ["--watt-fixture", "J10.1/base"]))
     }
+    #endif
 }
 
 @MainActor

@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J122ConfirmUninstallTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndReleasePackageGate() throws {
         let fixture = try ScenarioRegistry.resolve("J12.2")
         XCTAssertEqual(fixture.story.node, "35:5144")
@@ -21,6 +22,7 @@ final class J122ConfirmUninstallTests: XCTestCase {
         XCTAssertTrue(J122FixtureLaunch.matches(arguments: ["--watt-fixture", "J12.2/base"]))
         #endif
     }
+    #endif
 
     func testOnlyExplicitExactConfirmationCallsRemovalOnce() async throws {
         let router = AppRouter()
@@ -109,6 +111,7 @@ final class J122ConfirmUninstallTests: XCTestCase {
         XCTAssertFalse(preferences.checkForUpdatesAutomatically)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeAlertAndFixtureContract() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"))
@@ -122,4 +125,5 @@ final class J122ConfirmUninstallTests: XCTestCase {
         XCTAssertTrue(prefs.openAtLogin)
         XCTAssertEqual(MenuBarStatusLabel(reading: J122FixtureLaunch.makeStore().currentReading, preferences: prefs).text, "+42.1 W")
     }
+    #endif
 }

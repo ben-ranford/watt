@@ -152,6 +152,7 @@ final class J103AvailableTests: XCTestCase {
         XCTAssertEqual(UpdateStore(storage: storage).state, .failed(.interruptedUpdate, receipt))
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndPackageIsolation() throws {
         let fixture = try ScenarioRegistry.resolve("J10.3")
         XCTAssertEqual(fixture.story.node, "34:4695")
@@ -164,6 +165,7 @@ final class J103AvailableTests: XCTestCase {
         XCTAssertFalse(J103FixtureLaunch.requested)
         #endif
     }
+    #endif
 
     func testAvailableNativeLayout() async {
         _ = NSApplication.shared

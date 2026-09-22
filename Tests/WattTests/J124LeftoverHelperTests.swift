@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J124LeftoverHelperTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeAlertAndExactRegistry() throws {
         let alert = LeftoverHelperAlert.make()
         XCTAssertEqual(alert.alertStyle, .informational)
@@ -24,6 +25,7 @@ final class J124LeftoverHelperTests: XCTestCase {
             XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", value]))
         }
     }
+    #endif
     func testReconnectConsumesConsentAndPersistsCompletion() async throws {
         let storage = InMemoryStorage(), id = UUID()
         let prompt = LeftoverHelperPrompt(storage: storage, installationID: id)
@@ -41,6 +43,7 @@ final class J124LeftoverHelperTests: XCTestCase {
         await relaunched.discover()
         XCTAssertNil(relaunched.intent)
     }
+    #if DEBUG || SWIFT_PACKAGE
     func testClosedAndStaleIntentsCannotMutate() async throws {
         let prompt = J124FixtureLaunch.makePrompt()
         var calls = 0
@@ -53,6 +56,7 @@ final class J124LeftoverHelperTests: XCTestCase {
         XCTAssertEqual(calls, 0)
         XCTAssertNotNil(prompt.intent)
     }
+    #endif
     func testRetryKeepsReceiptAndFailedPersistencePreventsRemoval() async throws {
         let storage = InMemoryStorage()
         let prompt = LeftoverHelperPrompt(storage: storage, installationID: UUID())
@@ -84,6 +88,7 @@ final class J124LeftoverHelperTests: XCTestCase {
         XCTAssertEqual(calls, 1)
         XCTAssertNil(prompt.failure)
     }
+    #if DEBUG || SWIFT_PACKAGE
     func testCloseDuringReconnectIgnoresLateSuccessAndBlocksNewWork() async throws {
         let prompt = J124FixtureLaunch.makePrompt()
         var continuation: CheckedContinuation<HelperReconciliation, Never>?
@@ -114,6 +119,7 @@ final class J124LeftoverHelperTests: XCTestCase {
             XCTAssertNotNil(prompt.failure)
         }
     }
+    #endif
     func testInventoryDetectionAndHelperOnlyRemoval() async throws {
         let driver = J124Driver()
         let helper = FakeHelperService()

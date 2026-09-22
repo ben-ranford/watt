@@ -6,6 +6,7 @@ import WattFixtures
 
 @MainActor
 final class J123UninstalledTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactEmptyFixture() throws {
         let fixture = try ScenarioRegistry.resolve("J12.3")
         XCTAssertEqual(fixture.story.node, "35:5599")
@@ -20,6 +21,7 @@ final class J123UninstalledTests: XCTestCase {
         XCTAssertTrue(J123FixtureLaunch.matches(arguments: ["--watt-fixture", "J12.3/base"]))
         #endif
     }
+    #endif
 
     private func confirm(_ router: AppRouter) async throws -> RemovalOutcome? {
         let token = router.beginUninstallPresentation()

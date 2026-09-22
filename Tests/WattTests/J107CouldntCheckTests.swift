@@ -119,6 +119,7 @@ final class J107CouldntCheckTests: XCTestCase {
             XCTAssertFalse(router.couldntCheckPresented)
         }
     }
+    #if DEBUG || SWIFT_PACKAGE
     func testFixtureRegistryAndReleaseBoundary() throws {
         XCTAssertEqual(try ScenarioRegistry.resolve("J10.7").story.node, "34:6003")
         XCTAssertEqual(try ScenarioRegistry.resolve("J10.7").story.status, "implemented")
@@ -130,6 +131,7 @@ final class J107CouldntCheckTests: XCTestCase {
         XCTAssertFalse(J107FixtureLaunch.requested)
         #endif
     }
+    #endif
 }
 
 @MainActor

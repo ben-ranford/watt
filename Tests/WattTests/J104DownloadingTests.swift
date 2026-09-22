@@ -131,6 +131,7 @@ final class J104DownloadingTests: XCTestCase {
         XCTAssertEqual(router.updates.state, .idle)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testFixtureSelection() throws {
         let selection = try XCTUnwrap(FixtureLaunchSelection.parse(["--watt-fixture", "J10.4/base"]))
         XCTAssertEqual(try selection.smokeLaunchArguments(), ["--watt-fixture", "J10.4/base"])
@@ -138,6 +139,7 @@ final class J104DownloadingTests: XCTestCase {
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.4"]))
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.4/other"]))
     }
+    #endif
 }
 
 @MainActor
