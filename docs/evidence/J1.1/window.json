@@ -1,0 +1,39 @@
+{
+  "accessibilityEvidence": "source-native SwiftUI semantics only; no AX traversal, UI automation or VoiceOver audit",
+  "appearance": "light / aqua",
+  "capture": "screencapture -x -o -l (app-owned window only)",
+  "capturedAtUTC": "2026-09-22T10:19:19Z",
+  "confirmationState": "not presented; neutral Remove opens native SwiftUI alert; Cancel role cancel; Remove role destructive; local fixture mutation only; not runtime interaction audited",
+  "contentNode": "27:1319",
+  "fixture": "J1.1/base",
+  "frameNode": "27:987",
+  "image": "native-window.png",
+  "locale": "en_US",
+  "nonblank": true,
+  "osVersion": "Version 27.0 (Build 26A428)",
+  "pixelHeight": 612,
+  "pixelWidth": 960,
+  "pixelsPerPoint": 2,
+  "referenceNode": "general state coverage",
+  "sampledRGBColors": 327,
+  "visualGate": "native smoke capture only; no calibrated Figma comparison or VoiceOver sign-off",
+  "window": {
+    "kCGWindowAlpha": 1,
+    "kCGWindowBounds": {
+      "Height": 306,
+      "Width": 480,
+      "X": 660,
+      "Y": 228
+    },
+    "kCGWindowIsOnscreen": true,
+    "kCGWindowLayer": 0,
+    "kCGWindowMemoryUsage": 2432,
+    "kCGWindowName": "",
+    "kCGWindowNumber": 9559,
+    "kCGWindowOwnerName": "Watt?",
+    "kCGWindowOwnerPID": 36649,
+    "kCGWindowSharingState": 1,
+    "kCGWindowStoreType": 1
+  },
+  "windowNode": "27:1302"
+}

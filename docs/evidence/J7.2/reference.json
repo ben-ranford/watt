@@ -1,0 +1,70 @@
+{
+  "story": "J7.2",
+  "goal": "G056",
+  "title": "7.2 Result — Per Component in menu bar",
+  "figmaFile": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "31:6952",
+  "assetURL": "https://www.figma.com/api/mcp/asset/e2e5a443-246c-47c9-8ec8-5e2b3e8dbc4b.png",
+  "sha256": "5383443c3506f7d58834c6e20687a2564029fbbb288f3d22aedb2e086106fa75",
+  "sizeBytes": 240241,
+  "downloadedAtUTC": "2026-09-22T16:46:19.288675+00:00",
+  "frame": {
+    "width": 1000,
+    "height": 220
+  },
+  "appearance": "aqua",
+  "statusAnchorNode": "31:7101",
+  "statusItemNode": "31:7099",
+  "statusText": "CPU 9.8 · GPU 4.1 W",
+  "showsSymbol": false,
+  "statusAnchorBounds": {
+    "x": 0,
+    "y": 5,
+    "width": 741,
+    "height": 24
+  },
+  "statusItemBoundsInFrame": {
+    "x": 593,
+    "y": 5,
+    "width": 148,
+    "height": 24
+  },
+  "typography": {
+    "style": "Body/Emphasized",
+    "family": "SF Pro",
+    "size": 13,
+    "lineHeight": 16,
+    "weight": "semibold"
+  },
+  "variants": {
+    "desktop": "Light",
+    "menuBar": "Over Light",
+    "statusItemSelected": false,
+    "dockVisible": false
+  },
+  "fixture": "--watt-fixture J7.2/base",
+  "fixtureState": {
+    "reading": "PowerReading.samplePerComponent",
+    "source": "fixture",
+    "components": {
+      "CPU": 9.8,
+      "GPU": 4.1
+    },
+    "componentsCapability": "available",
+    "clock": "frozen at samplePerComponent.timestamp",
+    "storage": "fresh InMemoryStorage per launch",
+    "displayMode": "components",
+    "selectedComponents": [
+      "CPU",
+      "GPU"
+    ],
+    "componentReadings": true,
+    "showSymbol": false,
+    "precision": "decimal",
+    "onboarding": "livePanel completed helperOptIn true"
+  },
+  "assets": "No app-owned raster/vector assets in the status item. Exact PNG retained as evidence only. Desktop wallpaper, Wi-Fi, Spotlight, Control Center and date/time belong to macOS.",
+  "nativeOwnership": "Shared MenuBarStatusLabel in MenuBarExtra and existing NSStatusBarButton bridge. Native system font/material/placement/focus; reference coordinates are inspection metadata, never imposed app geometry.",
+  "referenceInspection": "Exact supplied 1000x220 PNG inspected locally. Idle unselected text-only per-component status item; no battery or bolt glyph. Retrieved exact node design context and hierarchy via Figma MCP.",
+  "historicalF00Export": "Registry referenceJSON retains original F00 export e9c65d95a6157519f53c4dfc68bcafaf5055385189ee5e29340d90eb915411ff; supplied PNG is current evidence authority."
+}

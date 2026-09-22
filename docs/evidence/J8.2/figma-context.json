@@ -1,0 +1,30 @@
+{
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "nodeId": "32:4456",
+  "frameName": "8.2 Readings resume automatically (no alert)",
+  "frameSize": { "width": 1000, "height": 220 },
+  "desktopTemplate": { "nodeId": "32:4457", "appearance": "dark", "showDock": false },
+  "statusItemAnchor": { "nodeId": "32:4574", "name": "Status Item Anchor (right-aligned)", "width": 741, "height": 24 },
+  "statusItem": { "nodeId": "32:4572", "name": "Watt? Status Item", "width": 96, "height": 24 },
+  "display": {
+    "symbolAndText": "􀢋 +42.1 W",
+    "fontFamily": "SF Pro",
+    "fontStyle": "Semibold",
+    "fontWeight": 590,
+    "fontSize": 13,
+    "lineHeight": 16,
+    "letterSpacing": 0
+  },
+  "constraints": [
+    "Use the existing native AppKit NSStatusItem/MenuBarExtra bridge",
+    "Use SF Symbols/system rendering",
+    "Do not draw wallpaper or menu-bar chrome",
+    "Do not add gradients, rounded rectangles, custom status-item backgrounds or custom controls",
+    "No alert or custom panel in this frame"
+  ],
+  "retrievedWith": [
+    "figma_get_design_context(fileKey=9DKDgUfEqidZdZQEVlQgLS,nodeId=32:4456,clientFrameworks=swiftui,appkit,clientLanguages=swift)",
+    "figma_get_metadata(fileKey=9DKDgUfEqidZdZQEVlQgLS,nodeId=32:4456)",
+    "figma_get_screenshot(fileKey=9DKDgUfEqidZdZQEVlQgLS,nodeId=32:4456,maxDimension=1000)"
+  ]
+}

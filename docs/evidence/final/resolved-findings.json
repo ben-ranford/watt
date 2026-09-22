@@ -1,0 +1,40 @@
+[
+  {
+    "story": "J8.2",
+    "kind": "missing local checksum alias resolved to F00 export",
+    "path": ".omx/plans/f00-reference-evidence/exports/32-4456.png",
+    "sha256": "202888272184e508e92e1e786e70301ad8adbedb9758c0d5e414eb5827a23c65",
+    "portableInGit": false,
+    "remainingGap": "reference.sha256 names an absent sibling file; ignored F00 export is required on handoff"
+  },
+  {
+    "story": "J8.3",
+    "kind": "missing local checksum alias resolved to F00 export",
+    "path": ".omx/plans/f00-reference-evidence/exports/32-4575.png",
+    "sha256": "7dccac13b2d83978dacabea90ae91f4874ca60f68f1490b31c72859f91b08586",
+    "portableInGit": false,
+    "remainingGap": "reference.sha256 names an absent sibling file; ignored F00 export is required on handoff"
+  },
+  {
+    "story": "J8.2",
+    "kind": "MCP screenshot bytes absent from docs",
+    "claimedSHA256": "da0dd0feb4c8b23667c90125bdadcd8dc1e45fc6425cccf76fe0f99d54ac14a7",
+    "matches": [],
+    "remainingGap": "URL/metadata/hash is not retained screenshot bytes"
+  },
+  {
+    "story": "J11.2",
+    "kind": "raw tool text mislabeled .json; valid normalized JSON and both PNG hashes verified",
+    "remainingGap": "Do not feed the raw mixed-text response to a strict JSON parser; preserve provenance"
+  },
+  {
+    "story": "C03",
+    "kind": "metadata.sha256 README.md digest stale",
+    "remainingGap": "Documentation was extended after snapshot; image hash checks pass, but current checksum manifest is not wholly reproducible"
+  },
+  {
+    "kind": "concurrent change detection",
+    "changedSinceG081Start": [],
+    "scope": "All 2882 initial tracked/nonignored non-build files; excludes final evidence; baseline refreshed for this pass"
+  }
+]

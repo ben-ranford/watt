@@ -1,0 +1,44 @@
+{
+  "story": "J12.3",
+  "goal": "G075",
+  "branch": "bug/G075-j123-uninstalled",
+  "developerDir": "/Applications/Xcode.app/Contents/Developer",
+  "checks": {
+    "capture": 1,
+    "debug": 0,
+    "focused-tests": 0,
+    "full-tests": 0,
+    "release-build-for-testing": 65,
+    "release": 0,
+    "static-checks": 0
+  },
+  "focusedTests": {
+    "executed": 57,
+    "failures": 0
+  },
+  "fullTests": {
+    "executed": 651,
+    "skipped": 5,
+    "failures": 0
+  },
+  "debug": "build, analyze, build-for-testing passed",
+  "release": "app build and analyze passed; nm/strings fixture isolation passed",
+  "releaseTestBuild": "Attempted; exit 65: existing WattTests dependency cannot resolve a compatible Watt module (first diagnostic J108HelperUpdateTests.swift:5).",
+  "supersededAttempts": [
+    "Initial ad-hoc focused test used CommandLineTools and failed because SwiftUIMacros plugin was missing; superseded by successful Xcode-toolchain focused/full runs.",
+    "Initial full run required adding J12.3 to F05FixtureTests implemented-ID assertion; fixed and full suite rerun passed."
+  ],
+  "controlledNoWattLaunch": {
+    "exitCode": 0,
+    "wattWindowsObserved": 0,
+    "productionUninstallVerified": false
+  },
+  "capture": "Exit 1; AX untrusted, Terminal frontmost; screen capture preauthorized but no valid Finder-only comparison. No native screenshot fabricated.",
+  "referenceInspected": true,
+  "visualPass": false,
+  "score": null,
+  "pixel_diff": null,
+  "productionBoundary": "Scoped P05 contract and injected inventory verification tested. No trusted production OwnedRemovalDriver configured; default uninstall remains fail-closed. No real installed app/helper/login/settings removal claimed.",
+  "commitCreated": false,
+  "newWorktreeCreated": false
+}

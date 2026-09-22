@@ -1,0 +1,21 @@
+{
+  "appearance" : "aqua",
+  "capture" : "NSView.cacheDisplay; actual app-owned welcome content; native titlebar not assessed",
+  "contentNode" : "27:1319",
+  "figmaWindowBounds" : [
+    260,
+    216,
+    480,
+    308
+  ],
+  "fixture" : "J1.1\/base",
+  "frameNode" : "27:987",
+  "height" : 306,
+  "limitation" : "Native system metrics; not pixel-identical to Figma. AX\/VoiceOver not audited.",
+  "locale" : "en_US",
+  "os" : "Version 27.0 (Build 26A428)",
+  "storage" : "fresh InMemoryStorage; welcome checkpoint; no live services",
+  "visualPass" : false,
+  "width" : 480,
+  "windowNode" : "27:1302"
+}

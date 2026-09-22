@@ -1,0 +1,24 @@
+{
+  "story": "J5.2",
+  "goal": "G048",
+  "node": "30:4028",
+  "status": "blocked",
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "storyDone": false,
+  "nativeCapture": null,
+  "comparableCapture": false,
+  "captureExit": 1,
+  "screenCapturePreauthorized": true,
+  "AXTrusted": false,
+  "liveInteractionVerified": false,
+  "reference": "reference.png",
+  "captureEvidence": "capture/window.json",
+  "blockers": [
+    "Fresh PID-scoped live compositor capture found no app-owned on-screen windows for the J5.2 fixture.",
+    "AXIsProcessTrusted=false; live pointer, keyboard and VoiceOver interaction is unverified.",
+    "No comparable native PNG exists. Native row/button/footer visibility, clipping, light appearance and selected status-item pixels remain unmeasured."
+  ],
+  "knownDifferences": "Only the forced outer native host frame is unit-tested; SwiftUI Form may scroll or compress at OS-native metrics. No offscreen/synthetic image substitutes for visual acceptance."
+}

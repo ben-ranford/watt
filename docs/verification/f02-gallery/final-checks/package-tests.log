@@ -1,0 +1,172 @@
+Building for debugging...
+[2 / 10] Watt
+[3 / 10]
+[4 / 11] Watt
+[5 / 12] Watt
+[11 / 13] Watt-product
+[12 / 14] Watt-product
+[23 / 26] Watt
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift:124:64: warning: main actor-isolated property 'isEditable' can not be referenced from a nonisolated context
+122 |                 window.makeKeyAndOrderFront(nil)
+123 |                 func focusField(in view: NSView) -> Bool {
+124 |                     if let field = view as? NSTextField, field.isEditable {
+    |                                                                `- warning: main actor-isolated property 'isEditable' can not be referenced from a nonisolated context
+125 |                         return window.makeFirstResponder(field)
+126 |                     }
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSTextField.h:30:36: note: property declared here
+ 28 | @property (getter=isBordered) BOOL bordered;
+ 29 | @property (getter=isBezeled) BOOL bezeled;
+ 30 | @property (getter=isEditable) BOOL editable;
+    |                                    `- note: property declared here
+ 31 | @property (getter=isSelectable) BOOL selectable;
+ 32 | - (void)selectText:(nullable id)sender;
+
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift:125:39: warning: call to main actor-isolated instance method 'makeFirstResponder' in a synchronous nonisolated context [#ActorIsolatedCall]
+123 |                 func focusField(in view: NSView) -> Bool {
+124 |                     if let field = view as? NSTextField, field.isEditable {
+125 |                         return window.makeFirstResponder(field)
+    |                                       `- warning: call to main actor-isolated instance method 'makeFirstResponder' in a synchronous nonisolated context [#ActorIsolatedCall]
+126 |                     }
+127 |                     return view.subviews.contains { focusField(in: $0) }
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSWindow.h:387:1: note: calls to instance method 'makeFirstResponder' from outside of its actor context are implicitly asynchronous
+ 385 | - (void)update;
+ 386 | 
+ 387 | - (BOOL)makeFirstResponder:(nullable NSResponder *)responder;
+     | |- note: calls to instance method 'makeFirstResponder' from outside of its actor context are implicitly asynchronous
+     | `- note: main actor isolation inferred from inheritance from class 'NSResponder'
+ 388 | /* firstResponder is Key Value Observing (KVO) compliant. */
+ 389 | @property (readonly, weak) NSResponder *firstResponder;
+
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift:127:33: warning: main actor-isolated property 'subviews' can not be referenced from a nonisolated context
+125 |                         return window.makeFirstResponder(field)
+126 |                     }
+127 |                     return view.subviews.contains { focusField(in: $0) }
+    |                                 `- warning: main actor-isolated property 'subviews' can not be referenced from a nonisolated context
+128 |                 }
+129 |                 if let content = window.contentView { _ = focusField(in: content) }
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSView.h:88:46: note: property declared here
+ 86 | @property (nullable, readonly, unsafe_unretained) NSWindow *window;
+ 87 | @property (nullable, readonly, unsafe_unretained) NSView *superview;
+ 88 | @property (copy) NSArray<__kindof NSView *> *subviews;
+    |                                              `- note: property declared here
+ 89 | - (BOOL)isDescendantOf:(NSView *)view;
+ 90 | - (nullable NSView *)ancestorSharedWithView:(NSView *)view;
+
+[#ActorIsolatedCall]: <https://docs.swift.org/compiler/documentation/diagnostics/actor-isolated-call>
+[35 / 38] Watt-product
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift:124:64: warning: main actor-isolated property 'isEditable' can not be referenced from a nonisolated context
+122 |                 window.makeKeyAndOrderFront(nil)
+123 |                 func focusField(in view: NSView) -> Bool {
+124 |                     if let field = view as? NSTextField, field.isEditable {
+    |                                                                `- warning: main actor-isolated property 'isEditable' can not be referenced from a nonisolated context
+125 |                         return window.makeFirstResponder(field)
+126 |                     }
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSTextField.h:30:36: note: property declared here
+ 28 | @property (getter=isBordered) BOOL bordered;
+ 29 | @property (getter=isBezeled) BOOL bezeled;
+ 30 | @property (getter=isEditable) BOOL editable;
+    |                                    `- note: property declared here
+ 31 | @property (getter=isSelectable) BOOL selectable;
+ 32 | - (void)selectText:(nullable id)sender;
+
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift:125:39: warning: call to main actor-isolated instance method 'makeFirstResponder' in a synchronous nonisolated context [#ActorIsolatedCall]
+123 |                 func focusField(in view: NSView) -> Bool {
+124 |                     if let field = view as? NSTextField, field.isEditable {
+125 |                         return window.makeFirstResponder(field)
+    |                                       `- warning: call to main actor-isolated instance method 'makeFirstResponder' in a synchronous nonisolated context [#ActorIsolatedCall]
+126 |                     }
+127 |                     return view.subviews.contains { focusField(in: $0) }
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSWindow.h:387:1: note: calls to instance method 'makeFirstResponder' from outside of its actor context are implicitly asynchronous
+ 385 | - (void)update;
+ 386 | 
+ 387 | - (BOOL)makeFirstResponder:(nullable NSResponder *)responder;
+     | |- note: calls to instance method 'makeFirstResponder' from outside of its actor context are implicitly asynchronous
+     | `- note: main actor isolation inferred from inheritance from class 'NSResponder'
+ 388 | /* firstResponder is Key Value Observing (KVO) compliant. */
+ 389 | @property (readonly, weak) NSResponder *firstResponder;
+
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift:127:33: warning: main actor-isolated property 'subviews' can not be referenced from a nonisolated context
+125 |                         return window.makeFirstResponder(field)
+126 |                     }
+127 |                     return view.subviews.contains { focusField(in: $0) }
+    |                                 `- warning: main actor-isolated property 'subviews' can not be referenced from a nonisolated context
+128 |                 }
+129 |                 if let content = window.contentView { _ = focusField(in: content) }
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSView.h:88:46: note: property declared here
+ 86 | @property (nullable, readonly, unsafe_unretained) NSWindow *window;
+ 87 | @property (nullable, readonly, unsafe_unretained) NSView *superview;
+ 88 | @property (copy) NSArray<__kindof NSView *> *subviews;
+    |                                              `- note: property declared here
+ 89 | - (BOOL)isDescendantOf:(NSView *)view;
+ 90 | - (nullable NSView *)ancestorSharedWithView:(NSView *)view;
+
+[#ActorIsolatedCall]: <https://docs.swift.org/compiler/documentation/diagnostics/actor-isolated-call>
+[37 / 41] Watt-product
+[41 / 43] WattTests-product
+[43 / 45] WattTests-product
+[49 / 50] WattTests-product
+Build complete! (6.04 sec.)
+Test Suite 'All tests' started at 2026-09-20 20:56:08.688.
+Test Suite 'WattTests.xctest' started at 2026-09-20 20:56:08.689.
+Test Suite 'AppRouterTests' started at 2026-09-20 20:56:08.689.
+Test Case '-[WattTests.AppRouterTests testCaptureRequiresExactOptIn]' started.
+Test Case '-[WattTests.AppRouterTests testCaptureRequiresExactOptIn]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testCaptureWindowHostsNativePanelWithoutShowingIt]' started.
+Test Case '-[WattTests.AppRouterTests testCaptureWindowHostsNativePanelWithoutShowingIt]' passed (0.137 seconds).
+Test Case '-[WattTests.AppRouterTests testOnboardingAdvancesAndReturnsToStatusPanel]' started.
+Test Case '-[WattTests.AppRouterTests testOnboardingAdvancesAndReturnsToStatusPanel]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testSampleReadingMatchesChargingFixture]' started.
+Test Case '-[WattTests.AppRouterTests testSampleReadingMatchesChargingFixture]' passed (0.000 seconds).
+Test Suite 'AppRouterTests' passed at 2026-09-20 20:56:08.827.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.138 (0.138) seconds
+Test Suite 'DesignSystemTokenTests' started at 2026-09-20 20:56:08.828.
+Test Case '-[WattTests.DesignSystemTokenTests testAccentRespectsSystemAccentChoice]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testAccentRespectsSystemAccentChoice]' passed (0.000 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testControlMetricsPreserveMinimumLayoutContracts]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testControlMetricsPreserveMinimumLayoutContracts]' passed (0.000 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testReferenceSettingsSpacingIsTenPointsTighter]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testReferenceSettingsSpacingIsTenPointsTighter]' passed (0.000 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testSemanticColorsResolveAgainstBothHostAppearances]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testSemanticColorsResolveAgainstBothHostAppearances]' passed (0.001 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testSpacingScalePreservesCompactDesktopRhythm]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testSpacingScalePreservesCompactDesktopRhythm]' passed (0.000 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testTypographyUsesSystemTextStylesAndSemanticEmphasis]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testTypographyUsesSystemTextStylesAndSemanticEmphasis]' passed (0.000 seconds).
+Test Suite 'DesignSystemTokenTests' passed at 2026-09-20 20:56:08.830.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'ReadingPickerTests' started at 2026-09-20 20:56:08.830.
+Test Case '-[WattTests.ReadingPickerTests testCallerControlsVisibleOptionsDescriptionsAndAvailability]' started.
+Test Case '-[WattTests.ReadingPickerTests testCallerControlsVisibleOptionsDescriptionsAndAvailability]' passed (0.000 seconds).
+Test Case '-[WattTests.ReadingPickerTests testDefaultInitializerPreservesAllModesAndDescriptions]' started.
+Test Case '-[WattTests.ReadingPickerTests testDefaultInitializerPreservesAllModesAndDescriptions]' passed (0.000 seconds).
+Test Case '-[WattTests.ReadingPickerTests testReferenceCaptureSizesAndAppearances]' started.
+Test Case '-[WattTests.ReadingPickerTests testReferenceCaptureSizesAndAppearances]' passed (0.184 seconds).
+Test Case '-[WattTests.ReadingPickerTests testReferenceReadingHasExactlyFourEnabledOptions]' started.
+Test Case '-[WattTests.ReadingPickerTests testReferenceReadingHasExactlyFourEnabledOptions]' passed (0.000 seconds).
+Test Suite 'ReadingPickerTests' passed at 2026-09-20 20:56:09.014.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.184 (0.185) seconds
+Test Suite 'SharedControlTests' started at 2026-09-20 20:56:09.014.
+Test Case '-[WattTests.SharedControlTests testActionButtonsKeepMinimumHeightAcrossStylesAndAppearances]' started.
+Test Case '-[WattTests.SharedControlTests testActionButtonsKeepMinimumHeightAcrossStylesAndAppearances]' passed (0.011 seconds).
+Test Case '-[WattTests.SharedControlTests testDisabledButtonsRetainLayoutAcrossStylesAndAppearances]' started.
+Test Case '-[WattTests.SharedControlTests testDisabledButtonsRetainLayoutAcrossStylesAndAppearances]' passed (0.021 seconds).
+Test Case '-[WattTests.SharedControlTests testFormRowMaintainsMinimumHeightWithoutPixelRendering]' started.
+Test Case '-[WattTests.SharedControlTests testFormRowMaintainsMinimumHeightWithoutPixelRendering]' passed (0.002 seconds).
+Test Case '-[WattTests.SharedControlTests testFormSectionTitleInsetPreservesDefaultAndAllowsFlushHeading]' started.
+Test Case '-[WattTests.SharedControlTests testFormSectionTitleInsetPreservesDefaultAndAllowsFlushHeading]' passed (0.000 seconds).
+Test Suite 'SharedControlTests' passed at 2026-09-20 20:56:09.048.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.034 (0.034) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-20 20:56:09.048.
+	 Executed 18 tests, with 0 failures (0 unexpected) in 0.357 (0.359) seconds
+Test Suite 'All tests' passed at 2026-09-20 20:56:09.048.
+	 Executed 18 tests, with 0 failures (0 unexpected) in 0.357 (0.360) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

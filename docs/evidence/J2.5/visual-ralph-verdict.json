@@ -1,0 +1,24 @@
+{
+  "score": null,
+  "verdict": "blocked",
+  "category_match": "Native Settings Form/Section/LabeledContent/menu Picker/bordered Button/window semantics verified by source, tests and window capture; complete scene not visually verified.",
+  "differences": [
+    "Native capture follows dark system appearance; exact Figma reference is light. The launch-only AppleInterfaceStyle argument did not override system appearance.",
+    "Native window is 520x362 points (1040x724 pixels), versus 520x311 reference window; preserving native form spacing requires greater height to avoid clipping.",
+    "Native titlebar typography and controls differ from the reference template.",
+    "Window-only capture does not prove actual status-item text, selection, panel transitions or system-owned approval behavior."
+  ],
+  "suggestions": [
+    "Repeat capture in an approved light-appearance graphical session and capture only the app-owned status item/panel.",
+    "Perform live AX/VoiceOver and native Remove/Cancel interaction audit when access is available.",
+    "Do not replace native system control metrics with custom styling to manufacture a pixel match."
+  ],
+  "reasoning": "A real native window capture exists and visibly contains exact J2.5 copy, including Components / CPU, GPU / Two fit. / On / Remove\u2026. AXIsProcessTrusted is false. Appearance, window metrics and missing status-item evidence prevent calibrated full-reference comparison. No numeric fidelity score or visual pass is claimed.",
+  "reference": "reference.png",
+  "actual": "actual-settings.png",
+  "initial_actual": "initial-dark-settings.png",
+  "pixel_diff": "Not calibrated: reference light full desktop vs dark native window-only capture with differing height. No invented pixel-diff score.",
+  "live_helper_verified": false,
+  "os_approval_verified": false,
+  "ax_verified": false
+}

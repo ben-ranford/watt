@@ -1,0 +1,106 @@
+{
+  "story": "J7.3",
+  "goal": "G057",
+  "figmaFile": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "31:7102",
+  "frame": "7.3 Settings — choose components (max 2)",
+  "assetURL": "https://www.figma.com/api/mcp/asset/b3c4703f-fb7f-4529-bd75-09578341b687.png",
+  "referenceURL": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-7102",
+  "sha256": "d6ffb39f4c390876077c0fb584f1bd7692308be6068bc92004004813a5329a07",
+  "bytes": 700861,
+  "width": 1000,
+  "height": 720,
+  "appearance": "aqua",
+  "settingsWindowNode": "31:7256",
+  "settingsReferenceBounds": {
+    "x": 240,
+    "y": 256,
+    "width": 520,
+    "height": 229
+  },
+  "menuNode": "31:7533",
+  "menuReferenceBounds": {
+    "x": 570,
+    "y": 406,
+    "width": 170,
+    "height": 130
+  },
+  "title": "Watt? Settings",
+  "section": "Menu Bar",
+  "rows": [
+    {
+      "label": "Show",
+      "value": "Components"
+    },
+    {
+      "label": "Components",
+      "subtitle": "Two fit. More crowd the menu bar.",
+      "value": "CPU, GPU"
+    },
+    {
+      "label": "Precision",
+      "value": "42.1 W"
+    }
+  ],
+  "menuItems": [
+    {
+      "name": "CPU",
+      "checked": true,
+      "enabled": true,
+      "node": "31:7662"
+    },
+    {
+      "name": "GPU",
+      "checked": true,
+      "enabled": true,
+      "node": "31:7684"
+    },
+    {
+      "name": "Display",
+      "checked": false,
+      "enabled": false,
+      "node": "31:7712"
+    },
+    {
+      "name": "SSD",
+      "checked": false,
+      "enabled": false,
+      "node": "31:7734"
+    },
+    {
+      "name": "Other",
+      "checked": false,
+      "enabled": false,
+      "node": "31:7756"
+    }
+  ],
+  "variants": [
+    "base"
+  ],
+  "fixtureSelector": "--watt-fixture J7.3/base",
+  "fonts": [
+    {
+      "style": "Body/Emphasized",
+      "font": "SF Pro Semibold",
+      "size": 13,
+      "lineHeight": 16
+    },
+    {
+      "style": "Headline/Regular",
+      "font": "SF Pro Bold",
+      "size": 13,
+      "lineHeight": 16
+    }
+  ],
+  "nativePolicy": "Reference geometry only. Existing semantic surface width; intrinsic Form height, system typography, popup material, checkmarks, disabled state, focus and keyboard semantics. No desktop recreation.",
+  "runtimeAssets": [],
+  "evidenceAssets": [
+    "reference.png",
+    "figma-design-context.txt",
+    "figma-hierarchy.xml"
+  ],
+  "historicalF00SHA256": "8db7f6dbf19438d66f5701a36e08013779d04942663bba19103ee5cc4ed1d9ac",
+  "retrievedUTC": "2026-09-22T17:04:29.253584+00:00",
+  "inspection": "Exact MCP design context and hierarchy retrieved; downloaded supplied PNG visually inspected with view_image. Settings centered over Light desktop; native popup from Components row, CPU/GPU checkmarks and three gray unavailable items. Precision value is behind popup in PNG, confirmed in exact design context.",
+  "nativeRenderVerified": false
+}

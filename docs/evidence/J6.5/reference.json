@@ -1,0 +1,38 @@
+{
+  "story": "J6.5",
+  "goal": "G054",
+  "node": "31:5571",
+  "figmaFile": "9DKDgUfEqidZdZQEVlQgLS",
+  "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-5571",
+  "assetURL": "https://www.figma.com/api/mcp/asset/e5d93c42-8a3c-4991-91bc-1bb798e1d7dd.png",
+  "provenance": "Exact user-specified Figma MCP PNG downloaded and inspected locally. User supplied inspected design context with Swift/SwiftUI guidance. No alternate frame or recreated reference.",
+  "file": "reference.png",
+  "sha256": "2fc0d5e53483f6377d473195b64643f6b4316da85ea9c78e83af1a7c21ce1c47",
+  "bytes": 756059,
+  "widthPixels": 1000,
+  "heightPixels": 720,
+  "appearance": "darkAqua",
+  "selectedStatusItem": "−18.4 W",
+  "referencePanelBounds": {
+    "x": 645,
+    "y": 38,
+    "width": 320,
+    "height": 265
+  },
+  "boundsProvenance": "Approximate bounds supplied by user, corroborated by exact PNG inspection. Original F00 metadata records x644; retained verbatim in registry. Native MenuBarExtra owns actual placement.",
+  "copy": [
+    "On battery",
+    "−18.4 W",
+    "64% · about 4 h 10 min left",
+    "Charger input",
+    "Unplugged",
+    "System draw",
+    "18.4 W",
+    "Battery",
+    "−18.4 W",
+    "Settings…",
+    "Quit Watt?"
+  ],
+  "componentsVisible": false,
+  "mapping": "Existing StatusPanelView/StatusPanelModel, sampleOnBattery, Form/Section/LabeledContent/Button, MenuBarExtra and NSStatusItem selection bridge, semantic native tokens. No duplicate panel or custom assets. Desktop wallpaper and menu bar are system chrome."
+}

@@ -1,0 +1,74 @@
+export default function Component113DestructiveConfirmationKeyboard() {
+  return (
+    <div className="relative size-full" data-node-id="36:5428" data-name="11.3 Destructive confirmation — keyboard">
+      <CodeConnectSnippet data-node-id="36:5429" data-name="Desktop Template">
+        {/* macOS 27 component */}
+        <DesktopTemplate booleanShowDock={false} showDock={false} variantColorMode="Light" colorMode="Light">
+          <DesktopWallpaper variantColorMode="Light" colorMode="Light" />
+          <MenuBar slotMenuItems="36:5434" menuItems="36:5434" textDate="Wed Apr 1" date="Wed Apr 1" textTime="9:41 AM" time="9:41 AM" variantColorMode="Over Light" colorMode="Over Light">
+            <AppleLogo variantSelected="False" selected="False" />
+            <AppName textAppName="Watt?" appName="Watt?" variantSelected="False" selected="False" />
+            <Edit textMenuItem="Edit" menuItem="Edit" variantSelected="False" selected="False" />
+            <Window textMenuItem="Window" menuItem="Window" variantSelected="False" selected="False" />
+            <Help textMenuItem="Help" menuItem="Help" variantSelected="False" selected="False" />
+          </MenuBar>
+        </DesktopTemplate>
+      </CodeConnectSnippet>
+      <div className="absolute content-stretch flex items-center justify-end left-0 overflow-clip top-[5px] w-[741px]" data-node-id="36:5430" data-name="Status Item Anchor (right-aligned)">
+        <CodeConnectSnippet data-node-id="36:5431" data-name="Watt? Status Item">
+          {/* macOS 27 component */}
+          <MenuBarMenuItemLight textMenuItem="􀢋 +42.1 W" menuItem="􀢋 +42.1 W" variantSelected="False" selected="False" />
+        </CodeConnectSnippet>
+      </div>
+      <CodeConnectSnippet data-node-id="36:5432" data-name="Watt? Settings">
+        {/* macOS 27 component */}
+        <WindowsComposed slotContentArea="36:5441" contentArea="36:5441" variantMode="Light" mode="Light" variantActive="True" active="True" variantWindowType="Default + Title" windowType="Default + Title">
+          <ScrollEdgeEffectHard variantMode="Light" mode="Light" variantEdge="Top" edge="Top" />
+          <WindowControls variantMode="Light" mode="Light" variantActive="True" active="True" />
+          <Title textSubtitle="Subtitle" subtitle="Subtitle" textSymbol="folder" symbol="folder" booleanShowSubtitle={false} showSubtitle={false} booleanShowSymbol={false} showSymbol={false} textTitle="Watt? Settings" title="Watt? Settings" variantMode="Light" mode="Light" variantWithSidebar="False" withSidebar="False" />
+          <FormGeneral slotRows="36:5446" rows="36:5446">
+            <OpenAtLogin>
+              <LeadingAccessory booleanShowSymbol={true} showSymbol={true} booleanShowDisclosure={true} showDisclosure={true} booleanShowSubtitle={false} showSubtitle={false} textSubtitle="Subtitle" subtitle="Subtitle" textTitle="Open at login" title="Open at login" variantContent="Title and Subtitle" content="Title and Subtitle" />
+              <RightAccessory booleanShowLabel={true} showLabel={true} textLabel="Label" label="Label" booleanShowInfo={false} showInfo={false} variantType="Switch" type="Switch">
+                <TogglesSwitches variantActive="True" active="True" variantState="Idle" state="Idle" variantSelection="On" selection="On">
+                  <Track variantMode="Light" mode="Light" variantActive="True" active="True" variantContext="Content Area" context="Content Area" variantState="Idle" state="Idle" />
+                  <Knob variantSize="Mini" size="Mini" variantState="Idle" state="Idle" variantSelection="True" selection="True" />
+                </TogglesSwitches>
+              </RightAccessory>
+            </OpenAtLogin>
+            <UninstallWatt>
+              <LeadingAccessory booleanShowSymbol={true} showSymbol={true} booleanShowDisclosure={true} showDisclosure={true} booleanShowSubtitle={true} showSubtitle={true} textSubtitle="Removes the helper and your settings, then moves Watt? to the Trash." subtitle="Removes the helper and your settings, then moves Watt? to the Trash." textTitle="Uninstall Watt?" title="Uninstall Watt?" variantContent="Title and Subtitle" content="Title and Subtitle" />
+              <RightAccessory booleanShowInfo={false} showInfo={false} booleanShowLabel={false} showLabel={false} textLabel="Label" label="Label" variantType="Button" type="Button">
+                <Buttons variantActive="True" active="True" variantContext="Content Area" context="Content Area" variantState="Idle" state="Idle" variantStyle="Bordered" style="Bordered" variantOn="False" on="False">
+                  <BG variantMode="Light" mode="Light" variantContext="Content Area" context="Content Area" variantState="Idle" state="Idle" variantOn="False" on="False" />
+                  <Label textLabel="Uninstall…" label="Uninstall…" variantMode="Light" mode="Light" variantActive="Active" active="Active" variantContext="Content Area" context="Content Area" variantState="Idle" state="Idle" variantStyle="Bordered" style="Bordered" variantOn="False" on="False" />
+                </Buttons>
+              </RightAccessory>
+            </UninstallWatt>
+          </FormGeneral>
+        </WindowsComposed>
+      </CodeConnectSnippet>
+      <CodeConnectSnippet data-node-id="36:5433" data-name="Alert" data-keyboard-annotations="****Return**** triggers nothing destructive (no default button); ****Esc**** = Cancel. VoiceOver reads title, message, then buttons in order.">
+        {/* macOS 27 component */}
+        <Alert slotButtons="36:5449" buttons="36:5449" booleanShowMessage={true} showMessage={true} booleanShowIcon={true} showIcon={true} textDescription="Removes the helper, your settings and the login item, then moves Watt? to the Trash. Nothing is left behind." description="Removes the helper, your settings and the login item, then moves Watt? to the Trash. Nothing is left behind." textTitle="Uninstall Watt?" title="Uninstall Watt?" variantType="Stacked" type="Stacked">
+          <BG variantMode="Light" mode="Light" />
+          <Icon variantMode="Light" mode="Light" variantAppIcon="Custom" appIcon="Custom" />
+          <ButtonUninstall textLabel="Uninstall" label="Uninstall" variantMode="Light" mode="Light" variantType="Destructive" type="Destructive" />
+          <ButtonCancel textLabel="Cancel" label="Cancel" variantMode="Light" mode="Light" variantType="Secondary" type="Secondary" />
+        </Alert>
+      </CodeConnectSnippet>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Body/Emphasized: Font(family: "SF Pro", style: Semibold, size: 13, weight: 590, lineHeight: 16, letterSpacing: 0), Headline/Regular: Font(family: "SF Pro", style: Bold, size: 13, weight: 700, lineHeight: 16, letterSpacing: 0), Subheadline/Regular: Font(family: "SF Pro", style: Regular, size: 11, weight: 400, lineHeight: 14, letterSpacing: 0).
+If the node is connected to a code component in the users codebase via Code Connect, the connected component will be included in the final markup wrapped in a CodeConnectSnippet element, with relevant imports at the top of the file. There are two formats: 1. Single snippet: <CodeConnectSnippet data-snippet-language="React"><TitleComponent>Hello World</TitleComponent></CodeConnectSnippet> 2. Multiple options: <CodeConnectSnippet data-snippet-language="React" options={[<Button variant="primary" />, <Button variant="secondary" />]} /> IMPORTANT: the CodeConnectSnippet wrapper element should not be part of the final code. For the options format, choose the single most appropriate option to use in your implementation. The source of the code component will be in the import path, e.g. import {ComponentName } from 'path/to/component'; IMPORTANT: the import path may not be relative/may point to a URL, so you should search for the component in the codebase and MUST use it if possible.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.
+Some elements have annotation data attributes. They provide extra information about how the element should be implemented.IMPORTANT: Do not ignore these annotation attributes. They should not appear in your final code.

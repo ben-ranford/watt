@@ -1,0 +1,96 @@
+{
+  "story": "J10.1",
+  "goal": "G065",
+  "status": "partial-implementation-acceptance-blocked",
+  "focusedTests": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test --filter J101CheckForUpdatesTests",
+    "exit": 0,
+    "tests": 7,
+    "failures": 0,
+    "log": "focused-tests.log",
+    "skipped": 0
+  },
+  "latestFullPackageRun": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test",
+    "exit": 0,
+    "tests": 585,
+    "passed": 580,
+    "skipped": 5,
+    "failures": 0,
+    "log": "full-tests.log",
+    "remainingFailures": null,
+    "priorCorrectionVerified": "Existing J53FinishSetupTests enabled-action loop correction verified by the full suite; no additional source or test edits required.",
+    "skippedTests": [
+      "J62ChargingHoldTests testNativeAccessibilityExposesThreePowerRowsWithoutComponents",
+      "J63FullOnAdapterTests testNativeAccessibilityExposesThreePowerRowsWithoutComponents",
+      "J64InsufficientChargerTests testNativeAccessibilityExposesThreePowerRowsWithoutComponents",
+      "J65OnBatteryTests testNativeAccessibilityExposesThreePowerRowsWithoutComponents",
+      "P01TelemetryTests testPhysicalHostPublicAPISmoke"
+    ],
+    "skipReasons": [
+      "Four native SwiftUI AX-label checks lack host accessibility evidence.",
+      "Physical-host public API smoke test is opt-in."
+    ]
+  },
+  "J101TestsInFullRun": {
+    "tests": 7,
+    "failures": 0
+  },
+  "nativeDebug": {
+    "build": "passed",
+    "analyze": "passed",
+    "buildForTesting": "passed",
+    "exit": 0,
+    "log": "debug.log",
+    "nativeTestExecution": "not performed"
+  },
+  "nativeRelease": {
+    "build": "passed",
+    "analyze": "passed",
+    "exit": 0,
+    "log": "release.log"
+  },
+  "staticChecks": {
+    "exit": 0,
+    "log": "static-checks.log",
+    "checks": [
+      "git diff --check",
+      "plutil project lint",
+      "reference SHA256 verification",
+      "no custom menu drawing and native validation assertions"
+    ]
+  },
+  "fixtureIsolation": {
+    "newDebugFixtureAdded": false,
+    "exactJ101RenderTarget": "fail-closed",
+    "swiftPackageGate": "covered by J101 tests",
+    "releaseRuntimeProbe": "not performed; no new fixture source introduced"
+  },
+  "knownWarnings": [
+    "Existing OnboardingFlowView actor isolation warning",
+    "AppIntents extraction skipped: no framework dependency"
+  ],
+  "visualReview": "visual-review.json",
+  "productionUpdaterConfigured": false,
+  "J102PresentationImplemented": false,
+  "noSyntheticVisualScore": true,
+  "finalTestEditsReverified": true,
+  "commitCreated": false,
+  "changedFiles": "changed-files.json",
+  "verificationOnlyPass": {
+    "timestampUTC": "2026-09-22T19:33:48+00:00",
+    "status": "passed",
+    "scope": "Focused J10.1 tests, full SwiftPM suite, and diff whitespace check; not story acceptance.",
+    "branch": "bug/G065-j101-check-for-updates",
+    "sourceChanges": false,
+    "testChanges": false,
+    "worktreeCreated": false,
+    "nativeBuildsAndVisualCaptureRerun": false,
+    "warning": "SwiftPM reports 15089 unhandled files under existing build/ artifacts; package configuration left unchanged.",
+    "diffCheck": {
+      "command": "git diff --check",
+      "exit": 0,
+      "log": "diff-check.log"
+    }
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "story": "J8.1",
+  "goal": "G059",
+  "frame": "8.1 No reading (e.g. just after wake)",
+  "figmaFile": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "32:3451",
+  "assetURL": "https://www.figma.com/api/mcp/asset/856abcfb-8fd1-4ad0-bc6e-6bc27d479d06.png",
+  "sha256": "524141281b61d5cdb627ea8f4cf8cc12658e6f94a802f87d77231472568eb0da",
+  "dimensions": [
+    1000,
+    720
+  ],
+  "appearance": "darkAqua",
+  "desktopNode": "32:3452",
+  "statusAnchorNode": "32:3700",
+  "statusItemNode": "32:3697",
+  "panelNode": "32:3701",
+  "retrySlotNode": "32:4362",
+  "variants": {
+    "desktopColorMode": "Dark",
+    "menuBarColorMode": "Over Dark",
+    "statusItemSelected": true,
+    "panelMode": "Dark",
+    "retryStyle": "Bordered",
+    "retryState": "Idle",
+    "retryActive": true,
+    "retryOn": false,
+    "footerStyle": "Borderless",
+    "fixture": [
+      "base"
+    ]
+  },
+  "copy": {
+    "title": "No reading",
+    "value": "− − W",
+    "subtitle": "Usually right after wake. Watt? tries again every few seconds.",
+    "retryLabel": "Try now",
+    "retryAction": "Try Again",
+    "settings": "Settings…",
+    "quit": "Quit Watt?"
+  },
+  "symbols": {
+    "status": "bolt.fill",
+    "warning": "exclamationmark.triangle.fill"
+  },
+  "symbolEvidence": "Existing no-reading status symbol, exact screenshot and user-supplied visual inspection. Figma Code Connect wraps the header and omits its glyph names; no codepoint conversion used.",
+  "typography": {
+    "Body/Emphasized": {
+      "family": "SF Pro",
+      "weight": "semibold",
+      "size": 13,
+      "lineHeight": 16
+    },
+    "Headline/Regular": {
+      "family": "SF Pro",
+      "weight": "bold",
+      "size": 13,
+      "lineHeight": 16
+    },
+    "Large Title/Emphasized": {
+      "family": "SF Pro",
+      "weight": "bold",
+      "size": 26,
+      "lineHeight": 32
+    },
+    "Subheadline/Regular": {
+      "family": "SF Pro",
+      "weight": "regular",
+      "size": 11,
+      "lineHeight": 14
+    }
+  },
+  "hierarchy": {
+    "panel": [
+      670,
+      38,
+      320,
+      195
+    ],
+    "statusAnchor": [
+      0,
+      5,
+      741,
+      24
+    ],
+    "statusItem": [
+      670,
+      5,
+      71,
+      24
+    ],
+    "headerRelativeToContent": [
+      9,
+      9,
+      278,
+      80
+    ],
+    "headerGap": 2,
+    "retryRelativeToContent": [
+      9,
+      101,
+      278,
+      42
+    ],
+    "footerRelativeToContent": [
+      9,
+      155,
+      278,
+      24
+    ]
+  },
+  "layoutDecision": "Reuse shared panel width and semantic typography; no-reading Form sizes vertically using native content metrics. The Figma 320×195 panel bounds are reference metadata, not fixed child/control placement.",
+  "assets": {
+    "appOwned": [],
+    "referenceOnly": [
+      "reference.png",
+      "retrieved-screenshot.png"
+    ],
+    "desktopWallpaper": "System Figma template, never imported into app assets"
+  },
+  "retrievedScreenshotSHA256": "524141281b61d5cdb627ea8f4cf8cc12658e6f94a802f87d77231472568eb0da",
+  "retrievedScreenshotMatchesExactReference": true,
+  "metadataLayerNamesAreNotCopy": true,
+  "inspectedAtUTC": "2026-09-22T17:39:07.607700+00:00",
+  "visualPass": false,
+  "score": null,
+  "pixel_diff": null
+}

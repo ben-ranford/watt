@@ -1,0 +1,21 @@
+{
+  "customView" : true,
+  "deltaStateRetained" : true,
+  "events" : [
+    "action: Settings…",
+    "shortcut dispatched: true",
+    "open: main",
+    "highlight main: Show in Menu Bar",
+    "open: submenu",
+    "highlight submenu: Delta",
+    "highlight submenu: Charger",
+    "selected main: Show in Menu Bar; submenu: Charger",
+    "fallback cancel",
+    "highlight submenu: none",
+    "highlight main: none"
+  ],
+  "limitation" : "Isolated minimal custom views, not Watt; no VoiceOver audit or WindowServer composite",
+  "os" : "Version 27.0 (Build 26A428)",
+  "submenuAttached" : true,
+  "titleRetained" : "Show in Menu Bar"
+}

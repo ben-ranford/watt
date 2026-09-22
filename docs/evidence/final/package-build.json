@@ -1,0 +1,15 @@
+{
+  "command": [
+    "xcrun",
+    "swift",
+    "build"
+  ],
+  "environment": {
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+  },
+  "exitCode": 0,
+  "timedOut": false,
+  "timeoutSeconds": 240,
+  "durationSeconds": 10.72,
+  "log": "package-build.log"
+}

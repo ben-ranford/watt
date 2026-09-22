@@ -1,0 +1,46 @@
+{
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "36:5428",
+  "frameName": "11.3 Destructive confirmation \u2014 keyboard",
+  "frame": {
+    "width": 1000,
+    "height": 720
+  },
+  "settings": {
+    "node": "36:5432",
+    "x": 230,
+    "y": 277,
+    "width": 540,
+    "height": 187,
+    "titlebarHeight": 31,
+    "contentHeight": 156
+  },
+  "form": {
+    "node": "36:5442",
+    "x": 20,
+    "y": 20,
+    "width": 500,
+    "height": 116
+  },
+  "alert": {
+    "node": "36:5433",
+    "x": 370,
+    "y": 223,
+    "width": 260,
+    "height": 260
+  },
+  "referenceURL": "https://www.figma.com/api/mcp/asset/ee9b2658-4806-40c3-9d8f-10d65cfd6137.png",
+  "referencePNG": "reference.png",
+  "referenceDigest": {
+    "node": "36:5428",
+    "sha256": "1466b6e3c198db2ab44c628c4a899604f8f600e9e489e74c52c82723ae3d383c",
+    "bytes": 728087,
+    "dimensions": [
+      1000,
+      720
+    ],
+    "provenance": "Unmodified Figma MCP asset PNG; not implementation capture"
+  },
+  "nativeRenderVerified": false,
+  "copyOverride": "User explicitly requires the full alert message as the Settings confirmation-excerpt subtitle; retrieved Figma row has older shorter copy. Native controls retain system-owned metrics."
+}

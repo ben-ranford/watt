@@ -1,0 +1,1444 @@
+{
+  "shellSyntaxChecks": 143,
+  "pythonSyntaxChecks": 20,
+  "swiftSourceFilesScanned": 43,
+  "nativeStyling": "No gradient/shape/canvas/tint substitute detected; native controls additionally exercised by NativeStylingTests",
+  "navigation": "One MenuBarExtra; no tabs or navigation stacks; scene roots retained",
+  "sourceMembershipFiles": 106,
+  "failures": [
+    "No Xcode build reference: Tests/WattTests/UpdateOfferInstallTests.swift",
+    "No Xcode build reference: Tests/WattTests/StatusPanelVoiceOverSummaryTests.swift"
+  ],
+  "checks": [
+    {
+      "name": "docs/evidence/C01/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C01/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C02/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C02/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C03/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C03/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C03/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C03/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C03/custom-view-experiment/run.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C03/custom-view-experiment/run.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C03/verification.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C03/verification.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C03/windowserver-probe/run.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C03/windowserver-probe/run.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.1/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.1/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.10/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.10/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.10/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.10/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.11/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.11/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.11/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.11/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.12/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.12/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.12/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.12/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.2/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.2/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.3/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.3/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.4/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.4/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.4/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.4/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.5/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.5/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.5/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.5/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.6/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.6/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.6/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.6/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.7/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.7/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.7/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.7/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.8/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.8/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.8/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.8/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.9/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.9/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/C04.9/compare.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/C04.9/compare.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J1.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J1.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J1.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J1.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J1.3/static-checks.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J1.3/static-checks.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J1.4/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J1.4/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J1.5/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J1.5/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J1.6/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J1.6/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J1.7/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J1.7/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J1.8/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J1.8/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.1/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.1/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.2/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.2/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.3/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.3/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.4/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.4/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.4/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.4/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.4/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.4/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.5/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.5/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.5/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.5/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.5/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.5/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.6/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.6/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.6/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.6/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.6/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.6/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.7/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.7/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.7/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.7/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.7/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.7/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.8/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.8/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.8/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.8/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J10.8/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J10.8/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J11.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J11.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J11.1/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J11.1/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J11.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J11.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J11.2/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J11.2/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J11.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J11.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J11.3/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J11.3/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.1/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.1/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.1/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.1/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.2/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.2/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.2/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.2/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.3/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.3/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.3/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.3/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.4/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.4/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.4/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.4/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.4/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.4/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.5/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.5/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.5/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.5/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J12.5/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J12.5/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J2.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J2.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J2.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J2.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J2.4/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J2.4/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J2.5/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J2.5/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J3.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J3.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J3.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J3.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J3.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J3.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J4.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J4.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J4.1/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J4.1/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J4.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J4.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J4.2/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J4.2/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J4.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J4.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J4.3/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J4.3/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J5.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J5.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J5.1/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J5.1/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J5.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J5.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J5.2/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J5.2/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J5.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J5.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J5.3/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J5.3/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J5.3/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J5.3/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.1/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.1/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.1/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.1/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.2/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.2/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.2/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.2/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.3/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.3/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.3/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.3/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.4/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.4/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.4/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.4/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.4/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.4/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.5/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.5/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.5/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.5/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J6.5/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J6.5/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.1/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.1/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.1/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.1/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.2/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.2/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.2/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.2/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.3/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.3/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.3/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.3/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.4/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.4/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.4/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.4/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J7.4/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J7.4/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J8.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J8.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J8.1/static-check.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J8.1/static-check.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J8.1/verify.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J8.1/verify.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J8.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J8.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J8.3/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J8.3/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J9.1/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J9.1/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/J9.2/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/J9.2/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "docs/evidence/native-styling/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "docs/evidence/native-styling/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "scripts/C05/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "scripts/C05/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "scripts/F05/capture.sh",
+      "command": [
+        "bash",
+        "-n",
+        "scripts/F05/capture.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "scripts/F05/check-image-helper.sh",
+      "command": [
+        "bash",
+        "-n",
+        "scripts/F05/check-image-helper.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "scripts/P03/read-only-status.sh",
+      "command": [
+        "bash",
+        "-n",
+        "scripts/P03/read-only-status.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "scripts/capture-native-gallery.sh",
+      "command": [
+        "bash",
+        "-n",
+        "scripts/capture-native-gallery.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "scripts/capture-native-panel.sh",
+      "command": [
+        "bash",
+        "-n",
+        "scripts/capture-native-panel.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "scripts/verify-native-host.sh",
+      "command": [
+        "bash",
+        "-n",
+        "scripts/verify-native-host.sh"
+      ],
+      "exitCode": 0,
+      "output": ""
+    }
+  ]
+}

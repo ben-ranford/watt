@@ -1,0 +1,126 @@
+{
+  "story": "J6.3",
+  "goal": "G052",
+  "node": "31:4355",
+  "branch": "bug/G052-j63-on-adapter-fully-charged",
+  "status": "automated-checks-passed-visual-acceptance-blocked",
+  "verifiedAtUTC": "2026-09-22T16:03:03.623124+00:00",
+  "exits": {
+    "capture": 1,
+    "diff-check": 0,
+    "fixture-rejection": 0,
+    "focused-tests": 0,
+    "host-Debug": 0,
+    "host-Release": 0,
+    "host-focused-tests": 0,
+    "host-tests": 0,
+    "package-build": 0,
+    "package-tests": 0,
+    "static-check": 0,
+    "toolchain-initial": 1
+  },
+  "testResults": {
+    "focused-tests": {
+      "executed": 119,
+      "passed": 117,
+      "skipped": 2,
+      "failures": 0,
+      "log": "focused-tests.log"
+    },
+    "package-tests": {
+      "executed": 461,
+      "passed": 458,
+      "skipped": 3,
+      "failures": 0,
+      "log": "package-tests.log"
+    },
+    "host-focused-tests": {
+      "executed": 119,
+      "passed": 117,
+      "skipped": 2,
+      "failures": 0,
+      "log": "host-focused-tests.log"
+    },
+    "host-tests": {
+      "executed": 449,
+      "passed": 446,
+      "skipped": 3,
+      "failures": 0,
+      "log": "host-tests.log"
+    },
+    "J6.3": {
+      "executed": 15,
+      "passed": 14,
+      "skipped": 1,
+      "failures": 0,
+      "runtimes": [
+        "package",
+        "native host"
+      ],
+      "skip": "Native SwiftUI host exposes no AX labels; live row AX validation remains blocked."
+    }
+  },
+  "skips": [
+    "J6.2 and J6.3 native AX row traversal: no labels exposed by host",
+    "Opt-in P01 physical hardware probe (full suites only)"
+  ],
+  "builds": {
+    "package": "passed",
+    "nativeDebug": [
+      "build passed",
+      "analyze passed"
+    ],
+    "nativeRelease": [
+      "build passed",
+      "analyze passed"
+    ]
+  },
+  "staticChecks": [
+    "Shell syntax",
+    "Python AST",
+    "Swift capture script typecheck",
+    "JSON parsing",
+    "Exact reference SHA256",
+    "Shared native layout/control contracts",
+    "Debug fixture symbols present; Release fixture symbols absent"
+  ],
+  "nativeFixtureRejection": {
+    "checks": 5,
+    "passed": 5,
+    "log": "fixture-rejection.log"
+  },
+  "referenceSHA256": "13696607c0ea717fd3476b8355bcdbbd1cd77c8d2f7530648ac359632bd9d813",
+  "capture": {
+    "exit": 1,
+    "metadata": "capture/window.json",
+    "screenCapturePreauthorized": true,
+    "AXTrusted": false,
+    "ownedWindowCount": 0,
+    "processIdentifier": 99207,
+    "processCleanedUp": true
+  },
+  "visualPass": false,
+  "storyDone": false,
+  "committed": false,
+  "changedFiles": [
+    "App/WattApp.swift",
+    "Models/PowerReading.swift",
+    "Services/PowerReadingStore.swift",
+    "Features/MenuBar/Views/StatusPanelView.swift",
+    "Features/MenuBar/Views/MenuBarRootView.swift",
+    "Tests/Fixtures/StoryFixtures.swift",
+    "Tests/Fixtures/StoryFixtureData.swift",
+    "Tests/Fixtures/FixtureLaunchSelection.swift",
+    "Tests/WattTests/F05FixtureTests.swift",
+    "Tests/WattTests/J63FullOnAdapterTests.swift",
+    "Watt.xcodeproj/project.pbxproj",
+    "DESIGN.md",
+    "SCREEN-BACKLOG.md",
+    "docs/evidence/J6.3/"
+  ],
+  "validationGap": "No comparable native capture: AXTrusted=false and zero fixture-owned on-screen compositor windows. Selected status-item pixels, live keyboard/navigation, hover/dismissal and VoiceOver remain unverified. No permissions requested or changed.",
+  "warnings": "Native builds retain existing OnboardingFlowView actor-isolation and AppIntents metadata warnings; no analyzer/build failures.",
+  "initialFailure": "Initial direct swift test used CommandLineTools and failed to load SwiftUIMacros. toolchain-initial.log/exit retained. verify.sh uses the installed Xcode DEVELOPER_DIR; all final commands pass.",
+  "review": "Review found that a fresh flag could outlive the snapshot. Full status now expires after five seconds using the store clock; expiry/recovery regression passes. The earlier passing run is retained in pre-age-guard/.",
+  "productionBoundary": "System parser remains unchanged and cannot supply measured charger/system watts. Full presentation needs validated fresh available telemetry with explicit full state, 100% and zero battery delta. Store enforces the five-second age limit on statusReading access; production polling composition remains outside this story."
+}

@@ -1,0 +1,1277 @@
+warning: 'swiftui-implementation': found 788 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.app/Contents/Info.plist
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.app/Contents/MacOS/Watt
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.app/Contents/PkgInfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Info.plist
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.swiftmodule/Project/x86_64-apple-macos.swiftsourceinfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.swiftmodule/x86_64-apple-macos.abi.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.swiftmodule/x86_64-apple-macos.swiftdoc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/Watt.swiftmodule/x86_64-apple-macos.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/WattTests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/WattTests.swiftmodule/Project/x86_64-apple-macos.swiftsourceinfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/WattTests.swiftmodule/arm64-apple-macos.abi.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftdoc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/WattTests.swiftmodule/x86_64-apple-macos.abi.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/WattTests.swiftmodule/x86_64-apple-macos.swiftdoc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Debug/WattTests.swiftmodule/x86_64-apple-macos.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/ExplicitPrecompiledModules/modules.timestamp
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/Accessibility-RCJSN2GG3RAR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/AppKit-2VI8NB39I5AT6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/ApplicationServices-3NXEUUZF9JJBD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CFNetwork-1PNPO1ORVQZLS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CUPS-1HLHMKUB322XA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/ColorSync-3EIM4S8RXNRVI.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreAudio-J9DSWC1670R6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreAudioTypes-11649WXSRCA0E.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreData-1KHK1L2CYC2N6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreFoundation-16SA8WK3L6MQN.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreGraphics-1PSDCAYCIV3T9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreImage-39ZO87840M5PP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreMedia-SHYM2JB41P4U.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreServices-39NCTJOEW7PQ2.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreText-3FAL1B4J38DIR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreTransferable-27T896KGHFB3R.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/CoreVideo-DBBGB2LXU3HG.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/Darwin-1FXX23EKWOBA9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/DataDetection-R5W4QHNMPWVH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/DeveloperToolsSupport-3SUCMSK9ZS2JA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/DiskArbitration-3LBJF5I58QD8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/Dispatch-R76HXUP80TVL.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/Foundation-24LYWIP48SHNP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/IOKit-1IAL9NTK1TABA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/IOSurface-26455DPS9NDS0.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/ImageIO-2ZSF831VT29UB.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/MachO-20RPYVQSX341K.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/Metal-1GCZV9N85NJOH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/OSLog-218FBXNFJGY61.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/ObjectiveC-1G8H182PQX3QE.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/OpenGL-H89XJT7GTCP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/QuartzCore-39A8LQKF980J1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/Security-3QCVXOV25KK54.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/Spatial-1JZLH83HN83CS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/SwiftShims-2IMTS4WWRU7VJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/SwiftUI-3DCHKT5UWXXCX.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/SwiftUICore-86HIVXUC6WOA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/Symbols-3KC1789KJFX94.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/UniformTypeIdentifiers-1OLJP4K3PLM48.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/XCTest-16NBZGJV3YRYA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/XCUIAutomation-32USULGCX4UAI.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/XPC-T0ZXCAST7PE3.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_AvailabilityInternal-2YSBQADOLX02V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_float-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_intrinsics-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_inttypes-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_limits-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_stdarg-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_stdatomic-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_stdbool-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_stddef-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_stdint-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_Builtin_tgmath-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_DarwinFoundation1-2YSBQADOLX02V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_DarwinFoundation2-3J4ZFA06I5V1P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_DarwinFoundation3-2NSGASPTSNBVQ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/_SwiftConcurrencyShims-2IMTS4WWRU7VJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/launch-3T3BU4MASLMUM.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/libDER-26DYHF6GC6WWA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/libkern-2KQ0X67RTM1JF.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/os-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/os_object-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/os_workgroup-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/ptrauth-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/ptrcheck-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/simd-KY25Q80SBOHY.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/string_h-47SZ9A199RUD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1XU1F3VOKO8PD/sys_types-3J4ZFA06I5V1P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/Accessibility-RCJSN2GG3RAR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/AppKit-2VI8NB39I5AT6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/ApplicationServices-3NXEUUZF9JJBD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CFNetwork-1PNPO1ORVQZLS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CUPS-1HLHMKUB322XA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/ColorSync-3EIM4S8RXNRVI.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreAudio-J9DSWC1670R6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreAudioTypes-11649WXSRCA0E.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreData-1KHK1L2CYC2N6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreFoundation-16SA8WK3L6MQN.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreGraphics-1PSDCAYCIV3T9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreImage-39ZO87840M5PP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreMedia-SHYM2JB41P4U.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreServices-39NCTJOEW7PQ2.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreText-3FAL1B4J38DIR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreTransferable-27T896KGHFB3R.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/CoreVideo-DBBGB2LXU3HG.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/Darwin-1FXX23EKWOBA9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/DataDetection-R5W4QHNMPWVH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/DeveloperToolsSupport-3SUCMSK9ZS2JA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/DiskArbitration-3LBJF5I58QD8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/Dispatch-R76HXUP80TVL.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/Foundation-24LYWIP48SHNP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/IOKit-1IAL9NTK1TABA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/IOSurface-26455DPS9NDS0.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/ImageIO-2ZSF831VT29UB.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/MachO-20RPYVQSX341K.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/Metal-1GCZV9N85NJOH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/OSLog-218FBXNFJGY61.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/ObjectiveC-1G8H182PQX3QE.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/OpenGL-H89XJT7GTCP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/QuartzCore-39A8LQKF980J1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/Security-3QCVXOV25KK54.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/Spatial-1JZLH83HN83CS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/SwiftShims-2IMTS4WWRU7VJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/SwiftUI-3DCHKT5UWXXCX.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/SwiftUICore-86HIVXUC6WOA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/Symbols-3KC1789KJFX94.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/UniformTypeIdentifiers-1OLJP4K3PLM48.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/XCTest-16NBZGJV3YRYA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/XCUIAutomation-32USULGCX4UAI.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/XPC-T0ZXCAST7PE3.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_AvailabilityInternal-2YSBQADOLX02V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_float-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_intrinsics-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_inttypes-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_limits-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_stdarg-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_stdatomic-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_stdbool-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_stddef-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_stdint-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_Builtin_tgmath-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_DarwinFoundation1-2YSBQADOLX02V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_DarwinFoundation2-3J4ZFA06I5V1P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_DarwinFoundation3-2NSGASPTSNBVQ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/_SwiftConcurrencyShims-2IMTS4WWRU7VJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/launch-3T3BU4MASLMUM.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/libDER-26DYHF6GC6WWA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/libkern-2KQ0X67RTM1JF.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/os-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/os_object-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/os_workgroup-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/ptrauth-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/ptrcheck-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/simd-KY25Q80SBOHY.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/string_h-47SZ9A199RUD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/1ZHMPRDXMR5A7/sys_types-3J4ZFA06I5V1P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Accessibility-CDXC66XCF1AD1WB7X6MUDUFW7.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Accessibility-DL5FP319ZLXKQCJGQGOH99K4S.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/AppKit-27SNLUE9OTMOTV4703504Z7J.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/AppKit-8PPIR16VZGLKCZW78T2764872.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ApplicationServices-2W9TZMD2DBH6PFV1OA9ENW4Z4.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ApplicationServices-3FS2RK3YOHDCOFB6P60E82WNO.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CFNetwork-6STGP1DEKEEAZYJR27W6RG6SK.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CFNetwork-A455INM2B4Y6M1GSBRKYJ1SWG.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CUPS-6TXCSAKAZWQPJJ20BH4ZXBSVW.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CUPS-7SQ9CYD1GPLFV1ICUT206IIJ1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ColorSync-2SMU7GL3VPXKOCZNC5932YB5W.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ColorSync-DVOV8AUF3QA8B3OSY3I4L6B3H.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreAudio-4ZZOD3GVZZBUNF9XYYPOLIC5C.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreAudio-DRK4L01Z1273E714APLL7CVMS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreAudioTypes-94MMS2V1VLO8UBL74V08FV82A.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreAudioTypes-EY8PDRD358OB896D4F7XQ04PJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreData-23F1MO6SHKES7RVHZAV4KFTCB.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreData-7VOV5U3ZOTZ4547TK1RZJA4F8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreFoundation-5L5UYAODGX00OYWGBQYPVXTHC.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreFoundation-68JW0TEQNFIMATLBPAH84T9GO.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreGraphics-1FR79FLMPDOXDEJR29P9JLLSX.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreGraphics-7NK10ATG11FEDAGAHUH3USUU5.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreImage-82CGDF0OC2YO33JNVXFWZYGQ0.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreImage-EXXGB3WYJWG3MTWASRB0C3K9N.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreMedia-3XK8K8B1GRYZ37HJK60AB7JCL.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreMedia-6U560L51LCVPQLXFTPM2MY4P7.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreServices-6AL1JNPL7ATOQ6I5HL1N4WTGN.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreServices-DE0E3L9MH2WOEJJAJ3S6KBVGG.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreText-BT87L7QC3NO5ZKV5WWVM4EIB0.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreText-D7ER9PBTRTLMB1UBNZ9O2UT0Z.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreTransferable-1F7XWONAP743LLSLA872YSL7P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreTransferable-4BRSDCSB0TJ8CKYK076O0ZMIS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreVideo-9N0CSXAXN4Q5Y72EGDY5R7XSF.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/CoreVideo-BNGDC0TL0JR1SM1V9RD0R5THG.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Darwin-6EGTUA6RO48NIEQRBFPXF49HQ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Darwin-8EBV3KQ76ZJZZEHXZ92BY4OQ3.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/DataDetection-1CINQDLK6WTC86O5DRGSOI6MA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/DataDetection-1D2S5RF0FUB5Z4DUA6IFJD5UC.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/DeveloperToolsSupport-5XC9KHQ5J1ISCUN0PYSVH5V93.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/DeveloperToolsSupport-BLQX9EEDF2VSAMNKTBP9OVL5C.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/DiskArbitration-CRM92HD238PSG5EZFWR4XNNK9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/DiskArbitration-EXD9WVE8VGQBBBBZQCV5B5YK8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Dispatch-4VAXOXXFC3L8C8EDVO0X4YZZO.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Dispatch-6C1PGNC1S4NN7XVE5VQRZCE17.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Foundation-75HGGDIF1XAL4SEFXBZJ6SDI6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Foundation-AW5IJFV2UUB9JT8BBGWEM23OC.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/IOKit-AFQ0OOIJ1O9SYYQ32Z7UHOV7U.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/IOKit-AU1HL98E5EAYHNXT67VLK3ENU.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/IOSurface-4IEMZGQINP93XF4MRBYE27VY3.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/IOSurface-DCTCRXY83G3R53Z8J6VMXS2FQ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ImageIO-2KVYN4XB15U1MBR34OWHGQH7F.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ImageIO-EOH8LA6V1RXG8WNRVPNKBE5G2.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/Accessibility-RCJSN2GG3RAR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/AppKit-2VI8NB39I5AT6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/ApplicationServices-3NXEUUZF9JJBD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CFNetwork-1PNPO1ORVQZLS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CUPS-1HLHMKUB322XA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/ColorSync-3EIM4S8RXNRVI.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreAudio-J9DSWC1670R6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreAudioTypes-11649WXSRCA0E.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreData-1KHK1L2CYC2N6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreFoundation-16SA8WK3L6MQN.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreGraphics-1PSDCAYCIV3T9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreImage-39ZO87840M5PP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreMedia-SHYM2JB41P4U.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreServices-39NCTJOEW7PQ2.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreText-3FAL1B4J38DIR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreTransferable-27T896KGHFB3R.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/CoreVideo-DBBGB2LXU3HG.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/Darwin-1FXX23EKWOBA9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/DataDetection-R5W4QHNMPWVH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/DeveloperToolsSupport-3SUCMSK9ZS2JA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/DiskArbitration-3LBJF5I58QD8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/Dispatch-R76HXUP80TVL.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/Foundation-24LYWIP48SHNP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/IOKit-1IAL9NTK1TABA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/IOSurface-26455DPS9NDS0.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/ImageIO-2ZSF831VT29UB.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/MachO-20RPYVQSX341K.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/Metal-1GCZV9N85NJOH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/OSLog-218FBXNFJGY61.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/ObjectiveC-1G8H182PQX3QE.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/OpenGL-H89XJT7GTCP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/QuartzCore-39A8LQKF980J1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/Security-3QCVXOV25KK54.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/Spatial-1JZLH83HN83CS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/SwiftShims-2IMTS4WWRU7VJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/SwiftUI-3DCHKT5UWXXCX.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/SwiftUICore-86HIVXUC6WOA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/Symbols-3KC1789KJFX94.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/UniformTypeIdentifiers-1OLJP4K3PLM48.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/XPC-T0ZXCAST7PE3.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_AvailabilityInternal-2YSBQADOLX02V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_float-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_intrinsics-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_inttypes-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_limits-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_stdarg-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_stdatomic-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_stdbool-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_stddef-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_stdint-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_Builtin_tgmath-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_DarwinFoundation1-2YSBQADOLX02V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_DarwinFoundation2-3J4ZFA06I5V1P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_DarwinFoundation3-2NSGASPTSNBVQ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/_SwiftConcurrencyShims-2IMTS4WWRU7VJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/launch-3T3BU4MASLMUM.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/libDER-26DYHF6GC6WWA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/libkern-2KQ0X67RTM1JF.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/os-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/os_object-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/os_workgroup-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/ptrauth-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/ptrcheck-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/simd-KY25Q80SBOHY.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/string_h-47SZ9A199RUD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/JG9ECJCEDM9N/sys_types-3J4ZFA06I5V1P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/Accessibility-RCJSN2GG3RAR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/AppKit-2VI8NB39I5AT6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/ApplicationServices-3NXEUUZF9JJBD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CFNetwork-1PNPO1ORVQZLS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CUPS-1HLHMKUB322XA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/ColorSync-3EIM4S8RXNRVI.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreAudio-J9DSWC1670R6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreAudioTypes-11649WXSRCA0E.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreData-1KHK1L2CYC2N6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreFoundation-16SA8WK3L6MQN.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreGraphics-1PSDCAYCIV3T9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreImage-39ZO87840M5PP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreMedia-SHYM2JB41P4U.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreServices-39NCTJOEW7PQ2.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreText-3FAL1B4J38DIR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreTransferable-27T896KGHFB3R.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/CoreVideo-DBBGB2LXU3HG.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/Darwin-1FXX23EKWOBA9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/DataDetection-R5W4QHNMPWVH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/DeveloperToolsSupport-3SUCMSK9ZS2JA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/DiskArbitration-3LBJF5I58QD8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/Dispatch-R76HXUP80TVL.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/Foundation-24LYWIP48SHNP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/IOKit-1IAL9NTK1TABA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/IOSurface-26455DPS9NDS0.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/ImageIO-2ZSF831VT29UB.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/MachO-20RPYVQSX341K.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/Metal-1GCZV9N85NJOH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/OSLog-218FBXNFJGY61.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/ObjectiveC-1G8H182PQX3QE.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/OpenGL-H89XJT7GTCP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/QuartzCore-39A8LQKF980J1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/Security-3QCVXOV25KK54.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/Spatial-1JZLH83HN83CS.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/SwiftShims-2IMTS4WWRU7VJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/SwiftUI-3DCHKT5UWXXCX.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/SwiftUICore-86HIVXUC6WOA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/Symbols-3KC1789KJFX94.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/UniformTypeIdentifiers-1OLJP4K3PLM48.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/XPC-T0ZXCAST7PE3.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_AvailabilityInternal-2YSBQADOLX02V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_float-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_intrinsics-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_inttypes-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_limits-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_stdarg-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_stdatomic-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_stdbool-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_stddef-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_stdint-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_Builtin_tgmath-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_DarwinFoundation1-2YSBQADOLX02V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_DarwinFoundation2-3J4ZFA06I5V1P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_DarwinFoundation3-2NSGASPTSNBVQ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/_SwiftConcurrencyShims-2IMTS4WWRU7VJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/launch-3T3BU4MASLMUM.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/libDER-26DYHF6GC6WWA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/libkern-2KQ0X67RTM1JF.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/os-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/os_object-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/os_workgroup-2MV8OP7R98AN8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/ptrauth-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/ptrcheck-2OQWMRBVRD4OJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/simd-KY25Q80SBOHY.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/string_h-47SZ9A199RUD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/K3GJUV24AO02/sys_types-3J4ZFA06I5V1P.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/MachO-6SQW860QTGCFNBFRYEGODF2PX.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/MachO-C2CU0EUQ8UX8Q6UX0WF9T5UWL.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Metal-DD8HS9QTKTEG7LX5YM53Z1CN6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Metal-EZRXC62VJZ4893M6UQMZ3075J.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/OSLog-2YRKO3QA0FW0J2XTS80GQM2B7.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/OSLog-5XHNC7RM8ZHTA1M820CNBJCYL.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ObjectiveC-3CEHJ52JFTMY5OIN6UZ37OBY2.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ObjectiveC-BCDY1ENUEPDGSMSQ19W07O0X7.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/OpenGL-6OIFIWW0L191RHRKD9FMK1HUX.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/OpenGL-BAB110BEVXCQYBOTWYMZQFLYA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/QuartzCore-1FE29SSM2FM03ROQZ030MACO0.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/QuartzCore-CGO9IZ4BLXXDSKXT9ON5ZOZ7Z.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Security-7RF5O9DWC8IFDZ93UAVC5709C.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Security-7ZTU5UUYUYHMDX0DAW9F8NBFI.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Spatial-4BI9R2BB818S20ZGLW09LLFGN.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Spatial-8TZL10AJEVZ6DD02Z2FDOFF60.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/SwiftShims-4HLSSW6OBDV14TN5DAHU6KAD7.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/SwiftShims-4O6FFFNIVL303S2FZOJWY169.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/SwiftUI-32G13KXUAV282L4BFQUP8H333.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/SwiftUI-DKVV7OH41RB4UWKPRPU7SAT5E.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/SwiftUICore-AINEM1AMFXQY0T1JY0C7UBE95.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/SwiftUICore-DXQ10UDWWAM2WG3GSWK2HNHOM.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Symbols-BU53QM5HV0LGBNTULX52W03J6.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/Symbols-ES4JLGUJ1F4BQGTFIMKTWBMQA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/UniformTypeIdentifiers-23J4EEL2YIPGOYTJJCKND7EV2.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/UniformTypeIdentifiers-2Z1TWZ8VJWCPF7090M7U4IQS3.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XCTest-1GDON5KR3MCCQ.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XCTest-3Q4KG60I1Z0FUO81K8YQWMI1A.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XCTest-7TTSPC8W5DP3DRJ7HV01140G9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XCTest-J4MLXTZWQO6I.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XCUIAutomation-1JOQ3WEBX3I6D.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XCUIAutomation-CM3EH08WU8B9V7YWI9RJIWMI4.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XCUIAutomation-CR7WVSG84YLFQFGECNYSTD6BQ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XCUIAutomation-Y6RJ010K9MYY.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XPC-DMYJJO1ZOJ3C6QZSMTAF6RGL4.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/XPC-R9LCG65PLV3NE7LWPOPTDF5K.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_AvailabilityInternal-7167XGJNMXKSUVEG0T57DBM7Z.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_AvailabilityInternal-AH4MNYBC9S88A9UEWASRWTSL1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_float-5GVLBO8C4HE7J0GHJ08MCTSBD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_float-E7AX7CIB4XK4KEPCJOXCHGCC5.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_intrinsics-8OWMGCNPY2IYV8ILXQPRMFGX7.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_intrinsics-CV3NY5RGDPS5C0RH3V90FOD8K.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_inttypes-5KJ80CQMGUJXHPJI7ULDQICUJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_inttypes-98ZQ7KULJFA1EAMS30QC9GLR5.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_limits-4LBEJQDWIF1SMVWMSDE3H9H9Y.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_limits-79P4R0JJSL1I0M05MQLZ7CSMI.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stdarg-AXBTJHX1P65MS087T0GCRPNME.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stdarg-AZNJ150SGL7Q94SD9TS3VLGWL.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stdatomic-9P5J49DMG0MV492XSP1T9CBKH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stdatomic-9TH87OCI58MVI9BZT51ES77F8.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stdbool-6BRJSQ8K8J1GRZ6AJBAM3T9RD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stdbool-9HB2PLHJVGECVQL4BJ8LU95RA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stddef-3EKC1W8QPGEE7R50OTQJ16RTA.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stddef-B1EZZAKF4E4UDBAFKZRYSH6GK.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stdint-4XMS77RQ85KAY79XIE7JX59QM.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_stdint-7S5EI5BG8X86D396UV562YK4C.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_tgmath-1QN0A0GXCAG571QHSVMITR7WD.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_Builtin_tgmath-CE66Y73DV8I4Z3NP45DQ81HWB.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_DarwinFoundation1-8RGTOD1GA2WBWQREDYPYKIJ3L.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_DarwinFoundation1-AINAMUS5BHZK968WNHG0GT6F1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_DarwinFoundation2-2HG3C982KR05FJK6TEW0W0PK9.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_DarwinFoundation2-D22TTK7NMD90CLS7NWQFQ80DC.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_DarwinFoundation3-2C2ZZYJ1FYQ90W1B3943Z7FPC.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_DarwinFoundation3-DTQB3KDNYSN8NK5KB441APTNB.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_SwiftConcurrencyShims-6Y9AFMS9ATTOUQ0JXDCPNWU6B.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/_SwiftConcurrencyShims-CP6FABW6G507KSFJDGBYO9S47.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/launch-8FT6XZ11BV6OM4LP7IMZMKLR4.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/launch-C7LDICXBIODNGR27RNXC8HR0R.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/libDER-4C9E2T260CAXV89U69607TXZF.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/libDER-ECNZCL0YG6IR83JDH8DP92IJT.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/libkern-4DUW4PZKOY5XMAV75713VDRBZ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/libkern-7FFKS1LBDM2FTMZHDD6SCGIE4.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/modules.timestamp
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/os-390YA5N2Q5240DP6KV7FCT7BJ.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/os-5O90VQLMFDFLGZ56H0HS48IFM.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/os_object-6XQVJ660O0I9S5TOQARAYPB38.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/os_object-A30TJNEGPB4CX0QC11A5URD6E.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/os_workgroup-5UDOS1C7CW63IDK4UK6D8J3RV.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/os_workgroup-79M16CF3UGIZ52EQG6BRCC7N1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ptrauth-89TZ432Y5XK6UKUSSR4C8GOTH.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ptrauth-8XLGLZ1HE0DQRJ99X73FJ5RP0.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ptrcheck-5ZLBMFQ0D2NVT5PN5MKRD6BQR.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/ptrcheck-8LWZ3PIKF8PF1XARDMZF9JB1V.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/simd-2RTMT0Y4C2A2G45BDJBZSAV7M.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/simd-49J0N4SEL3RGZ6IGTA4XZPS9J.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/string_h-EWU4X7NJK0FZEUCK57G202BPP.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/string_h-F4C36T3XZKHZCOHGCXDFXLMM1.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/sys_types-CL5M6Y8AG9N299DZV5J234BDV.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/SwiftExplicitPrecompiledModules/sys_types-DQHMF75XWKQQK7UBFRTLJ8FGB.pcm
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppDestination.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppDestination.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppDestination.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppDestination.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppDestination.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppRouter.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppRouter.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppRouter.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppRouter.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppRouter.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Binary/Watt
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/GeneratedAssetSymbols.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/GeneratedAssetSymbols.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/GeneratedAssetSymbols.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarRootView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarRootView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarRootView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarRootView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarRootView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarStatusLabel.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarStatusLabel.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarStatusLabel.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarStatusLabel.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/MenuBarStatusLabel.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/OnboardingFlowView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/OnboardingFlowView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/OnboardingFlowView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/OnboardingFlowView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/OnboardingFlowView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReading.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReading.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReading.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReading.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReading.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReadingStore.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReadingStore.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReadingStore.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReadingStore.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/PowerReadingStore.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/ReadingPicker.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/ReadingPicker.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/ReadingPicker.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/ReadingPicker.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/ReadingPicker.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/RootSceneView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/RootSceneView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/RootSceneView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/RootSceneView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/RootSceneView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/SettingsRootView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/SettingsRootView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/SettingsRootView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/SettingsRootView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/SettingsRootView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusItemContextMenu.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusItemContextMenu.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusItemContextMenu.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusItemContextMenu.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusItemContextMenu.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusPanelView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusPanelView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusPanelView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusPanelView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/StatusPanelView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependencies-2.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-primary-emit-module.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-primary-emit-module.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-primary.priors
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattActionButton.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattActionButton.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattActionButton.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattActionButton.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattActionButton.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattColors.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattColors.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattColors.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattColors.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattColors.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattComponentGallery.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattComponentGallery.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattComponentGallery.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattComponentGallery.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattComponentGallery.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattFormRow.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattFormRow.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattFormRow.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattFormRow.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattFormRow.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattPreferences.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattPreferences.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattPreferences.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattPreferences.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattPreferences.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattSpacing.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattSpacing.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattSpacing.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattSpacing.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattSpacing.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattTypography.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattTypography.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattTypography.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattTypography.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattTypography.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattWindowScaffold.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattWindowScaffold.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattWindowScaffold.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattWindowScaffold.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattWindowScaffold.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/supplementaryOutputs-3
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/arm64/supplementaryOutputs-4
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppDestination.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppDestination.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppDestination.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppDestination.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppDestination.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppRouter.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppRouter.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppRouter.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppRouter.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/AppRouter.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Binary/Watt
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/ExtractedAppShortcutsMetadata.stringsdata
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/GeneratedAssetSymbols.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/GeneratedAssetSymbols.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarRootView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarRootView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarRootView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarRootView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarRootView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarStatusLabel.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarStatusLabel.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarStatusLabel.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarStatusLabel.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/MenuBarStatusLabel.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/OnboardingFlowView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/OnboardingFlowView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/OnboardingFlowView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/OnboardingFlowView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/OnboardingFlowView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReading.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReading.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReading.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReading.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReading.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReadingStore.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReadingStore.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReadingStore.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReadingStore.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/PowerReadingStore.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/ReadingPicker.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/ReadingPicker.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/ReadingPicker.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/ReadingPicker.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/ReadingPicker.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/RootSceneView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/RootSceneView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/RootSceneView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/RootSceneView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/RootSceneView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/SettingsRootView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/SettingsRootView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/SettingsRootView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/SettingsRootView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/SettingsRootView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusItemContextMenu.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusItemContextMenu.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusItemContextMenu.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusItemContextMenu.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusItemContextMenu.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusPanelView.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusPanelView.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusPanelView.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusPanelView.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/StatusPanelView.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt-OutputFileMap.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt-dependencies-1.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt-dependency-scan.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt-primary-emit-module.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt-primary-emit-module.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt-primary.priors
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt.LinkFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt.SwiftConstValuesFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt.SwiftFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt.abi.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt.swiftdoc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt.swiftsourceinfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattActionButton.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattActionButton.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattActionButton.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattActionButton.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattActionButton.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattApp.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattApp.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattApp.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattApp.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattApp.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattColors.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattColors.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattColors.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattColors.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattColors.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattComponentGallery.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattComponentGallery.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattComponentGallery.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattComponentGallery.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattComponentGallery.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattFormRow.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattFormRow.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattFormRow.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattFormRow.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattFormRow.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattPreferences.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattPreferences.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattPreferences.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattPreferences.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattPreferences.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattSpacing.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattSpacing.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattSpacing.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattSpacing.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattSpacing.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattTypography.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattTypography.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattTypography.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattTypography.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattTypography.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattWindowScaffold.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattWindowScaffold.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattWindowScaffold.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattWindowScaffold.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/WattWindowScaffold.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt_const_extract_protocols.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/Watt_dependency_info.dat
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/supplementaryOutputs-1
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Objects-normal/x86_64/supplementaryOutputs-2
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/SwiftStdLibToolInputDependencies.dep
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Watt-generated-files.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Watt-project-headers.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/Watt.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/assetcatalog_dependencies
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/assetcatalog_signature
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/Watt.build/empty-Watt.plist
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/AppRouterTests.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/AppRouterTests.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/AppRouterTests.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/AppRouterTests.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/AppRouterTests.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/Binary/WattTests
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-dependencies-2.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-dependency-scan.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-primary-emit-module.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-primary-emit-module.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-primary.priors
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.LinkFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftConstValuesFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.abi.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftdoc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftsourceinfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_dependency_info.dat
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/AppRouterTests.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/AppRouterTests.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/AppRouterTests.o
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/AppRouterTests.swiftconstvalues
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/AppRouterTests.swiftdeps
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/Binary/WattTests
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/ExtractedAppShortcutsMetadata.stringsdata
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests-OutputFileMap.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests-dependencies-1.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests-dependency-scan.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests-primary-emit-module.d
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests-primary-emit-module.dia
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests-primary.priors
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests.LinkFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests.SwiftConstValuesFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests.SwiftFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests.abi.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests.swiftdoc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests.swiftmodule
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests.swiftsourceinfo
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests_const_extract_protocols.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/Objects-normal/x86_64/WattTests_dependency_info.dat
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/SwiftStdLibToolInputDependencies.dep
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/WattTests-all-non-framework-target-headers.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/WattTests.DependencyMetadataFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/WattTests.DependencyStaticMetadataFileList
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/WattTests.hmap
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/Watt.build/Debug/WattTests.build/empty-WattTests.plist
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/0575ff0f1cc4194e27eaa7e915e85be5
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/0ac1e9f5045c1b38bfa31d8b27dcbd74
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/2de6a04cdba79ed13580c47dfd70cc5f
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/2fb7bf8d30e54ebc35205c18e9b5e864
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/42b62b81435aecffecd73c18e13c5afc
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/68ef97f45e17ec8a6c6113fe41423342
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/8b5ad366d20cff323450019b9ca69345
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/8bba4233626f64a7ea772bb94a08a1a9
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/96b00124207bd481323631a0d646d14b
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/9a2910799639cff85464f3dcb75559c1
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/bd8c08d4950316128a528dd8e448fe88
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/be859775a4d6636780cd43f6b93a5a15
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/c03f41a162a6921dcc90086079536ce6
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/cb5dc366dde28c2061fca20731eb304f
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/d41d8cd98f00b204e9800998ecf8427e
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/d5c0f08729b65f16947ff92c53979854
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/e25cf1ef3720a1d84c5111f09b31583b
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/e9ae6533b4182ebdcf0ea66ddd8ee53c
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/fce026a0ef625cf287bfebd4eda1dad2
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/fd8314defc70a8778956f026c0ddfd19
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/attachments/fef8564b568b05bd69fddd75016abec5
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/build-request.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/description.msgpack
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/manifest.json
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/target-graph.txt
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/792b84612741f773b1bedb30ff44962a.xcbuilddata/task-store.msgpack
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/build.db
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/prior-build-descriptions.txt
+    /Users/benranford/Projects/watt-worktrees/swiftui-implementation/build/XCBuildData/registered-launchservices.txt
+Building for debugging...
+[1 / 1]
+Build complete! (0.28 sec.)
+Test Suite 'All tests' started at 2026-09-22 18:08:59.230.
+Test Suite 'WattTests.xctest' started at 2026-09-22 18:08:59.231.
+Test Suite 'AppRouterTests' started at 2026-09-22 18:08:59.232.
+Test Case '-[WattTests.AppRouterTests testCaptureRequiresExactOptIn]' started.
+Test Case '-[WattTests.AppRouterTests testCaptureRequiresExactOptIn]' passed (0.001 seconds).
+Test Case '-[WattTests.AppRouterTests testCaptureWindowHostsNativePanelWithoutShowingIt]' started.
+Test Case '-[WattTests.AppRouterTests testCaptureWindowHostsNativePanelWithoutShowingIt]' passed (0.110 seconds).
+Test Case '-[WattTests.AppRouterTests testContextMenuPresentationActionsRequestTheirOwnDestinations]' started.
+Test Case '-[WattTests.AppRouterTests testContextMenuPresentationActionsRequestTheirOwnDestinations]' passed (0.006 seconds).
+Test Case '-[WattTests.AppRouterTests testContextMenuStructureReflectsSetupCompletion]' started.
+Test Case '-[WattTests.AppRouterTests testContextMenuStructureReflectsSetupCompletion]' passed (0.001 seconds).
+Test Case '-[WattTests.AppRouterTests testEveryDisplayModeMenuActionPersistsAndRebuiltMenuChecksOnlySelection]' started.
+Test Case '-[WattTests.AppRouterTests testEveryDisplayModeMenuActionPersistsAndRebuiltMenuChecksOnlySelection]' passed (0.007 seconds).
+Test Case '-[WattTests.AppRouterTests testExplicitPresentationRequestsDoNotSuppressRepeatedIntents]' started.
+Test Case '-[WattTests.AppRouterTests testExplicitPresentationRequestsDoNotSuppressRepeatedIntents]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testFinishSetupPersistsPickerBeforeRequestingOnboardingWithoutCompleting]' started.
+Test Case '-[WattTests.AppRouterTests testFinishSetupPersistsPickerBeforeRequestingOnboardingWithoutCompleting]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testLaunchPresentsOnlyIncompleteSetupAndIsIdempotent]' started.
+Test Case '-[WattTests.AppRouterTests testLaunchPresentsOnlyIncompleteSetupAndIsIdempotent]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testOnboardingPresentationPreservesPersistedProgress]' started.
+Test Case '-[WattTests.AppRouterTests testOnboardingPresentationPreservesPersistedProgress]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testReopenUsesCurrentCompletionStateWithoutRepeatingLaunch]' started.
+Test Case '-[WattTests.AppRouterTests testReopenUsesCurrentCompletionStateWithoutRepeatingLaunch]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testSampleReadingMatchesChargingFixture]' started.
+Test Case '-[WattTests.AppRouterTests testSampleReadingMatchesChargingFixture]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testSettingsAndUpdateIntentsRemainIndependentOfStatusPanelVisibility]' started.
+Test Case '-[WattTests.AppRouterTests testSettingsAndUpdateIntentsRemainIndependentOfStatusPanelVisibility]' passed (0.000 seconds).
+Test Suite 'AppRouterTests' passed at 2026-09-22 18:08:59.359.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.126 (0.128) seconds
+Test Suite 'C03ContextMenuTests' started at 2026-09-22 18:08:59.359.
+Test Case '-[WattTests.C03ContextMenuTests testC03ActionsAndSetupPreservedOutsideBase]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03ActionsAndSetupPreservedOutsideBase]' passed (0.260 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03LabelFollowsMenuSelectionOnTheSameObservedStore]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03LabelFollowsMenuSelectionOnTheSameObservedStore]' passed (0.321 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03LabelUnavailableReadingsAndComponentSelection]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03LabelUnavailableReadingsAndComponentSelection]' passed (0.000 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03NativeAppearanceContractDoesNotUseCustomRows]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03NativeAppearanceContractDoesNotUseCustomRows]' passed (0.001 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03NativeShortcutDispatchPreservesTargetsAndModifiers]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03NativeShortcutDispatchPreservesTargetsAndModifiers]' passed (0.128 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03OrderSeparatorsAndShortcuts]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03OrderSeparatorsAndShortcuts]' passed (0.000 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03SelectionsAndFreshCheckmarks]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03SelectionsAndFreshCheckmarks]' passed (0.330 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03StableSelectorAndFailClosedVariants]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03StableSelectorAndFailClosedVariants]' passed (0.002 seconds).
+Test Suite 'C03ContextMenuTests' passed at 2026-09-22 18:09:00.402.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 1.042 (1.043) seconds
+Test Suite 'C041StatusItemTests' started at 2026-09-22 18:09:00.402.
+Test Case '-[WattTests.C041StatusItemTests testChargingRenderContractUsesExistingStoreAndLabel]' started.
+Test Case '-[WattTests.C041StatusItemTests testChargingRenderContractUsesExistingStoreAndLabel]' passed (0.001 seconds).
+Test Case '-[WattTests.C041StatusItemTests testExactSelectorAndSiblingIsolation]' started.
+Test Case '-[WattTests.C041StatusItemTests testExactSelectorAndSiblingIsolation]' passed (0.000 seconds).
+Test Suite 'C041StatusItemTests' passed at 2026-09-22 18:09:00.404.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'DesignSystemTokenTests' started at 2026-09-22 18:09:00.404.
+Test Case '-[WattTests.DesignSystemTokenTests testAccentRespectsSystemAccentChoice]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testAccentRespectsSystemAccentChoice]' passed (0.000 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testControlMetricsPreserveMinimumLayoutContracts]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testControlMetricsPreserveMinimumLayoutContracts]' passed (0.000 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testReferenceSettingsSpacingIsTenPointsTighter]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testReferenceSettingsSpacingIsTenPointsTighter]' passed (0.000 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testSemanticColorsResolveAgainstBothHostAppearances]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testSemanticColorsResolveAgainstBothHostAppearances]' passed (0.001 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testSpacingScalePreservesCompactDesktopRhythm]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testSpacingScalePreservesCompactDesktopRhythm]' passed (0.000 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testTypographyUsesSystemTextStylesAndSemanticEmphasis]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testTypographyUsesSystemTextStylesAndSemanticEmphasis]' passed (0.000 seconds).
+Test Suite 'DesignSystemTokenTests' passed at 2026-09-22 18:09:00.406.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'F03ApprovalContractTests' started at 2026-09-22 18:09:00.406.
+Test Case '-[WattTests.F03ApprovalContractTests testActiveRejoinReplacesOnlyItsPresentationForEitherOrigin]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testActiveRejoinReplacesOnlyItsPresentationForEitherOrigin]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testApprovalFailureClearsInterestAndPreservesReasonForEachOrigin]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testApprovalFailureClearsInterestAndPreservesReasonForEachOrigin]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testBothWithdrawalOrdersRetireSharedWaitOnlyAfterLastInterest]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testBothWithdrawalOrdersRetireSharedWaitOnlyAfterLastInterest]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testClosingAndRejoiningReplacesPresentationButRetainsSharedOperation]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testClosingAndRejoiningReplacesPresentationButRetainsSharedOperation]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testCompletionRetiresGenerationAndRejectsEveryLateStatusBeforeFreshAbsentRetry]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testCompletionRetiresGenerationAndRejectsEveryLateStatusBeforeFreshAbsentRetry]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testFailedPersistenceDoesNotGrantRegistrationOrNavigation]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testFailedPersistenceDoesNotGrantRegistrationOrNavigation]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testFailedTerminalPersistenceStillRejectsLateRepliesAndAllowsReconciledRetry]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testFailedTerminalPersistenceStillRejectsLateRepliesAndAllowsReconciledRetry]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testFailedWithdrawalPreservesOtherOriginEligibilityInBothJoinAndWithdrawalOrders]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testFailedWithdrawalPreservesOtherOriginEligibilityInBothJoinAndWithdrawalOrders]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testOriginsShareOneOperationAndReceiveCompletionOnlyOnce]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testOriginsShareOneOperationAndReceiveCompletionOnlyOnce]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testRestartRestoresIntentButNotTokensOrEffectiveConnection]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testRestartRestoresIntentButNotTokensOrEffectiveConnection]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testSuccessBeforeWithdrawalDoesNotRevokeEffectiveConnectionOrRedeliver]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testSuccessBeforeWithdrawalDoesNotRevokeEffectiveConnectionOrRedeliver]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testUnknownReconciliationDoesNotRegisterAndInvalidatesOldPresentation]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testUnknownReconciliationDoesNotRegisterAndInvalidatesOldPresentation]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testWithdrawAllAndRetryRejectsLateOperationAndGeneration]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testWithdrawAllAndRetryRejectsLateOperationAndGeneration]' passed (0.000 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testWithdrawingOneOriginDoesNotCancelOtherOrigin]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testWithdrawingOneOriginDoesNotCancelOtherOrigin]' passed (0.000 seconds).
+Test Suite 'F03ApprovalContractTests' passed at 2026-09-22 18:09:00.411.
+	 Executed 14 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'F03FakeServiceContractTests' started at 2026-09-22 18:09:00.411.
+Test Case '-[WattTests.F03FakeServiceContractTests testCancelledTasksDoNotBeginFakeWorkOrRevokeVerifiedRemoval]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testCancelledTasksDoNotBeginFakeWorkOrRevokeVerifiedRemoval]' passed (0.002 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testDiscardedUpdateReceiptCannotBeReusedAndFreshReceiptCanRetry]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testDiscardedUpdateReceiptCannotBeReusedAndFreshReceiptCanRetry]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testDiscardFailureRetainsStagedTransactionAndInstalledUpdateCannotBeDiscarded]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testDiscardFailureRetainsStagedTransactionAndInstalledUpdateCannotBeDiscarded]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testHelperExplicitDeniedTimeoutAndDisconnectedOutcomes]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testHelperExplicitDeniedTimeoutAndDisconnectedOutcomes]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testHelperFakeFailuresReachOnlyStillInterestedOriginInEitherOrder]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testHelperFakeFailuresReachOnlyStillInterestedOriginInEitherOrder]' passed (0.001 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testNotificationDenialUsesFakeWithoutRequestingOSPermission]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testNotificationDenialUsesFakeWithoutRequestingOSPermission]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testRemovalFailuresAndInterruptionsNeverClaimVerifiedAbsence]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testRemovalFailuresAndInterruptionsNeverClaimVerifiedAbsence]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testTelemetryExplicitDisconnectedAndTimeoutOutcomes]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testTelemetryExplicitDisconnectedAndTimeoutOutcomes]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateExplicitNetworkAndInterruptedOutcomesDoNotCreateTransaction]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateExplicitNetworkAndInterruptedOutcomesDoNotCreateTransaction]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateFakeCancelStagedTransactionDoesNotInstall]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateFakeCancelStagedTransactionDoesNotInstall]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateFakeIsIdempotentAndRecoversAcknowledgedInstall]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateFakeIsIdempotentAndRecoversAcknowledgedInstall]' passed (0.000 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testVerifiedRemovalIsIdempotentAndReconcilesAsAbsent]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testVerifiedRemovalIsIdempotentAndReconcilesAsAbsent]' passed (0.000 seconds).
+Test Suite 'F03FakeServiceContractTests' passed at 2026-09-22 18:09:00.416.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'F03PowerContractTests' started at 2026-09-22 18:09:00.416.
+Test Case '-[WattTests.F03PowerContractTests testCapabilitiesGateValuesIndependentlyOfPresence]' started.
+Test Case '-[WattTests.F03PowerContractTests testCapabilitiesGateValuesIndependentlyOfPresence]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testChargingHoldIsDistinctFromFullAtZeroWatts]' started.
+Test Case '-[WattTests.F03PowerContractTests testChargingHoldIsDistinctFromFullAtZeroWatts]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testComponentIdentitySurvivesRenamingAndNewSamples]' started.
+Test Case '-[WattTests.F03PowerContractTests testComponentIdentitySurvivesRenamingAndNewSamples]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testDisconnectInvalidatesOutstandingReplyAndNewGenerationRecovers]' started.
+Test Case '-[WattTests.F03PowerContractTests testDisconnectInvalidatesOutstandingReplyAndNewGenerationRecovers]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testFreshnessIncludesAgeBoundaryAndRejectsFutureOrInvalidAge]' started.
+Test Case '-[WattTests.F03PowerContractTests testFreshnessIncludesAgeBoundaryAndRejectsFutureOrInvalidAge]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testFutureInitialSampleIsUnavailableAndCurrentSampleRecovers]' started.
+Test Case '-[WattTests.F03PowerContractTests testFutureInitialSampleIsUnavailableAndCurrentSampleRecovers]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testRestartRejectsLateReplyEvenWithNewerTimestamp]' started.
+Test Case '-[WattTests.F03PowerContractTests testRestartRejectsLateReplyEvenWithNewerTimestamp]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testSignedFormattingAndUnsignedInput]' started.
+Test Case '-[WattTests.F03PowerContractTests testSignedFormattingAndUnsignedInput]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testStoreRecoversFromStaleWithFreshSample]' started.
+Test Case '-[WattTests.F03PowerContractTests testStoreRecoversFromStaleWithFreshSample]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testStoreRejectsOutOfOrderFutureAndInvalidSamplesWithoutReplacingReading]' started.
+Test Case '-[WattTests.F03PowerContractTests testStoreRejectsOutOfOrderFutureAndInvalidSamplesWithoutReplacingReading]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testUnavailableAndNonFiniteValuesAreNotZero]' started.
+Test Case '-[WattTests.F03PowerContractTests testUnavailableAndNonFiniteValuesAreNotZero]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testUnavailableSourceOrFreshnessSuppressesValues]' started.
+Test Case '-[WattTests.F03PowerContractTests testUnavailableSourceOrFreshnessSuppressesValues]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testUnpluggedChargerFallsBackToBatteryInsteadOfOldInputOrZero]' started.
+Test Case '-[WattTests.F03PowerContractTests testUnpluggedChargerFallsBackToBatteryInsteadOfOldInputOrZero]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testValidationRejectsDuplicateAndEmptyComponentIDs]' started.
+Test Case '-[WattTests.F03PowerContractTests testValidationRejectsDuplicateAndEmptyComponentIDs]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PowerContractTests testValidationRejectsInvalidPhysicalReadings]' started.
+Test Case '-[WattTests.F03PowerContractTests testValidationRejectsInvalidPhysicalReadings]' passed (0.000 seconds).
+Test Suite 'F03PowerContractTests' passed at 2026-09-22 18:09:00.419.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'F03PreferencesContractTests' started at 2026-09-22 18:09:00.419.
+Test Case '-[WattTests.F03PreferencesContractTests testDefaultAndPreviewStorageDoNotSharePreferences]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testDefaultAndPreviewStorageDoNotSharePreferences]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testInjectedStoragePersistsPreferencesAndOnboardingAcrossInstances]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testInjectedStoragePersistsPreferencesAndOnboardingAcrossInstances]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testInvalidSelectionNeverReachesPublisherOrPersistentStorage]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testInvalidSelectionNeverReachesPublisherOrPersistentStorage]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testSelectionRejectsThirdDuplicateAndBlankIDsWithoutPersistingThem]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testSelectionRejectsThirdDuplicateAndBlankIDsWithoutPersistingThem]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testStorageWriteFailureIsVisibleAndRetryPersists]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testStorageWriteFailureIsVisibleAndRetryPersists]' passed (0.000 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testUnreadableAndCorruptStoragePreserveSafeDefaults]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testUnreadableAndCorruptStoragePreserveSafeDefaults]' passed (0.000 seconds).
+Test Suite 'F03PreferencesContractTests' passed at 2026-09-22 18:09:00.421.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'F03UpdateContractTests' started at 2026-09-22 18:09:00.421.
+Test Case '-[WattTests.F03UpdateContractTests testAvailableAndDownloadingCancellationRejectLateStagingAndAllowRetry]' started.
+Test Case '-[WattTests.F03UpdateContractTests testAvailableAndDownloadingCancellationRejectLateStagingAndAllowRetry]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testCancellationWriteFailureInvalidatesLateWorkWithoutClaimingSuccess]' started.
+Test Case '-[WattTests.F03UpdateContractTests testCancellationWriteFailureInvalidatesLateWorkWithoutClaimingSuccess]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testCancelledStagedDiscardRequiresExactReceiptAndCurrentGenerationBeforeRetry]' started.
+Test Case '-[WattTests.F03UpdateContractTests testCancelledStagedDiscardRequiresExactReceiptAndCurrentGenerationBeforeRetry]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testCancelPreInstallInvalidatesLateRepliesAndRetainsReceipt]' started.
+Test Case '-[WattTests.F03UpdateContractTests testCancelPreInstallInvalidatesLateRepliesAndRetainsReceipt]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testCheckingCancellationCanRestartWithNewGeneration]' started.
+Test Case '-[WattTests.F03UpdateContractTests testCheckingCancellationCanRestartWithNewGeneration]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testDiscardPersistenceFailureRetainsReceiptAndAcknowledgementCanBeRetried]' started.
+Test Case '-[WattTests.F03UpdateContractTests testDiscardPersistenceFailureRetainsReceiptAndAcknowledgementCanBeRetried]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testInstallingAndAwaitingRelaunchCannotBeLocallyCancelled]' started.
+Test Case '-[WattTests.F03UpdateContractTests testInstallingAndAwaitingRelaunchCannotBeLocallyCancelled]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testInterruptedPreTransactionWorkRestartsWithoutReceipt]' started.
+Test Case '-[WattTests.F03UpdateContractTests testInterruptedPreTransactionWorkRestartsWithoutReceipt]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testInterruptedTransactionsRestoreReceiptAndRequireRecovery]' started.
+Test Case '-[WattTests.F03UpdateContractTests testInterruptedTransactionsRestoreReceiptAndRequireRecovery]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testInvalidTransitionsProgressAndMismatchedReceiptsAreRejected]' started.
+Test Case '-[WattTests.F03UpdateContractTests testInvalidTransitionsProgressAndMismatchedReceiptsAreRejected]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testPersistenceFailureDoesNotAdvanceUpdateState]' started.
+Test Case '-[WattTests.F03UpdateContractTests testPersistenceFailureDoesNotAdvanceUpdateState]' passed (0.000 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testValidUpdateLifecyclePersistsCompletion]' started.
+Test Case '-[WattTests.F03UpdateContractTests testValidUpdateLifecyclePersistsCompletion]' passed (0.000 seconds).
+Test Suite 'F03UpdateContractTests' passed at 2026-09-22 18:09:00.425.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'F05FixtureTests' started at 2026-09-22 18:09:00.425.
+Test Case '-[WattTests.F05FixtureTests testAll69ExactIDsResolveWithUniqueNodes]' started.
+Test Case '-[WattTests.F05FixtureTests testAll69ExactIDsResolveWithUniqueNodes]' passed (0.002 seconds).
+Test Case '-[WattTests.F05FixtureTests testAppCompositionRejectsUnimplementedStoriesAndGalleriesBeforeLaunch]' started.
+Test Case '-[WattTests.F05FixtureTests testAppCompositionRejectsUnimplementedStoriesAndGalleriesBeforeLaunch]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testBacklogAndPinnedReferenceMatch]' started.
+Test Case '-[WattTests.F05FixtureTests testBacklogAndPinnedReferenceMatch]' passed (0.059 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01AccessibilitySourceSemantics]' started.
+Test Case '-[WattTests.F05FixtureTests testC01AccessibilitySourceSemantics]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01ActionsUseSuppliedCallbacks]' started.
+Test Case '-[WattTests.F05FixtureTests testC01ActionsUseSuppliedCallbacks]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01ExactPresentation]' started.
+Test Case '-[WattTests.F05FixtureTests testC01ExactPresentation]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01FormatterSignsAndZeros]' started.
+Test Case '-[WattTests.F05FixtureTests testC01FormatterSignsAndZeros]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01RuntimeStorageIsIsolatedAndClockPinned]' started.
+Test Case '-[WattTests.F05FixtureTests testC01RuntimeStorageIsIsolatedAndClockPinned]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableAndDisabledCapabilitiesNeverLeakValues]' started.
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableAndDisabledCapabilitiesNeverLeakValues]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableSourceAndFreshnessOverrideAvailableCapabilities]' started.
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableSourceAndFreshnessOverrideAvailableCapabilities]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02CallbacksAndPinnedStore]' started.
+Test Case '-[WattTests.F05FixtureTests testC02CallbacksAndPinnedStore]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02ExactPresentationAndStableFixture]' started.
+Test Case '-[WattTests.F05FixtureTests testC02ExactPresentationAndStableFixture]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02LaunchGateAndMalformedSelectors]' started.
+Test Case '-[WattTests.F05FixtureTests testC02LaunchGateAndMalformedSelectors]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02UnavailableDoesNotBecomeUnpluggedOrZero]' started.
+Test Case '-[WattTests.F05FixtureTests testC02UnavailableDoesNotBecomeUnpluggedOrZero]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testEveryUnimplementedFixtureRefusesRendering]' started.
+Test Case '-[WattTests.F05FixtureTests testEveryUnimplementedFixtureRefusesRendering]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testGalleryIsDistinctFromStories]' started.
+Test Case '-[WattTests.F05FixtureTests testGalleryIsDistinctFromStories]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testLaunchParserFailsClosed]' started.
+Test Case '-[WattTests.F05FixtureTests testLaunchParserFailsClosed]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testOnlyImplementedStoriesHaveRenderTargets]' started.
+Test Case '-[WattTests.F05FixtureTests testOnlyImplementedStoriesHaveRenderTargets]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testStorageIsNewForEveryLaunch]' started.
+Test Case '-[WattTests.F05FixtureTests testStorageIsNewForEveryLaunch]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testTwoRunsAreDeterministicAndAllVariantsResolve]' started.
+Test Case '-[WattTests.F05FixtureTests testTwoRunsAreDeterministicAndAllVariantsResolve]' passed (0.004 seconds).
+Test Case '-[WattTests.F05FixtureTests testUnknownIDsAndVariantsFail]' started.
+Test Case '-[WattTests.F05FixtureTests testUnknownIDsAndVariantsFail]' passed (0.000 seconds).
+Test Suite 'F05FixtureTests' passed at 2026-09-22 18:09:00.496.
+	 Executed 21 tests, with 0 failures (0 unexpected) in 0.070 (0.072) seconds
+Test Suite 'NativeStylingTests' started at 2026-09-22 18:09:00.497.
+Test Case '-[WattTests.NativeStylingTests testButtonsPreserveLayoutWithNativeAccessibilityAppearances]' started.
+Test Case '-[WattTests.NativeStylingTests testButtonsPreserveLayoutWithNativeAccessibilityAppearances]' passed (0.034 seconds).
+Test Case '-[WattTests.NativeStylingTests testFocusSpecimenUsesOneNativeFieldLabel]' started.
+Test Case '-[WattTests.NativeStylingTests testFocusSpecimenUsesOneNativeFieldLabel]' passed (0.001 seconds).
+Test Case '-[WattTests.NativeStylingTests testSettingsNotesUseSectionFootersWithoutExtraChromeOrSpacing]' started.
+Test Case '-[WattTests.NativeStylingTests testSettingsNotesUseSectionFootersWithoutExtraChromeOrSpacing]' passed (0.004 seconds).
+Test Case '-[WattTests.NativeStylingTests testSharedControlsDoNotPaintSystemChrome]' started.
+Test Case '-[WattTests.NativeStylingTests testSharedControlsDoNotPaintSystemChrome]' passed (0.005 seconds).
+Test Case '-[WattTests.NativeStylingTests testWindowScaffoldRetainsContentInNativeAppearances]' started.
+Test Case '-[WattTests.NativeStylingTests testWindowScaffoldRetainsContentInNativeAppearances]' passed (0.006 seconds).
+Test Suite 'NativeStylingTests' passed at 2026-09-22 18:09:00.546.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.049 (0.049) seconds
+Test Suite 'P01TelemetryTests' started at 2026-09-22 18:09:00.546.
+Test Case '-[WattTests.P01TelemetryTests testAbsentBatteryAndUPSDoNotBecomeInternalBattery]' started.
+Test Case '-[WattTests.P01TelemetryTests testAbsentBatteryAndUPSDoNotBecomeInternalBattery]' passed (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testCancellationBeforeAndDuringProvider]' started.
+Test Case '-[WattTests.P01TelemetryTests testCancellationBeforeAndDuringProvider]' passed (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testChargedIsNotInferredFromPercentageAndHoldIsNotGuessed]' started.
+Test Case '-[WattTests.P01TelemetryTests testChargedIsNotInferredFromPercentageAndHoldIsNotGuessed]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testClockFreshStaleRecoveryAndFailures]' started.
+Test Case '-[WattTests.P01TelemetryTests testClockFreshStaleRecoveryAndFailures]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testDischargingAndProvidingSourcesRemainIndependent]' started.
+Test Case '-[WattTests.P01TelemetryTests testDischargingAndProvidingSourcesRemainIndependent]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testMissingAndInvalidKeysNeverBecomeFalseOrZero]' started.
+Test Case '-[WattTests.P01TelemetryTests testMissingAndInvalidKeysNeverBecomeFalseOrZero]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke]' started.
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/WattTests/P01TelemetryTests.swift:141: -[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke] : Test skipped - Opt-in physical-host metadata probe; not fixture evidence
+Test Case '-[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke]' skipped (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testPresentChargingBatteryHasMetadataButNeverWatts]' started.
+Test Case '-[WattTests.P01TelemetryTests testPresentChargingBatteryHasMetadataButNeverWatts]' passed (0.000 seconds).
+Test Suite 'P01TelemetryTests' passed at 2026-09-22 18:09:00.549.
+	 Executed 8 tests, with 1 test skipped and 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'P02HelperLifecycleTests' started at 2026-09-22 18:09:00.549.
+Test Case '-[WattTests.P02HelperLifecycleTests testAllOriginsWithdrawLateApprovalOnlyUpdatesEffectiveState]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testAllOriginsWithdrawLateApprovalOnlyUpdatesEffectiveState]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testCandidateAndPeerMismatchNeverSendIPC]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testCandidateAndPeerMismatchNeverSendIPC]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testLateIPCReplyWithWrongGenerationFailsClosed]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testLateIPCReplyWithWrongGenerationFailsClosed]' passed (0.001 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testLateReconnectDuringRemovalCannotResurrect]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testLateReconnectDuringRemovalCannotResurrect]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testOriginCancellationRejoinPreservesOtherOriginAndNoDuplicateRegistration]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testOriginCancellationRejoinPreservesOtherOriginAndNoDuplicateRegistration]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testRegistrationApprovalAuthenticationAndIPC]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testRegistrationApprovalAuthenticationAndIPC]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testRemoveAndUpdateRecoverWithoutDuplicateUpdate]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testRemoveAndUpdateRecoverWithoutDuplicateUpdate]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testStaleGenerationCannotConnectAndReconnectAuthenticatesAgain]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testStaleGenerationCannotConnectAndReconnectAuthenticatesAgain]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testSuccessfulUpdateRequiresReceiptProofAndAuthenticatedReconnect]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testSuccessfulUpdateRequiresReceiptProofAndAuthenticatedReconnect]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testTaskCancellationRejectsLateReply]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testTaskCancellationRejectsLateReply]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testTimeoutAndDisconnectAreRetryableWithoutRegistration]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testTimeoutAndDisconnectAreRetryableWithoutRegistration]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testUnknownDisabledAndMalformedReplyFailClosed]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testUnknownDisabledAndMalformedReplyFailClosed]' passed (0.000 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testUnknownRemovalDoesNotMutateAndPreCancelledRegistrationDoesNotInstall]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testUnknownRemovalDoesNotMutateAndPreCancelledRegistrationDoesNotInstall]' passed (0.000 seconds).
+Test Suite 'P02HelperLifecycleTests' passed at 2026-09-22 18:09:00.555.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'P03NotificationLoginTests' started at 2026-09-22 18:09:00.555.
+Test Case '-[WattTests.P03NotificationLoginTests testAuthorizationFailureAndRecovery]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testAuthorizationFailureAndRecovery]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testConcurrentDeliverySameIDDoesNotEnqueueTwice]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testConcurrentDeliverySameIDDoesNotEnqueueTwice]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testIndependentEventIDsAndPreferenceChanges]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testIndependentEventIDsAndPreferenceChanges]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testJ63J64CompletePreferencePermissionMatrix]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testJ63J64CompletePreferencePermissionMatrix]' passed (0.001 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginFailureNeverPersistsEffectiveSuccessOrBlindlyRetries]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginFailureNeverPersistsEffectiveSuccessOrBlindlyRetries]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginPendingApprovalDoesNotRegisterAgainAndCanRemove]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginPendingApprovalDoesNotRegisterAgainAndCanRemove]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginPreferenceStatusMatrixIsReadOnly]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginPreferenceStatusMatrixIsReadOnly]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginRegisterReconcileRemoveIdempotenceAndRestart]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginRegisterReconcileRemoveIdempotenceAndRestart]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginUnknownAndMissingFailClosed]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginUnknownAndMissingFailClosed]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginUnverifiedRemovalDoesNotClaimAbsence]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginUnverifiedRemovalDoesNotClaimAbsence]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testNativeStatusMappingsWithoutInstantiatingSystemServices]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testNativeStatusMappingsWithoutInstantiatingSystemServices]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testNotificationEpisodeIdempotenceAndFailureRetry]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testNotificationEpisodeIdempotenceAndFailureRetry]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testPermissionRequestIsExplicitAndDenialNeverReprompts]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testPermissionRequestIsExplicitAndDenialNeverReprompts]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testPreCancelledTasksPerformNoEffects]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testPreCancelledTasksPerformNoEffects]' passed (0.000 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testPreferenceDisabledDuringStatusReadSuppressesDelivery]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testPreferenceDisabledDuringStatusReadSuppressesDelivery]' passed (0.000 seconds).
+Test Suite 'P03NotificationLoginTests' passed at 2026-09-22 18:09:00.560.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'P04UpdaterTests' started at 2026-09-22 18:09:00.560.
+Test Case '-[WattTests.P04UpdaterTests testCancelledDiscardedReceiptCannotBeReusedAcrossRestart]' started.
+Test Case '-[WattTests.P04UpdaterTests testCancelledDiscardedReceiptCannotBeReusedAcrossRestart]' passed (0.002 seconds).
+Test Case '-[WattTests.P04UpdaterTests testCancelSuspendedDownloadRejectsLateReplyAndConcurrentWork]' started.
+Test Case '-[WattTests.P04UpdaterTests testCancelSuspendedDownloadRejectsLateReplyAndConcurrentWork]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testCompletedBuildCannotBeOfferedAgainAndNewBinaryCanRecover]' started.
+Test Case '-[WattTests.P04UpdaterTests testCompletedBuildCannotBeOfferedAgainAndNewBinaryCanRecover]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testConfirmationRequiredAndNotRestored]' started.
+Test Case '-[WattTests.P04UpdaterTests testConfirmationRequiredAndNotRestored]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testCorruptDownloadNeverStages]' started.
+Test Case '-[WattTests.P04UpdaterTests testCorruptDownloadNeverStages]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testDiscardRequiresAbsenceAndCanRetry]' started.
+Test Case '-[WattTests.P04UpdaterTests testDiscardRequiresAbsenceAndCanRetry]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testDiscardTombstoneWriteFailureCanRetryButCannotInstall]' started.
+Test Case '-[WattTests.P04UpdaterTests testDiscardTombstoneWriteFailureCanRetryButCannotInstall]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testDuplicateJournalReceiptsAndWrongVersionFailClosed]' started.
+Test Case '-[WattTests.P04UpdaterTests testDuplicateJournalReceiptsAndWrongVersionFailClosed]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testDurableAtomicJournalRestartAndCorruptionFailClosed]' started.
+Test Case '-[WattTests.P04UpdaterTests testDurableAtomicJournalRestartAndCorruptionFailClosed]' passed (0.005 seconds).
+Test Case '-[WattTests.P04UpdaterTests testExactReceiptNotOnlyUUID]' started.
+Test Case '-[WattTests.P04UpdaterTests testExactReceiptNotOnlyUUID]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testInstalledCorruptionNeverLaunchesAndRecoveryRestoresOriginal]' started.
+Test Case '-[WattTests.P04UpdaterTests testInstalledCorruptionNeverLaunchesAndRecoveryRestoresOriginal]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testInterruptedReplacementRecoveryAtEveryBoundary]' started.
+Test Case '-[WattTests.P04UpdaterTests testInterruptedReplacementRecoveryAtEveryBoundary]' passed (0.003 seconds).
+Test Case '-[WattTests.P04UpdaterTests testInvalidSignatureWrongIdentityAndDowngrade]' started.
+Test Case '-[WattTests.P04UpdaterTests testInvalidSignatureWrongIdentityAndDowngrade]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testJournalSignatureTamperAndReadFailure]' started.
+Test Case '-[WattTests.P04UpdaterTests testJournalSignatureTamperAndReadFailure]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionCurrentAndOlderCandidates]' started.
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionCurrentAndOlderCandidates]' passed (0.004 seconds).
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionMalformedOrMissingRejected]' started.
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionMalformedOrMissingRejected]' passed (0.008 seconds).
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionNewerCandidatesHaveNoEffects]' started.
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionNewerCandidatesHaveNoEffects]' passed (0.002 seconds).
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionRecheckedBeforeInstallWithoutBlockingCleanup]' started.
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionRecheckedBeforeInstallWithoutBlockingCleanup]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testNoUpdateAndNetworkFailureRetry]' started.
+Test Case '-[WattTests.P04UpdaterTests testNoUpdateAndNetworkFailureRetry]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testPersistenceFailurePreventsEffectsAndRetryPreservesReceipt]' started.
+Test Case '-[WattTests.P04UpdaterTests testPersistenceFailurePreventsEffectsAndRetryPreservesReceipt]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testPostInstallCancelDiscardAndReplayRejected]' started.
+Test Case '-[WattTests.P04UpdaterTests testPostInstallCancelDiscardAndReplayRejected]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testPostReplacementAndCompletionWriteFailuresRecoverWithoutReplay]' started.
+Test Case '-[WattTests.P04UpdaterTests testPostReplacementAndCompletionWriteFailuresRecoverWithoutReplay]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testRelaunchFailureWrongRunningReceiptAndRetry]' started.
+Test Case '-[WattTests.P04UpdaterTests testRelaunchFailureWrongRunningReceiptAndRetry]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testRollbackFailureRemainsRecoverable]' started.
+Test Case '-[WattTests.P04UpdaterTests testRollbackFailureRemainsRecoverable]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testSignedInstallRelaunchRestartAndSentinel]' started.
+Test Case '-[WattTests.P04UpdaterTests testSignedInstallRelaunchRestartAndSentinel]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testSignedManifestCannotOverrideArtifactIdentity]' started.
+Test Case '-[WattTests.P04UpdaterTests testSignedManifestCannotOverrideArtifactIdentity]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testStagedArtifactRevalidatedBeforeInstallAndRecovery]' started.
+Test Case '-[WattTests.P04UpdaterTests testStagedArtifactRevalidatedBeforeInstallAndRecovery]' passed (0.001 seconds).
+Test Case '-[WattTests.P04UpdaterTests testStageVerificationNetworkAndCleanupFailuresRemainRecoverable]' started.
+Test Case '-[WattTests.P04UpdaterTests testStageVerificationNetworkAndCleanupFailuresRemainRecoverable]' passed (0.003 seconds).
+Test Case '-[WattTests.P04UpdaterTests testTaskCancellationDoesNotStageLateDownload]' started.
+Test Case '-[WattTests.P04UpdaterTests testTaskCancellationDoesNotStageLateDownload]' passed (0.001 seconds).
+Test Suite 'P04UpdaterTests' passed at 2026-09-22 18:09:00.612.
+	 Executed 29 tests, with 0 failures (0 unexpected) in 0.050 (0.052) seconds
+Test Suite 'P05RemovalTests' started at 2026-09-22 18:09:00.612.
+Test Case '-[WattTests.P05RemovalTests testAlreadyAbsentPathsAreNotRemoved]' started.
+Test Case '-[WattTests.P05RemovalTests testAlreadyAbsentPathsAreNotRemoved]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testAmbiguousFailureAfterEveryEffectReconcilesWithoutReplay]' started.
+Test Case '-[WattTests.P05RemovalTests testAmbiguousFailureAfterEveryEffectReconcilesWithoutReplay]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testAuthenticationFailureBlocksHelperRemovalAndLaterSteps]' started.
+Test Case '-[WattTests.P05RemovalTests testAuthenticationFailureBlocksHelperRemovalAndLaterSteps]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testConcurrentRetryCannotDuplicateEffectsAndCancellationReportsReality]' started.
+Test Case '-[WattTests.P05RemovalTests testConcurrentRetryCannotDuplicateEffectsAndCancellationReportsReality]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testFailureAtEveryStepListsRemainingAndRetryIsSafe]' started.
+Test Case '-[WattTests.P05RemovalTests testFailureAtEveryStepListsRemainingAndRetryIsSafe]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testForeignInstallationJournalRejected]' started.
+Test Case '-[WattTests.P05RemovalTests testForeignInstallationJournalRejected]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testHelperRemovalLeavesAppRunningAndOtherOwnedResourcesIntact]' started.
+Test Case '-[WattTests.P05RemovalTests testHelperRemovalLeavesAppRunningAndOtherOwnedResourcesIntact]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testHelperRetryCannotHideUnexpectedAppExit]' started.
+Test Case '-[WattTests.P05RemovalTests testHelperRetryCannotHideUnexpectedAppExit]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testJournalFailurePreventsEffects]' started.
+Test Case '-[WattTests.P05RemovalTests testJournalFailurePreventsEffects]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testMalformedAndOverlappingManifestRejected]' started.
+Test Case '-[WattTests.P05RemovalTests testMalformedAndOverlappingManifestRejected]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testMissingBytesWithRunningHelperCannotClaimSuccess]' started.
+Test Case '-[WattTests.P05RemovalTests testMissingBytesWithRunningHelperCannotClaimSuccess]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testNoOpDriverCannotClaimSuccess]' started.
+Test Case '-[WattTests.P05RemovalTests testNoOpDriverCannotClaimSuccess]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testOrderedSuccessAndSecondRetryPreservesSentinel]' started.
+Test Case '-[WattTests.P05RemovalTests testOrderedSuccessAndSecondRetryPreservesSentinel]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testReceiptAndScopeMismatchCannotEscalateCleanup]' started.
+Test Case '-[WattTests.P05RemovalTests testReceiptAndScopeMismatchCannotEscalateCleanup]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testReconcileWithoutJournalCannotClaimSuccess]' started.
+Test Case '-[WattTests.P05RemovalTests testReconcileWithoutJournalCannotClaimSuccess]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testReconnectAuthenticatesEveryTime]' started.
+Test Case '-[WattTests.P05RemovalTests testReconnectAuthenticatesEveryTime]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testReconnectRejectsTimeoutAndUncorrelatedHandshake]' started.
+Test Case '-[WattTests.P05RemovalTests testReconnectRejectsTimeoutAndUncorrelatedHandshake]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testRestartRecoveryUsesSameManifestAndFreshInventory]' started.
+Test Case '-[WattTests.P05RemovalTests testRestartRecoveryUsesSameManifestAndFreshInventory]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testRollbackAfterEveryPartialFailureRestoresBaselineAndIsIdempotent]' started.
+Test Case '-[WattTests.P05RemovalTests testRollbackAfterEveryPartialFailureRestoresBaselineAndIsIdempotent]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testRollbackFailureAtEveryStepCanRecover]' started.
+Test Case '-[WattTests.P05RemovalTests testRollbackFailureAtEveryStepCanRecover]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testRollbackNoOpCannotClaimRestoration]' started.
+Test Case '-[WattTests.P05RemovalTests testRollbackNoOpCannotClaimRestoration]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testRollbackPreservesInterveningDataInsteadOfOverwriting]' started.
+Test Case '-[WattTests.P05RemovalTests testRollbackPreservesInterveningDataInsteadOfOverwriting]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testRunningAppPreventsFullUninstallSuccessEvenWithNoPaths]' started.
+Test Case '-[WattTests.P05RemovalTests testRunningAppPreventsFullUninstallSuccessEvenWithNoPaths]' passed (0.000 seconds).
+Test Case '-[WattTests.P05RemovalTests testUnknownInventoryFailsClosedAndListsAllPaths]' started.
+Test Case '-[WattTests.P05RemovalTests testUnknownInventoryFailsClosedAndListsAllPaths]' passed (0.000 seconds).
+Test Suite 'P05RemovalTests' passed at 2026-09-22 18:09:00.622.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 0.008 (0.010) seconds
+Test Suite 'ReadingPickerTests' started at 2026-09-22 18:09:00.622.
+Test Case '-[WattTests.ReadingPickerTests testCallerControlsVisibleOptionsDescriptionsAndAvailability]' started.
+Test Case '-[WattTests.ReadingPickerTests testCallerControlsVisibleOptionsDescriptionsAndAvailability]' passed (0.000 seconds).
+Test Case '-[WattTests.ReadingPickerTests testDefaultInitializerPreservesAllModesAndDescriptions]' started.
+Test Case '-[WattTests.ReadingPickerTests testDefaultInitializerPreservesAllModesAndDescriptions]' passed (0.000 seconds).
+Test Case '-[WattTests.ReadingPickerTests testReferenceCaptureSizesAndAppearances]' started.
+Test Case '-[WattTests.ReadingPickerTests testReferenceCaptureSizesAndAppearances]' passed (0.134 seconds).
+Test Case '-[WattTests.ReadingPickerTests testReferenceReadingHasExactlyFourEnabledOptions]' started.
+Test Case '-[WattTests.ReadingPickerTests testReferenceReadingHasExactlyFourEnabledOptions]' passed (0.000 seconds).
+Test Suite 'ReadingPickerTests' passed at 2026-09-22 18:09:00.757.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.135 (0.135) seconds
+Test Suite 'SharedControlTests' started at 2026-09-22 18:09:00.757.
+Test Case '-[WattTests.SharedControlTests testActionButtonsMatchNativeMetricsAcrossStylesAndAppearances]' started.
+Test Case '-[WattTests.SharedControlTests testActionButtonsMatchNativeMetricsAcrossStylesAndAppearances]' passed (0.018 seconds).
+Test Case '-[WattTests.SharedControlTests testDisabledButtonsRetainLayoutAcrossStylesAndAppearances]' started.
+Test Case '-[WattTests.SharedControlTests testDisabledButtonsRetainLayoutAcrossStylesAndAppearances]' passed (0.016 seconds).
+Test Case '-[WattTests.SharedControlTests testFormRowMatchesNativeLabeledContent]' started.
+Test Case '-[WattTests.SharedControlTests testFormRowMatchesNativeLabeledContent]' passed (0.002 seconds).
+Test Case '-[WattTests.SharedControlTests testReadingPickerRejectsUnavailableSelectionAndPreservesCallbacks]' started.
+Test Case '-[WattTests.SharedControlTests testReadingPickerRejectsUnavailableSelectionAndPreservesCallbacks]' passed (0.000 seconds).
+Test Suite 'SharedControlTests' passed at 2026-09-22 18:09:00.794.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.036 (0.037) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-22 18:09:00.794.
+	 Executed 210 tests, with 1 test skipped and 0 failures (0 unexpected) in 1.546 (1.562) seconds
+Test Suite 'All tests' passed at 2026-09-22 18:09:00.794.
+	 Executed 210 tests, with 1 test skipped and 0 failures (0 unexpected) in 1.546 (1.563) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

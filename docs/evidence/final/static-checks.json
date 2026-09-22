@@ -1,0 +1,14 @@
+{
+  "command": [
+    "python3",
+    "docs/evidence/final/static-checks.py"
+  ],
+  "environment": {
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+  },
+  "exitCode": 1,
+  "timedOut": false,
+  "timeoutSeconds": 120,
+  "durationSeconds": 0.6,
+  "log": "static-checks.log"
+}

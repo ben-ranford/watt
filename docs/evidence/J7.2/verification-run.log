@@ -1,0 +1,14 @@
+focused-tests: 0
+package-tests: 0
+package-build: 0
+host-Debug: 0
+host-Release: 0
+host-focused-tests: 0
+host-tests: 0
+fixture-rejection: 0
+diff-check: 0
+static-check: 1
+
+Post-run corrections (no app/test source changes):
+static-check: 0 (demangled Swift symbol names)
+fixture-rejection: 0 (correct J7.2 lowercase selector)

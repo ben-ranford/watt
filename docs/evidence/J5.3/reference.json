@@ -1,0 +1,39 @@
+{
+  "story": "J5.3",
+  "goal": "G049",
+  "node": "30:4788",
+  "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-4788",
+  "source": "User-supplied exact docs/evidence/J5.3/reference.png, inspected locally; no new Figma retrieval.",
+  "file": "reference.png",
+  "sha256": "4decb95b964609fba6db2eaf0f71bee8cca246258387020127391d19f3a6e1e4",
+  "bytes": 787980,
+  "widthPixels": 1000,
+  "heightPixels": 720,
+  "appearance": "light",
+  "referenceMenuBounds": {
+    "x": 645,
+    "y": 38,
+    "width": 230,
+    "height": 222
+  },
+  "boundsProvenance": "Approximate visible menu bounds inspected from supplied image; AppKit owns actual native geometry.",
+  "copy": [
+    "Finish Setup\u2026",
+    "separator",
+    "Show in Menu Bar",
+    "separator",
+    "Open Watt?",
+    "Settings\u2026",
+    "separator",
+    "About Watt?",
+    "Check for Updates\u2026",
+    "separator",
+    "Quit Watt?"
+  ],
+  "shortcuts": {
+    "Settings\u2026": "Command-,",
+    "Quit Watt?": "Command-Q"
+  },
+  "selectedRow": "Finish Setup\u2026",
+  "mapping": "Real NSMenu/NSMenuItem through existing status-item bridge; native separators, submenu arrow/checkmark, highlight, hover, key equivalents and accessibility. No custom menu chrome."
+}

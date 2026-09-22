@@ -1,0 +1,45 @@
+{
+  "story": "J7.1",
+  "goal": "G055",
+  "node": "31:6173",
+  "figmaFile": "9DKDgUfEqidZdZQEVlQgLS",
+  "status": "visual-blocked",
+  "verdict": "blocked",
+  "score": null,
+  "pixel_diff": null,
+  "category_match": null,
+  "differences": [],
+  "suggestions": [
+    "Re-run the retained native capture harness in a host with existing AX trust and live PID-owned menu/status compositor windows, then perform visual verdict and pixel comparison. Preserve AppKit styling regardless of native OS metric differences."
+  ],
+  "reasoning": "No comparable screenshot exists. A real native Debug fixture was launched, but Accessibility trust is unavailable and no PID-owned compositor windows were listed. A numeric score, pixel diff or visual pass would be unsupported.",
+  "visualPass": false,
+  "reference": "reference.png",
+  "referenceSHA256": "cbb1d098466ed5c3b58b0ac8748bcd75a928550d38a9c4b2309c8d48e3fe5cd9",
+  "nativeCapture": null,
+  "comparableCapture": false,
+  "captureEvidence": "capture/window.json",
+  "blockers": [
+    "Accessibility trust unavailable (AXTrusted=false)",
+    "No fixture-owned on-screen compositor windows; app did not produce native-menu tracking identity metadata"
+  ],
+  "screenCapturePreauthorized": true,
+  "selectedStatusItemVerified": false,
+  "liveInteractionVerified": false,
+  "referenceInspection": "Exact supplied PNG inspected locally; two native menus with Delta checked and Components blue highlighted; main Show in Menu Bar row highlighted; selected charging battery glyph +42.1 W. Desktop/wallpaper/system chrome are not app-owned.",
+  "method": "Actual native Debug app, app-local secondary click/arrow-key harness, external PID-owned compositor/AX evidence gates. No synthetic or cached screenshot, desktop capture, foreign windows, permission request, or substitute reference. Capture PID terminated and reaped.",
+  "visualRalph": {
+    "skill": "/Users/benranford/Projects/watt/.codex/skills/visual-ralph/SKILL.md",
+    "installed": true,
+    "runtimeAvailable": false,
+    "reason": "Non-tmux native session; used repository capture/verification scripts without creating or mutating goal/runtime state.",
+    "approvedReference": "Exact user-supplied PNG; no new approval required."
+  },
+  "remainingReview": [
+    "Native Components highlight and Delta checkmark in live submenu",
+    "Native light menu material and status selection pixels",
+    "Screen-edge submenu placement",
+    "Live pointer/keyboard/dismissal and VoiceOver",
+    "Comparable pixel diff/visual verdict"
+  ]
+}

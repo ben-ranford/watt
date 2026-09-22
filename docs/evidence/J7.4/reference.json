@@ -1,0 +1,74 @@
+{
+  "story": "J7.4",
+  "goal": "G058",
+  "title": "7.4 Crowded menu bar \u2014 Icon Only",
+  "figmaFile": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "31:7764",
+  "assetURL": "https://www.figma.com/api/mcp/asset/2775d3ec-51cb-4a81-a340-a98ea35ac5b2.png",
+  "sha256": "43c40d136771931bcde6be9c589a0f76ec23271830ae02c52e809fa3adff311d",
+  "sizeBytes": 239339,
+  "recordedAtUTC": "2026-09-22T17:19:12.440166+00:00",
+  "frame": {
+    "width": 1000,
+    "height": 220
+  },
+  "appearance": "aqua",
+  "desktopNode": "31:7765",
+  "statusAnchorNode": "31:7913",
+  "statusItemNode": "31:7911",
+  "statusText": null,
+  "symbolName": "battery.100percent.bolt",
+  "showsSymbol": true,
+  "statusAnchorBounds": {
+    "x": 0,
+    "y": 5,
+    "width": 741,
+    "height": 24
+  },
+  "statusItemBoundsInFrame": {
+    "x": 700,
+    "y": 5,
+    "width": 41,
+    "height": 24
+  },
+  "typography": {
+    "style": "Body/Emphasized",
+    "family": "SF Pro",
+    "size": 13,
+    "lineHeight": 16,
+    "weight": 590,
+    "letterSpacing": 0,
+    "implementation": "Icon-only image inherits MenuBarExtra metrics; no explicit font modifier"
+  },
+  "variants": {
+    "desktop": "Light",
+    "menuBar": "Over Light",
+    "statusItemSelected": false,
+    "dockVisible": false
+  },
+  "fixture": "--watt-fixture J7.4/base",
+  "fixtureState": {
+    "reading": "PowerReading.sampleCharging",
+    "timestamp": 1700000000,
+    "source": "fixture",
+    "batteryState": "charging",
+    "watts": 42.1,
+    "batteryPercentage": 64,
+    "chargerWatts": 65,
+    "systemWatts": 22.9,
+    "capabilities": "battery, charger, systemDraw, components available",
+    "clock": "frozen at sampleCharging.timestamp",
+    "storage": "fresh InMemoryStorage per launch",
+    "displayMode": "iconOnly",
+    "showSymbol": true,
+    "componentReadings": true,
+    "precision": "decimal",
+    "onboarding": "livePanel completed helperOptIn true",
+    "helper": "FakeHelperService connected",
+    "accessibilityReading": "+42.1 watts"
+  },
+  "assets": "Native SF Symbol battery.100percent.bolt rendered as template. Reference PNG is evidence only. No app-owned wallpaper/menu-bar/desktop raster assets.",
+  "nativeOwnership": "Existing MenuBarExtra, MenuBarStatusLabel, NSStatusBarButton bridge. System owns placement, material, tint/contrast, spacing, typography and hit target. Bounds are inspection metadata only.",
+  "referenceInspection": "Exact supplied PNG inspected locally; one idle unselected battery-with-bolt glyph without text; desktop/system indicators not app-owned.",
+  "historicalF00Export": "Registry referenceJSON preserves d99e2eadbc66f95a01c661ded137c3889f916e0063fb525c58694976586de3b3. Supplied PNG is current evidence authority."
+}

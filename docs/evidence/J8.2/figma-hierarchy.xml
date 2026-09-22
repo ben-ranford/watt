@@ -1,0 +1,10 @@
+<frame id="32:4456" name="8.2 Readings resume automatically (no alert)" x="1160" y="100" width="1000" height="220">
+  <instance id="32:4457" name="Desktop Template" x="-512" y="0" width="1512" height="982">
+    <instance id="I32:4457;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+    <instance id="I32:4457;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+    <instance id="I32:4457;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34" />
+  </instance>
+  <frame id="32:4574" name="Status Item Anchor (right-aligned)" x="0" y="5" width="741" height="24">
+    <instance id="32:4572" name="Watt? Status Item" x="645" y="0" width="96" height="24" />
+  </frame>
+</frame>

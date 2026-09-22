@@ -1,0 +1,73 @@
+{
+  "date": "2026-09-21",
+  "incomingScore": 84,
+  "incomingScoreSource": "latest user-provided baseline",
+  "score": null,
+  "independentReview": false,
+  "visualPass": false,
+  "productionRenderingChanged": false,
+  "decision": "Reject custom views: observed keyboard activation regression and loss of standard drawing; retain native rows",
+  "reference": [
+    "reference-menu.png",
+    "reference-submenu.png"
+  ],
+  "capture": [
+    "native-menu-1x.png",
+    "native-submenu-1x.png"
+  ],
+  "gaps": [
+    "near-black cached material versus blue-gray reference",
+    "heavier native text despite regular font request",
+    "separator insets",
+    "1pt submenu inset and overlap differences",
+    "no compositor, physical interaction, or runtime AX audit"
+  ],
+  "priorSelfAssessment": {
+    "date": "2026-09-21",
+    "reviewer": "implementing assistant, direct view_image comparison",
+    "score": 83,
+    "priorScore": 79,
+    "priorScoreSource": "user-provided",
+    "independentReview": false,
+    "visualPass": false,
+    "rubric": {
+      "structure": [
+        25,
+        25
+      ],
+      "geometry": [
+        24,
+        25
+      ],
+      "typography": [
+        16,
+        20
+      ],
+      "material": [
+        8,
+        20
+      ],
+      "interactionState": [
+        10,
+        10
+      ]
+    },
+    "reference": [
+      "reference-menu.png",
+      "reference-submenu.png"
+    ],
+    "capture": [
+      "native-menu-1x.png",
+      "native-submenu-1x.png"
+    ],
+    "gaps": [
+      "near-black cached material versus blue-gray reference",
+      "heavier native text despite regular font request",
+      "separator insets",
+      "1pt submenu inset and overlap differences",
+      "no compositor, physical interaction, or runtime AX audit"
+    ],
+    "checkpoint": false
+  },
+  "checkpoint": false
+}

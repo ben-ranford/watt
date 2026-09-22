@@ -1,0 +1,100 @@
+{
+  "story": "J3.3",
+  "goal": "G043",
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "29:6181",
+  "score": null,
+  "verdict": "blocked",
+  "category_match": null,
+  "visualPass": false,
+  "storyDone": false,
+  "reference": "figma-reference.png",
+  "referenceMetadata": "reference.json",
+  "actual": [
+    {
+      "path": "capture-final/native-window-11324.png",
+      "windowId": 11324,
+      "width": 560,
+      "height": 440,
+      "sha256": "46a33f31ba13a834fb247b3bcaeb733967b9f855965f684fc781a0549ce0d786"
+    },
+    {
+      "path": "capture-final/native-window-11323.png",
+      "windowId": 11323,
+      "width": 560,
+      "height": 440,
+      "sha256": "3871a559fa1ad84692a6ecdd2568f15491852907ed7e94ceb9191746614bd538"
+    }
+  ],
+  "captureMetadata": "capture-final/window.json",
+  "nativeCaptureAvailable": true,
+  "comparableLightVisualParityVerified": false,
+  "AXTrusted": false,
+  "liveInteractionVerified": false,
+  "liveSignedUpdateAndApprovalVerified": false,
+  "differences": [
+    "The exact title, full message and stacked Update Helper / Later controls are visible in both native captures; live control behavior is not verified.",
+    "The reference is a light alert with an app-icon placeholder over desktop context; actual captures are dark with no visible app icon and include the Watt? Update host title bar.",
+    "Message wrapping and geometry differ. Both captures are 560x440 pixels and include the attached alert/host composite, not isolated crops matching the individual compositor bounds.",
+    "No comparable light capture, aligned pixel diff, overlay or numeric similarity assessment is available."
+  ],
+  "suggestions": [
+    "Capture the native alert in a comparable light appearance and document a reproducible app-owned comparison region before scoring; do not synthesize desktop, icon or alert chrome.",
+    "Verify native actions, default/cancel keyboard behavior and VoiceOver in an AX-authorized session.",
+    "Verify real signed app relaunch, helper installation, renewed macOS approval and authenticated reconnect separately from injected unit tests."
+  ],
+  "reasoning": "Reviewed the pinned exact-node reference, both final native PNGs, PID-scoped window metadata, source and existing test/build logs. Capture success proves native presentation, not visual parity or live approval. AXTrusted and liveInteractionVerified are false; comparable light evidence and live signed approval evidence are absent. Fail closed without an invented score, diff or pass.",
+  "verification": {
+    "basis": "Existing logs inspected; no build, test or capture rerun during documentation-only pass. Test counts overlap across runs.",
+    "focused": {
+      "log": "focused-tests.log",
+      "executed": 54,
+      "skipped": 0,
+      "failures": 0,
+      "exitCode": 0,
+      "suites": {
+        "J33HelperUpdateTests": 10,
+        "P02HelperLifecycleTests": 13,
+        "P04UpdaterTests": 31
+      }
+    },
+    "packageTests": {
+      "log": "package-tests.log",
+      "executed": 369,
+      "skipped": 1,
+      "failures": 0,
+      "exitCode": 0
+    },
+    "hostUnitTests": {
+      "log": "host-tests.log",
+      "executed": 357,
+      "skipped": 1,
+      "failures": 0,
+      "exitCode": 0,
+      "selection": "-only-testing:WattTests",
+      "uiTestsIncluded": false
+    },
+    "packageBuild": {
+      "log": "package-build.log",
+      "exitCode": 0
+    },
+    "debugBuildAndAnalyze": {
+      "log": "host-Debug.log",
+      "exitCode": 0
+    },
+    "releaseBuildAndAnalyze": {
+      "log": "host-Release.log",
+      "exitCode": 0
+    },
+    "capture": {
+      "log": "capture-final/window-capture.log",
+      "exitCode": 0,
+      "windowsCaptured": 2
+    },
+    "diffCheck": {
+      "log": "diff-check.log",
+      "exitFile": "diff-check.exit",
+      "exitCode": 0
+    }
+  }
+}

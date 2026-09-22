@@ -1,0 +1,23 @@
+{
+  "docs/evidence/J1.4/capture.sh": "c683f56204718dc5b8acac08fb2bc62f76915aff51abc24024d67e0110542e51",
+  "docs/evidence/J1.4/tests.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "docs/evidence/J1.4/figma-frame.png": "3755e5354037425d8a2874c58f4d886aa698b430712a2b8244bc08053667e43b",
+  "docs/evidence/J1.4/window-capture.log": "a4ac0b6d24f9571937560cf8a16914af174ef48d3b6ae2b30fbd85b0c0e3acd5",
+  "docs/evidence/J1.4/focused-tests.log": "c4af3bcc278e60a94657dc3f663cfed2a3ad04fefc47dc7b5742af19657a3c26",
+  "docs/evidence/J1.4/build-analyze.log": "0867867af4cce9b9106f27ee595afc016c206eb07434c49b901ec59341f14b6d",
+  "docs/evidence/J1.4/capture-build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "docs/evidence/J1.4/capture.json": "e36694c440a9a4cfa4cbd317e763c71eb4ac3a7af23ea986cbfc194ec2348995",
+  "docs/evidence/J1.4/README.md": "440aa9c8d790f0740e2d0f5007e96c6cb47a9380c39f769a5c085ad1661327d2",
+  "docs/evidence/J1.4/capture-window.swift": "efa4918334e3220d1f84635ceb6a86443081a2d8eaa2f6807dae72de60f59cb4",
+  "docs/evidence/J1.4/focused-tests.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "docs/evidence/J1.4/build-analyze.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "docs/evidence/J1.4/capture-run.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "docs/evidence/J1.4/tests.log": "9fc4760a1afc3da5336300f135e18d16362f8bdabb4cd72ff8f5cb88acd0f7c2",
+  "docs/evidence/J1.4/actual-content.png": "14d8b22439c9a33833704c02ebc1625746efbaf437a4c4090f49669fb87335fc",
+  "docs/evidence/J1.4/window.json": "a3f6cb076cb8a5c7b17dea7b7ee30114bec14c66108b1a333f30a7ac1b325d83",
+  "docs/evidence/J1.4/capture-build.log": "925c1da68ab4234aee7d9ba4447a9a1952c277fed51e77f1160646428938d6fb",
+  "docs/evidence/J1.4/capture-run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "docs/evidence/J1.4/fixture-launch.log": "ec4e23aac8183d34df1afa893f1a48dd19f6b4daa3cf8b6c51f8dab194d5e010",
+  "docs/evidence/J1.4/static-checks.log": "d9ae277a4db58227908755c527ffad2b37c6c3a8ed7b2441fc18e179597513dc",
+  "docs/evidence/J1.4/native-window.png": "596a0c17f5da0ea3463a8ec92849b4bb1eb3860011ce416e299fea6822a18e2c"
+}

@@ -1,0 +1,80 @@
+{
+  "story": "J10.6",
+  "status": "native-image-captured-ax-acceptance-blocked",
+  "source": {
+    "file": "9DKDgUfEqidZdZQEVlQgLS",
+    "frame": "34:5822",
+    "alert": "34:5976",
+    "title": "34:5976;152:9962",
+    "description": "34:5976;152:9963",
+    "button": "34:6002",
+    "reference_png": "reference.png",
+    "sha256": "7171d3276645906a92685db8f2871c18d351c74149bdf14c94db61f198561877",
+    "dimensions": [
+      1000,
+      720
+    ],
+    "responses": [
+      "figma-context.json",
+      "figma-metadata.json",
+      "figma-screenshot.json",
+      "figma-variables.json"
+    ]
+  },
+  "native_image": "capture/native-window.png",
+  "native_image_sha256": "b3d42dda8cb8e013b3ee677904099969d32ebad861d8bbc4afb2232e30c04065",
+  "capture_record": "capture/window.json",
+  "native_capture": {
+    "AXTrusted": false,
+    "captureExit": 0,
+    "fixture": "J10.6/base",
+    "node": "34:5822",
+    "pixel_diff": null,
+    "processIdentifier": 93034,
+    "reason": "PID-owned image captured; AX comparison blocked by Accessibility TCC. No numerical comparison performed.",
+    "score": null,
+    "screenCapturePreauthorized": true,
+    "timestampUTC": "2026-09-22T20:23:43Z",
+    "visualPass": false,
+    "windowNode": "34:5976",
+    "windows": [
+      {
+        "kCGWindowAlpha": 1,
+        "kCGWindowBounds": {
+          "Height": 202,
+          "Width": 260,
+          "X": 770,
+          "Y": 255
+        },
+        "kCGWindowIsOnscreen": true,
+        "kCGWindowLayer": 8,
+        "kCGWindowMemoryUsage": 2432,
+        "kCGWindowName": "",
+        "kCGWindowNumber": 14519,
+        "kCGWindowOwnerName": "Watt?",
+        "kCGWindowOwnerPID": 93034,
+        "kCGWindowSharingState": 1,
+        "kCGWindowStoreType": 1
+      }
+    ]
+  },
+  "process_identifier": 93034,
+  "capture_timestamp_utc": "2026-09-22T20:23:43Z",
+  "cleanup_evidence": "capture/process-cleanup.log",
+  "accessibility_trusted": false,
+  "screen_recording_preauthorized": true,
+  "capture_exit": 0,
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "reason": "PID-owned image captured; AX comparison blocked by Accessibility TCC. No numerical comparison performed.",
+  "qualitative_observations": [
+    "Implementation uses native informational NSAlert, not a custom SwiftUI alert recreation.",
+    "Recorded native window is 260\u00d7202 points at (770,255), window number 14519, PID 93034.",
+    "macOS owns alert sizing, typography, button treatment and chrome; reference desktop, wallpaper and chrome are not custom drawn."
+  ],
+  "limitations": [
+    "Accessibility TCC blocks AX interaction/comparison; no numerical comparison performed.",
+    "Null metrics do not imply visual acceptance; no new image inspection or validation performed for this documentation-only update."
+  ]
+}

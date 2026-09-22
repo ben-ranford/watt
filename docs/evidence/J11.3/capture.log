@@ -1,0 +1,2 @@
+BLOCKED: Accessibility trust unavailable; no permission requested
+docs/evidence/J11.3/capture.sh: line 12: 49377 Terminated: 15          "$app" --watt-fixture J11.3/base --watt-j113-capture-directory "$out" > "$out/app.log" 2>&1

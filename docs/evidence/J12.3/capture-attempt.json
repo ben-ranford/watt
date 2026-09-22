@@ -1,0 +1,19 @@
+{
+  "AXTrusted" : false,
+  "capturePermitted" : false,
+  "comparableCapture" : false,
+  "compositorWindowCount" : 13,
+  "fixture" : "J12.3\/base",
+  "frontmostBundleIdentifier" : "com.apple.Terminal",
+  "method" : "Controlled no-Watt launch followed by read-only native compositor inventory",
+  "node" : "35:5599",
+  "pixel_diff" : null,
+  "productionUninstallVerified" : false,
+  "reason" : "No valid Finder-only comparison: AX\/TCC, compositor visibility or frontmost app requirements unavailable. No desktop fabricated.",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "visualPass" : false,
+  "wattWindows" : [
+
+  ]
+}

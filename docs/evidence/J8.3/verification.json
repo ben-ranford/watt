@@ -1,0 +1,41 @@
+{
+  "story": "J8.3",
+  "branch": "bug/G061-j83-opening-settings",
+  "figma": {
+    "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+    "nodeId": "32:4575",
+    "referenceSha256": "95284e826372536b4105a03e4749ebf28412329359c01fe9168ced544a837242",
+    "manifestFrameExportSha256": "7dccac13b2d83978dacabea90ae91f4874ca60f68f1490b31c72859f91b08586"
+  },
+  "tests": {
+    "focusedPackageJ83": { "status": "passed", "executed": 6, "failures": 0 },
+    "focusedNativeJ83": { "status": "passed" },
+    "focusedPackageJ73Compatibility": { "status": "passed", "executed": 12, "failures": 0 },
+    "fullPackage": { "status": "passed", "executed": 561, "skipped": 5, "failures": 0 },
+    "fullNativeUnitTargetWattTests": { "status": "passed", "passed": 544, "skipped": 5, "failures": 0, "total": 549 },
+    "fullNativeScheme": { "status": "blocked", "reason": "WattUITests-Runner timed out enabling automation mode after 89.298s" }
+  },
+  "builds": {
+    "debugBuild": "passed",
+    "debugAnalyze": "passed",
+    "releaseBuild": "passed",
+    "releaseAnalyze": "passed",
+    "releaseIsolation": "passed; no J83FixtureLaunch, watt-j83-capture-directory or J8.3/base strings/symbols"
+  },
+  "staticChecks": {
+    "gitDiffCheck": "passed",
+    "referenceHashCheck": "passed",
+    "captureShellSyntax": "passed"
+  },
+  "capture": {
+    "status": "blocked",
+    "fixture": "J8.3/base",
+    "pid": 54372,
+    "screenCapturePreauthorized": true,
+    "AXTrusted": false,
+    "score": null,
+    "pixel_diff": null,
+    "cleanup": "PID terminated and reaped",
+    "evidence": "docs/evidence/J8.3/capture/window.json"
+  }
+}

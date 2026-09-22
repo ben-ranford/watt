@@ -1,0 +1,32 @@
+ M App/AppDestination.swift
+ M App/AppRouter.swift
+ M App/RootSceneView.swift
+ M App/WattApp.swift
+ M DESIGN.md
+ M DesignSystem/Components/WattActionButton.swift
+ M DesignSystem/Components/WattFormRow.swift
+ M DesignSystem/Components/WattWindowScaffold.swift
+ M DesignSystem/Theme/WattColors.swift
+ M DesignSystem/Theme/WattSpacing.swift
+ M DesignSystem/Theme/WattTypography.swift
+ M Features/MenuBar/Components/MenuBarStatusLabel.swift
+ M Features/MenuBar/Views/MenuBarRootView.swift
+ M Features/MenuBar/Views/StatusItemContextMenu.swift
+ M Features/MenuBar/Views/StatusPanelView.swift
+ M Features/Onboarding/Views/OnboardingFlowView.swift
+ M Models/PowerReading.swift
+ M Models/WattPreferences.swift
+ M Package.swift
+ M Services/PowerReadingStore.swift
+ M Tests/WattTests/AppRouterTests.swift
+?? DesignSystem/Components/ReadingPicker.swift
+?? DesignSystem/Verification/
+?? Services/SystemPowerSourceTelemetryService.swift
+?? Tests/Fixtures/
+?? Tests/WattTests/F05FixtureTests.swift
+?? Tests/WattTests/P01TelemetryTests.swift
+?? Tests/WattUITests/
+?? Watt.xcodeproj/
+?? build/
+?? docs/
+?? scripts/

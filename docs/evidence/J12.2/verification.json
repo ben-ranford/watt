@@ -1,0 +1,32 @@
+{
+  "story": "J12.2",
+  "goal": "G074",
+  "branch": "bug/G074-j122-confirm-uninstall",
+  "checks": {
+    "capture": 1,
+    "full-tests": 0,
+    "debug": 0,
+    "static-checks": 0,
+    "release-build-for-testing": 65,
+    "release": 0,
+    "focused-tests": 0
+  },
+  "focusedTests": {
+    "executed": 52,
+    "failures": 0
+  },
+  "fullTests": {
+    "executed": 646,
+    "skipped": 5,
+    "failures": 0
+  },
+  "debug": "build, analyze, build-for-testing passed",
+  "release": "app build and analyze passed; binary fixture isolation passed",
+  "releaseTestBuild": "attempted: exit 65; existing test target cannot resolve a compatible Watt module",
+  "capture": "exit 1; AX untrusted; no fixture PID-owned on-screen compositor windows; no native screenshot or keyboard interaction proof",
+  "visualPass": false,
+  "score": null,
+  "pixel_diff": null,
+  "commitCreated": false,
+  "newWorktreeCreated": false
+}

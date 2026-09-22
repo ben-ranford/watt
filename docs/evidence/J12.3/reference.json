@@ -1,0 +1,12 @@
+{
+  "story": "J12.3",
+  "goal": "G075",
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "35:5599",
+  "desktopTemplate": "35:5600",
+  "frame": {"width": 1000, "height": 220},
+  "referenceURL": "https://www.figma.com/api/mcp/asset/7ff96d81-f108-4449-8349-b23895532a08.png",
+  "appOwnedCrop": null,
+  "systemOwnedEmptyState": true,
+  "notes": "Desktop Template is offset x=-512; Finder and leading menu items exist in context but are outside the exported frame crop. Do not recreate or change host desktop."
+}

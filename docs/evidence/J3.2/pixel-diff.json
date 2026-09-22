@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "reference": "figma-reference.png",
+  "actual": null,
+  "diff": null,
+  "score": null,
+  "reason": "No eligible native capture; cannot compare a placeholder or content-only reconstruction to the selected status item and compositor panel."
+}

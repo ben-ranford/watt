@@ -1,0 +1,25 @@
+{
+  "accessibility" : [
+    {
+      "class" : "NSHostingView<ModifiedContent<ModifiedContent<AnyView, _EnvironmentKeyWritingModifier<ColorScheme>>, _EnvironmentKeyWritingModifier<Locale>>>",
+      "enabled" : false,
+      "label" : "",
+      "role" : "AXGroup"
+    }
+  ],
+  "capture" : "in-process NSView.cacheDisplay; actual SwiftUI\/AppKit controls",
+  "captureBounds" : "{{0, 0}, {480, 366}}",
+  "capturedAt" : "2026-09-22T08:00:41Z",
+  "heightPixels" : 732,
+  "includesWindowFrame" : true,
+  "isKeyWindow" : false,
+  "limitations" : "Reading includes the native NSWindow frame; other samples are content-only. Inactive window; active accent\/focus and WindowServer vibrancy not verified. In-process accessibility traversal is incomplete, not VoiceOver\/AX interaction sign-off.",
+  "nativeContentBounds" : "{{0, 0}, {480, 334}}",
+  "os" : "Version 27.0 (Build 26A428)",
+  "pixelsPerPoint" : 2,
+  "sample" : "reading-dark",
+  "visualPass" : false,
+  "widthPixels" : 960,
+  "windowClass" : "NSWindow",
+  "windowStyleMask" : 3
+}

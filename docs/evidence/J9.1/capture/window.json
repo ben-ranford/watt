@@ -1,0 +1,19 @@
+{
+  "AXTrusted" : false,
+  "captureAPI" : "screencapture -l; PID\/AX\/content\/geometry-verified native Settings scene",
+  "comparableCapture" : false,
+  "fixture" : "J9.1\/base",
+  "node" : "32:5397",
+  "pixel_diff" : null,
+  "processIdentifier" : 60337,
+  "reason" : "BLOCKED: Accessibility trust unavailable; no permission requested",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "settingsWindowVerified" : false,
+  "status" : "blocked",
+  "timestampUTC" : "2026-09-22T19:02:40Z",
+  "visualPass" : false,
+  "windows" : [
+
+  ]
+}

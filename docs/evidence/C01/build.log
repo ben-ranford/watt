@@ -1,0 +1,602 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination platform=macOS -derivedDataPath .build/c01-native build
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'Watt' in project 'Watt' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: ea1c524fa96cc541da94a712ba205441
+Build description path: /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/XCBuildData/ea1c524fa96cc541da94a712ba205441.xcbuilddata
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/CompilationCache.noindex
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/CompilationCache.noindex
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/PrecompiledHeaders
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/PrecompiledHeaders
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    builtin-create-build-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.hmap
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Entitlements.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    write-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Entitlements.plist
+
+MkDir /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Resources (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /bin/mkdir -p /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Resources
+
+MkDir /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /bin/mkdir -p /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS
+
+MkDir /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /bin/mkdir -p /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents
+
+MkDir /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /bin/mkdir -p /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app
+
+ProcessProductPackaging "" /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    
+    Entitlements:
+    
+    {
+    "com.apple.security.get-task-allow" = 1;
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent
+
+ProcessProductPackagingDER /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /usr/bin/derq query -f xml -i /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der --raw
+
+GenerateAssetSymbols /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets --compile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Resources --output-format human-readable-text --notices --warnings --export-dependency-info /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies --output-partial-info-plist /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 13.0 --platform macosx --bundle-identifier dev.watt.verification --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/* com.apple.actool.compilation-results */
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.h
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift
+
+
+Ld /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -F/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -install_name @rpath/Watt.debug.dylib -rdynamic -Xlinker -dependency_info -Xlinker /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat -Xlinker -no_adhoc_codesign -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+
+MkDir /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /bin/mkdir -p /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned
+
+MkDir /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /bin/mkdir -p /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned
+
+CompileAssetCatalogVariant thinned /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Resources /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets --compile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned --output-partial-info-plist /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 13.0 --platform macosx
+/* com.apple.actool.compilation-results */
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned
+
+
+LinkAssetCatalog /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-linkAssetCatalog --thinned /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned --thinned-dependencies /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned --unthinned /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned --unthinned-dependencies /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_unthinned --output /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Resources --plist-output /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist
+
+ProcessInfoPlistFile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Info.plist /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-infoPlistUtility /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Info.plist
+
+SwiftDriver Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Index.noindex/DataStore -swift-version 6 -I /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -F /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex -sdk-module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/include -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/ptrcheck-B22TI5ZFXT2VONSYDK7OC2T4N.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/SwiftShims-E81S7UOZ7VR4D969F2VFJYOYD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_stdarg-DZPNVZPZYV2EKQOGS4BR0016J.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-F08BEOQR3C0LZ0XF0AMT6O1MN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_float-52RAJJC1YUTTVOWE0KIJXSRQ1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/ptrauth-DES1E1CN8O2FCUMJJFJ00DDZT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_stdbool-1FGSXBU6IA50G5VSOKDI496ES.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/DeveloperToolsSupport-F1VUUEU7R0KPECEURDG3ONY85.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_stddef-7ZIK1XC34GP52FU7AAAEL0C6A.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_AvailabilityInternal-C7LRFDAAO4BIZO5FVMJEXQEYJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_DarwinFoundation1-9KUWPE5LY6FV4U465TQX14QNB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_limits-1V52U9RDQED4CRNF881E9TCUV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_DarwinFoundation2-6HLDIYVYBCAS6JMQNOZTX1MLD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_stdint-5P7C0X2DTZ3AGB3KBVXDZA70.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/string_h-2J1IT9BNVTZXO8JQNZW22CZOF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/sys_types-A4204BG1MTDW1U6SGJ9UGA6FY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_tgmath-3MOWM1SLGYKU6DDI5U1VPTRAQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_stdatomic-2JHQB2PQPAT9I4TVIC45Z7MG6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/libDER-58TEQPI6INZAVD8CY5NKGU5ST.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_intrinsics-73S7J9UVZ39SRIA93XJ3RBT94.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_DarwinFoundation3-84QKCFPC7W92MJJT4HPJM9OE0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/_Builtin_inttypes-BSG5TZD6GH0QHAO4PPWX712DA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/Darwin-15MPIHGAUFW8ZEFQOB8FSILFS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/simd-4UTFY84CQSGBY6HM11Z3G9XUK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CUPS-DF4QLLTM6FS4BBOROG38HNDND.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/MachO-DGXCK8R1Q1IYQILSXGRCXQJOV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/launch-DAID4X4URQGZHV5RP3SGR7ZGV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/libkern-4VZORVV9Y8P3O2J9MLLPRHWZ5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/ObjectiveC-58JN4Y6KJWOD4HZKPGCEEWLT1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/Spatial-5JNRNYQULPF5ILFF1F830KRF8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/os_object-6AETJHLH3KLF1DHZLOUS55K80.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/os_workgroup-BP8GKPE5Z2LE3AIXDP54YCFZT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/Dispatch-6ZW035YLPCK7HIQHQH7VWMZNX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreFoundation-3SFS1BXCZAPEV7GJZM7L593UF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/XPC-8GTQ27OE22GB1YRTCYA8J7B6J.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/os-4L97UW40EVU7MPHMGVQJXG7AV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CFNetwork-BFXH6C1IJO942OML3RLHSM3ZR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreAudioTypes-AGL8G5JWT3MDKKPKOSJFZMWAT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/Security-5KPK1YB46ZRTOZFH3A6E2A95M.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/ColorSync-74O17PWMM66SVKUMPWNS64QGI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/IOKit-8YIUTPVEV7TN47JPXBOAXUIJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreGraphics-BMF92VSU6JWD2ZSZO9EZ417L6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/DiskArbitration-EZNOIYFZ6G1BFMZBZ3JEGJMN9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreServices-7WP2WF35RV0O4G3S094XCUEFE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/ImageIO-2GH20ICSEB5TSJD1S33W7KD75.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreText-120FN6P3FIV9UV6F6RZ0XOHIB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/Foundation-4XCZ3319SG25R0S3QN1WVQ7NJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/DataDetection-2TOTGQYZRHOQHVU9DIKYV7TI3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreAudio-ARDDXULSDRTANONUMWHYIPQUQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreTransferable-9B6YRK5Q2JC4LO69XFQETJN7C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/Accessibility-7STP2S1RJFCX1UE49YY9SVL40.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-6KML09CEGWIUPJG1JRUUENGRF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/ApplicationServices-78NG7ARLEVM5IWZW0H5LM0TQC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreData-7VMX77OXXEHCOYIT7LKT3YBER.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/IOSurface-6NC9EREVXTNTP317OGE5EJCV1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/Symbols-BJI2APE9OSYRNZ1Y6IDMF5STJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/OSLog-7IGOH2YXNHNZ8B5L81ZLNWHAP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/OpenGL-2YHF7KZV9LI9I9777UPXW86TI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/Metal-AC979HXB8761WKJ04XTY5G1K.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreVideo-EQ7JXLGHS5NKWFJM241C8HBEX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/QuartzCore-9CM88B00ZXNJN6DPSJHIDW078.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreMedia-42XWG0QZT5W9ZU61J71RMIRAH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/CoreImage-40WW9F9AJTKZ8SSOMRP4WNUB5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/SwiftUICore-4G0LJ5OZEQY4FP1ET2FFWIK6T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/AppKit-791H0EZTSDOA2COAJXTWQLEL9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules/SwiftUI-F34O7XU7APM1CBG6Q03LIID0V.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Watt (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    
+
+SwiftCompile normal arm64 Compiling\ PowerReadingStore.swift,\ GeneratedAssetSymbols.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/PowerReadingStore.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/PowerReadingStore.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile PowerReadingStore.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
+
+SwiftCompile normal arm64 Compiling\ PowerReading.swift,\ WattPreferences.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/PowerReading.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/WattPreferences.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/PowerReading.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile PowerReading.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/WattPreferences.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattPreferences.swift
+
+SwiftCompile normal arm64 Compiling\ SystemPowerSourceTelemetryService.swift,\ StoryFixtures.swift,\ StoryFixtureData.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/SystemPowerSourceTelemetryService.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtures.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtureData.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/SystemPowerSourceTelemetryService.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile SystemPowerSourceTelemetryService.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtures.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile StoryFixtures.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtureData.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile StoryFixtureData.swift
+
+SwiftCompile normal arm64 Compiling\ WattTypography.swift,\ MenuBarStatusLabel.swift,\ MenuBarRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattTypography.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Components/MenuBarStatusLabel.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattTypography.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattTypography.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Components/MenuBarStatusLabel.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile MenuBarStatusLabel.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile MenuBarRootView.swift
+
+SwiftCompile normal arm64 Compiling\ WattWindowScaffold.swift,\ WattColors.swift,\ WattSpacing.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattWindowScaffold.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattColors.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattSpacing.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattWindowScaffold.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattColors.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattColors.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattSpacing.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattSpacing.swift
+
+SwiftCompile normal arm64 Compiling\ StatusItemContextMenu.swift,\ StatusPanelView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusItemContextMenu.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusPanelView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile StatusItemContextMenu.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusPanelView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile StatusPanelView.swift
+
+SwiftCompile normal arm64 Compiling\ OnboardingFlowView.swift,\ SettingsRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile OnboardingFlowView.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile SettingsRootView.swift
+
+SwiftCompile normal arm64 Compiling\ AppDestination.swift,\ AppRouter.swift,\ RootSceneView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppDestination.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppDestination.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile AppDestination.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile AppRouter.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile RootSceneView.swift
+
+SwiftCompile normal arm64 Compiling\ FixtureLaunchSelection.swift,\ WattComponentGallery.swift,\ ReadingPicker.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/FixtureLaunchSelection.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Verification/WattComponentGallery.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/ReadingPicker.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile FixtureLaunchSelection.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Verification/WattComponentGallery.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattComponentGallery.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/ReadingPicker.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile ReadingPicker.swift
+
+SwiftCompile normal arm64 Compiling\ WattApp.swift,\ WattActionButton.swift,\ WattFormRow.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattActionButton.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattFormRow.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattApp.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattActionButton.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattActionButton.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattFormRow.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-SwiftPerFileCompile WattFormRow.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for Watt (in target 'Watt' from project 'Watt')
+
+SwiftDriver\ Compilation\ Requirements Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Index.noindex/DataStore -swift-version 6 -I /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -F /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex -sdk-module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/include -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling PowerReading.swift, WattPreferences.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling SystemPowerSourceTelemetryService.swift, StoryFixtures.swift, StoryFixtureData.swift (in target 'Watt' from project 'Watt')
+
+SwiftMergeGeneratedHeaders /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Watt-Swift.h /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-swiftHeaderTool -arch arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Watt-Swift.h
+
+Copy /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule
+
+Copy /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc
+
+Copy /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling OnboardingFlowView.swift, SettingsRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling AppDestination.swift, AppRouter.swift, RootSceneView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattTypography.swift, MenuBarStatusLabel.swift, MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattWindowScaffold.swift, WattColors.swift, WattSpacing.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling FixtureLaunchSelection.swift, WattComponentGallery.swift, ReadingPicker.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattApp.swift, WattActionButton.swift, WattFormRow.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PowerReadingStore.swift, GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling StatusItemContextMenu.swift, StatusPanelView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriver\ Compilation Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Index.noindex/DataStore -swift-version 6 -I /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -F /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex -sdk-module-cache-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/include -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation -experimental-emit-module-separately -disable-cmo
+
+Ld /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -F/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -filelist /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList -install_name @rpath/Watt.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/../Frameworks -Xlinker -object_path_lto -Xlinker /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
+
+ConstructStubExecutorLinkFileList /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    construct-stub-executor-link-file-list /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'Watt' from project 'Watt')
+
+Ld /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -F/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/../Frameworks -rdynamic -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib -Xlinker -no_adhoc_codesign -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+
+CopySwiftLibs /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib --scan-folder /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Frameworks --scan-folder /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/PlugIns --scan-folder /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Library/SystemExtensions --scan-folder /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name Watt --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk --xcode-version 27A266a --platform-family macOS --deployment-target 13.0 --bundle-identifier dev.watt.verification --output /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt --dependency-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat --stringsdata-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList --metadata-file-list /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList --static-metadata-file-list /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList --swift-const-vals-list /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-09-20 22:27:15.797 appintentsmetadataprocessor[94349:3969944] Starting appintentsmetadataprocessor export
+2026-09-20 22:27:15.800 appintentsmetadataprocessor[94349:3969944] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CodeSign /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
+
+CodeSign /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+
+CodeSign /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent --timestamp\=none --generate-entitlement-der /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app
+
+RegisterExecutionPolicyException /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-RegisterExecutionPolicyException /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app
+
+Validate /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-validationUtility /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+RegisterWithLaunchServices /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-lsregisterurl --record-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/XCBuildData/registered-launchservices.txt -- /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app
+
+Touch /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    /usr/bin/touch -c /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Products/Debug/Watt.app
+
+PruneExplicitPrecompiledModules /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c01-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+

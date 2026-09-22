@@ -1,0 +1,5 @@
+Crop outside image
+Scale mismatch or invalid tolerance
+Geometry mismatch; resizing is forbidden
+Scale mismatch or invalid tolerance
+6 helper checks passed (crop, identical diff, bounds, scale, geometry, invalid threshold)

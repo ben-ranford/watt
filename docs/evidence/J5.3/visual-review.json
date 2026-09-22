@@ -1,0 +1,26 @@
+{
+  "story": "J5.3",
+  "goal": "G049",
+  "node": "30:4788",
+  "status": "blocked",
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "storyDone": false,
+  "nativeCapture": null,
+  "comparableCapture": false,
+  "captureExit": 1,
+  "screenCapturePreauthorized": true,
+  "AXTrusted": false,
+  "liveInteractionVerified": false,
+  "reference": "reference.png",
+  "captureEvidence": "capture/window.json",
+  "blockers": [
+    "No app-owned on-screen compositor windows were enumerated for the fixture PID; no native menu PNG or comparable pixels were produced.",
+    "AXTrusted=false. Native pointer/hover, submenu tracking, keyboard shortcuts, Escape and VoiceOver acceptance remain unverified."
+  ],
+  "knownDifferences": "AppKit owns native menu geometry, material, typography, separators, selection and keyboard behavior. No pixel comparison was possible in this capture session; unit tests establish content and callbacks, not visual parity.",
+  "timestampUTC": "2026-09-22T15:28:09Z",
+  "appOwnedCompositorWindowCount": 0,
+  "captureCleanup": "Fixture PID 81978 terminated and reaped"
+}

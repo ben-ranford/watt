@@ -1,0 +1,23 @@
+{
+  "tool": "figma_get_screenshot",
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "nodeId": "32:4575",
+  "requestedMaxDimension": 1000,
+  "userSuppliedReferenceURL": "https://www.figma.com/api/mcp/asset/b7b30cb9-b1f9-4f63-9e0e-1f5befd821ef.png",
+  "userSuppliedReferenceURLFetch": {
+    "httpStatus": 200,
+    "storedImage": "mcp-supplied-reference.png",
+    "width": 1000,
+    "height": 720,
+    "sha256": "95284e826372536b4105a03e4749ebf28412329359c01fe9168ced544a837242"
+  },
+  "mcpResponse": {
+    "url": "https://www.figma.com/api/mcp/asset/bdb63f55-e339-464b-852b-917d608fcdfd.png",
+    "width": 1000,
+    "height": 720,
+    "format": "png",
+    "sha256": "95284e826372536b4105a03e4749ebf28412329359c01fe9168ced544a837242",
+    "sizeBytes": 653200
+  },
+  "visualReview": { "status": "not_claimed", "score": null, "pixel_diff": null }
+}

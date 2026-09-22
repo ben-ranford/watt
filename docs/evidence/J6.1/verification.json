@@ -1,0 +1,91 @@
+{
+  "story": "J6.1",
+  "goal": "G050",
+  "node": "31:2745",
+  "status": "automated-checks-passed; visual-acceptance-blocked",
+  "exits": {
+    "focused-tests": 0,
+    "package-tests": 0,
+    "package-build": 0,
+    "host-Debug": 0,
+    "host-Release": 0,
+    "host-focused-tests": 0,
+    "host-tests": 0,
+    "diff-check": 0,
+    "static-check": 0,
+    "capture": 1
+  },
+  "toolchain": "/Applications/Xcode.app/Contents/Developer",
+  "referenceSHA256": "778afcc2be6c0edea970eb2907fa36405d39b8240a1d4799c2e4649c063d2a83",
+  "validationGap": "Native capture exited 1: AXTrusted=false and windows=[] despite screenCapturePreauthorized=true. No comparable native panel or selected-status-item pixels; live keyboard, dismissal and VoiceOver acceptance unverified. Visual score/pixel diff null; G050/J6.1 not story-done.",
+  "visualPass": false,
+  "storyDone": false,
+  "committed": false,
+  "omxRuntimeStateMutated": false,
+  "verifiedAtUTC": "2026-09-22T15:40:09.930297+00:00",
+  "testResults": {
+    "focused-tests": {
+      "tests": 91,
+      "skipped": 0,
+      "failures": 0
+    },
+    "package-tests": {
+      "tests": 433,
+      "skipped": 1,
+      "failures": 0
+    },
+    "host-focused-tests": {
+      "tests": 91,
+      "skipped": 0,
+      "failures": 0
+    },
+    "host-tests": {
+      "tests": 421,
+      "skipped": 1,
+      "failures": 0
+    }
+  },
+  "j61Tests": {
+    "package": 8,
+    "host": 8,
+    "failures": 0
+  },
+  "registration": "Tests/WattTests is automatically discovered by Package.swift; J61ChargingPanelTests.swift is explicitly registered in the host PBX group and test sources phase.",
+  "expectedSkip": "P01TelemetryTests.testPhysicalHostPublicAPISmoke: opt-in physical-host metadata probe, not fixture evidence (one skip in each full suite).",
+  "nativeCaptureEvidence": "capture/window.json",
+  "independentReview": {
+    "verdict": "No concrete defects found in scoped J6.1 implementation",
+    "limitations": "Hosted native controls prove callbacks, local dark appearance and geometry; they do not prove the actual MenuBarExtra compositor, row visibility, selected status item or live AX acceptance."
+  },
+  "resolvedInitialFailure": "focused-tests-initial.log records one F05 registry/backlog state wording mismatch; wording synchronized and all final suites pass.",
+  "existingWarnings": [
+    "Package target reports existing unhandled build files.",
+    "OnboardingFlowView.swift:200 reports existing main-actor isolation warning in host builds.",
+    "AppIntents metadata extraction skipped because the app has no AppIntents framework dependency."
+  ],
+  "omxCheckpoint": "No plan or active Codex goal in this worktree/session. Main repository G050 observed in_progress read-only; no cross-repository runtime mutation or completion checkpoint.",
+  "hostTestScope": "Full WattTests native host unit target, matching prior stories. WattUITests live UI/AX acceptance is blocked and is not represented as passing.",
+  "sourceSHA256": {
+    "App/WattApp.swift": "accb5512e41850b4b784c5ad600d5304f24e53acbbb4c5d7bf3fdbc0ef2126d9",
+    "Features/MenuBar/Views/StatusPanelView.swift": "a9b46af192516ce2414b4e948be8622f4c7f2302bc640f72367c71e98393655f",
+    "Features/MenuBar/Views/MenuBarRootView.swift": "07d7252cf2120d837fe528d80821d70d2894770a39552fb8c5955b3e9dac4c63",
+    "DesignSystem/Theme/WattSpacing.swift": "be2e2eebde316b69080172c0358e26418020eb9350bce89e9755c2755b412af1",
+    "Tests/Fixtures/StoryFixtures.swift": "c2d9f14eae215da5b57b18440c7eda31bcc8dd1e1477334a4e2f8d4bac2a6ecb",
+    "Tests/Fixtures/StoryFixtureData.swift": "df532c39c5ed7aecfc16dd4d2a17e4fa9811e4917b8e5fda4526b10a9340bff3",
+    "Tests/Fixtures/FixtureLaunchSelection.swift": "4cebe8c7a6c7e90f58743c11867a546e81faf1c5c8d08b27b8c232b6b65a1c1c",
+    "Tests/WattTests/F05FixtureTests.swift": "390092246f4cf3b7d67492d4d4f0f3318498efea6d7f800dbe1423586a0103ad",
+    "Tests/WattTests/J61ChargingPanelTests.swift": "67437b4496d4b1b5ef16d3d8f2d0d3eea876e9ca0fc67dfa50f2d40138ec437a",
+    "Watt.xcodeproj/project.pbxproj": "ce6bfd7a299f6b52d1dfa7fbcc2cff30162380f9d2c80631f570c9db215dce8d",
+    "Package.swift": "b25b9d4d84c418b6078cbd0c4039f491c802189dfaeb17007bb0dc2ad14539ae",
+    "DESIGN.md": "18eedbf0a56e1d46c6f9f1ec2191c622d82acfd712b1766188b1504a3639d012",
+    "SCREEN-BACKLOG.md": "77f1e1c4e5ab73e619451a084042655aad66b72981486aee6a087ba86c9e3e59"
+  },
+  "capture": {
+    "exit": 1,
+    "screenCapturePreauthorized": true,
+    "AXTrusted": false,
+    "appOwnedCompositorWindowCount": 0,
+    "nativeCapture": null,
+    "processCleanup": "Fixture PID 87220 terminated and reaped"
+  }
+}

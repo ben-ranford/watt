@@ -1,0 +1,23 @@
+{
+  "story": "J4.1",
+  "goal": "G044",
+  "file": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "30:2275",
+  "source": "https://www.figma.com/api/mcp/asset/5bee2922-a217-41bd-97e9-6a1462294517.png",
+  "reference": "figma-reference.png",
+  "sha256": "9645b629f56dc8e77d203ae95a687c90ef241d817cf9843a842717ba7de55c3d",
+  "dimensions": [
+    1000,
+    720
+  ],
+  "appearance": "dark",
+  "design_context_retrieved": true,
+  "app_owned_reference_bounds": {
+    "x": 260,
+    "y": 216,
+    "width": 480,
+    "height": 308
+  },
+  "reference_bounds_basis": "exact-node screenshot and pinned F00 metadata",
+  "live_interaction_verified": false
+}

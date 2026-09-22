@@ -1,0 +1,115 @@
+{
+  "story": "J8.1",
+  "goal": "G059",
+  "branch": "bug/G059-j81-no-reading-after-wake",
+  "noCommit": true,
+  "status": "implementation-verified-visual-blocked",
+  "checks": {
+    "environment": {
+      "exit": 0,
+      "log": "environment.log"
+    },
+    "xcode-version": {
+      "exit": 0,
+      "log": "xcode-version.log"
+    },
+    "os-version": {
+      "exit": 0,
+      "log": "os-version.log"
+    },
+    "focused-tests": {
+      "exit": 0,
+      "log": "focused-tests.log"
+    },
+    "package-tests": {
+      "exit": 0,
+      "log": "package-tests.log"
+    },
+    "package-build": {
+      "exit": 0,
+      "log": "package-build.log"
+    },
+    "host-Debug": {
+      "exit": 0,
+      "log": "host-Debug.log"
+    },
+    "host-Release": {
+      "exit": 0,
+      "log": "host-Release.log"
+    },
+    "host-focused-tests": {
+      "exit": 0,
+      "log": "host-focused-tests.log"
+    },
+    "host-tests": {
+      "exit": 0,
+      "log": "host-tests.log"
+    },
+    "fixture-rejection": {
+      "exit": 0,
+      "log": "fixture-rejection.log"
+    },
+    "static-check": {
+      "exit": 0,
+      "log": "static-check.log"
+    },
+    "diff-check": {
+      "exit": 0,
+      "log": "diff-check.log"
+    },
+    "git-diff-check": {
+      "exit": 0,
+      "log": "git-diff-check.log"
+    }
+  },
+  "testCounts": {
+    "focused-tests": {
+      "executed": 161,
+      "skipped": 5,
+      "failures": 0
+    },
+    "package-tests": {
+      "executed": 550,
+      "skipped": 5,
+      "failures": 0
+    },
+    "host-focused-tests": {
+      "executed": 160,
+      "skipped": 5,
+      "failures": 0
+    },
+    "host-tests": {
+      "executed": 538,
+      "skipped": 5,
+      "failures": 0
+    },
+    "J8.1": {
+      "package": 19,
+      "native": 19,
+      "skipped": 0,
+      "failures": 0
+    }
+  },
+  "buildCount": 3,
+  "nativeAnalyzeCount": 2,
+  "malformedSelectorsRejected": 10,
+  "releaseFixtureIsolation": "passed: fixture, observer, registry and parser symbols/selectors absent; production title/subtitle/refresh/wake present",
+  "visual": {
+    "status": "blocked",
+    "score": null,
+    "pixel_diff": null,
+    "comparableCapture": false,
+    "visualPass": false,
+    "PID": 38757,
+    "cleanup": "Fixture PID 38757 terminated and reaped"
+  },
+  "initialCheckerCorrection": "Initial verify.sh run passed all tests/builds and fixture isolation, then failed an extra check for the NoReadingPresentation enum symbol. Release inlines this constants-only enum. The corrected static check proves emitted production copy plus refresh/wake functions. Final static-check.log/.exit pass; original run/initial-static-check logs retained. The final full verify.sh invocation was rerun after adding the valid per-component panel regression; it exits 0 end to end.",
+  "knownWarnings": [
+    "Pre-existing actor-isolation warning at Features/Onboarding/Views/OnboardingFlowView.swift:200",
+    "AppIntents metadata extraction skipped because app has no AppIntents dependency"
+  ],
+  "skips": "Existing J6.2/J6.3/J6.4/J6.5 host AX-label checks and opt-in P01 physical-host probe. No new skips.",
+  "productionOrTestCodeModifiedAfterFinalBuild": false,
+  "verifyScriptExit": 0,
+  "verifyScriptLog": "verify-run.log"
+}

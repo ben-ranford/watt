@@ -1,0 +1,14 @@
+{
+  "story": "J9.1",
+  "node": "32:5397",
+  "status": "blocked",
+  "nativeVisualPass": false,
+  "score": null,
+  "pixel_diff": null,
+  "liveInteractionVerified": false,
+  "reason": "Capture attempt: AXTrusted=false; no PID-owned compositor windows. Settings window and alert cannot be visually verified. No synthetic image or pixel comparison.",
+  "referenceInspected": true,
+  "sourceReview": "Shared SwiftUI alert with exact title/message, native destructive Remove and no-op Cancel; grouped Form reuses SettingsHelperRows.",
+  "knownDifference": "User specifies Component Readings section; screenshot visibly says Helper. Explicit requested section name used; native OS owns geometry, icon, material and typography.",
+  "capture": "capture/window.json"
+}

@@ -1,0 +1,116 @@
+{
+  "directChildren": [
+    {
+      "bounds": {
+        "height": 982,
+        "width": 1512,
+        "x": -612,
+        "y": 0
+      },
+      "id": "36:5058",
+      "name": "Desktop Template"
+    },
+    {
+      "bounds": {
+        "height": 24,
+        "width": 641,
+        "x": 0,
+        "y": 5
+      },
+      "id": "36:5059",
+      "name": "Status Item Anchor (right-aligned)"
+    },
+    {
+      "bounds": {
+        "height": 473,
+        "width": 320,
+        "x": 551,
+        "y": 40
+      },
+      "id": "36:5061",
+      "name": "Watt? Panel (MenuBarExtra .window)"
+    }
+  ],
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "frame": {
+    "height": 640,
+    "width": 900,
+    "x": 80,
+    "y": 100
+  },
+  "frameName": "11.1 Status item + panel \u2014 VoiceOver order",
+  "keyboard": [
+    "Tab",
+    "Shift-Tab",
+    "Cmd-,",
+    "Cmd-Q",
+    "Esc"
+  ],
+  "node": "36:5057",
+  "panel": {
+    "actions": [
+      "Settings\u2026",
+      "Quit Watt?"
+    ],
+    "bounds": {
+      "height": 473,
+      "width": 320,
+      "x": 551,
+      "y": 40
+    },
+    "components": [
+      [
+        "CPU",
+        "9.8 W"
+      ],
+      [
+        "GPU",
+        "4.1 W"
+      ],
+      [
+        "Display",
+        "5.2 W"
+      ],
+      [
+        "Other",
+        "3.8 W"
+      ]
+    ],
+    "header": [
+      "Charging",
+      "+42.1 W",
+      "Into battery \u00b7 64% \u00b7 full in 38 min"
+    ],
+    "id": "36:5061",
+    "material": "dark system material via native MenuBarExtra .window",
+    "power": [
+      {
+        "label": "Charger input",
+        "subtitle": "96 W USB-C charger",
+        "value": "65.0 W"
+      },
+      {
+        "label": "System draw",
+        "value": "22.9 W"
+      },
+      {
+        "label": "Battery",
+        "value": "+42.1 W"
+      }
+    ]
+  },
+  "source": "Exact Figma MCP retrieval supplied for G078/J11.1; preserved without redraw.",
+  "statusItem": {
+    "accessibilityHint": "Click for details. VO-Shift-M for options.",
+    "accessibilityLabel": "Watt?, charging, plus 42.1 watts, menu extra.",
+    "announcementPolicy": "announce only state changes/at most 30s",
+    "bounds": {
+      "height": 24,
+      "width": 96,
+      "x": 545,
+      "y": 0
+    },
+    "id": "36:5060",
+    "name": "Watt? Status Item"
+  }
+}

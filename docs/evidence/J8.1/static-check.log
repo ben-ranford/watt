@@ -1,0 +1,5 @@
+docs/evidence/J8.1/reference.png: OK
+.build/xcode/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: no symbols
+J8.1 exact reference SHA, native controls/style, sampling/wake routing and fixture isolation passed
+Cumulative baseline outside declared source edits preserved; native/safety/authority guards retained
+Debug fixture symbols present; Release fixture/registry/selectors absent; production no-reading path retained

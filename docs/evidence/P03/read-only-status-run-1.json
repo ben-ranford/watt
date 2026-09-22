@@ -1,0 +1,16 @@
+{
+  "bundleIdentifier" : "dev.watt.evidence.P03StatusProbe",
+  "bundlePath" : "\/Users\/benranford\/Projects\/watt-worktrees\/swiftui-implementation\/.build\/p03-read-only\/P03StatusProbe.app",
+  "loginReadAtUTC" : "2026-09-20T13:05:00Z",
+  "mainAppStatus" : "notFound",
+  "mainAppStatusRawValue" : 3,
+  "notificationAuthorization" : "notDetermined",
+  "notificationAuthorizationRawValue" : 0,
+  "notificationReadAtUTC" : "2026-09-20T13:05:00Z",
+  "osVersion" : "Version 27.0 (Build 26A428)",
+  "processID" : 13052,
+  "processStartedAtUTC" : "2026-09-20T13:05:00Z",
+  "run" : "1",
+  "scope" : "probe identity only; no delivery, registration, or approval mutation proof",
+  "systemUptimeSeconds" : 174627.93576933333
+}

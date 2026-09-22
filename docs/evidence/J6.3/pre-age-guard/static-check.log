@@ -1,0 +1,3 @@
+.build/xcode/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: no symbols
+Debug fixture symbols present; Release fixture symbols absent
+J6.3 shared native panel, exact dark fixture, reference digest, honest capture and script checks passed

@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"Body/Emphasized\":\"Font(family: \\\"SF Pro\\\", style: Semibold, size: 13, weight: 590, lineHeight: 16, letterSpacing: 0)\",\"Labels/Primary\":\"#000000d9\",\"Headline/Regular\":\"Font(family: \\\"SF Pro\\\", style: Bold, size: 13, weight: 700, lineHeight: 16, letterSpacing: 0)\",\"Toggle (Switch)/Track - Width\":\"36\",\"Toggle (Switch)/Track - Height\":\"16\",\"Accents/Blue\":\"#0088ff\",\"Toggle (Switch)/Knob - Width\":\"21\",\"Toggle (Switch)/Knob - Height\":\"13\",\"Labels/Quinary\":\"#0000000d\",\"Labels/Secondary\":\"#00000080\",\"Global/Font Size\":\"13\",\"Button/Padding - Horizontal\":\"16\",\"Global/Height\":\"24\",\"Button/Radius\":\"6\",\"Fills - Opaque/Quaternary\":\"#00000008\",\"Window Background\":\"#ffffff\",\"Liquid Glass/Light Angle\":\"0\",\"Liquid Glass/Depth - Medium and Large\":\"30\",\"Liquid Glass/Dispersion\":\"20\",\"Liquid Glass/Frost - Large\":\"16\",\"Liquid Glass/Opacity\":\"25\",\"Liquid Glass/Refraction\":\"70\",\"Liquid Glass/Splay - Medium and Large\":\"20\",\"Subheadline/Regular\":\"Font(family: \\\"SF Pro\\\", style: Regular, size: 11, weight: 400, lineHeight: 14, letterSpacing: 0)\",\"Accents - Vibrant/Red\":\"#f52f32\",\"Fills - Vibrant (Use Plus Lighter | Darker)/Secondary\":\"#e6e6e6\"}"
+    }
+  ],
+  "isError": false
+}

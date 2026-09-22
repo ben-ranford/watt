@@ -1,0 +1,19 @@
+{
+  "AXTrusted" : false,
+  "captureAPI" : "screencapture -l; independently verified PID-owned Settings and Components popup windows",
+  "comparableCapture" : false,
+  "fixture" : "J7.3\/base",
+  "liveInteractionVerified" : false,
+  "node" : "31:7102",
+  "pixel_diff" : null,
+  "processIdentifier" : 24681,
+  "reason" : "BLOCKED: Accessibility trust unavailable; no permission requested",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "status" : "blocked",
+  "timestampUTC" : "2026-09-22T17:07:19Z",
+  "visualPass" : false,
+  "windows" : [
+
+  ]
+}

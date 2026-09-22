@@ -1,0 +1,33 @@
+{
+  "command": [
+    "xcodebuild",
+    "-project",
+    "Watt.xcodeproj",
+    "-scheme",
+    "Watt",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=macOS",
+    "-derivedDataPath",
+    ".build/G081-Debug",
+    "-only-testing:WattTests",
+    "-parallel-testing-enabled",
+    "NO",
+    "-test-timeouts-enabled",
+    "YES",
+    "-maximum-test-execution-time-allowance",
+    "60",
+    "-resultBundlePath",
+    ".build/G081-native-tests.xcresult",
+    "test-without-building"
+  ],
+  "environment": {
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+  },
+  "exitCode": 143,
+  "timedOut": true,
+  "timeoutSeconds": 150,
+  "durationSeconds": 150.03,
+  "log": "native-tests.log"
+}

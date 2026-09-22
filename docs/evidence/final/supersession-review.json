@@ -1,0 +1,62 @@
+{
+  "C01": {
+    "sources": [
+      "DESIGN.md:362-379",
+      "DESIGN.md:564-585",
+      "docs/evidence/C01/visual-review.json",
+      "docs/evidence/C01/README.md"
+    ],
+    "supersession": {
+      "state": "historical-superseded",
+      "reason": "The reviewed custom gradient/card chrome in StatusPanelView has been removed in favor of native SwiftUI Form, Section and LabeledContent styling. The prior capture and independent PASS do not validate the current implementation.",
+      "supersededBy": {
+        "implementation": "Features/MenuBar/Views/StatusPanelView.swift",
+        "sourceChecks": "Tests/WattTests/NativeStylingTests.swift"
+      },
+      "originalStatus": "Independent visual-ralph review complete: 92/100 PASS; C01 visual correction closed with residual material/typography differences",
+      "originalVisualPass": true,
+      "preservedEvidenceScope": "All capture/reference paths, hashes, comparison results, correction details and independentReview below describe the historical custom-chrome implementation, not current native styling. Original artifacts are retained unchanged.",
+      "currentVisualReview": {
+        "status": "pending",
+        "visualPass": null,
+        "reason": "Source/static checks establish native control usage only; no fresh capture or independent visual approval is supplied by this supersession."
+      }
+    },
+    "currentVisualPass": null,
+    "currentVisualScore": null,
+    "conflict": "C01 README still leads with the historical PASS and obsolete C01-only gate wording. Explicit JSON supersession and DESIGN native-control mapping take precedence; README was not edited."
+  },
+  "J11.3": {
+    "sources": [
+      "docs/evidence/J11.3/README.md",
+      "docs/evidence/J11.3/verification.json",
+      "docs/evidence/J11.3/visual-review.json"
+    ],
+    "captureExit": 1,
+    "record": {
+      "story": "J11.3",
+      "node": "36:5428",
+      "status": "blocked",
+      "visualPass": false,
+      "score": null,
+      "pixel_diff": null,
+      "comparableCapture": false,
+      "implementationScreenshot": null,
+      "referenceScreenshot": "reference.png",
+      "captureEvidence": "capture-20260922T224834-49373/window.json",
+      "screenCapturePreauthorized": true,
+      "AXTrusted": false,
+      "blockers": [
+        "BLOCKED: Accessibility trust unavailable; no permission requested",
+        "No PID-owned on-screen compositor windows enumerated; no capture-attempt.json emitted during observation period.",
+        "Live Return/Escape, focus traversal, VoiceOver order and exact native geometry remain unverified."
+      ],
+      "review": "Reference inspected; no accepted native implementation image exists, so no image comparison or visual score is reported.",
+      "nativeStyling": "Shared SettingsRootView grouped Form and SwiftUI alert; no painted tokens, custom alert, gradients or duplicate chrome."
+    },
+    "currentVisualScore": null,
+    "runtimeKeyboardVerified": false,
+    "voiceOverVerified": false,
+    "limitation": "Package/source shortcut and cancellation tests do not prove actual Return/Escape, focus traversal or VoiceOver; no new native capture attempted."
+  }
+}

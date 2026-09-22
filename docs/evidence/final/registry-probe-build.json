@@ -1,0 +1,21 @@
+{
+  "command": [
+    "xcrun",
+    "swiftc",
+    "-D",
+    "DEBUG",
+    "Tests/Fixtures/StoryFixtures.swift",
+    "Tests/Fixtures/StoryFixtureData.swift",
+    "scripts/F05/RegistryProbe.swift",
+    "-o",
+    ".build/G081-registry-probe"
+  ],
+  "environment": {
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+  },
+  "exitCode": 0,
+  "timedOut": false,
+  "timeoutSeconds": 90,
+  "durationSeconds": 0.77,
+  "log": "registry-probe-build.log"
+}

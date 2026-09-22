@@ -1,0 +1,36 @@
+{
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "frameNode": "25:787",
+  "frame": {
+    "width": 1512,
+    "height": 982
+  },
+  "windowNode": "25:1102",
+  "window": {
+    "x": 466,
+    "y": 56,
+    "width": 580,
+    "height": 870
+  },
+  "contentNode": "25:1129",
+  "content": {
+    "x": 0,
+    "y": 31,
+    "width": 580,
+    "height": 839
+  },
+  "forms": [
+    "25:1501",
+    "25:1751",
+    "25:1994",
+    "25:2243",
+    "25:2492"
+  ],
+  "source": "Figma get_design_context(25:787) and get_metadata(25:1102), 2026-09-22",
+  "actualContent": {
+    "width": 580,
+    "height": 1000
+  },
+  "deviation": "Native grouped Form section spacing retained; taller content capture rather than painting compact reference rows.",
+  "visualPass": false
+}

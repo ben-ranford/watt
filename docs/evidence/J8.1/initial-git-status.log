@@ -1,0 +1,73 @@
+ M App/AppDestination.swift
+ M App/AppRouter.swift
+ M App/RootSceneView.swift
+ M App/WattApp.swift
+ M DESIGN.md
+ M DesignSystem/Components/WattActionButton.swift
+ M DesignSystem/Components/WattFormRow.swift
+ M DesignSystem/Components/WattWindowScaffold.swift
+ M DesignSystem/Theme/WattColors.swift
+ M DesignSystem/Theme/WattSpacing.swift
+ M DesignSystem/Theme/WattTypography.swift
+ M Features/MenuBar/Components/MenuBarStatusLabel.swift
+ M Features/MenuBar/Views/MenuBarRootView.swift
+ M Features/MenuBar/Views/StatusItemContextMenu.swift
+ M Features/MenuBar/Views/StatusPanelView.swift
+ M Features/Onboarding/Views/OnboardingFlowView.swift
+ M Features/Settings/Views/SettingsRootView.swift
+ M Models/PowerReading.swift
+ M Models/WattPreferences.swift
+ M Package.swift
+ M Resources/Assets.xcassets/WattAppIcon.imageset/Contents.json
+ M SCREEN-BACKLOG.md
+ M Services/PowerReadingStore.swift
+ M Tests/WattTests/AppRouterTests.swift
+?? App/HelperUpdatePresentation.swift
+?? App/J73FixtureLaunch.swift
+?? App/J74FixtureLaunch.swift
+?? DesignSystem/Components/ComponentSelectionMenu.swift
+?? DesignSystem/Components/ReadingPicker.swift
+?? DesignSystem/Verification/
+?? Resources/Assets.xcassets/WattAppIcon.imageset/watt-app-icon.png
+?? Services/ScopedRemovalAdapter.swift
+?? Services/SystemPowerSourceTelemetryService.swift
+?? Services/UpdateAdapter.swift
+?? Tests/Fixtures/
+?? Tests/WattTests/F05FixtureTests.swift
+?? Tests/WattTests/J13OfferTests.swift
+?? Tests/WattTests/J14ApprovalTests.swift
+?? Tests/WattTests/J15PreviewTests.swift
+?? Tests/WattTests/J16AllSetTests.swift
+?? Tests/WattTests/J17CoachMarkTests.swift
+?? Tests/WattTests/J18LivePanelTests.swift
+?? Tests/WattTests/J21ComponentsUnavailableTests.swift
+?? Tests/WattTests/J23SettingsTurnOnTests.swift
+?? Tests/WattTests/J24SettingsApprovalTests.swift
+?? Tests/WattTests/J25SettingsConnectedTests.swift
+?? Tests/WattTests/J31ApprovalNotGivenTests.swift
+?? Tests/WattTests/J32HelperSwitchedOffTests.swift
+?? Tests/WattTests/J33HelperUpdateTests.swift
+?? Tests/WattTests/J41WelcomeDesktopTests.swift
+?? Tests/WattTests/J42ReadingBatteryUnavailableTests.swift
+?? Tests/WattTests/J43PanelSystemDrawTests.swift
+?? Tests/WattTests/J51WelcomeClosedTests.swift
+?? Tests/WattTests/J52FinishSetupTests.swift
+?? Tests/WattTests/J53FinishSetupTests.swift
+?? Tests/WattTests/J61ChargingPanelTests.swift
+?? Tests/WattTests/J62ChargingHoldTests.swift
+?? Tests/WattTests/J63FullOnAdapterTests.swift
+?? Tests/WattTests/J64InsufficientChargerTests.swift
+?? Tests/WattTests/J65OnBatteryTests.swift
+?? Tests/WattTests/J71ShowInMenuBarTests.swift
+?? Tests/WattTests/J72PerComponentMenuBarTests.swift
+?? Tests/WattTests/J73ChooseComponentsTests.swift
+?? Tests/WattTests/J74CrowdedMenuBarTests.swift
+?? Tests/WattTests/NativeStylingTests.swift
+?? Tests/WattTests/P01TelemetryTests.swift
+?? Tests/WattTests/P04UpdaterTests.swift
+?? Tests/WattTests/P05RemovalTests.swift
+?? Tests/WattUITests/
+?? Watt.xcodeproj/
+?? build/
+?? docs/
+?? scripts/

@@ -1,0 +1,36 @@
+{
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "nodeId": "32:4575",
+  "frameName": "8.3 Opening Watt? again from Finder or Spotlight shows Settings",
+  "frameSize": { "width": 1000, "height": 720 },
+  "desktopTemplate": { "nodeId": "32:4576", "appearance": "light", "showDock": false },
+  "statusItemAnchor": { "nodeId": "32:4892", "name": "Status Item Anchor (right-aligned)", "width": 741, "height": 24 },
+  "statusItem": { "nodeId": "32:4890", "name": "Watt? Status Item", "copy": "􀢋 +42.1 W", "width": 96, "height": 24 },
+  "settingsWindow": {
+    "nodeId": "32:4893",
+    "contentAreaNodeId": "32:4913",
+    "width": 520,
+    "height": 311,
+    "title": "Watt? Settings",
+    "formSections": {
+      "menuBar": { "rowsNodeId": "32:5076", "rows": ["Show = Delta", "Show symbol = On"] },
+      "general": { "rowsNodeId": "32:5315", "rows": ["Open at login = On", "Version = 1.0 (1)"] }
+    }
+  },
+  "typography": [
+    { "style": "Body/Emphasized", "family": "SF Pro", "weight": 590, "size": 13, "lineHeight": 16, "letterSpacing": 0 },
+    { "style": "Headline/Regular", "family": "SF Pro", "weight": 700, "size": 13, "lineHeight": 16, "letterSpacing": 0 }
+  ],
+  "nativeConstraints": [
+    "Use the existing native Settings scene, AppKit/SwiftUI Form, Section, Picker and Toggle.",
+    "Reuse SettingsRootView, AppRouter, the native Settings bridge and shared PreferencesStore.",
+    "Do not draw desktop wallpaper, traffic lights, rounded-rect backgrounds, gradients, custom window chrome or controls.",
+    "Use system wallpaper, titlebar, traffic lights, materials, typography and accessibility."
+  ],
+  "retrievedWith": [
+    "figma_get_design_context(fileKey=9DKDgUfEqidZdZQEVlQgLS,nodeId=32:4575,clientFrameworks=swiftui,clientLanguages=swift)",
+    "figma_get_design_context(fileKey=9DKDgUfEqidZdZQEVlQgLS,nodeId=32:4893,clientFrameworks=swiftui,clientLanguages=swift)",
+    "figma_get_metadata(fileKey=9DKDgUfEqidZdZQEVlQgLS,nodeId=32:4575)",
+    "figma_get_screenshot(fileKey=9DKDgUfEqidZdZQEVlQgLS,nodeId=32:4575,maxDimension=1000)"
+  ]
+}

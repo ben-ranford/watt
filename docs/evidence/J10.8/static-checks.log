@@ -1,0 +1,4 @@
+Watt.xcodeproj/project.pbxproj: OK
+docs/evidence/J10.8/reference.png: OK
+docs/evidence/J10.8/context.png: OK
+PASS: native alert, scoped state, Release fixture isolation

@@ -1,0 +1,20 @@
+{
+  "story": "J2.5",
+  "goal": "G040",
+  "file": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "29:4590",
+  "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-4590",
+  "asset_url": "https://www.figma.com/api/mcp/asset/a0ca7e0c-d91c-4d76-aca9-3eb3d2cfc2e3.png",
+  "path": "reference.png",
+  "width": 1000,
+  "height": 720,
+  "sha256": "1782ab6fdaf8a6e23d742d36fd5d1048c9222505f9232ef13730eabbc94be592",
+  "context": "Exact get_design_context retrieved 2026-09-22; native macOS Code Connect semantics adapted to existing SwiftUI components.",
+  "window_crop": {
+    "x": 240,
+    "y": 215,
+    "width": 520,
+    "height": 311
+  },
+  "native_render_verified": false
+}

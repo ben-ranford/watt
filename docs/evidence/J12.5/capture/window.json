@@ -1,0 +1,16 @@
+{
+  "AXTrusted" : false,
+  "fixture" : "J12.5\/base",
+  "node" : "35:5926",
+  "pixel_diff" : null,
+  "processIdentifier" : 22451,
+  "reason" : "Blocked: no visible PID-owned Settings window within the bounded launch attempt; AX trust unavailable, no permission requested.",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "timestampUTC" : "2026-09-22T21:29:12Z",
+  "visualPass" : false,
+  "windowNode" : "35:6083",
+  "windows" : [
+
+  ]
+}

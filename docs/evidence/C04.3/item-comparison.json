@@ -1,0 +1,12 @@
+{
+  "changedFraction" : 1,
+  "changedPixels" : 1944,
+  "height" : 24,
+  "mask" : "none",
+  "pass" : false,
+  "pixelsPerPoint" : 1,
+  "review" : "pixel check only; independent visual\/accessibility\/service review required",
+  "storyDone" : false,
+  "tolerance" : 0.01,
+  "width" : 81
+}

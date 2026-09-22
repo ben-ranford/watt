@@ -1,0 +1,20 @@
+{
+  "story": "J12.2",
+  "referenceInspected": true,
+  "reference": "reference.png",
+  "referenceObservations": "1000x720 desktop, +42.1 W status item; 540x187 Settings behind native stacked Uninstall Watt? alert; General rows Open at login and Uninstall Watt?; destructive Uninstall and Cancel.",
+  "nativeCaptureInspected": false,
+  "AXTrusted": false,
+  "screenCapturePreauthorized": true,
+  "compositorWindows": [],
+  "status": "blocked",
+  "reason": "BLOCKED: Accessibility trust unavailable; no permission requested",
+  "visualPass": false,
+  "score": null,
+  "pixel_diff": null,
+  "remainingProof": [
+    "Native Settings and alert screenshot comparison",
+    "OS Return/Escape and close interaction in trusted GUI session"
+  ],
+  "processCleanup": "Fixture PID 9524 terminated and reaped"
+}

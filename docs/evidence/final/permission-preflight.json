@@ -1,0 +1,15 @@
+{
+  "command": [
+    "xcrun",
+    "swift",
+    "docs/evidence/final/permission-preflight.swift"
+  ],
+  "environment": {
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+  },
+  "exitCode": 1,
+  "timedOut": false,
+  "timeoutSeconds": 90,
+  "durationSeconds": 0.57,
+  "log": "permission-preflight.log"
+}

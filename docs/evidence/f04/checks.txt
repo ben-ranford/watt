@@ -1,0 +1,11 @@
+Release capture symbol/flag check: PASS
+Debug/Release actor-isolation warning check: PASS
+docs/evidence/f04/debug-build.log:** BUILD SUCCEEDED **
+docs/evidence/f04/release-analyze.log:** ANALYZE SUCCEEDED **
+docs/evidence/f04/native-tests.log:** TEST SUCCEEDED **
+docs/evidence/f04/package-tests.log:	 Executed 85 tests, with 0 failures (0 unexpected) in 0.258 (0.264) seconds
+docs/evidence/f04/package-tests.log:	 Executed 85 tests, with 0 failures (0 unexpected) in 0.258 (0.265) seconds
+docs/evidence/f04/native-tests.log:	 Executed 85 tests, with 0 failures (0 unexpected) in 0.275 (0.297) seconds
+docs/evidence/f04/native-tests.log:	 Executed 85 tests, with 0 failures (0 unexpected) in 0.275 (0.297) seconds
+Captured PID 73789, window 7358: 640x1008, 270 sampled RGB colors
+git diff --check: PASS

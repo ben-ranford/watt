@@ -1,0 +1,37 @@
+{
+  "story": "J6.1",
+  "goal": "G050",
+  "node": "31:2745",
+  "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-2745",
+  "source": "User-supplied exact docs/evidence/J6.1/reference.png, inspected locally; no new Figma retrieval.",
+  "file": "reference.png",
+  "sha256": "778afcc2be6c0edea970eb2907fa36405d39b8240a1d4799c2e4649c063d2a83",
+  "bytes": 757801,
+  "widthPixels": 1000,
+  "heightPixels": 720,
+  "appearance": "darkAqua",
+  "selectedStatusItem": "+42.1 W",
+  "referencePanelBounds": {
+    "x": 645,
+    "y": 38,
+    "width": 320,
+    "height": 265
+  },
+  "boundsProvenance": "Panel bounds in the existing local F00 registry record for node 31:2745 (child 31:3013), consistent with the supplied image. Native MenuBarExtra owns actual window geometry.",
+  "copy": [
+    "Charging",
+    "+42.1 W",
+    "64% · full in about 38 min",
+    "Charger input",
+    "96 W USB-C charger",
+    "65.0 W",
+    "System draw",
+    "22.9 W",
+    "Battery",
+    "+42.1 W",
+    "Settings…",
+    "Quit Watt?"
+  ],
+  "componentsVisible": false,
+  "mapping": "Existing StatusPanelView/StatusPanelModel/PowerReadingStore/MenuBarRootView and design tokens. Native dark Aqua MenuBarExtra window, grouped Form/LabeledContent rows, borderless footer buttons. No custom background, rounded rectangles, gradients or duplicate panel markup."
+}

@@ -1,0 +1,35 @@
+{
+  "accessibilityEvidence" : "source-native SwiftUI semantics only; no AX traversal, UI automation or VoiceOver audit",
+  "appearance" : "light \/ aqua",
+  "capture" : "screencapture -x -o -l (app-owned window only)",
+  "capturedAtUTC" : "2026-09-20T10:56:09Z",
+  "confirmationState" : "not presented; neutral Remove opens native SwiftUI alert; Cancel role cancel; Remove role destructive; local fixture mutation only; not runtime interaction audited",
+  "fixture" : "J1.2: Delta selected; four enabled options; +42.1 W \/ 65 W \/ 22.9 W",
+  "locale" : "en_US",
+  "nonblank" : true,
+  "osVersion" : "Version 27.0 (Build 26A428)",
+  "pixelHeight" : 668,
+  "pixelsPerPoint" : 2,
+  "pixelWidth" : 960,
+  "referenceNode" : "27:1354 \/ window 27:1508 \/ content 27:1520",
+  "sampledRGBColors" : 210,
+  "visualGate" : "native smoke capture only; no calibrated Figma comparison or VoiceOver sign-off",
+  "window" : {
+    "kCGWindowAlpha" : 1,
+    "kCGWindowBounds" : {
+      "Height" : 334,
+      "Width" : 480,
+      "X" : 660,
+      "Y" : 222
+    },
+    "kCGWindowIsOnscreen" : true,
+    "kCGWindowLayer" : 0,
+    "kCGWindowMemoryUsage" : 2432,
+    "kCGWindowName" : "Watt F02 Gallery reading-light",
+    "kCGWindowNumber" : 7181,
+    "kCGWindowOwnerName" : "Watt?",
+    "kCGWindowOwnerPID" : 46263,
+    "kCGWindowSharingState" : 1,
+    "kCGWindowStoreType" : 1
+  }
+}

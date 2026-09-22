@@ -1,0 +1,21 @@
+DesignSystem/Verification/WattComponentGallery.swift:150:51: warning: 'previewDisplayName' was deprecated in any Apple OS 27.0: Use #Preview("name") instead. [#DeprecatedDeclaration]
+148 | struct WattComponentGallery_Previews: PreviewProvider {
+149 |     static var previews: some View {
+150 |         WattComponentGallery(colorScheme: .light).previewDisplayName("Light")
+    |                                                   `- warning: 'previewDisplayName' was deprecated in any Apple OS 27.0: Use #Preview("name") instead. [#DeprecatedDeclaration]
+151 |         WattComponentGallery(colorScheme: .dark).previewDisplayName("Dark")
+152 |     }
+
+DesignSystem/Verification/WattComponentGallery.swift:151:50: warning: 'previewDisplayName' was deprecated in any Apple OS 27.0: Use #Preview("name") instead. [#DeprecatedDeclaration]
+149 |     static var previews: some View {
+150 |         WattComponentGallery(colorScheme: .light).previewDisplayName("Light")
+151 |         WattComponentGallery(colorScheme: .dark).previewDisplayName("Dark")
+    |                                                  `- warning: 'previewDisplayName' was deprecated in any Apple OS 27.0: Use #Preview("name") instead. [#DeprecatedDeclaration]
+152 |     }
+153 | }
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+Captured PID 78107, window 7439: 1160x1960, 350 sampled RGB colors
+Captured PID 78121, window 7451: 1160x1960, 350 sampled RGB colors
+Captured PID 78306, window 7457: 1160x1960, 323 sampled RGB colors
+Captured PID 78331, window 7467: 1160x1960, 323 sampled RGB colors

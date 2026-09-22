@@ -1,0 +1,17 @@
+{
+  "actualOriginalPixels" : [
+    1040,
+    576
+  ],
+  "fractionPixelsExceeding16" : 0.98874749785530458,
+  "height" : 269,
+  "meanAbsoluteRGBDifference" : 206.27401582308644,
+  "note" : "Secondary localization evidence only. Actual 520x288 window resampled to 520x269 reference crop for localization ONLY; height and dark\/light appearance differ. No comparable viewport\/appearance, no acceptance score. No desktop or OS notification compared.",
+  "referenceCrop" : [
+    240,
+    236,
+    520,
+    269
+  ],
+  "width" : 520
+}

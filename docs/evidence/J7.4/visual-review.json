@@ -1,0 +1,23 @@
+{
+  "story": "J7.4",
+  "goal": "G058",
+  "reference": "reference.png",
+  "referenceNode": "31:7764",
+  "score": null,
+  "pixel_diff": null,
+  "verdict": "blocked",
+  "visualPass": false,
+  "category_match": null,
+  "differences": [],
+  "suggestions": [
+    "Re-run capture.sh on a graphical host with preauthorized Accessibility and screen capture; archive the existing capture directory first."
+  ],
+  "reasoning": "Native Debug fixture PID 29583 launched. AXTrusted=false and no PID-owned compositor windows were visible. No comparable image exists; no synthetic fallback was attempted. Process terminated and reaped. Native click/AX/pixel acceptance remains unproven.",
+  "runtime": "visual-ralph unavailable outside tmux; not invoked; no workflow or goal state mutated",
+  "evidence": [
+    "capture/window.json",
+    "capture/process.txt",
+    "capture/process-cleanup.log",
+    "verification.json"
+  ]
+}

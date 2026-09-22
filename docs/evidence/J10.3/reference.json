@@ -1,0 +1,21 @@
+{
+  "story": "J10.3",
+  "goal": "G067",
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "34:4695",
+  "windowNode": "34:4849",
+  "frame": {
+    "width": 1000,
+    "height": 720
+  },
+  "window": {
+    "x": 240,
+    "y": 188,
+    "width": 520,
+    "height": 365
+  },
+  "reference": "reference.png",
+  "sha256": "b254adecabe4525bfc656ae429fa4b201e3646f64c3b8bcde9fd814b957b4f80",
+  "suppliedMatchesRetrieved": true,
+  "copyPrecedence": "Explicit user copy and metadata names override rendered PNG headings; PNG says Watt? 1.1 is out / What changed."
+}

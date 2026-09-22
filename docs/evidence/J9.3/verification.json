@@ -1,0 +1,74 @@
+{
+  "story": "J9.3",
+  "goal": "G064",
+  "branch": "bug/G061-j83-opening-settings",
+  "committed": false,
+  "reference": {
+    "story": "J9.3",
+    "goal": "G064",
+    "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+    "node": "32:6494",
+    "frame": {
+      "width": 1000,
+      "height": 220
+    },
+    "appOwnedSurface": null,
+    "sha256": {
+      "mcp-supplied-reference.png": "dbb12c0ff5fdb072f77626740af6954b710d6f046cf2feb622ae660e7f506a84",
+      "mcp-retrieved-screenshot.png": "dbb12c0ff5fdb072f77626740af6954b710d6f046cf2feb622ae660e7f506a84"
+    },
+    "interpretation": "Desktop Template only, Dock hidden. Finder/system chrome is OS-owned; no Watt status item or window after process exit. SF Pro Body/Emphasized 13/16 belongs to native system chrome. Historic F00 manifest remains unchanged."
+  },
+  "tests": {
+    "focused": {
+      "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test --filter J9[123]",
+      "executed": 17,
+      "J93": 6,
+      "failures": 0
+    },
+    "full": {
+      "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test",
+      "executed": 578,
+      "skipped": 5,
+      "failures": 0
+    },
+    "nativeTestTargets": "build-for-testing passed; native test host not launched because session/AX capture is blocked"
+  },
+  "builds": {
+    "Debug": "build/analyze/build-for-testing passed",
+    "Release": "build/analyze passed",
+    "ReleaseIsolation": "J93FixtureLaunch, J9.3/base and capture flag absent from Release binary"
+  },
+  "staticChecks": "project plist, Python capture syntax, git diff whitespace, matching PNG hashes passed",
+  "native": {
+    "status": "blocked",
+    "AXTrusted": false,
+    "screenCapturePreauthorized": true,
+    "frontmostBundleID": "com.apple.LocalAuthentication.UIAgent",
+    "fixtureQuitActionObserved": false,
+    "normalApplicationsLaunchExit": 0,
+    "visualPass": false,
+    "score": null,
+    "pixel_diff": null,
+    "liveInteractionVerified": false,
+    "reason": "No fixture status button/quit observation before two 20-second deadlines; no owned compositor windows. AX trust unavailable. System desktop is not a drawable app surface. No screenshot synthesized or compared."
+  },
+  "cleanup": {
+    "pids": [
+      66509,
+      66681,
+      66843
+    ],
+    "allAbsent": true,
+    "ownedCompositorWindowsAfterCleanup": [],
+    "method": "Bounded fixture timeout cleanup: NSRunningApplication.terminate accepted for each PID; 5-second wait with SIGKILL fallback available. Exact fixture fallback usage was not separately logged. Final absence independently checked. Normal Applications launch required no SIGKILL fallback.",
+    "temporaryApplicationsBundleRemoved": "/Users/benranford/Applications/Watt-J93-f2tvi47b",
+    "notProofOfProductionQuit": true
+  },
+  "warnings": [
+    "Existing native test targets deploy to macOS 13 while installed XCTest libraries require macOS 14; build succeeds.",
+    "Initial CLT package build failed; Xcode-selected toolchain passed.",
+    "Initial full-suite expectation omitted newly implemented J9.3; updated F05 registry expectation and reran successfully."
+  ],
+  "completion": "Implementation and automated validation complete; native context-menu Quit, visible status-item disappearance and normal launch window routing remain unverified due AX/session blocker."
+}

@@ -1,0 +1,127 @@
+{
+  "story": "J6.2",
+  "goal": "G051",
+  "node": "31:3754",
+  "branch": "bug/G051-j62-on-adapter-charging-on-hold",
+  "status": "automated-checks-passed-visual-acceptance-blocked",
+  "verifiedAtUTC": "2026-09-22T15:52:42.718883+00:00",
+  "exits": {
+    "host-tests": 0,
+    "static-check": 0,
+    "fixture-rejection": 0,
+    "package-build": 0,
+    "capture": 1,
+    "host-Debug": 0,
+    "focused-tests-initial": 1,
+    "focused-tests": 0,
+    "host-focused-tests": 0,
+    "package-tests": 0,
+    "host-Release": 0,
+    "diff-check": 0
+  },
+  "testResults": {
+    "focused-tests": {
+      "executed": 104,
+      "passed": 103,
+      "skipped": 1,
+      "failures": 0,
+      "log": "focused-tests.log"
+    },
+    "package-tests": {
+      "executed": 446,
+      "passed": 444,
+      "skipped": 2,
+      "failures": 0,
+      "log": "package-tests.log"
+    },
+    "host-focused-tests": {
+      "executed": 104,
+      "passed": 103,
+      "skipped": 1,
+      "failures": 0,
+      "log": "host-focused-tests.log"
+    },
+    "host-tests": {
+      "executed": 434,
+      "passed": 432,
+      "skipped": 2,
+      "failures": 0,
+      "log": "host-tests.log"
+    },
+    "J6.2": {
+      "executed": 13,
+      "passed": 12,
+      "skipped": 1,
+      "failures": 0,
+      "runtimes": [
+        "package",
+        "native host"
+      ],
+      "skip": "Native SwiftUI host exposes no AX labels in this test process; live row AX validation remains blocked."
+    }
+  },
+  "skips": [
+    "J6.2 native AX row traversal: no labels exposed by host",
+    "Opt-in P01 real hardware probe (full suites only)"
+  ],
+  "builds": {
+    "package": "passed",
+    "nativeDebug": [
+      "build passed",
+      "analyze passed"
+    ],
+    "nativeRelease": [
+      "build passed",
+      "analyze passed"
+    ]
+  },
+  "staticChecks": [
+    "Shell syntax",
+    "Python AST",
+    "Swift capture script typecheck",
+    "JSON parsing",
+    "Exact reference SHA256",
+    "Native shared layout/control source contracts",
+    "Native Release excludes fixture registry sources and J6.2 symbols; Debug contains them"
+  ],
+  "nativeFixtureRejection": {
+    "checks": 2,
+    "passed": 2,
+    "log": "fixture-rejection.log"
+  },
+  "referenceSHA256": "3d61ebe2a14f409192352f4d3e52edd26cd07d0d5da6437496a438961ce87ce9",
+  "capture": {
+    "exit": 1,
+    "metadata": "capture/window.json",
+    "screenCapturePreauthorized": true,
+    "AXTrusted": false,
+    "ownedWindowCount": 0,
+    "processIdentifier": 94208,
+    "processCleanedUp": true
+  },
+  "visualPass": false,
+  "storyDone": false,
+  "committed": false,
+  "changedFiles": [
+    "App/WattApp.swift",
+    "Models/PowerReading.swift",
+    "Services/PowerReadingStore.swift",
+    "Features/MenuBar/Views/StatusPanelView.swift",
+    "Features/MenuBar/Views/MenuBarRootView.swift",
+    "Features/MenuBar/Components/MenuBarStatusLabel.swift",
+    "DesignSystem/Theme/WattSpacing.swift",
+    "Tests/Fixtures/StoryFixtures.swift",
+    "Tests/Fixtures/StoryFixtureData.swift",
+    "Tests/Fixtures/FixtureLaunchSelection.swift",
+    "Tests/WattTests/F05FixtureTests.swift",
+    "Tests/WattTests/J62ChargingHoldTests.swift",
+    "Watt.xcodeproj/project.pbxproj",
+    "DESIGN.md",
+    "SCREEN-BACKLOG.md",
+    "docs/evidence/J6.2/"
+  ],
+  "validationGap": "No comparable native capture: AXTrusted=false and zero fixture-owned on-screen compositor windows. Selected status-item appearance, live keyboard/navigation, hover/dismissal and VoiceOver remain unverified; no permission changes requested or made.",
+  "initialFailure": "Initial focused run had 3 assertions failing in the AX row traversal. Diagnosis found no native labels exposed in this process. Geometry/native button/callback checks remain passing; AX validation is a separate explicitly skipped test. Initial log/exit retained.",
+  "warnings": "Native builds retain existing OnboardingFlowView actor-isolation warnings and AppIntents metadata warning; no analyzer or build failure.",
+  "productionBoundary": "Existing system telemetry parser cannot establish Optimised Battery Charging reason. The state requires explicit authoritative chargingHoldReason; connection or zero delta alone never infers it."
+}

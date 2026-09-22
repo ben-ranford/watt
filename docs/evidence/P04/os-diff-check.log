@@ -1,0 +1,6 @@
+git diff --check PASS
+Watt.xcodeproj/project.pbxproj: OK
+Whitespace PASS: Services/UpdateAdapter.swift
+Whitespace PASS: Tests/WattTests/P04UpdaterTests.swift
+Whitespace PASS: docs/evidence/P04/README.md
+Whitespace PASS: DESIGN.md

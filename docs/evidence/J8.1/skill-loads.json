@@ -1,0 +1,19 @@
+{
+  "loadedBeforeEachContextCall": true,
+  "contextCalls": [
+    "32:3451",
+    "I32:3701;4353:3203;32:4015"
+  ],
+  "skills": [
+    {
+      "path": "/Users/benranford/.codex/plugins/cache/openai-curated-remote/figma/12.0.0/skills/figma-design-to-code/SKILL.md",
+      "sha256": "936bbe68b4731d4a8748db15f85247efde232c8ae0902857c2c79a9ed40649ea"
+    },
+    {
+      "path": "/Users/benranford/.codex/plugins/cache/openai-curated-remote/figma/12.0.0/skills/figma-swiftui/SKILL.md",
+      "sha256": "868c4defe2c0854f5a3e27594d3fa0f20347c86a9b15d103483b7488bfa8affe"
+    }
+  ],
+  "swiftuiReference": "figma-swiftui/references/design-to-code.md",
+  "userOverride": "Use native SF Symbols/material; no desktop assets or screenshot reconstruction."
+}

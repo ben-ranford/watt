@@ -1,0 +1,22 @@
+{
+  "file": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "35:5746",
+  "alertNode": "35:5900",
+  "bounds": {
+    "x": 370,
+    "y": 222,
+    "width": 260,
+    "height": 246
+  },
+  "icon": 64,
+  "titleNode": "I35:5900;152:9962",
+  "descriptionNode": "I35:5900;152:9963",
+  "primary": "I35:5900;35:5922",
+  "secondary": "I35:5900;35:5925",
+  "sourceScreenshot": "https://www.figma.com/api/mcp/asset/cc811280-dec6-4bdf-8658-1293ddb6c325.png",
+  "sha256": "78a2df9be1045781e5d8dde16d879b10bc42fbf608f6aaacb6dbacfda0d029d2",
+  "nativeGeometry": "OS-owned; no fixed frame or custom desktop",
+  "contextImage": "Embedded MCP context image omitted from JSON; separate exact MCP screenshot PNG retained",
+  "score": null,
+  "pixel_diff": null
+}

@@ -1,0 +1,3 @@
+PASS: C04.1 direct 1x capture byte-identical to prior evidence
+adc23b0ff5a85dee63fca687e1f8db16c8cb776ddad1931c4a5640925c7e8ab8  docs/evidence/C04.1/actual-status-item-1x.png
+adc23b0ff5a85dee63fca687e1f8db16c8cb776ddad1931c4a5640925c7e8ab8  docs/evidence/C04.2/c041-regression/actual-status-item-1x.png

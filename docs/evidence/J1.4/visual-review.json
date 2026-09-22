@@ -1,0 +1,57 @@
+{
+  "story": "J1.4",
+  "goal": "G031",
+  "date": "2026-09-22",
+  "reference": "figma-frame.png",
+  "frameNode": "28:1206",
+  "windowNode": "28:1521",
+  "capture": "native-window.png",
+  "capturePixels": [
+    960,
+    448
+  ],
+  "pixelsPerPoint": 2,
+  "normalizedWindowPoints": [
+    480,
+    224
+  ],
+  "figmaWindowBounds": [
+    260,
+    258,
+    480,
+    224
+  ],
+  "normalization": "960x448 native pixels at 2x normalize exactly to 480x224 points; raw capture retained unchanged",
+  "visualPass": true,
+  "scope": "App-owned waiting window only",
+  "independentReview": {
+    "source": "Independent visual-ralph result supplied in the task; persisted here, not a new review performed by this documentation update",
+    "score": 92,
+    "scoreOutOf": 100,
+    "verdict": "PASS",
+    "residualNativeDifferences": [
+      "Native button rendering",
+      "macOS traffic-light treatment",
+      "Native spinner rendering",
+      "Native window surface appearance"
+    ],
+    "limits": [
+      "Not pixel-identical parity or a calibrated pixel-diff score",
+      "No whole-frame approval: the system Notification Center card is excluded",
+      "No live AX interaction, VoiceOver audit or TCC verification claimed",
+      "No permission prompt or TCC bypass claimed",
+      "Visual PASS is not accessibility sign-off or approval of an overall gate including AX/TCC"
+    ]
+  },
+  "excludedSurfaces": [
+    {
+      "name": "System Notification Center card",
+      "node": "28:1584",
+      "ownership": "system-owned",
+      "status": "Excluded from score and PASS; not recreated",
+      "reason": "Unverifiable under safe app-owned capture/TCC"
+    }
+  ],
+  "captureMetadataPolicy": "capture.json and window.json remain unchanged capture-time metadata, including visualPass: false and outstanding-review wording. This artifact records the subsequent independent app-owned-window visual-only verdict without closing AX/TCC gaps.",
+  "verificationScope": "Documentation-only persistence; no new review, capture, build, test run or accessibility audit. Existing reproduction commands not rerun. Image dimensions checked; git diff --check run. Source and tests not edited."
+}

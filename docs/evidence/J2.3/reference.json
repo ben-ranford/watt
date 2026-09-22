@@ -1,0 +1,24 @@
+{
+  "story": "J2.3",
+  "goal": "G038",
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "node": "29:3270",
+  "windowNode": "29:3424",
+  "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-3270",
+  "assetURL": "https://www.figma.com/api/mcp/asset/978e075a-85da-4011-a401-4c5ce504c3cb.png",
+  "reference": "figma-reference.png",
+  "sha256": "370e402e90558dce25981857d3bbcd8ad736b13226ed2fef5108df968126b42b",
+  "dimensions": [
+    1000,
+    720
+  ],
+  "appOwnedCrop": [
+    240,
+    226,
+    520,
+    288
+  ],
+  "contextProvenance": "Exact Swift/SwiftUI get_design_context hierarchy supplied in task handoff; screenshot fetched directly from specified Figma asset URL and visually inspected.",
+  "historicalInventoryHash": "4b2d1d879e694c954a252a5a4302322fde23dddc98cadf6c2d373d2f759d1ad0",
+  "note": "Current task asset hash differs from the older F00 export. Both provenances remain explicit; the supplied exact asset is the comparison reference."
+}

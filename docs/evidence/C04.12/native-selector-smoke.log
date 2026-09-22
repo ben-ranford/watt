@@ -1,0 +1,3 @@
+PASS rejected ['--watt-fixture', 'C04.12/unknown'] Watt fixture launch rejected: --watt-fixture C04.12/unknown: unknownVariant("unknown")
+PASS rejected ['--watt-fixture=C04.12'] Watt fixture launch rejected: --watt-fixture=C04.12: invalidArguments
+PASS rejected ['--watt-fixture', 'C04.12', '--watt-fixture', 'C04.11'] Watt fixture launch rejected: --watt-fixture C04.12 --watt-fixture C04.11: invalidArguments

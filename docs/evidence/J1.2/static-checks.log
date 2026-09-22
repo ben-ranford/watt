@@ -1,0 +1,6 @@
+diff-check status: 0
+docs/evidence/J1.2/debug-build-analyze.log:** BUILD SUCCEEDED **
+docs/evidence/J1.2/debug-build-analyze.log:** ANALYZE SUCCEEDED **
+docs/evidence/J1.2/release-build-analyze.log:** BUILD SUCCEEDED **
+docs/evidence/J1.2/release-build-analyze.log:** ANALYZE SUCCEEDED **
+J1.2 native source contracts and Release fixture isolation: PASS

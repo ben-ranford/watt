@@ -1,0 +1,7 @@
+Watt.xcodeproj/project.pbxproj: OK
+docs/evidence/J10.2/reference.png: OK
+docs/evidence/J10.2/supplied-reference.png: OK
+docs/evidence/J10.2/figma-context.json: OK
+docs/evidence/J10.2/figma-metadata.json: OK
+docs/evidence/J10.2/figma-screenshot.json: OK
+Native scene/progress/button ownership and no absolute positioning checks passed

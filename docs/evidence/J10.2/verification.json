@@ -1,0 +1,52 @@
+{
+  "story": "J10.2",
+  "goal": "G066",
+  "status": "implementation-verified-visual-acceptance-blocked",
+  "focusedTests": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test --filter 'J101CheckForUpdatesTests|J102CheckingTests'",
+    "tests": 13,
+    "J101": 7,
+    "J102": 6,
+    "failures": 0,
+    "exit": 0,
+    "log": "focused-tests.log"
+  },
+  "fullPackage": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test",
+    "tests": 591,
+    "skipped": 5,
+    "passed": 586,
+    "failures": 0,
+    "exit": 0,
+    "log": "full-tests.log"
+  },
+  "debug": {
+    "build": "passed",
+    "analyze": "passed",
+    "buildForTesting": "passed",
+    "exit": 0,
+    "log": "debug.log"
+  },
+  "release": {
+    "build": "passed",
+    "analyze": "passed",
+    "exit": 0,
+    "log": "release.log",
+    "buildForTesting": "blocked",
+    "buildForTestingLog": "release-build-for-testing.log",
+    "buildForTestingExit": 65,
+    "blocker": "Existing Release test target cannot import compatible Watt module; first error in J83OpeningSettingsTests.swift:7"
+  },
+  "nativeTestExecution": "not performed",
+  "staticChecks": {
+    "exit": 0,
+    "log": "static-checks.log"
+  },
+  "visualReview": "visual-review.json",
+  "capture": "capture/window.json",
+  "processCleanup": "capture/process-cleanup.log",
+  "productionUpdaterConfigured": false,
+  "outcomeScreens": "J10.3/J10.6/J10.7 remain backlog",
+  "changedFiles": "changed-files.json",
+  "commitCreated": false
+}

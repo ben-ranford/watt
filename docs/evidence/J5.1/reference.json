@@ -1,0 +1,27 @@
+{
+  "story": "J5.1",
+  "goal": "G047",
+  "node": "30:3675",
+  "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-3675",
+  "source": "User-supplied exact downloaded reference; inspected locally. No new Figma retrieval claimed.",
+  "file": "reference.png",
+  "sha256": "03cb7f2a10858efb4648732def158a2258e74fb8c40192938e662c8a7d39fd7c",
+  "bytes": 797416,
+  "widthPixels": 1000,
+  "heightPixels": 720,
+  "appearance": "light",
+  "referencePopoverBounds": {
+    "x": 413,
+    "y": 33,
+    "width": 310,
+    "height": 122
+  },
+  "referenceBoundsProvenance": "Existing embedded F00 exact-node metadata in Tests/Fixtures/StoryFixtureData.swift, corroborated by supplied image; native AppKit chrome owns final geometry.",
+  "copy": [
+    "Watt? is on, showing Delta.",
+    "Setup can wait. Two steps, whenever you\u2019re ready.",
+    "Not Now",
+    "Finish Setup"
+  ],
+  "mapping": "Existing CoachMarkView variant; semantic SwiftUI text and native buttons in transient NSPopover anchored to real MenuBarExtra trailing edge. No wallpaper/system menu-bar recreation."
+}

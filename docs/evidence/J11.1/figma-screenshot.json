@@ -1,0 +1,21 @@
+{
+  "bytes": 561812,
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "frame": {
+    "height": 640,
+    "width": 900,
+    "x": 80,
+    "y": 100
+  },
+  "frameName": "11.1 Status item + panel \u2014 VoiceOver order",
+  "height": 640,
+  "node": "36:5057",
+  "originalHeight": 640,
+  "originalWidth": 900,
+  "referencePNG": "reference.png",
+  "retrieval": "Figma MCP screenshot/export preserved from the completed exact retrieval.",
+  "sha256": "654ac9f732cdf8c69a337ec5055dcbb2816e6b308679afe0eb6098b0cbda8e02",
+  "source": "Exact Figma MCP retrieval supplied for G078/J11.1; preserved without redraw.",
+  "visualReviewInput": "The PNG is reference evidence only; native visual review must fail closed when TCC/compositor gates fail.",
+  "width": 900
+}

@@ -1,0 +1,8 @@
+{
+  "path": "build/",
+  "fileCount": 77431,
+  "bytes": 8237063309,
+  "ignoredByGit": false,
+  "generatedByThisPass": false,
+  "instruction": "Do not stage generated build artifacts; this pass uses temporary scratch paths outside the repository."
+}

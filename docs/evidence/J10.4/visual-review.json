@@ -1,0 +1,48 @@
+{
+  "story": "J10.4",
+  "status": "native-image-reviewed-ax-acceptance-blocked",
+  "source": {
+    "file": "9DKDgUfEqidZdZQEVlQgLS",
+    "node": "34:5339",
+    "window_node": "34:5493",
+    "content_node": "34:5512",
+    "progress_node": "34:5598",
+    "reference_url": "https://www.figma.com/api/mcp/asset/d9ce482b-a41a-4392-89d1-3deb06ebc3ff.png",
+    "reference_png": "reference.png",
+    "sha256": "48b910f6cfa48094064523821945a3dab44d6bfdc4526a620073c27d02739769",
+    "reference_size": [
+      1000,
+      720
+    ],
+    "responses": [
+      "figma-context.json",
+      "figma-metadata.json",
+      "figma-screenshot.json",
+      "figma-variables.json"
+    ]
+  },
+  "native_image": "capture/native-window.png",
+  "native_image_sha256": "117e4d521f05069b094983f3e5895b32821335fe45a1aff7969b0fa22cd514ee",
+  "capture_record": "capture/window.json",
+  "capture_timestamp_utc": "2026-09-22T20:01:50Z",
+  "fixture": "J10.4/base",
+  "process_identifier": 84205,
+  "cleanup_evidence": "capture/process-cleanup.log",
+  "screen_recording_preauthorized": true,
+  "accessibility_trusted": false,
+  "capture_exit": 0,
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "reason": "PID-owned image captured; AX comparison blocked by Accessibility TCC. No numerical comparison performed.",
+  "qualitative_observations": [
+    "Real native Software Update window shows the existing 64pt icon, Downloading Watt? 1.1… heading, determinate half-progress, 2.1 MB of 4.2 MB footnote, and bordered Cancel.",
+    "Captured CGWindow bounds are 420×178 points versus the Figma 420×177 reference; host-native titlebar/control/font metrics are intentionally retained.",
+    "Reference includes desktop wallpaper and menu bar; the app capture includes only the real native window. No wallpaper or chrome was recreated."
+  ],
+  "limitations": [
+    "AX comparison and live AX interaction verification are blocked by Accessibility TCC.",
+    "No numerical similarity score or pixel-diff comparison was performed; null metrics are intentional.",
+    "Qualitative screenshot review is not a visual-acceptance pass."
+  ]
+}

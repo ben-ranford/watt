@@ -1,0 +1,52 @@
+{
+  "package-tests": {
+    "warnings": [
+      "    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context",
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context",
+      "warning: 'swiftui-implementation': found 77216 file(s) which are unhandled; explicitly declare them as resources or exclude from the target"
+    ],
+    "errors": [],
+    "completionMarkers": []
+  },
+  "debug-build-analyze": {
+    "warnings": [
+      "    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context",
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context",
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj: WattTests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0",
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj: WattTests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0",
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0",
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCUIAutomation.framework/Versions/A/XCUIAutomation' which was built for newer version 14.0",
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0",
+      "2026-09-23 09:22:14.193 appintentsmetadataprocessor[67294:7759250] warning: Metadata extraction skipped, no AppIntents.framework dependency found",
+      "2026-09-23 09:22:24.790 appintentsmetadataprocessor[67532:7760669] warning: Metadata extraction skipped, no AppIntents.framework dependency found",
+      "2026-09-23 09:22:25.352 appintentsmetadataprocessor[67550:7760757] warning: Metadata extraction skipped, no AppIntents.framework dependency found"
+    ],
+    "errors": [],
+    "completionMarkers": [
+      "** BUILD SUCCEEDED **",
+      "** ANALYZE SUCCEEDED **",
+      "** TEST BUILD SUCCEEDED **"
+    ]
+  },
+  "release-build-analyze": {
+    "warnings": [
+      "    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context",
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context",
+      "2026-09-23 09:22:21.842 appintentsmetadataprocessor[67459:7760280] warning: Metadata extraction skipped, no AppIntents.framework dependency found"
+    ],
+    "errors": [],
+    "completionMarkers": [
+      "** BUILD SUCCEEDED **",
+      "** ANALYZE SUCCEEDED **"
+    ]
+  },
+  "release-test-build": {
+    "warnings": [],
+    "errors": [
+      "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/WattTests/J13OfferTests.swift:7:18: error: Unable to resolve Swift module dependency to a compatible module: 'Watt' (in target 'WattTests' from project 'Watt')"
+    ],
+    "completionMarkers": [
+      "** TEST BUILD FAILED **"
+    ]
+  }
+}

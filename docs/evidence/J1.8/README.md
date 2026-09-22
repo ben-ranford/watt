@@ -1,0 +1,9 @@
+# J1.8 evidence — blocked visual review
+
+- Exact Figma reference: node `28:2802`, `docs/evidence/J1.8/figma-reference.png`.
+- Reference hierarchy: selected status item **+42.1 W** → native panel `29:9338`: **Charging**, **+42.1 W**, **64% · full in about 38 min**; charger **65.0 W**, system draw **22.9 W**, battery **+42.1 W**; components CPU **9.8 W**, GPU **4.1 W**, Display **5.2 W**, Other **3.8 W**; native **Settings…** and **Quit Watt?** buttons. This describes the target, not verified rendered parity.
+- Verified existing evidence: five J18 tests within 17 focused tests passed (`focused-tests.log`); Debug and Release build/analyze passed (`debug-build-analyze.log`, `release-build-analyze.log`). No checks were rerun for this documentation-only task.
+- Task-reported post-fix results: full package **295 tests / 1 skipped / 0 failures**; hosted **283 tests / 1 skipped / 0 failures**. Retained logs have not yet corroborated these totals: `package-tests.log` shows the earlier 294-test run with 1 skip and 3 failures (exit 1); `native-tests.log` shows earlier F05 failures (exit 65). Do not treat these logs as passing evidence.
+- F05/gating fix visible in `Tests/WattTests/F05FixtureTests.swift`: J1.8 included in implemented-story expectations; base-only launch regression rejects unavailable/loading/error/unknown variants, including directly constructed hosted selections. Product/test changes are outside this evidence-only task.
+- Capture failed (exit 1): no app-owned compositor window, zero PID-scoped windows (`window-capture.log`). Screen capture preauthorized, AX untrusted, live interaction unverified (`window.json`). No actual image or visual score exists.
+- Fail closed (`visual-review.json`): actual/score/secondary diff null, verdict blocked, category match unknown, visualPass/storyDone false. No fake chrome, desktop substitute, or TCC bypass. Obtain a genuine app-owned capture and corroborating post-fix logs before completing review.

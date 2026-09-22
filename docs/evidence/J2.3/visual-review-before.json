@@ -1,0 +1,12 @@
+{
+  "score": null,
+  "verdict": "blocked",
+  "category_match": null,
+  "differences": [
+    "Settings helper-off row has disabled Remove instead of Turn On."
+  ],
+  "suggestions": [
+    "Reuse native Settings form and existing approval lifecycle."
+  ],
+  "reasoning": "Exact reference inspected; no current app-owned J2.3 capture exists."
+}

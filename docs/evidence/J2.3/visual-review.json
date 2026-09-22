@@ -1,0 +1,32 @@
+{
+  "story": "J2.3",
+  "goal": "G038",
+  "node": "29:3270",
+  "score": 82,
+  "verdict": "needs_iteration",
+  "category_match": true,
+  "differences": [
+    "Native macOS grouped Form uses taller section and row spacing than the Figma approximation; the approval footer is below the 256pt excerpt viewport.",
+    "Native titlebar has different title offset, weight and disabled zoom-button appearance.",
+    "Native native-row header insets and popup shape differ slightly."
+  ],
+  "suggestions": [
+    "Review remaining native Form spacing against the reference without custom painting or changing production appearance.",
+    "On an AX-authorized test host, verify keyboard, VoiceOver and live Turn On / retry / cancellation controls.",
+    "Integrate the signed, authenticated production helper service through the existing lifecycle boundary before claiming real helper enablement."
+  ],
+  "reasoning": "Direct inspection of the real light native Settings window and exact Figma app-owned crop. Copy, control categories, order, width and window height match; spacing/footer/titlebar do not. Score is a qualitative visual assessment, not derived from pixel similarity. Capture succeeded; a null score or compositor-blocked claim would be incorrect.",
+  "reference": "docs/evidence/J2.3/figma-reference.png",
+  "actual": "docs/evidence/J2.3/capture-final/native-window-10452.png",
+  "secondary_diff": "docs/evidence/J2.3/pixel-diff.png",
+  "visualPass": false,
+  "storyDone": false,
+  "liveInteractionVerified": false,
+  "captureSucceeded": true,
+  "blockers": [
+    "Production signed helper driver/authenticated transport are not composed in this repository; default Turn On fails closed with retryable unknownStatus.",
+    "Visual score below 90; footer and native metrics differ.",
+    "AX is untrusted; live interaction/accessibility not verified."
+  ],
+  "correctiveReview": "P1 state-authority correction tested separately; no recapture. Retain 82 needs_iteration/blocking; original pixels predate correction."
+}

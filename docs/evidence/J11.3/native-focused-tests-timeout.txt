@@ -1,0 +1,1 @@
+Native xcodebuild test-without-building produced no test results within approximately 120 seconds; exact owned xcodebuild PID 49647 was sent SIGTERM. Package XCTest and native build-for-testing evidence remain separate. No native runtime pass claimed.

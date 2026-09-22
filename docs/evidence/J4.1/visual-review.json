@@ -1,0 +1,20 @@
+{
+  "score": null,
+  "verdict": "blocked",
+  "category_match": true,
+  "differences": [
+    "Existing supplied WattAppIcon is light; exact dark reference icon is dark. Asset deliberately reused, not recolored or replaced.",
+    "Native compositor window is 480x306 points (960x612 pixels); reference window is 480x308. Host control/font metrics and traffic-light states differ.",
+    "Native screenshot is app-owned only; desktop wallpaper/menu bar were not synthesized. No aligned comparable pixel-diff evidence is available."
+  ],
+  "suggestions": [
+    "Verify click, Return, Escape and close with the added J4.1 UI test in an AX-authorized graphical session.",
+    "Resolve dark asset availability without substituting generated artwork; capture comparable appearance/native metrics and align the app-owned reference crop before scoring."
+  ],
+  "reasoning": "Inspected exact get_design_context screenshot and actual dark native window. Structure and exact copy match, but visible asset/metric differences remain. AXTrusted=false and liveInteractionVerified=false. Capture proves presentation only, not interaction or a >=90 visual pass. No invented score or diff.",
+  "reference": "figma-reference.png",
+  "actual": "capture-final/native-window-11407.png",
+  "pixel_diff": null,
+  "AXTrusted": false,
+  "liveInteractionVerified": false
+}

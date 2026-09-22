@@ -1,0 +1,37 @@
+{
+  "story": "J5.2",
+  "goal": "G048",
+  "node": "30:4028",
+  "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-4028",
+  "source": "User-supplied exact reference /tmp/watt-g048-reference.png, inspected locally; no new Figma retrieval.",
+  "file": "reference.png",
+  "sha256": "6bf9638d14796af8ab793011b0d654a56bf19b003fd6b59ceaca8e3834e61d93",
+  "bytes": 756277,
+  "widthPixels": 1000,
+  "heightPixels": 720,
+  "appearance": "light",
+  "referencePanelBounds": {
+    "x": 645,
+    "y": 38,
+    "width": 320,
+    "height": 319
+  },
+  "boundsProvenance": "Existing exact-node metadata in Tests/Fixtures/StoryFixtureData.swift corroborated by supplied image; native chrome owns final geometry.",
+  "copy": [
+    "Finish setup",
+    "2 steps left",
+    "Continue…",
+    "Charging",
+    "+42.1 W",
+    "64% · full in about 38 min",
+    "Charger input",
+    "65.0 W",
+    "System draw",
+    "22.9 W",
+    "Battery",
+    "+42.1 W",
+    "Settings…",
+    "Quit Watt?"
+  ],
+  "mapping": "Shared StatusPanelView/MenuBarRootView, native GroupBox and bordered-prominent Button, grouped Form/LabeledContent power rows, native borderless footer actions and selected MenuBarExtra status item."
+}

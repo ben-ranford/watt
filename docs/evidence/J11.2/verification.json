@@ -1,0 +1,124 @@
+{
+  "story": "J11.2",
+  "goal": "G079",
+  "branch": "bug/G079-j112-settings-controls",
+  "status": "implementation-verified-with-validation-gaps",
+  "committed": false,
+  "toolchain": {
+    "developerDirectory": "/Applications/Xcode.app/Contents/Developer",
+    "xcodeAvailable": true,
+    "xcodebuildVersion": "Xcode 27.0 (Build version 27A266a)",
+    "routing": "All xcodebuild/xcrun validation commands used DEVELOPER_DIR explicitly"
+  },
+  "reference": {
+    "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+    "node": "36:5186",
+    "windowNode": "36:5188",
+    "formNode": "36:5197",
+    "metadata": [
+      "figma-context.json",
+      "figma-metadata.json",
+      "figma-screenshot.json",
+      "figma-variables.json",
+      "reference.json",
+      "reference-digest.json"
+    ]
+  },
+  "ordering": {
+    "registryOrder": "J12.1, J12.2, J12.3, J12.4, J12.5, J11.1, J11.2",
+    "f05ExpectedOrder": "J12.1, J12.2, J12.3, J12.4, J12.5, J11.1, J11.2",
+    "consistent": true
+  },
+  "validation": {
+    "static-checks": {
+      "command": "Static phase of bash docs/evidence/J11.2/verify.sh",
+      "exit": 0,
+      "exit_file": "static-checks.exit",
+      "log": "static-check.log",
+      "status": "passed"
+    },
+    "focused-tests": {
+      "command": "xcrun swift test --filter 'J111|J112|NativeStylingTests'",
+      "exit": 0,
+      "exit_file": "focused-tests.exit",
+      "log": "focused-tests.log",
+      "tests": 23,
+      "skipped": 0,
+      "failures": 0
+    },
+    "package-tests": {
+      "command": "xcrun swift test",
+      "exit": 0,
+      "exit_file": "package-tests.exit",
+      "log": "package-tests.log",
+      "tests": 681,
+      "skipped": 5,
+      "failures": 0,
+      "passed": 676
+    },
+    "debug-build-analyze": {
+      "command": "xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -derivedDataPath build/J112-Debug CODE_SIGNING_ALLOWED=NO build analyze build-for-testing",
+      "exit": 0,
+      "exit_file": "debug-build-analyze.exit",
+      "log": "debug-build-analyze.log",
+      "build": "passed",
+      "analyze": "passed",
+      "build_for_testing": "passed"
+    },
+    "release-build-analyze": {
+      "command": "xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release -derivedDataPath build/J112-Release CODE_SIGNING_ALLOWED=NO build analyze",
+      "exit": 0,
+      "exit_file": "release-build-analyze.exit",
+      "log": "release-build-analyze.log",
+      "build": "passed",
+      "analyze": "passed"
+    },
+    "release-build-for-testing": {
+      "command": "xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release -derivedDataPath build/J112-Release CODE_SIGNING_ALLOWED=NO build-for-testing",
+      "exit": 65,
+      "exit_file": "release-build-for-testing.exit",
+      "log": "release-build-for-testing.log",
+      "status": "failed",
+      "blocker": "Release test build cannot find 'FixtureLaunchSelection' in scope in fixture launch sources and App/WattApp.swift. Release app build/analyze passed; no Release test execution claimed."
+    },
+    "verify": {
+      "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer bash docs/evidence/J11.2/verify.sh",
+      "exit": 1,
+      "exit_file": "verify.exit",
+      "log": "validation.log",
+      "reason": "Aggregate exit 1 solely because release-build-for-testing exited 65. Capture is run separately and is not included in verify.sh aggregate."
+    }
+  },
+  "capture": {
+    "command": "bash docs/evidence/J11.2/capture.sh",
+    "exit": 1,
+    "exit_file": "capture.exit",
+    "log": "capture.log",
+    "status": "blocked",
+    "evidence": "capture/window.json",
+    "reason": "BLOCKED: Accessibility trust unavailable; no permission requested",
+    "reference_node": "36:5186",
+    "window_node": "36:5188",
+    "AXTrusted": false,
+    "screenCapturePreauthorized": true,
+    "nativeCapture": null,
+    "comparableCapture": false,
+    "liveInteractionVerified": false,
+    "score": null,
+    "pixel_diff": null,
+    "visualPass": false,
+    "cleanup_evidence": "capture/process-cleanup.log"
+  },
+  "environment": {
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer",
+    "xcode": "27.0",
+    "build_version": "27A266a",
+    "evidence": "toolchain.log"
+  },
+  "known_gaps": [
+    "Release build-for-testing exits 65 with missing FixtureLaunchSelection errors; Debug test build and both app builds/analyzers pass.",
+    "Native Settings capture exits 1 because Accessibility trust is unavailable; no comparable capture or live interaction/visual acceptance.",
+    "Five package-suite skips: four J6.2–J6.5 AX-label checks and the opt-in P01 physical-host probe."
+  ],
+  "visual_review": "visual-review.json"
+}

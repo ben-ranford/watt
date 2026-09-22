@@ -1,0 +1,22 @@
+{
+  "story": "J7.2",
+  "node": "31:6952",
+  "status": "blocked",
+  "visualPass": false,
+  "score": null,
+  "pixel_diff": null,
+  "captureExit": 1,
+  "screenCapturePreauthorized": true,
+  "AXTrusted": false,
+  "pid": 18444,
+  "pidOwnedWindows": [],
+  "comparableCapture": false,
+  "reason": "BLOCKED: Accessibility trust unavailable; no permission requested",
+  "limitations": [
+    "No screenshot produced; no native status button metadata observed in this launch",
+    "Appearance, no-symbol pixels, native placement, live click/focus and VoiceOver require a graphical host with AX trust and PID-owned compositor evidence",
+    "Native host layout/style tests are semantic evidence, not visual acceptance",
+    "visual-ralph runtime unavailable in this non-tmux session"
+  ],
+  "cleanup": "Fixture PID 18444 terminated and reaped"
+}

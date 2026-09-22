@@ -1,0 +1,1 @@
+ 6223 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/xcode/Build/Products/Debug/Watt.app/Contents/MacOS/Watt

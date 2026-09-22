@@ -1,0 +1,21 @@
+{
+  "story": "J11.3",
+  "node": "36:5428",
+  "status": "blocked",
+  "visualPass": false,
+  "score": null,
+  "pixel_diff": null,
+  "comparableCapture": false,
+  "implementationScreenshot": null,
+  "referenceScreenshot": "reference.png",
+  "captureEvidence": "capture-20260922T224834-49373/window.json",
+  "screenCapturePreauthorized": true,
+  "AXTrusted": false,
+  "blockers": [
+    "BLOCKED: Accessibility trust unavailable; no permission requested",
+    "No PID-owned on-screen compositor windows enumerated; no capture-attempt.json emitted during observation period.",
+    "Live Return/Escape, focus traversal, VoiceOver order and exact native geometry remain unverified."
+  ],
+  "review": "Reference inspected; no accepted native implementation image exists, so no image comparison or visual score is reported.",
+  "nativeStyling": "Shared SettingsRootView grouped Form and SwiftUI alert; no painted tokens, custom alert, gradients or duplicate chrome."
+}

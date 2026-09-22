@@ -1,0 +1,55 @@
+{
+  "story": "J10.5",
+  "status": "native-image-reviewed-ax-acceptance-blocked",
+  "source": {
+    "file": "9DKDgUfEqidZdZQEVlQgLS",
+    "frame": "34:5608",
+    "window": "34:5762",
+    "content": "34:5781",
+    "icon": "34:5797",
+    "title": "34:5801",
+    "progress": "34:5805",
+    "footnote": "34:5807",
+    "buttons": [
+      "34:5814",
+      "34:5821"
+    ],
+    "qualified_footnote": "I34:5762;4363:18606;34:5807",
+    "reference_png": "reference.png",
+    "sha256": "a95f45ab4ed2a7b994aee2274921453abe61c69c23acfbabce68aea15e92e107",
+    "dimensions": [
+      1000,
+      720
+    ],
+    "responses": [
+      "figma-context.json",
+      "figma-footnote-exact.json",
+      "figma-footnote.json",
+      "figma-metadata.json",
+      "figma-screenshot.json",
+      "figma-variables.json"
+    ]
+  },
+  "native_image": "capture/native-window.png",
+  "native_image_sha256": "a8f72b83aaeafaf139b0a2e27bba2ea3449af344cd9b1e3dec1eeaafd993f96c",
+  "capture_record": "capture/window.json",
+  "process_identifier": 88744,
+  "capture_timestamp_utc": "2026-09-22T20:12:59Z",
+  "cleanup_evidence": "capture/process-cleanup.log",
+  "accessibility_trusted": false,
+  "screen_recording_preauthorized": true,
+  "capture_exit": 0,
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "reason": "PID-owned image captured; AX comparison blocked by Accessibility TCC. No numerical comparison performed.",
+  "qualitative_observations": [
+    "Real native window shows Ready to install, full determinate progress, exact retrieved footnote, Later and prominent Install and Relaunch.",
+    "Captured window is 420\u00d7178 points (840\u00d7356 pixel screenshot), versus reference 420\u00d7177; OS-owned titlebar/control/font metrics intentionally preserved.",
+    "Existing icon reused; reference desktop/menu bar is not recreated or included in native window capture."
+  ],
+  "limitations": [
+    "AX interaction/comparison blocked by Accessibility TCC; no permissions requested.",
+    "No numerical comparison performed; null metrics do not imply visual acceptance."
+  ]
+}

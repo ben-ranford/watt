@@ -1,0 +1,19 @@
+{
+  "AXTrusted" : false,
+  "captureAPI" : "screencapture -l; independently verified app-owned native menu window only",
+  "comparableCapture" : false,
+  "fixture" : "J5.3\/base",
+  "liveInteractionVerified" : false,
+  "node" : "30:4788",
+  "pixel_diff" : null,
+  "processIdentifier" : 81978,
+  "reason" : "BLOCKED: Accessibility trust unavailable; no permission requested",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "status" : "blocked",
+  "timestampUTC" : "2026-09-22T15:28:09Z",
+  "visualPass" : false,
+  "windows" : [
+
+  ]
+}

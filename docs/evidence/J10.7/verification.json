@@ -1,0 +1,178 @@
+{
+  "story": "J10.7",
+  "issue": "G071",
+  "branch": "bug/G071-j107-couldnt-check",
+  "status": "implementation-verified-with-validation-gaps",
+  "source": {
+    "provenance": "Exact Figma MCP hierarchy and variables supplied in task; reference asset downloaded in this run (not a newly retrieved MCP context).",
+    "file": "9DKDgUfEqidZdZQEVlQgLS",
+    "frame": "34:6003",
+    "desktop": {
+      "width": 1000,
+      "height": 720
+    },
+    "screenshot_url": "https://www.figma.com/api/mcp/asset/caa4f086-820d-4ada-a3b1-a2d83d04b0f0.png",
+    "alert": {
+      "node": "34:6157",
+      "x": 370,
+      "y": 230,
+      "width": 260,
+      "height": 246
+    },
+    "background": "I34:6157;494:3080",
+    "icon_frame": "I34:6157;152:9717",
+    "icon": {
+      "node": "I34:6157;495:4743",
+      "x": 6,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    "title": {
+      "node": "I34:6157;152:9962",
+      "text": "Couldn’t check for updates"
+    },
+    "description": {
+      "node": "I34:6157;152:9963",
+      "text": "No connection right now. Watt? checks again later on its own."
+    },
+    "buttons": {
+      "node": "I34:6157;493:2993",
+      "x": 16,
+      "y": 168,
+      "width": 228,
+      "height": 62,
+      "children": [
+        {
+          "node": "I34:6157;34:6179",
+          "text": "Try Again",
+          "y": 0,
+          "width": 228,
+          "height": 28
+        },
+        {
+          "node": "I34:6157;34:6182",
+          "text": "OK",
+          "y": 34,
+          "width": 228,
+          "height": 28
+        }
+      ]
+    },
+    "variables": {
+      "headline": "SF Pro Headline/Regular 13/16 bold",
+      "body": "SF Pro Body/Emphasized 13/16 semibold",
+      "subheadline": "SF Pro Subheadline/Regular 11/14",
+      "primary_label": "#000000d9",
+      "white_label": "#ffffff",
+      "accent": "#0088ff",
+      "secondary_fill": "#e6e6e6",
+      "liquid_glass": "Delegated to native OS material; not recreated"
+    },
+    "implementation_policy": "Native informational NSAlert; OS-owned icon, typography, material, button arrangement and chrome. No forced tint/appearance/geometry.",
+    "reference_png": "reference.png",
+    "sha256": "b7f4f7685a41956aba515c9ba974fd152c7f5a9841715779901fb7a7868dc361"
+  },
+  "environment": {
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+  },
+  "checks": {
+    "focused-tests": {
+      "command": "swift test --filter 'J10|NativeStylingTests|P04UpdaterTests'",
+      "exit": 0,
+      "log": "focused-tests.log",
+      "exit_file": "focused-tests.exit",
+      "tests": 91,
+      "skipped": 0,
+      "failures": 0,
+      "passed": 91
+    },
+    "full-tests": {
+      "command": "swift test",
+      "exit": 0,
+      "log": "full-tests.log",
+      "exit_file": "full-tests.exit",
+      "tests": 629,
+      "skipped": 5,
+      "failures": 0,
+      "passed": 624
+    },
+    "debug": {
+      "command": "xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -derivedDataPath build/J107-Debug CODE_SIGNING_ALLOWED=NO build analyze build-for-testing",
+      "exit": 0,
+      "log": "debug.log",
+      "exit_file": "debug.exit"
+    },
+    "release": {
+      "command": "xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release -derivedDataPath build/J107-Release CODE_SIGNING_ALLOWED=NO build analyze",
+      "exit": 0,
+      "log": "release.log",
+      "exit_file": "release.exit"
+    },
+    "release-build-for-testing": {
+      "command": "xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release -derivedDataPath build/J107-Release CODE_SIGNING_ALLOWED=NO build-for-testing",
+      "exit": 65,
+      "log": "release-build-for-testing.log",
+      "exit_file": "release-build-for-testing.exit"
+    },
+    "capture": {
+      "command": "bash docs/evidence/J10.7/capture.sh",
+      "exit": 0,
+      "log": "capture.log",
+      "exit_file": "capture.exit"
+    },
+    "static-checks": {
+      "command": "bash docs/evidence/J10.7/static-check.sh",
+      "exit": 0,
+      "log": "static-checks.log",
+      "exit_file": "static-checks.exit"
+    }
+  },
+  "gaps": [
+    "Release build-for-testing exits 65: WattTests cannot resolve a compatible Watt module for @testable import. Existing Release test-target limitation; Release app build and analyze pass. No Release test execution claimed.",
+    "Accessibility TCC is not preauthorized; native image captured and inspected, but AX interaction/comparison acceptance remains blocked. score and pixel_diff are null; visualPass false.",
+    "Five full-suite skips: four existing J6.2–J6.5 accessibility-label tests and one opt-in P01 physical-host probe.",
+    "No production updater endpoint or automatic-check scheduler is added; retry uses the existing injected UpdateService."
+  ],
+  "native_capture": {
+    "AXTrusted": false,
+    "captureExit": 0,
+    "fixture": "J10.7/base",
+    "node": "34:6003",
+    "pixel_diff": null,
+    "processIdentifier": 98608,
+    "reason": "PID-owned image captured; AX comparison blocked by Accessibility TCC. No numerical comparison performed.",
+    "score": null,
+    "screenCapturePreauthorized": true,
+    "timestampUTC": "2026-09-22T20:36:29Z",
+    "visualPass": false,
+    "windowNode": "34:6157",
+    "windows": [
+      {
+        "kCGWindowAlpha": 1,
+        "kCGWindowBounds": {
+          "Height": 218,
+          "Width": 260,
+          "X": 770,
+          "Y": 251
+        },
+        "kCGWindowIsOnscreen": true,
+        "kCGWindowLayer": 8,
+        "kCGWindowMemoryUsage": 2432,
+        "kCGWindowName": "",
+        "kCGWindowNumber": 14639,
+        "kCGWindowOwnerName": "Watt?",
+        "kCGWindowOwnerPID": 98608,
+        "kCGWindowSharingState": 1,
+        "kCGWindowStoreType": 1
+      }
+    ]
+  },
+  "capture_record": "capture/window.json",
+  "scope": [
+    "Native informational NSAlert, exact copy, Try Again default and OK secondary; no custom alert chrome or forced appearance.",
+    "Generation/presentation/receipt-scoped retry and OK; persistence failure preserves retry; stale/closed/restored failure safety.",
+    "DEBUG-only J10.7/base fixture, Xcode test membership, deterministic F05 implemented-story expectation updated."
+  ],
+  "commit_created": false
+}

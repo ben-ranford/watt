@@ -1,0 +1,25 @@
+{
+  "story": "J4.3",
+  "goal": "G046",
+  "node": "30:2786",
+  "status": "blocked",
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "storyDone": false,
+  "AXTrusted": false,
+  "liveInteractionVerified": false,
+  "nativeCapture": null,
+  "captureExit": 1,
+  "screenCapturePreauthorized": true,
+  "attempts": 2,
+  "comparableCapture": false,
+  "blockers": [
+    "Both PID-scoped compositor attempts found no app-owned on-screen window, including isolated retry after host tests completed.",
+    "AXIsProcessTrusted=false; no live pointer/keyboard/VoiceOver proof.",
+    "Native visual parity cannot be scored without a comparable live capture; no desktop or chrome was synthesized."
+  ],
+  "reference": "reference.png",
+  "captureEvidence": "capture-final/window.json",
+  "knownDifferences": "Native grouped form/semantic text metrics remain system-owned, not forced to reference pixels."
+}

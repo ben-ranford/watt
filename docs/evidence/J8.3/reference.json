@@ -1,0 +1,17 @@
+{
+  "story": "J8.3",
+  "node": "32:4575",
+  "frame": "8.3 Opening Watt? again from Finder or Spotlight shows Settings",
+  "referenceExport": {
+    "widthPixels": 1000,
+    "heightPixels": 720,
+    "sha256": "7dccac13b2d83978dacabea90ae91f4874ca60f68f1490b31c72859f91b08586",
+    "source": "StoryFixtureData.referenceJSON frame_export"
+  },
+  "directChildren": [
+    { "id": "32:4576", "name": "Desktop Template", "width": 1512, "height": 982 },
+    { "id": "32:4892", "name": "Status Item Anchor (right-aligned)", "width": 741, "height": 24 },
+    { "id": "32:4893", "name": "Watt? Settings", "width": 520, "height": 311 }
+  ],
+  "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=32-4575"
+}

@@ -1,0 +1,35 @@
+{
+  "accessibilityEvidence" : "source-native SwiftUI semantics only; no AX traversal, UI automation or VoiceOver audit",
+  "appearance" : "dark \/ darkAqua",
+  "capture" : "screencapture -x -o -l (app-owned window only)",
+  "capturedAtUTC" : "2026-09-20T12:40:51Z",
+  "confirmationState" : "C01 has no confirmation; Settings routes through AppRouter, Quit terminates; callbacks unit-tested, no AX interaction audit",
+  "fixture" : "C01\/base: PowerReading.sampleCharging; isolated in-memory preferences",
+  "locale" : "en_US",
+  "nonblank" : true,
+  "osVersion" : "Version 27.0 (Build 26A428)",
+  "pixelHeight" : 946,
+  "pixelsPerPoint" : 2,
+  "pixelWidth" : 640,
+  "referenceNode" : "21:928 \/ panel 29:8875",
+  "sampledRGBColors" : 2430,
+  "visualGate" : "native smoke capture only; no calibrated Figma comparison or VoiceOver sign-off",
+  "window" : {
+    "kCGWindowAlpha" : 1,
+    "kCGWindowBounds" : {
+      "Height" : 473,
+      "Width" : 320,
+      "X" : 740,
+      "Y" : 187
+    },
+    "kCGWindowIsOnscreen" : true,
+    "kCGWindowLayer" : 0,
+    "kCGWindowMemoryUsage" : 2432,
+    "kCGWindowName" : "Watt C01 StatusPanel Capture",
+    "kCGWindowNumber" : 7725,
+    "kCGWindowOwnerName" : "Watt?",
+    "kCGWindowOwnerPID" : 2180,
+    "kCGWindowSharingState" : 1,
+    "kCGWindowStoreType" : 1
+  }
+}

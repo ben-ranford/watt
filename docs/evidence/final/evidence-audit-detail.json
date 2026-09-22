@@ -1,0 +1,454 @@
+{
+  "orderedStories": 69,
+  "baseAndVariantSelections": 136,
+  "registryReferencesEqualF00": true,
+  "all69F00ExportHashesAndDimensionsPass": true,
+  "docsFilesRead": 2753,
+  "markdownFilesRead": 89,
+  "recordsRead": 95,
+  "jsonErrors": [
+    {
+      "path": "docs/evidence/J11.2/figma-screenshot-response.json",
+      "error": "Extra data: line 2 column 1 (char 178)"
+    }
+  ],
+  "digestStatusCounts": {
+    "pass": 275,
+    "mismatch": 57,
+    "missing": 3
+  },
+  "problems": [
+    {
+      "kind": "invalid JSON",
+      "path": "docs/evidence/J11.2/figma-screenshot-response.json",
+      "error": "Extra data: line 2 column 1 (char 178)"
+    },
+    {
+      "kind": "evidence digest",
+      "manifest": "docs/evidence/C03/metadata.sha256",
+      "path": "README.md",
+      "status": "mismatch",
+      "resolved": "docs/evidence/C03/README.md"
+    },
+    {
+      "kind": "evidence digest",
+      "manifest": "docs/evidence/J8.2/reference.sha256",
+      "path": "reference-export-from-story-manifest.png",
+      "status": "missing"
+    },
+    {
+      "kind": "evidence digest",
+      "manifest": "docs/evidence/J8.2/reference.sha256",
+      "path": "mcp-retrieved-screenshot.png",
+      "status": "missing"
+    },
+    {
+      "kind": "evidence digest",
+      "manifest": "docs/evidence/J8.3/reference.sha256",
+      "path": "reference-export-from-story-manifest.png",
+      "status": "missing"
+    }
+  ],
+  "historicalNotes": [
+    {
+      "kind": "historical F00 source revision changed",
+      "path": "SCREEN-BACKLOG.md"
+    },
+    {
+      "kind": "historical F00 source revision changed",
+      "path": "DESIGN.md"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/P04/sources.sha256",
+      "path": "Services/UpdateAdapter.swift",
+      "status": "mismatch",
+      "resolved": "Services/UpdateAdapter.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/P04/sources.sha256",
+      "path": "Tests/WattTests/P04UpdaterTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/P04UpdaterTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/P05/sources.sha256",
+      "path": "Services/ScopedRemovalAdapter.swift",
+      "status": "mismatch",
+      "resolved": "Services/ScopedRemovalAdapter.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/P05/sources.sha256",
+      "path": "Watt.xcodeproj/project.pbxproj",
+      "status": "mismatch",
+      "resolved": "Watt.xcodeproj/project.pbxproj"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "App/AppDestination.swift",
+      "status": "mismatch",
+      "resolved": "App/AppDestination.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "App/AppRouter.swift",
+      "status": "mismatch",
+      "resolved": "App/AppRouter.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "App/RootSceneView.swift",
+      "status": "mismatch",
+      "resolved": "App/RootSceneView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "App/WattApp.swift",
+      "status": "mismatch",
+      "resolved": "App/WattApp.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "DesignSystem/Components/ReadingPicker.swift",
+      "status": "mismatch",
+      "resolved": "DesignSystem/Components/ReadingPicker.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "DesignSystem/Theme/WattSpacing.swift",
+      "status": "mismatch",
+      "resolved": "DesignSystem/Theme/WattSpacing.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "DesignSystem/Theme/WattTypography.swift",
+      "status": "mismatch",
+      "resolved": "DesignSystem/Theme/WattTypography.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Features/MenuBar/Components/MenuBarStatusLabel.swift",
+      "status": "mismatch",
+      "resolved": "Features/MenuBar/Components/MenuBarStatusLabel.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Features/MenuBar/Views/MenuBarRootView.swift",
+      "status": "mismatch",
+      "resolved": "Features/MenuBar/Views/MenuBarRootView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Features/MenuBar/Views/StatusItemContextMenu.swift",
+      "status": "mismatch",
+      "resolved": "Features/MenuBar/Views/StatusItemContextMenu.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Features/MenuBar/Views/StatusPanelView.swift",
+      "status": "mismatch",
+      "resolved": "Features/MenuBar/Views/StatusPanelView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Features/Onboarding/Views/OnboardingFlowView.swift",
+      "status": "mismatch",
+      "resolved": "Features/Onboarding/Views/OnboardingFlowView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Features/Settings/Views/SettingsRootView.swift",
+      "status": "mismatch",
+      "resolved": "Features/Settings/Views/SettingsRootView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Models/PowerReading.swift",
+      "status": "mismatch",
+      "resolved": "Models/PowerReading.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Models/WattPreferences.swift",
+      "status": "mismatch",
+      "resolved": "Models/WattPreferences.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Services/PowerReadingStore.swift",
+      "status": "mismatch",
+      "resolved": "Services/PowerReadingStore.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Services/ScopedRemovalAdapter.swift",
+      "status": "mismatch",
+      "resolved": "Services/ScopedRemovalAdapter.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Services/UpdateAdapter.swift",
+      "status": "mismatch",
+      "resolved": "Services/UpdateAdapter.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/Fixtures/FixtureLaunchSelection.swift",
+      "status": "mismatch",
+      "resolved": "Tests/Fixtures/FixtureLaunchSelection.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/Fixtures/StoryFixtureData.swift",
+      "status": "mismatch",
+      "resolved": "Tests/Fixtures/StoryFixtureData.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/Fixtures/StoryFixtures.swift",
+      "status": "mismatch",
+      "resolved": "Tests/Fixtures/StoryFixtures.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/WattTests/AppRouterTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/AppRouterTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/WattTests/F05FixtureTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/F05FixtureTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/WattTests/NativeStylingTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/NativeStylingTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/WattTests/P04UpdaterTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/P04UpdaterTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/WattUITests/F05StoryRenderTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattUITests/F05StoryRenderTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Watt.xcodeproj/project.pbxproj",
+      "status": "mismatch",
+      "resolved": "Watt.xcodeproj/project.pbxproj"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "App/AppDestination.swift",
+      "status": "mismatch",
+      "resolved": "App/AppDestination.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "App/AppRouter.swift",
+      "status": "mismatch",
+      "resolved": "App/AppRouter.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "App/RootSceneView.swift",
+      "status": "mismatch",
+      "resolved": "App/RootSceneView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "App/WattApp.swift",
+      "status": "mismatch",
+      "resolved": "App/WattApp.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "DesignSystem/Components/ReadingPicker.swift",
+      "status": "mismatch",
+      "resolved": "DesignSystem/Components/ReadingPicker.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "DesignSystem/Theme/WattSpacing.swift",
+      "status": "mismatch",
+      "resolved": "DesignSystem/Theme/WattSpacing.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "DesignSystem/Theme/WattTypography.swift",
+      "status": "mismatch",
+      "resolved": "DesignSystem/Theme/WattTypography.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "DesignSystem/Verification/WattComponentGallery.swift",
+      "status": "mismatch",
+      "resolved": "DesignSystem/Verification/WattComponentGallery.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Features/MenuBar/Components/MenuBarStatusLabel.swift",
+      "status": "mismatch",
+      "resolved": "Features/MenuBar/Components/MenuBarStatusLabel.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Features/MenuBar/Views/MenuBarRootView.swift",
+      "status": "mismatch",
+      "resolved": "Features/MenuBar/Views/MenuBarRootView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Features/MenuBar/Views/StatusItemContextMenu.swift",
+      "status": "mismatch",
+      "resolved": "Features/MenuBar/Views/StatusItemContextMenu.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Features/MenuBar/Views/StatusPanelView.swift",
+      "status": "mismatch",
+      "resolved": "Features/MenuBar/Views/StatusPanelView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Features/Onboarding/Views/OnboardingFlowView.swift",
+      "status": "mismatch",
+      "resolved": "Features/Onboarding/Views/OnboardingFlowView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Features/Settings/Views/SettingsRootView.swift",
+      "status": "mismatch",
+      "resolved": "Features/Settings/Views/SettingsRootView.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Models/PowerReading.swift",
+      "status": "mismatch",
+      "resolved": "Models/PowerReading.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Models/WattPreferences.swift",
+      "status": "mismatch",
+      "resolved": "Models/WattPreferences.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Services/PowerReadingStore.swift",
+      "status": "mismatch",
+      "resolved": "Services/PowerReadingStore.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Services/ScopedRemovalAdapter.swift",
+      "status": "mismatch",
+      "resolved": "Services/ScopedRemovalAdapter.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Services/UpdateAdapter.swift",
+      "status": "mismatch",
+      "resolved": "Services/UpdateAdapter.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Tests/WattTests/AppRouterTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/AppRouterTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Tests/WattTests/F05FixtureTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/F05FixtureTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Tests/WattTests/NativeStylingTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/NativeStylingTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Tests/WattTests/P04UpdaterTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/P04UpdaterTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "docs/evidence/native-styling/CaptureHost.swift",
+      "status": "mismatch",
+      "resolved": "docs/evidence/native-styling/CaptureHost.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "docs/evidence/native-styling/capture.sh",
+      "status": "mismatch",
+      "resolved": "docs/evidence/native-styling/capture.sh"
+    }
+  ]
+}

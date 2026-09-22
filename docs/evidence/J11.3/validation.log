@@ -1,0 +1,2 @@
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+Xcode commands are explicitly routed through the full Xcode toolchain.

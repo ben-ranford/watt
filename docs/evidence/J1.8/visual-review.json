@@ -1,0 +1,95 @@
+{
+  "story": "J1.8",
+  "node": "28:2802",
+  "reference": "docs/evidence/J1.8/figma-reference.png",
+  "actual": null,
+  "score": null,
+  "verdict": "blocked",
+  "category_match": "unknown",
+  "visualPass": false,
+  "storyDone": false,
+  "differences": null,
+  "suggestions": null,
+  "reasoning": "Fail closed: no app-owned actual capture exists, so visual parity cannot be assessed. Automated checks do not establish a visual pass. No fake chrome or TCC bypass was used for this evidence-only task.",
+  "secondary_diff": null,
+  "blockers": [
+    "No app-owned compositor window: capture exited 1; zero PID-scoped windows.",
+    "AX untrusted; live interaction not verified.",
+    "No actual image, pixel comparison, or visual score.",
+    "Post-fix package/hosted totals are task-reported; retained logs currently show earlier F05 failures."
+  ],
+  "reference_hierarchy": {
+    "status_item": {
+      "selected": true,
+      "text": "+42.1 W"
+    },
+    "native_panel": {
+      "node": "29:9338",
+      "title": "Charging",
+      "value": "+42.1 W",
+      "subtitle": "64% · full in about 38 min",
+      "charger": "65.0 W",
+      "system_draw": "22.9 W",
+      "battery": "+42.1 W",
+      "components": {
+        "CPU": "9.8 W",
+        "GPU": "4.1 W",
+        "Display": "5.2 W",
+        "Other": "3.8 W"
+      },
+      "native_buttons": [
+        "Settings…",
+        "Quit Watt?"
+      ]
+    }
+  },
+  "verification": {
+    "j18_tests": {
+      "executed": 5,
+      "failures": 0,
+      "log": "focused-tests.log"
+    },
+    "focused_tests": {
+      "executed": 17,
+      "failures": 0,
+      "log": "focused-tests.log"
+    },
+    "package_tests": {
+      "executed": 295,
+      "skipped": 1,
+      "failures": 0,
+      "provenance": "Post-fix result supplied in task; not verified by retained package-tests.log (earlier run: 294 tests, 1 skipped, 3 failures; exit 1)."
+    },
+    "hosted_tests": {
+      "executed": 283,
+      "skipped": 1,
+      "failures": 0,
+      "provenance": "Post-fix result supplied in task; retained native-tests.log reports earlier F05 failures; exit 65."
+    },
+    "debug": {
+      "build": "passed",
+      "analyze": "passed",
+      "log": "debug-build-analyze.log"
+    },
+    "release": {
+      "build": "passed",
+      "analyze": "passed",
+      "log": "release-build-analyze.log"
+    },
+    "f05_gating_fix": "F05 implemented-story expectations include J1.8; testJ18LaunchAcceptsOnlyBase covers base launch and rejection of unavailable/loading/error/unknown variants, including directly constructed hosted selections. No product or test code changed by this documentation task.",
+    "rerun_for_documentation": false
+  },
+  "capture": {
+    "exit": 1,
+    "app_owned_compositor_windows": 0,
+    "screen_capture_preauthorized": true,
+    "AX_trusted": false,
+    "live_interaction_verified": false,
+    "logs": [
+      "capture-run.exit",
+      "fixture-launch.log",
+      "window-capture.log",
+      "window.json"
+    ]
+  }
+}

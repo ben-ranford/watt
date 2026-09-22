@@ -1,0 +1,15 @@
+{
+  "binary": "/var/folders/w1/bfdz7c0n0f13bm6tpbb9cxqc0000gn/T/watt-final-verification-seeie20w/Release/Build/Products/Release/Watt.app/Contents/MacOS/Watt",
+  "sha256": "391cd2be7872a041800a3cf1e8019ab62d2d92e6b9a72df5ce2d58dfd8a5d241",
+  "fixtureSelectorsAndSymbolsAbsent": true,
+  "patterns": [
+    "--watt-fixture",
+    "FixtureLaunchSelection",
+    "ScenarioRegistry",
+    "J113FixtureLaunch",
+    "WattComponentGallery",
+    "--watt-capture"
+  ],
+  "hits": [],
+  "scope": "Listed strings only; not production-service or comprehensive binary security proof"
+}

@@ -1,0 +1,102 @@
+{
+  "story": "J10.4",
+  "issue": "G068",
+  "branch": "bug/G068-j104-downloading",
+  "status": "implementation-verified-with-validation-gaps",
+  "source": {
+    "file": "9DKDgUfEqidZdZQEVlQgLS",
+    "node": "34:5339",
+    "window_node": "34:5493",
+    "content_node": "34:5512",
+    "progress_node": "34:5598",
+    "reference_url": "https://www.figma.com/api/mcp/asset/d9ce482b-a41a-4392-89d1-3deb06ebc3ff.png",
+    "reference_png": "reference.png",
+    "sha256": "48b910f6cfa48094064523821945a3dab44d6bfdc4526a620073c27d02739769",
+    "reference_size": [
+      1000,
+      720
+    ],
+    "responses": [
+      "figma-context.json",
+      "figma-metadata.json",
+      "figma-screenshot.json",
+      "figma-variables.json"
+    ]
+  },
+  "focused_tests": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --filter 'J10|NativeStylingTests|P04UpdaterTests'",
+    "exit": 0,
+    "log": "focused-tests.log",
+    "exit_file": "focused-tests.exit",
+    "tests": 69,
+    "skipped": 0,
+    "failures": 0,
+    "passed": 69
+  },
+  "full_tests": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test",
+    "exit": 0,
+    "log": "full-tests.log",
+    "exit_file": "full-tests.exit",
+    "tests": 607,
+    "skipped": 5,
+    "failures": 0,
+    "passed": 602
+  },
+  "debug": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -derivedDataPath build/J104-Debug CODE_SIGNING_ALLOWED=NO build analyze build-for-testing",
+    "exit": 0,
+    "log": "debug.log",
+    "exit_file": "debug.exit",
+    "build": "passed",
+    "analyze": "passed",
+    "build_for_testing": "passed"
+  },
+  "release": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release -derivedDataPath build/J104-Release CODE_SIGNING_ALLOWED=NO build analyze",
+    "exit": 0,
+    "log": "release.log",
+    "exit_file": "release.exit",
+    "build": "passed",
+    "analyze": "passed"
+  },
+  "release_build_for_testing": {
+    "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release -derivedDataPath build/J104-Release CODE_SIGNING_ALLOWED=NO build-for-testing",
+    "exit": 65,
+    "log": "release-build-for-testing.log",
+    "exit_file": "release-build-for-testing.exit",
+    "status": "blocked",
+    "blocker": "Tests/WattTests/J83OpeningSettingsTests.swift:7:18: Unable to resolve Swift module dependency to a compatible module: 'Watt' (WattTests target). Same blocker recorded by J10.3; Release test execution is not claimed."
+  },
+  "static_checks": {
+    "command": "bash docs/evidence/J10.4/static-check.sh",
+    "exit": 0,
+    "log": "static-checks.log",
+    "exit_file": "static-checks.exit"
+  },
+  "capture": {
+    "command": "bash docs/evidence/J10.4/capture.sh",
+    "exit": 0,
+    "log": "capture.log",
+    "exit_file": "capture.exit"
+  },
+  "visual_review": "visual-review.json",
+  "score": null,
+  "pixel_diff": null,
+  "known_gaps": [
+    "Tests/WattTests/J83OpeningSettingsTests.swift:7:18: Unable to resolve Swift module dependency to a compatible module: 'Watt' (WattTests target). Same blocker recorded by J10.3; Release test execution is not claimed.",
+    "Accessibility TCC blocks AX comparison; native screenshot exists but visual acceptance is not claimed.",
+    "Full suite reports five skipped tests; see full-tests.log for exact skip reasons."
+  ],
+  "scope": [
+    "Native ProgressView(value:), bordered Cancel and system window chrome.",
+    "Production appearance/accent overrides removed; semantic WattTypography bodyEmphasized/footnote used.",
+    "Receipt persisted before service admission; generation/version/receipt-bound progress and completion; cancellation invalidates before service call.",
+    "Cleanup-gated retry, durable persistence-failure semantics, and late-reply rejection verified.",
+    "DEBUG-only J10.4/base fixture; Release symbols/selectors absent. No production updater effect or J10.5+ install/relaunch implemented."
+  ],
+  "historical_evidence": {
+    "full-tests-before-registry-expectation-fix.log": "Initial failure was stale F05 implemented-story expectation; updated to include J10.4 and final full suite passes.",
+    "initial-tests.log": "Intermediate run, superseded by focused-tests.log and full-tests.log."
+  }
+}

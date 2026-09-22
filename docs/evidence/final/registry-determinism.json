@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/var/folders/w1/bfdz7c0n0f13bm6tpbb9cxqc0000gn/T/watt-final-verification-seeie20w/registry-probe"
+  ],
+  "runs": 2,
+  "allRunExitCodes": [
+    0,
+    0
+  ],
+  "identicalBytes": true,
+  "matchesSourceRegistryIgnoringNullOptionalKeys": true,
+  "stories": 69,
+  "variants": 136,
+  "sha256": "758e95a5662a10457cfc6f6a4ba4965f8886696e8c37436640da24bcf7f110ba"
+}

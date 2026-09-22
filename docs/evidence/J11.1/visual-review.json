@@ -1,0 +1,21 @@
+{
+  "story": "J11.1",
+  "goal": "G078",
+  "status": "blocked",
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "comparableCapture": false,
+  "nativeCapture": null,
+  "reason": "Strict native capture found Screen Recording preauthorized but Accessibility trust unavailable; no app-owned compositor panel was accepted and no visual score was invented.",
+  "tccRequested": false,
+  "screenCapturePreauthorized": true,
+  "AXTrusted": false,
+  "reference": "reference.png",
+  "captureEvidence": "capture/window.json",
+  "blockers": [
+    "Accessibility trust unavailable in the capture host.",
+    "No app-owned native panel could be AX-verified.",
+    "No compositor pixels were captured, so pixel metrics remain null."
+  ]
+}

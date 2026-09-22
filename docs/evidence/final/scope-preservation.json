@@ -1,0 +1,9 @@
+{
+  "baselineFiles": 2882,
+  "changedOutsideFinal": [],
+  "addedOutsideFinal": [],
+  "HEADUnchanged": true,
+  "head": "b1d4c11bb9f46166825f222f29fc6b1479f2848f",
+  "excluded": "final evidence, pre-existing build/, ignored files; scratch build artifacts outside repository",
+  "verdict": "PASS"
+}

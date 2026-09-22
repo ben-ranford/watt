@@ -1,0 +1,31 @@
+{
+  "accessibility" : [
+    {
+      "class" : "NSHostingView<ModifiedContent<ModifiedContent<AnyView, _EnvironmentKeyWritingModifier<ColorScheme>>, _EnvironmentKeyWritingModifier<Locale>>>",
+      "enabled" : false,
+      "label" : "",
+      "role" : "AXGroup"
+    },
+    {
+      "class" : "HostingScrollView",
+      "enabled" : false,
+      "label" : "",
+      "role" : "AXScrollArea"
+    }
+  ],
+  "capture" : "in-process NSView.cacheDisplay; actual SwiftUI\/AppKit controls",
+  "captureBounds" : "{{0, 0}, {580, 620}}",
+  "capturedAt" : "2026-09-22T08:09:05Z",
+  "heightPixels" : 1240,
+  "includesWindowFrame" : false,
+  "isKeyWindow" : false,
+  "limitations" : "Reading and settings shell include the native NSWindow frame; other samples are content-only. Inactive window; active accent\/focus and WindowServer vibrancy not verified. In-process accessibility traversal is incomplete, not VoiceOver\/AX interaction sign-off.",
+  "nativeContentBounds" : "{{0, 0}, {580, 620}}",
+  "os" : "Version 27.0 (Build 26A428)",
+  "pixelsPerPoint" : 2,
+  "sample" : "settings-light",
+  "visualPass" : false,
+  "widthPixels" : 1160,
+  "windowClass" : "NSWindow",
+  "windowStyleMask" : 3
+}

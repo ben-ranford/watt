@@ -1,0 +1,3 @@
+.build/xcode/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: no symbols
+J7.1 exact reference digest, native menu/bridge, fixture isolation and script checks passed
+Debug fixture symbols present; Release fixture symbols and selector strings absent

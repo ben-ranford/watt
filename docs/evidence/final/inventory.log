@@ -1,0 +1,8 @@
+PASS: 69 unique ordered story/node pairs = SCREEN-BACKLOG.md = approved plan = manifest
+PASS: captured live Figma inventory = 16 core + 53 journey frames; all names, IDs and bounds match
+PASS: all 69 entries retain DESIGN.md section coverage; no stories merged, added or marked Done
+Traceback (most recent call last):
+  File "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.omx/plans/f00-reference-evidence/verify_inventory.py", line 54, in <module>
+    assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == expected, f"Source revision changed: {path}"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Source revision changed: SCREEN-BACKLOG.md

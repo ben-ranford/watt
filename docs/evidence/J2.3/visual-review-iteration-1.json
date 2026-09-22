@@ -1,0 +1,15 @@
+{
+  "score": 72,
+  "verdict": "needs_iteration",
+  "category_match": true,
+  "differences": [
+    "Host inherited dark appearance versus light reference.",
+    "Native grouped-form spacing is taller; approval footer falls below the excerpt viewport.",
+    "Native titlebar metrics differ from the Figma approximation."
+  ],
+  "suggestions": [
+    "Pin light appearance in the DEBUG-only reference fixture, never production.",
+    "Retain native form metrics; document remaining differences rather than paint macOS chrome."
+  ],
+  "reasoning": "Actual 1040x576 Retina PID-scoped window inspected against 520x288 reference window. Semantic rows and controls match; appearance and spacing do not."
+}

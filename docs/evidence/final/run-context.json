@@ -1,0 +1,8 @@
+{
+  "startedUTC": "2026-09-22T23:21:43.052884+00:00",
+  "head": "b1d4c11bb9f46166825f222f29fc6b1479f2848f",
+  "branch": "bug/G081-final-project-verification",
+  "nonBuildFiles": 2882,
+  "scratch": "/var/folders/w1/bfdz7c0n0f13bm6tpbb9cxqc0000gn/T/watt-final-verification-seeie20w",
+  "scope": "Only docs/evidence/final may be edited; build products outside repo; existing linked worktree reused; no commits or permission changes"
+}

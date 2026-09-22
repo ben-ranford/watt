@@ -1,0 +1,20 @@
+{
+  "scope": "J10.2 completion including inherited partial implementation; existing unrelated dirty work preserved",
+  "files": [
+    "App/AppDestination.swift",
+    "App/AppRouter.swift",
+    "App/RootSceneView.swift",
+    "App/WattApp.swift",
+    "Tests/Fixtures/StoryFixtures.swift",
+    "Tests/Fixtures/FixtureLaunchSelection.swift",
+    "Tests/WattTests/F05FixtureTests.swift",
+    "Tests/WattTests/J102CheckingTests.swift",
+    "Watt.xcodeproj/project.pbxproj",
+    "DESIGN.md",
+    "SCREEN-BACKLOG.md"
+  ],
+  "evidenceDirectory": "docs/evidence/J10.2",
+  "commitCreated": false,
+  "worktreeCreated": false,
+  "branch": "bug/G066-j102-checking"
+}

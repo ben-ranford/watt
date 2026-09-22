@@ -1,0 +1,41 @@
+{
+  "story": "J8.2",
+  "node": "32:4456",
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "branch": "bug/G060-j82-readings-resume",
+  "reference": {
+    "frame": "8.2 Readings resume automatically (no alert)",
+    "size": "1000x220",
+    "mcpScreenshotSHA256": "da0dd0feb4c8b23667c90125bdadcd8dc1e45fc6425cccf76fe0f99d54ac14a7",
+    "storyManifestSHA256": "202888272184e508e92e1e786e70301ad8adbedb9758c0d5e414eb5827a23c65"
+  },
+  "tests": {
+    "packageDefaultCommand": "blocked by pre-existing SwiftUIMacros.StateMacro plugin failure under CommandLineTools",
+    "packageXcodeCommand": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test",
+    "packageXcodeResult": "passed: 555 tests, 5 skipped",
+    "nativeJ82Focused": "passed: 5 tests",
+    "nativeF05FixtureFocused": "passed: 22 tests",
+    "nativeWattTestsFull": "passed: 543 tests, 5 skipped",
+    "nativeWattUITests": "blocked: F05StoryRenderTests passed with 4 skips; NativeHostTests.testMenuBarPanelCapture failed because the native status item was not hittable in this graphical host"
+  },
+  "builds": {
+    "debugAnalyze": "passed",
+    "releaseBuild": "passed",
+    "releaseAnalyze": "passed",
+    "releaseIsolation": "passed: J82FixtureLaunch/J8.2/base/capture flag absent from Release binary",
+    "diffCheck": "passed"
+  },
+  "capture": {
+    "command": "bash docs/evidence/J8.2/capture.sh",
+    "status": "blocked",
+    "processIdentifier": 45989,
+    "screenCapturePreauthorized": true,
+    "AXTrusted": false,
+    "compositorWindow": false,
+    "visualPass": false,
+    "score": null,
+    "pixel_diff": null,
+    "cleanup": "Fixture PID 45989 terminated and reaped",
+    "evidence": "capture/window.json"
+  }
+}

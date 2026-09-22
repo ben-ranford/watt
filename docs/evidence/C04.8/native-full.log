@@ -1,0 +1,646 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination platform=macOS -derivedDataPath .build/c048-native test "-only-testing:WattTests"
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'WattUITests' in project 'Watt'
+        ➜ Explicit dependency on target 'Watt' in project 'Watt'
+    Target 'WattTests' in project 'Watt'
+        ➜ Explicit dependency on target 'Watt' in project 'Watt'
+    Target 'Watt' in project 'Watt' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+
+CodeSign /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib: replacing existing signature
+
+CodeSign /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: replacing existing signature
+
+CodeSign /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent --timestamp\=none --generate-entitlement-der /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app: replacing existing signature
+
+Validate /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-validationUtility /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+RegisterWithLaunchServices /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+    builtin-lsregisterurl --record-path /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Intermediates.noindex/XCBuildData/registered-launchservices.txt -- /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Products/Debug/Watt.app
+
+PruneExplicitPrecompiledModules /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+2026-09-22 19:27:21.292861+1000 Watt[9026:5850004] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-22 19:27:21.293160+1000 Watt[9026:5850004] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-22 19:27:21.293981+1000 Watt[9026:5850001] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-22 19:27:21.294003+1000 Watt[9026:5850001] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-22 19:27:21.295229+1000 Watt[9026:5850004] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-22 19:27:21.295246+1000 Watt[9026:5850004] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-22 19:27:21.296311+1000 Watt[9026:5850004] [Connection] Will NOT re-try to establish the connection
+2026-09-22 19:27:21.296344+1000 Watt[9026:5850002] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-22 19:27:21.296357+1000 Watt[9026:5850002] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+Test Suite 'All tests' started at 2026-09-22 19:27:21.541.
+Test Suite 'WattTests.xctest' started at 2026-09-22 19:27:21.541.
+Test Suite 'AppRouterTests' started at 2026-09-22 19:27:21.541.
+Test Case '-[WattTests.AppRouterTests testCaptureRequiresExactOptIn]' started.
+Test Case '-[WattTests.AppRouterTests testCaptureRequiresExactOptIn]' passed (0.001 seconds).
+Test Case '-[WattTests.AppRouterTests testCaptureWindowHostsNativePanelWithoutShowingIt]' started.
+Test Case '-[WattTests.AppRouterTests testCaptureWindowHostsNativePanelWithoutShowingIt]' passed (0.034 seconds).
+Test Case '-[WattTests.AppRouterTests testContextMenuPresentationActionsRequestTheirOwnDestinations]' started.
+Test Case '-[WattTests.AppRouterTests testContextMenuPresentationActionsRequestTheirOwnDestinations]' passed (0.002 seconds).
+Test Case '-[WattTests.AppRouterTests testContextMenuStructureReflectsSetupCompletion]' started.
+Test Case '-[WattTests.AppRouterTests testContextMenuStructureReflectsSetupCompletion]' passed (0.001 seconds).
+Test Case '-[WattTests.AppRouterTests testEveryDisplayModeMenuActionPersistsAndRebuiltMenuChecksOnlySelection]' started.
+Test Case '-[WattTests.AppRouterTests testEveryDisplayModeMenuActionPersistsAndRebuiltMenuChecksOnlySelection]' passed (0.008 seconds).
+Test Case '-[WattTests.AppRouterTests testExplicitPresentationRequestsDoNotSuppressRepeatedIntents]' started.
+Test Case '-[WattTests.AppRouterTests testExplicitPresentationRequestsDoNotSuppressRepeatedIntents]' passed (0.001 seconds).
+Test Case '-[WattTests.AppRouterTests testFinishSetupPersistsPickerBeforeRequestingOnboardingWithoutCompleting]' started.
+Test Case '-[WattTests.AppRouterTests testFinishSetupPersistsPickerBeforeRequestingOnboardingWithoutCompleting]' passed (0.001 seconds).
+Test Case '-[WattTests.AppRouterTests testLaunchPresentsOnlyIncompleteSetupAndIsIdempotent]' started.
+Test Case '-[WattTests.AppRouterTests testLaunchPresentsOnlyIncompleteSetupAndIsIdempotent]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testOnboardingPresentationPreservesPersistedProgress]' started.
+Test Case '-[WattTests.AppRouterTests testOnboardingPresentationPreservesPersistedProgress]' passed (0.000 seconds).
+Test Case '-[WattTests.AppRouterTests testReopenUsesCurrentCompletionStateWithoutRepeatingLaunch]' started.
+Test Case '-[WattTests.AppRouterTests testReopenUsesCurrentCompletionStateWithoutRepeatingLaunch]' passed (0.001 seconds).
+Test Case '-[WattTests.AppRouterTests testSampleReadingMatchesChargingFixture]' started.
+Test Case '-[WattTests.AppRouterTests testSampleReadingMatchesChargingFixture]' passed (0.002 seconds).
+Test Case '-[WattTests.AppRouterTests testSettingsAndUpdateIntentsRemainIndependentOfStatusPanelVisibility]' started.
+Test Case '-[WattTests.AppRouterTests testSettingsAndUpdateIntentsRemainIndependentOfStatusPanelVisibility]' passed (0.001 seconds).
+Test Suite 'AppRouterTests' passed at 2026-09-22 19:27:21.596.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.051 (0.054) seconds
+Test Suite 'C03ContextMenuTests' started at 2026-09-22 19:27:21.596.
+Test Case '-[WattTests.C03ContextMenuTests testC03ActionsAndSetupPreservedOutsideBase]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03ActionsAndSetupPreservedOutsideBase]' passed (0.028 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03LabelFollowsMenuSelectionOnTheSameObservedStore]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03LabelFollowsMenuSelectionOnTheSameObservedStore]' passed (0.001 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03LabelUnavailableReadingsAndComponentSelection]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03LabelUnavailableReadingsAndComponentSelection]' passed (0.001 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03NativeAppearanceContractDoesNotUseCustomRows]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03NativeAppearanceContractDoesNotUseCustomRows]' passed (0.001 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03NativeShortcutDispatchPreservesTargetsAndModifiers]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03NativeShortcutDispatchPreservesTargetsAndModifiers]' passed (0.004 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03OrderSeparatorsAndShortcuts]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03OrderSeparatorsAndShortcuts]' passed (0.001 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03SelectionsAndFreshCheckmarks]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03SelectionsAndFreshCheckmarks]' passed (0.002 seconds).
+Test Case '-[WattTests.C03ContextMenuTests testC03StableSelectorAndFailClosedVariants]' started.
+Test Case '-[WattTests.C03ContextMenuTests testC03StableSelectorAndFailClosedVariants]' passed (0.002 seconds).
+Test Suite 'C03ContextMenuTests' passed at 2026-09-22 19:27:21.638.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.040 (0.042) seconds
+Test Suite 'C041StatusItemTests' started at 2026-09-22 19:27:21.638.
+Test Case '-[WattTests.C041StatusItemTests testCaptureBitmapUsesExactReferenceScale]' started.
+Test Case '-[WattTests.C041StatusItemTests testCaptureBitmapUsesExactReferenceScale]' passed (0.001 seconds).
+Test Case '-[WattTests.C041StatusItemTests testChargingRenderContractUsesExistingStoreAndLabel]' started.
+Test Case '-[WattTests.C041StatusItemTests testChargingRenderContractUsesExistingStoreAndLabel]' passed (0.001 seconds).
+Test Case '-[WattTests.C041StatusItemTests testDisplayPreferencesRemainLiveAndIsolated]' started.
+Test Case '-[WattTests.C041StatusItemTests testDisplayPreferencesRemainLiveAndIsolated]' passed (0.001 seconds).
+Test Case '-[WattTests.C041StatusItemTests testExactSelectorAndSiblingIsolation]' started.
+Test Case '-[WattTests.C041StatusItemTests testExactSelectorAndSiblingIsolation]' passed (0.001 seconds).
+Test Case '-[WattTests.C041StatusItemTests testReferenceGeometryIncludesEntireStatusItem]' started.
+Test Case '-[WattTests.C041StatusItemTests testReferenceGeometryIncludesEntireStatusItem]' passed (0.001 seconds).
+Test Suite 'C041StatusItemTests' passed at 2026-09-22 19:27:21.643.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'C042StatusItemTests' started at 2026-09-22 19:27:21.643.
+Test Case '-[WattTests.C042StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C042StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C042StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C042StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Case '-[WattTests.C042StatusItemTests testOnBatteryContractAndPinnedClock]' started.
+Test Case '-[WattTests.C042StatusItemTests testOnBatteryContractAndPinnedClock]' passed (0.001 seconds).
+Test Case '-[WattTests.C042StatusItemTests testPreferencesStayLiveAndOtherModesUnchanged]' started.
+Test Case '-[WattTests.C042StatusItemTests testPreferencesStayLiveAndOtherModesUnchanged]' passed (0.001 seconds).
+Test Suite 'C042StatusItemTests' passed at 2026-09-22 19:27:21.647.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'C043StatusItemTests' started at 2026-09-22 19:27:21.648.
+Test Case '-[WattTests.C043StatusItemTests testChargedOnAdapterContractAndPinnedClock]' started.
+Test Case '-[WattTests.C043StatusItemTests testChargedOnAdapterContractAndPinnedClock]' passed (0.001 seconds).
+Test Case '-[WattTests.C043StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C043StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C043StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C043StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Case '-[WattTests.C043StatusItemTests testPreferencesStayLiveAndOtherModesUnchanged]' started.
+Test Case '-[WattTests.C043StatusItemTests testPreferencesStayLiveAndOtherModesUnchanged]' passed (0.001 seconds).
+Test Suite 'C043StatusItemTests' passed at 2026-09-22 19:27:21.651.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'C044StatusItemTests' started at 2026-09-22 19:27:21.652.
+Test Case '-[WattTests.C044StatusItemTests testChargerInputContractAndPinnedClock]' started.
+Test Case '-[WattTests.C044StatusItemTests testChargerInputContractAndPinnedClock]' passed (0.001 seconds).
+Test Case '-[WattTests.C044StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C044StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C044StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C044StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Suite 'C044StatusItemTests' passed at 2026-09-22 19:27:21.655.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'C045StatusItemTests' started at 2026-09-22 19:27:21.655.
+Test Case '-[WattTests.C045StatusItemTests testChargerInputContractAndPinnedClock]' started.
+Test Case '-[WattTests.C045StatusItemTests testChargerInputContractAndPinnedClock]' passed (0.001 seconds).
+Test Case '-[WattTests.C045StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C045StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C045StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C045StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Case '-[WattTests.C045StatusItemTests testExplicitFallbackDoesNotChangeLegacyContractOrReuseCharger]' started.
+Test Case '-[WattTests.C045StatusItemTests testExplicitFallbackDoesNotChangeLegacyContractOrReuseCharger]' passed (0.001 seconds).
+Test Suite 'C045StatusItemTests' passed at 2026-09-22 19:27:21.660.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'C046StatusItemTests' started at 2026-09-22 19:27:21.660.
+Test Case '-[WattTests.C046StatusItemTests testDeterministicDesktopDrawAndNativeLabel]' started.
+Test Case '-[WattTests.C046StatusItemTests testDeterministicDesktopDrawAndNativeLabel]' passed (0.001 seconds).
+Test Case '-[WattTests.C046StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C046StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C046StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C046StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Suite 'C046StatusItemTests' passed at 2026-09-22 19:27:21.663.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'C047StatusItemTests' started at 2026-09-22 19:27:21.663.
+Test Case '-[WattTests.C047StatusItemTests testDeterministicComponentsAndPreservedLegacyFormatting]' started.
+Test Case '-[WattTests.C047StatusItemTests testDeterministicComponentsAndPreservedLegacyFormatting]' passed (0.001 seconds).
+Test Case '-[WattTests.C047StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C047StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C047StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C047StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Suite 'C047StatusItemTests' passed at 2026-09-22 19:27:21.667.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'C048StatusItemTests' started at 2026-09-22 19:27:21.667.
+Test Case '-[WattTests.C048StatusItemTests testDeterministicIconOnlyAndPreservedDefaultSymbol]' started.
+Test Case '-[WattTests.C048StatusItemTests testDeterministicIconOnlyAndPreservedDefaultSymbol]' passed (0.001 seconds).
+Test Case '-[WattTests.C048StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C048StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C048StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C048StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Suite 'C048StatusItemTests' passed at 2026-09-22 19:27:21.670.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'DesignSystemTokenTests' started at 2026-09-22 19:27:21.671.
+Test Case '-[WattTests.DesignSystemTokenTests testAccentRespectsSystemAccentChoice]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testAccentRespectsSystemAccentChoice]' passed (0.001 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testControlMetricsPreserveMinimumLayoutContracts]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testControlMetricsPreserveMinimumLayoutContracts]' passed (0.001 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testReferenceSettingsSpacingIsTenPointsTighter]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testReferenceSettingsSpacingIsTenPointsTighter]' passed (0.001 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testSemanticColorsResolveAgainstBothHostAppearances]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testSemanticColorsResolveAgainstBothHostAppearances]' passed (0.001 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testSpacingScalePreservesCompactDesktopRhythm]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testSpacingScalePreservesCompactDesktopRhythm]' passed (0.001 seconds).
+Test Case '-[WattTests.DesignSystemTokenTests testTypographyUsesSystemTextStylesAndSemanticEmphasis]' started.
+Test Case '-[WattTests.DesignSystemTokenTests testTypographyUsesSystemTextStylesAndSemanticEmphasis]' passed (0.001 seconds).
+Test Suite 'DesignSystemTokenTests' passed at 2026-09-22 19:27:21.676.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.004 (0.006) seconds
+Test Suite 'F03ApprovalContractTests' started at 2026-09-22 19:27:21.676.
+Test Case '-[WattTests.F03ApprovalContractTests testActiveRejoinReplacesOnlyItsPresentationForEitherOrigin]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testActiveRejoinReplacesOnlyItsPresentationForEitherOrigin]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testApprovalFailureClearsInterestAndPreservesReasonForEachOrigin]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testApprovalFailureClearsInterestAndPreservesReasonForEachOrigin]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testBothWithdrawalOrdersRetireSharedWaitOnlyAfterLastInterest]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testBothWithdrawalOrdersRetireSharedWaitOnlyAfterLastInterest]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testClosingAndRejoiningReplacesPresentationButRetainsSharedOperation]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testClosingAndRejoiningReplacesPresentationButRetainsSharedOperation]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testCompletionRetiresGenerationAndRejectsEveryLateStatusBeforeFreshAbsentRetry]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testCompletionRetiresGenerationAndRejectsEveryLateStatusBeforeFreshAbsentRetry]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testFailedPersistenceDoesNotGrantRegistrationOrNavigation]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testFailedPersistenceDoesNotGrantRegistrationOrNavigation]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testFailedTerminalPersistenceStillRejectsLateRepliesAndAllowsReconciledRetry]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testFailedTerminalPersistenceStillRejectsLateRepliesAndAllowsReconciledRetry]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testFailedWithdrawalPreservesOtherOriginEligibilityInBothJoinAndWithdrawalOrders]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testFailedWithdrawalPreservesOtherOriginEligibilityInBothJoinAndWithdrawalOrders]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testOriginsShareOneOperationAndReceiveCompletionOnlyOnce]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testOriginsShareOneOperationAndReceiveCompletionOnlyOnce]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testRestartRestoresIntentButNotTokensOrEffectiveConnection]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testRestartRestoresIntentButNotTokensOrEffectiveConnection]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testSuccessBeforeWithdrawalDoesNotRevokeEffectiveConnectionOrRedeliver]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testSuccessBeforeWithdrawalDoesNotRevokeEffectiveConnectionOrRedeliver]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testUnknownReconciliationDoesNotRegisterAndInvalidatesOldPresentation]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testUnknownReconciliationDoesNotRegisterAndInvalidatesOldPresentation]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testWithdrawAllAndRetryRejectsLateOperationAndGeneration]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testWithdrawAllAndRetryRejectsLateOperationAndGeneration]' passed (0.001 seconds).
+Test Case '-[WattTests.F03ApprovalContractTests testWithdrawingOneOriginDoesNotCancelOtherOrigin]' started.
+Test Case '-[WattTests.F03ApprovalContractTests testWithdrawingOneOriginDoesNotCancelOtherOrigin]' passed (0.001 seconds).
+Test Suite 'F03ApprovalContractTests' passed at 2026-09-22 19:27:21.690.
+	 Executed 14 tests, with 0 failures (0 unexpected) in 0.010 (0.013) seconds
+Test Suite 'F03FakeServiceContractTests' started at 2026-09-22 19:27:21.690.
+Test Case '-[WattTests.F03FakeServiceContractTests testCancelledTasksDoNotBeginFakeWorkOrRevokeVerifiedRemoval]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testCancelledTasksDoNotBeginFakeWorkOrRevokeVerifiedRemoval]' passed (0.019 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testDiscardedUpdateReceiptCannotBeReusedAndFreshReceiptCanRetry]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testDiscardedUpdateReceiptCannotBeReusedAndFreshReceiptCanRetry]' passed (0.002 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testDiscardFailureRetainsStagedTransactionAndInstalledUpdateCannotBeDiscarded]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testDiscardFailureRetainsStagedTransactionAndInstalledUpdateCannotBeDiscarded]' passed (0.003 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testHelperExplicitDeniedTimeoutAndDisconnectedOutcomes]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testHelperExplicitDeniedTimeoutAndDisconnectedOutcomes]' passed (0.003 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testHelperFakeFailuresReachOnlyStillInterestedOriginInEitherOrder]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testHelperFakeFailuresReachOnlyStillInterestedOriginInEitherOrder]' passed (0.004 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testNotificationDenialUsesFakeWithoutRequestingOSPermission]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testNotificationDenialUsesFakeWithoutRequestingOSPermission]' passed (0.004 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testRemovalFailuresAndInterruptionsNeverClaimVerifiedAbsence]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testRemovalFailuresAndInterruptionsNeverClaimVerifiedAbsence]' passed (0.004 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testTelemetryExplicitDisconnectedAndTimeoutOutcomes]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testTelemetryExplicitDisconnectedAndTimeoutOutcomes]' passed (0.004 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateExplicitNetworkAndInterruptedOutcomesDoNotCreateTransaction]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateExplicitNetworkAndInterruptedOutcomesDoNotCreateTransaction]' passed (0.004 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateFakeCancelStagedTransactionDoesNotInstall]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateFakeCancelStagedTransactionDoesNotInstall]' passed (0.003 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateFakeIsIdempotentAndRecoversAcknowledgedInstall]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testUpdateFakeIsIdempotentAndRecoversAcknowledgedInstall]' passed (0.004 seconds).
+Test Case '-[WattTests.F03FakeServiceContractTests testVerifiedRemovalIsIdempotentAndReconcilesAsAbsent]' started.
+Test Case '-[WattTests.F03FakeServiceContractTests testVerifiedRemovalIsIdempotentAndReconcilesAsAbsent]' passed (0.004 seconds).
+Test Suite 'F03FakeServiceContractTests' passed at 2026-09-22 19:27:21.751.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.058 (0.061) seconds
+Test Suite 'F03PowerContractTests' started at 2026-09-22 19:27:21.751.
+Test Case '-[WattTests.F03PowerContractTests testCapabilitiesGateValuesIndependentlyOfPresence]' started.
+Test Case '-[WattTests.F03PowerContractTests testCapabilitiesGateValuesIndependentlyOfPresence]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testChargingHoldIsDistinctFromFullAtZeroWatts]' started.
+Test Case '-[WattTests.F03PowerContractTests testChargingHoldIsDistinctFromFullAtZeroWatts]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testComponentIdentitySurvivesRenamingAndNewSamples]' started.
+Test Case '-[WattTests.F03PowerContractTests testComponentIdentitySurvivesRenamingAndNewSamples]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testDisconnectInvalidatesOutstandingReplyAndNewGenerationRecovers]' started.
+Test Case '-[WattTests.F03PowerContractTests testDisconnectInvalidatesOutstandingReplyAndNewGenerationRecovers]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testFreshnessIncludesAgeBoundaryAndRejectsFutureOrInvalidAge]' started.
+Test Case '-[WattTests.F03PowerContractTests testFreshnessIncludesAgeBoundaryAndRejectsFutureOrInvalidAge]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testFutureInitialSampleIsUnavailableAndCurrentSampleRecovers]' started.
+Test Case '-[WattTests.F03PowerContractTests testFutureInitialSampleIsUnavailableAndCurrentSampleRecovers]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testRestartRejectsLateReplyEvenWithNewerTimestamp]' started.
+Test Case '-[WattTests.F03PowerContractTests testRestartRejectsLateReplyEvenWithNewerTimestamp]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testSignedFormattingAndUnsignedInput]' started.
+Test Case '-[WattTests.F03PowerContractTests testSignedFormattingAndUnsignedInput]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testStoreRecoversFromStaleWithFreshSample]' started.
+Test Case '-[WattTests.F03PowerContractTests testStoreRecoversFromStaleWithFreshSample]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testStoreRejectsOutOfOrderFutureAndInvalidSamplesWithoutReplacingReading]' started.
+Test Case '-[WattTests.F03PowerContractTests testStoreRejectsOutOfOrderFutureAndInvalidSamplesWithoutReplacingReading]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testUnavailableAndNonFiniteValuesAreNotZero]' started.
+Test Case '-[WattTests.F03PowerContractTests testUnavailableAndNonFiniteValuesAreNotZero]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testUnavailableSourceOrFreshnessSuppressesValues]' started.
+Test Case '-[WattTests.F03PowerContractTests testUnavailableSourceOrFreshnessSuppressesValues]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testUnpluggedChargerFallsBackToBatteryInsteadOfOldInputOrZero]' started.
+Test Case '-[WattTests.F03PowerContractTests testUnpluggedChargerFallsBackToBatteryInsteadOfOldInputOrZero]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testValidationRejectsDuplicateAndEmptyComponentIDs]' started.
+Test Case '-[WattTests.F03PowerContractTests testValidationRejectsDuplicateAndEmptyComponentIDs]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PowerContractTests testValidationRejectsInvalidPhysicalReadings]' started.
+Test Case '-[WattTests.F03PowerContractTests testValidationRejectsInvalidPhysicalReadings]' passed (0.001 seconds).
+Test Suite 'F03PowerContractTests' passed at 2026-09-22 19:27:21.764.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.010 (0.013) seconds
+Test Suite 'F03PreferencesContractTests' started at 2026-09-22 19:27:21.764.
+Test Case '-[WattTests.F03PreferencesContractTests testDefaultAndPreviewStorageDoNotSharePreferences]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testDefaultAndPreviewStorageDoNotSharePreferences]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testInjectedStoragePersistsPreferencesAndOnboardingAcrossInstances]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testInjectedStoragePersistsPreferencesAndOnboardingAcrossInstances]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testInvalidSelectionNeverReachesPublisherOrPersistentStorage]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testInvalidSelectionNeverReachesPublisherOrPersistentStorage]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testSelectionRejectsThirdDuplicateAndBlankIDsWithoutPersistingThem]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testSelectionRejectsThirdDuplicateAndBlankIDsWithoutPersistingThem]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testStorageWriteFailureIsVisibleAndRetryPersists]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testStorageWriteFailureIsVisibleAndRetryPersists]' passed (0.001 seconds).
+Test Case '-[WattTests.F03PreferencesContractTests testUnreadableAndCorruptStoragePreserveSafeDefaults]' started.
+Test Case '-[WattTests.F03PreferencesContractTests testUnreadableAndCorruptStoragePreserveSafeDefaults]' passed (0.001 seconds).
+Test Suite 'F03PreferencesContractTests' passed at 2026-09-22 19:27:21.769.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.004 (0.006) seconds
+Test Suite 'F03UpdateContractTests' started at 2026-09-22 19:27:21.770.
+Test Case '-[WattTests.F03UpdateContractTests testAvailableAndDownloadingCancellationRejectLateStagingAndAllowRetry]' started.
+Test Case '-[WattTests.F03UpdateContractTests testAvailableAndDownloadingCancellationRejectLateStagingAndAllowRetry]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testCancellationWriteFailureInvalidatesLateWorkWithoutClaimingSuccess]' started.
+Test Case '-[WattTests.F03UpdateContractTests testCancellationWriteFailureInvalidatesLateWorkWithoutClaimingSuccess]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testCancelledStagedDiscardRequiresExactReceiptAndCurrentGenerationBeforeRetry]' started.
+Test Case '-[WattTests.F03UpdateContractTests testCancelledStagedDiscardRequiresExactReceiptAndCurrentGenerationBeforeRetry]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testCancelPreInstallInvalidatesLateRepliesAndRetainsReceipt]' started.
+Test Case '-[WattTests.F03UpdateContractTests testCancelPreInstallInvalidatesLateRepliesAndRetainsReceipt]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testCheckingCancellationCanRestartWithNewGeneration]' started.
+Test Case '-[WattTests.F03UpdateContractTests testCheckingCancellationCanRestartWithNewGeneration]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testDiscardPersistenceFailureRetainsReceiptAndAcknowledgementCanBeRetried]' started.
+Test Case '-[WattTests.F03UpdateContractTests testDiscardPersistenceFailureRetainsReceiptAndAcknowledgementCanBeRetried]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testInstallingAndAwaitingRelaunchCannotBeLocallyCancelled]' started.
+Test Case '-[WattTests.F03UpdateContractTests testInstallingAndAwaitingRelaunchCannotBeLocallyCancelled]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testInterruptedPreTransactionWorkRestartsWithoutReceipt]' started.
+Test Case '-[WattTests.F03UpdateContractTests testInterruptedPreTransactionWorkRestartsWithoutReceipt]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testInterruptedTransactionsRestoreReceiptAndRequireRecovery]' started.
+Test Case '-[WattTests.F03UpdateContractTests testInterruptedTransactionsRestoreReceiptAndRequireRecovery]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testInvalidTransitionsProgressAndMismatchedReceiptsAreRejected]' started.
+Test Case '-[WattTests.F03UpdateContractTests testInvalidTransitionsProgressAndMismatchedReceiptsAreRejected]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testPersistenceFailureDoesNotAdvanceUpdateState]' started.
+Test Case '-[WattTests.F03UpdateContractTests testPersistenceFailureDoesNotAdvanceUpdateState]' passed (0.001 seconds).
+Test Case '-[WattTests.F03UpdateContractTests testValidUpdateLifecyclePersistsCompletion]' started.
+Test Case '-[WattTests.F03UpdateContractTests testValidUpdateLifecyclePersistsCompletion]' passed (0.001 seconds).
+Test Suite 'F03UpdateContractTests' passed at 2026-09-22 19:27:21.780.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.008 (0.011) seconds
+Test Suite 'F05FixtureTests' started at 2026-09-22 19:27:21.781.
+Test Case '-[WattTests.F05FixtureTests testAll69ExactIDsResolveWithUniqueNodes]' started.
+Test Case '-[WattTests.F05FixtureTests testAll69ExactIDsResolveWithUniqueNodes]' passed (0.003 seconds).
+Test Case '-[WattTests.F05FixtureTests testAppCompositionRejectsUnimplementedStoriesAndGalleriesBeforeLaunch]' started.
+Test Case '-[WattTests.F05FixtureTests testAppCompositionRejectsUnimplementedStoriesAndGalleriesBeforeLaunch]' passed (0.004 seconds).
+Test Case '-[WattTests.F05FixtureTests testBacklogAndPinnedReferenceMatch]' started.
+Test Case '-[WattTests.F05FixtureTests testBacklogAndPinnedReferenceMatch]' passed (0.059 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01AccessibilitySourceSemantics]' started.
+Test Case '-[WattTests.F05FixtureTests testC01AccessibilitySourceSemantics]' passed (0.002 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01ActionsUseSuppliedCallbacks]' started.
+Test Case '-[WattTests.F05FixtureTests testC01ActionsUseSuppliedCallbacks]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01ExactPresentation]' started.
+Test Case '-[WattTests.F05FixtureTests testC01ExactPresentation]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01FormatterSignsAndZeros]' started.
+Test Case '-[WattTests.F05FixtureTests testC01FormatterSignsAndZeros]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01RuntimeStorageIsIsolatedAndClockPinned]' started.
+Test Case '-[WattTests.F05FixtureTests testC01RuntimeStorageIsIsolatedAndClockPinned]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableAndDisabledCapabilitiesNeverLeakValues]' started.
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableAndDisabledCapabilitiesNeverLeakValues]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableSourceAndFreshnessOverrideAvailableCapabilities]' started.
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableSourceAndFreshnessOverrideAvailableCapabilities]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02CallbacksAndPinnedStore]' started.
+Test Case '-[WattTests.F05FixtureTests testC02CallbacksAndPinnedStore]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02ExactPresentationAndStableFixture]' started.
+Test Case '-[WattTests.F05FixtureTests testC02ExactPresentationAndStableFixture]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02LaunchGateAndMalformedSelectors]' started.
+Test Case '-[WattTests.F05FixtureTests testC02LaunchGateAndMalformedSelectors]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02UnavailableDoesNotBecomeUnpluggedOrZero]' started.
+Test Case '-[WattTests.F05FixtureTests testC02UnavailableDoesNotBecomeUnpluggedOrZero]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testEveryUnimplementedFixtureRefusesRendering]' started.
+Test Case '-[WattTests.F05FixtureTests testEveryUnimplementedFixtureRefusesRendering]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testGalleryIsDistinctFromStories]' started.
+Test Case '-[WattTests.F05FixtureTests testGalleryIsDistinctFromStories]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testLaunchParserFailsClosed]' started.
+Test Case '-[WattTests.F05FixtureTests testLaunchParserFailsClosed]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testOnlyImplementedStoriesHaveRenderTargets]' started.
+Test Case '-[WattTests.F05FixtureTests testOnlyImplementedStoriesHaveRenderTargets]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testStorageIsNewForEveryLaunch]' started.
+Test Case '-[WattTests.F05FixtureTests testStorageIsNewForEveryLaunch]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testTwoRunsAreDeterministicAndAllVariantsResolve]' started.
+Test Case '-[WattTests.F05FixtureTests testTwoRunsAreDeterministicAndAllVariantsResolve]' passed (0.004 seconds).
+Test Case '-[WattTests.F05FixtureTests testUnknownIDsAndVariantsFail]' started.
+Test Case '-[WattTests.F05FixtureTests testUnknownIDsAndVariantsFail]' passed (0.001 seconds).
+Test Suite 'F05FixtureTests' passed at 2026-09-22 19:27:21.867.
+	 Executed 21 tests, with 0 failures (0 unexpected) in 0.082 (0.087) seconds
+Test Suite 'NativeStylingTests' started at 2026-09-22 19:27:21.867.
+Test Case '-[WattTests.NativeStylingTests testButtonsPreserveLayoutWithNativeAccessibilityAppearances]' started.
+Test Case '-[WattTests.NativeStylingTests testButtonsPreserveLayoutWithNativeAccessibilityAppearances]' passed (0.038 seconds).
+Test Case '-[WattTests.NativeStylingTests testFocusSpecimenUsesOneNativeFieldLabel]' started.
+Test Case '-[WattTests.NativeStylingTests testFocusSpecimenUsesOneNativeFieldLabel]' passed (0.001 seconds).
+Test Case '-[WattTests.NativeStylingTests testSettingsNotesUseSectionFootersWithoutExtraChromeOrSpacing]' started.
+Test Case '-[WattTests.NativeStylingTests testSettingsNotesUseSectionFootersWithoutExtraChromeOrSpacing]' passed (0.004 seconds).
+Test Case '-[WattTests.NativeStylingTests testSharedControlsDoNotPaintSystemChrome]' started.
+Test Case '-[WattTests.NativeStylingTests testSharedControlsDoNotPaintSystemChrome]' passed (0.005 seconds).
+Test Case '-[WattTests.NativeStylingTests testWindowScaffoldRetainsContentInNativeAppearances]' started.
+Test Case '-[WattTests.NativeStylingTests testWindowScaffoldRetainsContentInNativeAppearances]' passed (0.005 seconds).
+Test Suite 'NativeStylingTests' passed at 2026-09-22 19:27:21.922.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.054 (0.055) seconds
+Test Suite 'P01TelemetryTests' started at 2026-09-22 19:27:21.922.
+Test Case '-[WattTests.P01TelemetryTests testAbsentBatteryAndUPSDoNotBecomeInternalBattery]' started.
+Test Case '-[WattTests.P01TelemetryTests testAbsentBatteryAndUPSDoNotBecomeInternalBattery]' passed (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testCancellationBeforeAndDuringProvider]' started.
+Test Case '-[WattTests.P01TelemetryTests testCancellationBeforeAndDuringProvider]' passed (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testChargedIsNotInferredFromPercentageAndHoldIsNotGuessed]' started.
+Test Case '-[WattTests.P01TelemetryTests testChargedIsNotInferredFromPercentageAndHoldIsNotGuessed]' passed (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testClockFreshStaleRecoveryAndFailures]' started.
+Test Case '-[WattTests.P01TelemetryTests testClockFreshStaleRecoveryAndFailures]' passed (0.103 seconds).
+Test Case '-[WattTests.P01TelemetryTests testDischargingAndProvidingSourcesRemainIndependent]' started.
+Test Case '-[WattTests.P01TelemetryTests testDischargingAndProvidingSourcesRemainIndependent]' passed (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testMissingAndInvalidKeysNeverBecomeFalseOrZero]' started.
+Test Case '-[WattTests.P01TelemetryTests testMissingAndInvalidKeysNeverBecomeFalseOrZero]' passed (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke]' started.
+/Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/WattTests/P01TelemetryTests.swift:141: -[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke] : Test skipped - Opt-in physical-host metadata probe; not fixture evidence
+Test Case '-[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke]' skipped (0.105 seconds).
+Test Case '-[WattTests.P01TelemetryTests testPresentChargingBatteryHasMetadataButNeverWatts]' started.
+Test Case '-[WattTests.P01TelemetryTests testPresentChargingBatteryHasMetadataButNeverWatts]' passed (0.002 seconds).
+Test Suite 'P01TelemetryTests' passed at 2026-09-22 19:27:22.138.
+	 Executed 8 tests, with 1 test skipped and 0 failures (0 unexpected) in 0.213 (0.216) seconds
+Test Suite 'P02HelperLifecycleTests' started at 2026-09-22 19:27:22.139.
+Test Case '-[WattTests.P02HelperLifecycleTests testAllOriginsWithdrawLateApprovalOnlyUpdatesEffectiveState]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testAllOriginsWithdrawLateApprovalOnlyUpdatesEffectiveState]' passed (0.105 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testCandidateAndPeerMismatchNeverSendIPC]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testCandidateAndPeerMismatchNeverSendIPC]' passed (0.104 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testLateIPCReplyWithWrongGenerationFailsClosed]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testLateIPCReplyWithWrongGenerationFailsClosed]' passed (0.013 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testLateReconnectDuringRemovalCannotResurrect]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testLateReconnectDuringRemovalCannotResurrect]' passed (0.003 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testOriginCancellationRejoinPreservesOtherOriginAndNoDuplicateRegistration]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testOriginCancellationRejoinPreservesOtherOriginAndNoDuplicateRegistration]' passed (0.103 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testRegistrationApprovalAuthenticationAndIPC]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testRegistrationApprovalAuthenticationAndIPC]' passed (0.103 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testRemoveAndUpdateRecoverWithoutDuplicateUpdate]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testRemoveAndUpdateRecoverWithoutDuplicateUpdate]' passed (0.104 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testStaleGenerationCannotConnectAndReconnectAuthenticatesAgain]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testStaleGenerationCannotConnectAndReconnectAuthenticatesAgain]' passed (0.104 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testSuccessfulUpdateRequiresReceiptProofAndAuthenticatedReconnect]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testSuccessfulUpdateRequiresReceiptProofAndAuthenticatedReconnect]' passed (0.104 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testTaskCancellationRejectsLateReply]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testTaskCancellationRejectsLateReply]' passed (0.003 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testTimeoutAndDisconnectAreRetryableWithoutRegistration]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testTimeoutAndDisconnectAreRetryableWithoutRegistration]' passed (0.002 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testUnknownDisabledAndMalformedReplyFailClosed]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testUnknownDisabledAndMalformedReplyFailClosed]' passed (0.105 seconds).
+Test Case '-[WattTests.P02HelperLifecycleTests testUnknownRemovalDoesNotMutateAndPreCancelledRegistrationDoesNotInstall]' started.
+Test Case '-[WattTests.P02HelperLifecycleTests testUnknownRemovalDoesNotMutateAndPreCancelledRegistrationDoesNotInstall]' passed (0.003 seconds).
+Test Suite 'P02HelperLifecycleTests' passed at 2026-09-22 19:27:23.003.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.856 (0.865) seconds
+Test Suite 'P03NotificationLoginTests' started at 2026-09-22 19:27:23.004.
+Test Case '-[WattTests.P03NotificationLoginTests testAuthorizationFailureAndRecovery]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testAuthorizationFailureAndRecovery]' passed (0.104 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testConcurrentDeliverySameIDDoesNotEnqueueTwice]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testConcurrentDeliverySameIDDoesNotEnqueueTwice]' passed (0.004 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testIndependentEventIDsAndPreferenceChanges]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testIndependentEventIDsAndPreferenceChanges]' passed (0.105 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testJ63J64CompletePreferencePermissionMatrix]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testJ63J64CompletePreferencePermissionMatrix]' passed (0.004 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginFailureNeverPersistsEffectiveSuccessOrBlindlyRetries]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginFailureNeverPersistsEffectiveSuccessOrBlindlyRetries]' passed (0.003 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginPendingApprovalDoesNotRegisterAgainAndCanRemove]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginPendingApprovalDoesNotRegisterAgainAndCanRemove]' passed (0.002 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginPreferenceStatusMatrixIsReadOnly]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginPreferenceStatusMatrixIsReadOnly]' passed (0.103 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginRegisterReconcileRemoveIdempotenceAndRestart]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginRegisterReconcileRemoveIdempotenceAndRestart]' passed (0.104 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginUnknownAndMissingFailClosed]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginUnknownAndMissingFailClosed]' passed (0.103 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testLoginUnverifiedRemovalDoesNotClaimAbsence]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testLoginUnverifiedRemovalDoesNotClaimAbsence]' passed (0.002 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testNativeStatusMappingsWithoutInstantiatingSystemServices]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testNativeStatusMappingsWithoutInstantiatingSystemServices]' passed (0.001 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testNotificationEpisodeIdempotenceAndFailureRetry]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testNotificationEpisodeIdempotenceAndFailureRetry]' passed (0.103 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testPermissionRequestIsExplicitAndDenialNeverReprompts]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testPermissionRequestIsExplicitAndDenialNeverReprompts]' passed (0.104 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testPreCancelledTasksPerformNoEffects]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testPreCancelledTasksPerformNoEffects]' passed (0.002 seconds).
+Test Case '-[WattTests.P03NotificationLoginTests testPreferenceDisabledDuringStatusReadSuppressesDelivery]' started.
+Test Case '-[WattTests.P03NotificationLoginTests testPreferenceDisabledDuringStatusReadSuppressesDelivery]' passed (0.104 seconds).
+Test Suite 'P03NotificationLoginTests' passed at 2026-09-22 19:27:23.861.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.847 (0.857) seconds
+Test Suite 'P04UpdaterTests' started at 2026-09-22 19:27:23.862.
+Test Case '-[WattTests.P04UpdaterTests testCancelledDiscardedReceiptCannotBeReusedAcrossRestart]' started.
+Test Case '-[WattTests.P04UpdaterTests testCancelledDiscardedReceiptCannotBeReusedAcrossRestart]' passed (0.007 seconds).
+Test Case '-[WattTests.P04UpdaterTests testCancelSuspendedDownloadRejectsLateReplyAndConcurrentWork]' started.
+Test Case '-[WattTests.P04UpdaterTests testCancelSuspendedDownloadRejectsLateReplyAndConcurrentWork]' passed (0.107 seconds).
+Test Case '-[WattTests.P04UpdaterTests testCompletedBuildCannotBeOfferedAgainAndNewBinaryCanRecover]' started.
+Test Case '-[WattTests.P04UpdaterTests testCompletedBuildCannotBeOfferedAgainAndNewBinaryCanRecover]' passed (0.108 seconds).
+Test Case '-[WattTests.P04UpdaterTests testConfirmationRequiredAndNotRestored]' started.
+Test Case '-[WattTests.P04UpdaterTests testConfirmationRequiredAndNotRestored]' passed (0.105 seconds).
+Test Case '-[WattTests.P04UpdaterTests testCorruptDownloadNeverStages]' started.
+Test Case '-[WattTests.P04UpdaterTests testCorruptDownloadNeverStages]' passed (0.004 seconds).
+Test Case '-[WattTests.P04UpdaterTests testDiscardRequiresAbsenceAndCanRetry]' started.
+Test Case '-[WattTests.P04UpdaterTests testDiscardRequiresAbsenceAndCanRetry]' passed (0.003 seconds).
+Test Case '-[WattTests.P04UpdaterTests testDiscardTombstoneWriteFailureCanRetryButCannotInstall]' started.
+Test Case '-[WattTests.P04UpdaterTests testDiscardTombstoneWriteFailureCanRetryButCannotInstall]' passed (0.105 seconds).
+Test Case '-[WattTests.P04UpdaterTests testDuplicateJournalReceiptsAndWrongVersionFailClosed]' started.
+Test Case '-[WattTests.P04UpdaterTests testDuplicateJournalReceiptsAndWrongVersionFailClosed]' passed (0.005 seconds).
+Test Case '-[WattTests.P04UpdaterTests testDurableAtomicJournalRestartAndCorruptionFailClosed]' started.
+Test Case '-[WattTests.P04UpdaterTests testDurableAtomicJournalRestartAndCorruptionFailClosed]' passed (0.117 seconds).
+Test Case '-[WattTests.P04UpdaterTests testExactReceiptNotOnlyUUID]' started.
+Test Case '-[WattTests.P04UpdaterTests testExactReceiptNotOnlyUUID]' passed (0.110 seconds).
+Test Case '-[WattTests.P04UpdaterTests testInstalledCorruptionNeverLaunchesAndRecoveryRestoresOriginal]' started.
+Test Case '-[WattTests.P04UpdaterTests testInstalledCorruptionNeverLaunchesAndRecoveryRestoresOriginal]' passed (0.104 seconds).
+Test Case '-[WattTests.P04UpdaterTests testInterruptedReplacementRecoveryAtEveryBoundary]' started.
+Test Case '-[WattTests.P04UpdaterTests testInterruptedReplacementRecoveryAtEveryBoundary]' passed (0.111 seconds).
+Test Case '-[WattTests.P04UpdaterTests testInvalidSignatureWrongIdentityAndDowngrade]' started.
+Test Case '-[WattTests.P04UpdaterTests testInvalidSignatureWrongIdentityAndDowngrade]' passed (0.111 seconds).
+Test Case '-[WattTests.P04UpdaterTests testJournalSignatureTamperAndReadFailure]' started.
+Test Case '-[WattTests.P04UpdaterTests testJournalSignatureTamperAndReadFailure]' passed (0.104 seconds).
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionCurrentAndOlderCandidates]' started.
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionCurrentAndOlderCandidates]' passed (0.115 seconds).
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionMalformedOrMissingRejected]' started.
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionMalformedOrMissingRejected]' passed (0.021 seconds).
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionNewerCandidatesHaveNoEffects]' started.
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionNewerCandidatesHaveNoEffects]' passed (0.106 seconds).
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionRecheckedBeforeInstallWithoutBlockingCleanup]' started.
+Test Case '-[WattTests.P04UpdaterTests testMinimumSystemVersionRecheckedBeforeInstallWithoutBlockingCleanup]' passed (0.106 seconds).
+Test Case '-[WattTests.P04UpdaterTests testNoUpdateAndNetworkFailureRetry]' started.
+Test Case '-[WattTests.P04UpdaterTests testNoUpdateAndNetworkFailureRetry]' passed (0.004 seconds).
+Test Case '-[WattTests.P04UpdaterTests testPersistenceFailurePreventsEffectsAndRetryPreservesReceipt]' started.
+Test Case '-[WattTests.P04UpdaterTests testPersistenceFailurePreventsEffectsAndRetryPreservesReceipt]' passed (0.103 seconds).
+Test Case '-[WattTests.P04UpdaterTests testPostInstallCancelDiscardAndReplayRejected]' started.
+Test Case '-[WattTests.P04UpdaterTests testPostInstallCancelDiscardAndReplayRejected]' passed (0.107 seconds).
+Test Case '-[WattTests.P04UpdaterTests testPostReplacementAndCompletionWriteFailuresRecoverWithoutReplay]' started.
+Test Case '-[WattTests.P04UpdaterTests testPostReplacementAndCompletionWriteFailuresRecoverWithoutReplay]' passed (0.007 seconds).
+Test Case '-[WattTests.P04UpdaterTests testRelaunchFailureWrongRunningReceiptAndRetry]' started.
+Test Case '-[WattTests.P04UpdaterTests testRelaunchFailureWrongRunningReceiptAndRetry]' passed (0.108 seconds).
+Test Case '-[WattTests.P04UpdaterTests testRollbackFailureRemainsRecoverable]' started.
+Test Case '-[WattTests.P04UpdaterTests testRollbackFailureRemainsRecoverable]' passed (0.109 seconds).
+Test Case '-[WattTests.P04UpdaterTests testSignedInstallRelaunchRestartAndSentinel]' started.
+Test Case '-[WattTests.P04UpdaterTests testSignedInstallRelaunchRestartAndSentinel]' passed (0.109 seconds).
+Test Case '-[WattTests.P04UpdaterTests testSignedManifestCannotOverrideArtifactIdentity]' started.
+Test Case '-[WattTests.P04UpdaterTests testSignedManifestCannotOverrideArtifactIdentity]' passed (0.107 seconds).
+Test Case '-[WattTests.P04UpdaterTests testStagedArtifactRevalidatedBeforeInstallAndRecovery]' started.
+Test Case '-[WattTests.P04UpdaterTests testStagedArtifactRevalidatedBeforeInstallAndRecovery]' passed (0.004 seconds).
+Test Case '-[WattTests.P04UpdaterTests testStageVerificationNetworkAndCleanupFailuresRemainRecoverable]' started.
+Test Case '-[WattTests.P04UpdaterTests testStageVerificationNetworkAndCleanupFailuresRemainRecoverable]' passed (0.105 seconds).
+Test Case '-[WattTests.P04UpdaterTests testTaskCancellationDoesNotStageLateDownload]' started.
+Test Case '-[WattTests.P04UpdaterTests testTaskCancellationDoesNotStageLateDownload]' passed (0.107 seconds).
+Test Suite 'P04UpdaterTests' passed at 2026-09-22 19:27:26.199.
+	 Executed 29 tests, with 0 failures (0 unexpected) in 2.317 (2.338) seconds
+Test Suite 'P05RemovalTests' started at 2026-09-22 19:27:26.200.
+Test Case '-[WattTests.P05RemovalTests testAlreadyAbsentPathsAreNotRemoved]' started.
+Test Case '-[WattTests.P05RemovalTests testAlreadyAbsentPathsAreNotRemoved]' passed (0.107 seconds).
+Test Case '-[WattTests.P05RemovalTests testAmbiguousFailureAfterEveryEffectReconcilesWithoutReplay]' started.
+Test Case '-[WattTests.P05RemovalTests testAmbiguousFailureAfterEveryEffectReconcilesWithoutReplay]' passed (0.127 seconds).
+Test Case '-[WattTests.P05RemovalTests testAuthenticationFailureBlocksHelperRemovalAndLaterSteps]' started.
+Test Case '-[WattTests.P05RemovalTests testAuthenticationFailureBlocksHelperRemovalAndLaterSteps]' passed (0.005 seconds).
+Test Case '-[WattTests.P05RemovalTests testConcurrentRetryCannotDuplicateEffectsAndCancellationReportsReality]' started.
+Test Case '-[WattTests.P05RemovalTests testConcurrentRetryCannotDuplicateEffectsAndCancellationReportsReality]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testFailureAtEveryStepListsRemainingAndRetryIsSafe]' started.
+Test Case '-[WattTests.P05RemovalTests testFailureAtEveryStepListsRemainingAndRetryIsSafe]' passed (0.007 seconds).
+Test Case '-[WattTests.P05RemovalTests testForeignInstallationJournalRejected]' started.
+Test Case '-[WattTests.P05RemovalTests testForeignInstallationJournalRejected]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testHelperRemovalLeavesAppRunningAndOtherOwnedResourcesIntact]' started.
+Test Case '-[WattTests.P05RemovalTests testHelperRemovalLeavesAppRunningAndOtherOwnedResourcesIntact]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testHelperRetryCannotHideUnexpectedAppExit]' started.
+Test Case '-[WattTests.P05RemovalTests testHelperRetryCannotHideUnexpectedAppExit]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testJournalFailurePreventsEffects]' started.
+Test Case '-[WattTests.P05RemovalTests testJournalFailurePreventsEffects]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testMalformedAndOverlappingManifestRejected]' started.
+Test Case '-[WattTests.P05RemovalTests testMalformedAndOverlappingManifestRejected]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testMissingBytesWithRunningHelperCannotClaimSuccess]' started.
+Test Case '-[WattTests.P05RemovalTests testMissingBytesWithRunningHelperCannotClaimSuccess]' passed (0.002 seconds).
+Test Case '-[WattTests.P05RemovalTests testNoOpDriverCannotClaimSuccess]' started.
+Test Case '-[WattTests.P05RemovalTests testNoOpDriverCannotClaimSuccess]' passed (0.002 seconds).
+Test Case '-[WattTests.P05RemovalTests testOrderedSuccessAndSecondRetryPreservesSentinel]' started.
+Test Case '-[WattTests.P05RemovalTests testOrderedSuccessAndSecondRetryPreservesSentinel]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testReceiptAndScopeMismatchCannotEscalateCleanup]' started.
+Test Case '-[WattTests.P05RemovalTests testReceiptAndScopeMismatchCannotEscalateCleanup]' passed (0.005 seconds).
+Test Case '-[WattTests.P05RemovalTests testReconcileWithoutJournalCannotClaimSuccess]' started.
+Test Case '-[WattTests.P05RemovalTests testReconcileWithoutJournalCannotClaimSuccess]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testReconnectAuthenticatesEveryTime]' started.
+Test Case '-[WattTests.P05RemovalTests testReconnectAuthenticatesEveryTime]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testReconnectRejectsTimeoutAndUncorrelatedHandshake]' started.
+Test Case '-[WattTests.P05RemovalTests testReconnectRejectsTimeoutAndUncorrelatedHandshake]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testRestartRecoveryUsesSameManifestAndFreshInventory]' started.
+Test Case '-[WattTests.P05RemovalTests testRestartRecoveryUsesSameManifestAndFreshInventory]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testRollbackAfterEveryPartialFailureRestoresBaselineAndIsIdempotent]' started.
+Test Case '-[WattTests.P05RemovalTests testRollbackAfterEveryPartialFailureRestoresBaselineAndIsIdempotent]' passed (0.002 seconds).
+Test Case '-[WattTests.P05RemovalTests testRollbackFailureAtEveryStepCanRecover]' started.
+Test Case '-[WattTests.P05RemovalTests testRollbackFailureAtEveryStepCanRecover]' passed (0.002 seconds).
+Test Case '-[WattTests.P05RemovalTests testRollbackNoOpCannotClaimRestoration]' started.
+Test Case '-[WattTests.P05RemovalTests testRollbackNoOpCannotClaimRestoration]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testRollbackPreservesInterveningDataInsteadOfOverwriting]' started.
+Test Case '-[WattTests.P05RemovalTests testRollbackPreservesInterveningDataInsteadOfOverwriting]' passed (0.001 seconds).
+Test Case '-[WattTests.P05RemovalTests testRunningAppPreventsFullUninstallSuccessEvenWithNoPaths]' started.
+Test Case '-[WattTests.P05RemovalTests testRunningAppPreventsFullUninstallSuccessEvenWithNoPaths]' passed (0.103 seconds).
+Test Case '-[WattTests.P05RemovalTests testUnknownInventoryFailsClosedAndListsAllPaths]' started.
+Test Case '-[WattTests.P05RemovalTests testUnknownInventoryFailsClosedAndListsAllPaths]' passed (0.002 seconds).
+Test Suite 'P05RemovalTests' passed at 2026-09-22 19:27:26.584.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 0.376 (0.384) seconds
+Test Suite 'ReadingPickerTests' started at 2026-09-22 19:27:26.585.
+Test Case '-[WattTests.ReadingPickerTests testCallerControlsVisibleOptionsDescriptionsAndAvailability]' started.
+Test Case '-[WattTests.ReadingPickerTests testCallerControlsVisibleOptionsDescriptionsAndAvailability]' passed (0.002 seconds).
+Test Case '-[WattTests.ReadingPickerTests testDefaultInitializerPreservesAllModesAndDescriptions]' started.
+Test Case '-[WattTests.ReadingPickerTests testDefaultInitializerPreservesAllModesAndDescriptions]' passed (0.007 seconds).
+Test Case '-[WattTests.ReadingPickerTests testReferenceCaptureSizesAndAppearances]' started.
+Test Case '-[WattTests.ReadingPickerTests testReferenceCaptureSizesAndAppearances]' passed (0.140 seconds).
+Test Case '-[WattTests.ReadingPickerTests testReferenceReadingHasExactlyFourEnabledOptions]' started.
+Test Case '-[WattTests.ReadingPickerTests testReferenceReadingHasExactlyFourEnabledOptions]' passed (0.001 seconds).
+Test Suite 'ReadingPickerTests' passed at 2026-09-22 19:27:26.735.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.148 (0.150) seconds
+Test Suite 'SharedControlTests' started at 2026-09-22 19:27:26.735.
+Test Case '-[WattTests.SharedControlTests testActionButtonsMatchNativeMetricsAcrossStylesAndAppearances]' started.
+Test Case '-[WattTests.SharedControlTests testActionButtonsMatchNativeMetricsAcrossStylesAndAppearances]' passed (0.016 seconds).
+Test Case '-[WattTests.SharedControlTests testDisabledButtonsRetainLayoutAcrossStylesAndAppearances]' started.
+Test Case '-[WattTests.SharedControlTests testDisabledButtonsRetainLayoutAcrossStylesAndAppearances]' passed (0.014 seconds).
+Test Case '-[WattTests.SharedControlTests testFormRowMatchesNativeLabeledContent]' started.
+Test Case '-[WattTests.SharedControlTests testFormRowMatchesNativeLabeledContent]' passed (0.003 seconds).
+Test Case '-[WattTests.SharedControlTests testReadingPickerRejectsUnavailableSelectionAndPreservesCallbacks]' started.
+Test Case '-[WattTests.SharedControlTests testReadingPickerRejectsUnavailableSelectionAndPreservesCallbacks]' passed (0.000 seconds).
+Test Suite 'SharedControlTests' passed at 2026-09-22 19:27:26.769.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.033 (0.034) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-22 19:27:26.769.
+	 Executed 237 tests, with 1 test skipped and 0 failures (0 unexpected) in 5.136 (5.227) seconds
+Test Suite 'All tests' passed at 2026-09-22 19:27:26.769.
+	 Executed 237 tests, with 1 test skipped and 0 failures (0 unexpected) in 5.136 (5.228) seconds
+2026-09-22 19:27:27.138 xcodebuild[9015:5849873] [MT] IDETestOperationsObserverDebug: 6.252 elapsed -- Testing started completed.
+2026-09-22 19:27:27.138 xcodebuild[9015:5849873] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-22 19:27:27.138 xcodebuild[9015:5849873] [MT] IDETestOperationsObserverDebug: 6.252 sec, +6.252 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/c048-native/Logs/Test/Test-Watt-2026.09.22_19-27-20-+1000.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started

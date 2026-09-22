@@ -1,0 +1,4 @@
+docs/evidence/J7.3/reference.png: OK
+.build/xcode/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: no symbols
+J7.3 exact reference/SHA, native Form/popup semantics, fixture isolation and capture gates passed
+ReadingPicker, J7.2 label and J7.1 context menu unchanged; Debug fixture present and Release fixture/registry absent

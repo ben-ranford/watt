@@ -1,0 +1,32 @@
+{
+  "modifiedExistingFiles": [
+    "App/WattApp.swift",
+    "Features/MenuBar/Components/MenuBarStatusLabel.swift",
+    "Tests/WattTests/F05FixtureTests.swift",
+    "Tests/Fixtures/StoryFixtureData.swift",
+    "Tests/Fixtures/FixtureLaunchSelection.swift",
+    "Tests/Fixtures/StoryFixtures.swift",
+    "Watt.xcodeproj/project.pbxproj",
+    "DESIGN.md",
+    "SCREEN-BACKLOG.md"
+  ],
+  "newSourceFiles": [
+    "App/J74FixtureLaunch.swift",
+    "Tests/WattTests/J74CrowdedMenuBarTests.swift"
+  ],
+  "newEvidenceDirectory": "docs/evidence/J7.4",
+  "preservedBaselineFiles": 59,
+  "hashes": {
+    "App/WattApp.swift": "701649a71405d1e79de697f13d2d6f62e6046143c73438fd4bf8361a8de09812",
+    "Features/MenuBar/Components/MenuBarStatusLabel.swift": "7ec1334a9f805d75df6eac6131e95b2cb16ab172011520627a8a911d46f6a269",
+    "Tests/WattTests/F05FixtureTests.swift": "3a3a1eb7bbf7464453253c1795326b9cf65cde7739068079fb34c00844ae9cd7",
+    "Tests/Fixtures/StoryFixtureData.swift": "e7fe5bebefd8ea665c5d61599b3c7ce527d60c1013da459704bcd5087d896715",
+    "Tests/Fixtures/FixtureLaunchSelection.swift": "4ce2a809297325726293f3495ca904f21dd77b3870198a44fa515cf94a05743b",
+    "Tests/Fixtures/StoryFixtures.swift": "8dcfe14e1ab5258794e2b302dd94b00e6f820f29443777979d588698ed7ceb3b",
+    "Watt.xcodeproj/project.pbxproj": "ddf91bc85ffe9a30fc69b2d9badd40ffab70d6975d26ca3d65a3917625d7e02e",
+    "DESIGN.md": "38da7a9b8319f73438dccdb48c16665127c0acaeceba10f063a034844d4b1a55",
+    "SCREEN-BACKLOG.md": "71de8ca465663772a5b2f6ce48671ca6fa2225a0e91fd1dde4a00503264f74bf",
+    "App/J74FixtureLaunch.swift": "a340ef2b24b219f29ac2f64c212d6044f207825ed878d3a5d58f62209ae9fb03",
+    "Tests/WattTests/J74CrowdedMenuBarTests.swift": "5bc5012ab69ac6cac53a7f400d348a46db98421b75585213764127da45d25205"
+  }
+}

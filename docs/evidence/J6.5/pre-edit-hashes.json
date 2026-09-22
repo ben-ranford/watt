@@ -1,0 +1,14 @@
+{
+  "App/WattApp.swift": "9637e8c5c197058fe7fa6e13482bb1336a0b2c1b0d9b411fa14f5ecd98311afa",
+  "Models/PowerReading.swift": "167e5a2ffc142d2dc6649f12ac515c032a1d98159af9587e717c8aa3f7893ba6",
+  "Services/PowerReadingStore.swift": "2733dfb75d35f36a826945d38525d150b156dff7aa20fafb40112b5d6c196ef6",
+  "Features/MenuBar/Views/StatusPanelView.swift": "9b4d6b2440800f7a8f90c548198fa4ed6739e35348d8264f6a2ab4c69319c226",
+  "Features/MenuBar/Views/MenuBarRootView.swift": "ff98c8b24f9d3cd6a3e4f68a975bb569b2eb4b7b73cb4268abad9410568d3914",
+  "Features/MenuBar/Components/MenuBarStatusLabel.swift": "55b97109a09ab443e7ce22486a16072e0073f723aceb03ae6d49a4686fa6d3f9",
+  "Tests/Fixtures/StoryFixtures.swift": "f4c243b73fbcddf9a9fd43b701b500991cab35a883b2ee6c575e0c6f37af70b1",
+  "Tests/Fixtures/FixtureLaunchSelection.swift": "d56f7785cd574ba0a51f7a2ce2a0d9db71343145346ac9abd7f843692b046178",
+  "Tests/Fixtures/StoryFixtureData.swift": "af58e91a0e71d06c07f545dabc3e4a124e09cd8b362876b2efcb5bbf4eefe629",
+  "Tests/WattTests/F05FixtureTests.swift": "1a89c64034ef8e62e324a09b58d1b01c119cb1b94b49276fe9dfc72f9f341fa4",
+  "DESIGN.md": "e76692b08e7d97eef2aa66fabbe7fa675d16ce328f2f90260c58a3fb55967fe7",
+  "SCREEN-BACKLOG.md": "4cb088c33cb79dae387257e205c0bc4bf52fbaf282a6e624c5a3165cb69354e1"
+}

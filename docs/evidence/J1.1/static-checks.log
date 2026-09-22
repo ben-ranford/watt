@@ -1,0 +1,2 @@
+PASS: native welcome controls, typography, routing, cancellation; no painted chrome/background or absolute positioning
+PASS: exact fixture identity and Figma metadata

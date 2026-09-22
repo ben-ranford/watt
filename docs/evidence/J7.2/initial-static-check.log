@@ -1,0 +1,5 @@
+docs/evidence/J7.2/reference.png: OK
+.build/xcode/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: no symbols
+Traceback (most recent call last):
+  File "<stdin>", line 68, in <module>
+AssertionError: Debug fixture symbol absent: observeJ72StatusFixture

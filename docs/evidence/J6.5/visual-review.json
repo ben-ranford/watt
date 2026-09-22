@@ -1,0 +1,36 @@
+{
+  "story": "J6.5",
+  "goal": "G054",
+  "node": "31:5571",
+  "figmaFile": "9DKDgUfEqidZdZQEVlQgLS",
+  "status": "visual-blocked",
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "reference": "reference.png",
+  "referenceSHA256": "2fc0d5e53483f6377d473195b64643f6b4316da85ea9c78e83af1a7c21ce1c47",
+  "nativeCapture": null,
+  "comparableCapture": false,
+  "captureEvidence": "capture/window.json",
+  "blockers": [
+    "Accessibility trust unavailable (AXTrusted=false)",
+    "No fixture-owned on-screen compositor windows"
+  ],
+  "screenCapturePreauthorized": true,
+  "selectedStatusItemVerified": false,
+  "liveInteractionVerified": false,
+  "hostedChecks": {
+    "geometry": "320 × 265 points passed",
+    "appearance": "dark Aqua passed",
+    "footerCallbacks": "Native borderless Settings and Quit NSButton clicks passed",
+    "statusSelection": "Native status button selection toggle and semantic −18.4 W/battery label passed; compositor pixels unverified",
+    "accessibilityRows": "Skipped: hosted SwiftUI exposes no AX labels"
+  },
+  "referenceInspection": "Exact PNG inspected locally: On battery / −18.4 W / 64% · about 4 h 10 min left; grouped Unplugged/18.4 W/−18.4 W rows; Components absent. Native desktop/system chrome is not app-owned.",
+  "method": "Launched the actual native Debug J6.5/base fixture. Required AX-content/geometry and PID compositor ownership. No synthetic screenshot, cached-view fallback, permission request or substitute reference. Capture PID terminated and reaped.",
+  "remainingReview": [
+    "Comparable native panel and selected status-item pixels",
+    "Pixel comparison/visual acceptance",
+    "Live keyboard, dismissal and VoiceOver checks"
+  ]
+}

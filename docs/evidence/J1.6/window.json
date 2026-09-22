@@ -1,0 +1,25 @@
+{
+  "fixture" : "J1.6\/base",
+  "limitation" : "Independent visual comparison and AX\/VoiceOver audit not performed",
+  "method" : "PID-scoped native screencapture",
+  "reference" : "28:2199",
+  "visualPass" : false,
+  "window" : {
+    "kCGWindowAlpha" : 1,
+    "kCGWindowBounds" : {
+      "Height" : 328,
+      "Width" : 480,
+      "X" : 660,
+      "Y" : 223
+    },
+    "kCGWindowIsOnscreen" : true,
+    "kCGWindowLayer" : 0,
+    "kCGWindowMemoryUsage" : 2432,
+    "kCGWindowName" : "",
+    "kCGWindowNumber" : 10007,
+    "kCGWindowOwnerName" : "Watt?",
+    "kCGWindowOwnerPID" : 71860,
+    "kCGWindowSharingState" : 1,
+    "kCGWindowStoreType" : 1
+  }
+}

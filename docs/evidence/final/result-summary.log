@@ -1,0 +1,31 @@
+{
+  "verdict": "PARTIAL",
+  "package": {
+    "suite": "All tests",
+    "status": "passed",
+    "executed": 703,
+    "skipped": 5,
+    "failures": 0
+  },
+  "exits": {
+    "toolchain": 0,
+    "package-tests": 0,
+    "debug-build-analyze": 0,
+    "release-build-analyze": 0,
+    "release-test-build": 65,
+    "diff-check": 0,
+    "project-lint": 0,
+    "static-checks": 1,
+    "shellcheck": 0,
+    "permission-preflight": 1,
+    "inventory": 1,
+    "evidence-audit": 1,
+    "finding-resolution": 0,
+    "supplemental-checks": 0,
+    "registry-repeat": 0
+  },
+  "outsideFinalChanges": [],
+  "outsideFinalAdded": [],
+  "nativePackageOnlyTests": 11,
+  "finalCompletionCommitReady": false
+}

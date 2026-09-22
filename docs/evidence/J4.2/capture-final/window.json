@@ -1,0 +1,26 @@
+{
+  "AXTrusted" : false,
+  "fixture" : "J4.2\/base",
+  "liveInteractionVerified" : false,
+  "screenCapturePreauthorized" : true,
+  "windows" : [
+    {
+      "kCGWindowAlpha" : 1,
+      "kCGWindowBounds" : {
+        "Height" : 346,
+        "Width" : 480,
+        "X" : 660,
+        "Y" : 219
+      },
+      "kCGWindowIsOnscreen" : true,
+      "kCGWindowLayer" : 0,
+      "kCGWindowMemoryUsage" : 2432,
+      "kCGWindowName" : "",
+      "kCGWindowNumber" : 11619,
+      "kCGWindowOwnerName" : "Watt?",
+      "kCGWindowOwnerPID" : 53562,
+      "kCGWindowSharingState" : 1,
+      "kCGWindowStoreType" : 1
+    }
+  ]
+}

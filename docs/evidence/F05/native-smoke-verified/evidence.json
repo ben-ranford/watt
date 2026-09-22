@@ -1,0 +1,38 @@
+{
+  "accessibility": "not audited",
+  "architecture": "arm64",
+  "commit": "b1d4c11bb9f46166825f222f29fc6b1479f2848f",
+  "dateUTC": "2026-09-20T11:54:19.190106+00:00",
+  "destination": "native macOS; iOS Simulator not applicable",
+  "dirtyWorktree": true,
+  "fixtures": [
+    "F02.gallery.light",
+    "F02.gallery.dark"
+  ],
+  "kind": "F05 foundation-only smoke; no story Done",
+  "locale": "en_US",
+  "masks": [],
+  "osBuild": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0\nBuildVersion:\t\t26A428",
+  "productionServices": "not invoked or verified",
+  "reviewerVerdict": "pending",
+  "sha256": {
+    "dark-1/gallery-dark.png": "03f02093a257b50ba44f523448b8216cbbb10c0135bd9a5f1904b56fb5872435",
+    "dark-2/gallery-dark.png": "a599d665d2c974ddf2c29b80b12bf92a1a5d7f69c60df486c54d67c393af5c8d",
+    "dark-negative-diff.png": "bbd925323b98abb1a24a0d9ed3ec5f07cd703f2a30cb436dee57ce0396a21747",
+    "dark-negative-overlay.png": "d9397f01c1adfb380030976f403febd7d229749eb01c520e15052fa5a670c569",
+    "dark-perturbed.png": "7eacf83f1a4d58cdcf553b9e3e63c2b594237f37a606eb5d07c5b1e4d5579c0d",
+    "dark-repeat-diff.png": "2af087828c592abeddf4d486eebedfd777bb9049a577c96fa1f11e0742da13c2",
+    "dark-repeat-overlay.png": "81b6fa14207c7377def1b7d02246c35d6c1648cfdcd7c0d3361bab2013ca8ff6",
+    "light-1/gallery-light.png": "4a697e9d153a007f0c351a973719c941a2bf6a87953bf446ce1a527062c8a2e1",
+    "light-2/gallery-light.png": "cc58adc73bdce1a86fd2df23be28a7866a2795f3ab7d1c06c7b7377d97720b5a",
+    "light-negative-diff.png": "3e9c0f7e6e9dc763593ae1ed2ad75dc1c5c8cea84ae06e3518b8f54f4c9337f4",
+    "light-negative-overlay.png": "d7120e667f3a11b8d187304e732491ce3361f9f4ccae6a10deb57cf2cc61fa35",
+    "light-perturbed.png": "18b6145c71bf09b35e7a8fdbb6ad240b01d660acbae8975a7a546da7e58c9936",
+    "light-repeat-diff.png": "2af087828c592abeddf4d486eebedfd777bb9049a577c96fa1f11e0742da13c2",
+    "light-repeat-overlay.png": "58ecd23886919cde58eacd870be2fa106f5455a362521e51f9791a9968d827c3"
+  },
+  "storage": "local view state only; no WattApp composition",
+  "storyVerdict": "not implemented",
+  "threshold": "0 changed pixels; exact-repeat smoke only, not a Figma acceptance threshold",
+  "xcode": "Xcode 27.0\nBuild version 27A266a"
+}

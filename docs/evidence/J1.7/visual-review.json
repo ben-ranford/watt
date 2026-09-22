@@ -1,0 +1,74 @@
+{
+  "story": "J1.7",
+  "node": "28:2621",
+  "reference": "docs/evidence/J1.7/figma-reference.png",
+  "actual": null,
+  "score": null,
+  "verdict": "blocked",
+  "category_match": "unknown",
+  "visualPass": false,
+  "storyDone": false,
+  "differences": [
+    "Visual differences cannot be assessed without an app-owned actual capture."
+  ],
+  "suggestions": [
+    "Retry app-owned popover/status-item capture in a session with a capturable compositor window; verify Accessibility trust before live AX interaction, then compare against the exact reference."
+  ],
+  "reasoning": "Fail closed: implementation and automated checks do not prove visual parity. Capture exited 1 with invalidData and no app-owned compositor window; no visual score or completion claim is supported.",
+  "secondary_diff": null,
+  "blockers": [
+    "Capture exit 1: invalidData.",
+    "No app-owned compositor window; actual capture unavailable.",
+    "AX trusted false; live AX interaction unverified."
+  ],
+  "implementation": {
+    "presentation": "Native NSPopover anchored to the status-item button; native chrome and arrow geometry.",
+    "copy": {
+      "title": "Watt? lives here",
+      "message": "Click for the detail. Right-click to change the number.",
+      "button": "Got It"
+    }
+  },
+  "verification": {
+    "focused_tests": {
+      "executed": 6,
+      "failures": 0,
+      "log": "focused-tests.log"
+    },
+    "package_tests": {
+      "executed": 289,
+      "skipped": 1,
+      "failures": 0,
+      "log": "package-tests.log"
+    },
+    "hosted_tests": {
+      "executed": 277,
+      "skipped": 1,
+      "failures": 0,
+      "log": "native-tests.log"
+    },
+    "debug": {
+      "build": "passed",
+      "analyze": "passed",
+      "log": "debug-build-analyze.log"
+    },
+    "release": {
+      "build": "passed",
+      "analyze": "passed",
+      "log": "release-build-analyze.log"
+    }
+  },
+  "capture": {
+    "exit": 1,
+    "error": "invalidData",
+    "app_owned_compositor_windows": 0,
+    "screen_capture_preauthorized": true,
+    "AX_trusted": false,
+    "logs": [
+      "capture-run.exit",
+      "fixture-launch.log",
+      "window-capture.log",
+      "window.json"
+    ]
+  }
+}

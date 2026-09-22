@@ -1,0 +1,21 @@
+{
+  "AXTrusted" : false,
+  "captureAPI" : "screencapture -l; AX-content\/geometry-verified app-owned native panel only",
+  "comparableCapture" : false,
+  "fixture" : "J11.1\/base",
+  "liveInteractionVerified" : false,
+  "nativeCapture" : null,
+  "node" : "36:5057",
+  "panelNode" : "36:5061",
+  "pixel_diff" : null,
+  "processIdentifier" : 35384,
+  "reason" : "BLOCKED: Accessibility trust unavailable; no permission requested",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "status" : "blocked",
+  "timestampUTC" : "2026-09-22T22:09:19Z",
+  "visualPass" : false,
+  "windows" : [
+
+  ]
+}

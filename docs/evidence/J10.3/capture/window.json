@@ -1,0 +1,33 @@
+{
+  "AXTrusted" : false,
+  "fixture" : "J10.3\/base",
+  "node" : "34:4695",
+  "pixel_diff" : null,
+  "processIdentifier" : 79934,
+  "reason" : "Capture blocked: Screen Recording or Accessibility not preauthorized; no permission requested.",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "timestampUTC" : "2026-09-22T19:51:49Z",
+  "visualPass" : false,
+  "windowNode" : "34:4849",
+  "windows" : [
+    {
+      "kCGWindowAlpha" : 1,
+      "kCGWindowBounds" : {
+        "Height" : 366,
+        "Width" : 520,
+        "X" : 640,
+        "Y" : 214
+      },
+      "kCGWindowIsOnscreen" : true,
+      "kCGWindowLayer" : 0,
+      "kCGWindowMemoryUsage" : 2432,
+      "kCGWindowName" : "Software Update",
+      "kCGWindowNumber" : 14147,
+      "kCGWindowOwnerName" : "Watt?",
+      "kCGWindowOwnerPID" : 79934,
+      "kCGWindowSharingState" : 1,
+      "kCGWindowStoreType" : 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "TMUX_present": false,
+  "TMUX_PANE_present": false,
+  "omx_cli": "/Users/benranford/.nvm/versions/node/v22.23.2/bin/omx",
+  "visualRalphRuntime": "unavailable in this non-tmux native session; ordinary local implementation/test/capture only"
+}
+bug/G056-j72-result-per-component-in-menu-bar
+
+ProductName:		macOS
+ProductVersion:		27.0
+BuildVersion:		26A428
+
+Xcode 27.0
+Build version 27A266a
+
+Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)
+Target: arm64-apple-macosx27.0.0
+

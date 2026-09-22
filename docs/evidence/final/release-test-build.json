@@ -1,0 +1,24 @@
+{
+  "command": [
+    "xcodebuild",
+    "-project",
+    "Watt.xcodeproj",
+    "-scheme",
+    "Watt",
+    "-configuration",
+    "Release",
+    "-destination",
+    "platform=macOS",
+    "-derivedDataPath",
+    "/var/folders/w1/bfdz7c0n0f13bm6tpbb9cxqc0000gn/T/watt-final-verification-seeie20w/Release",
+    "build-for-testing"
+  ],
+  "environment": {
+    "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+  },
+  "exitCode": 65,
+  "timedOut": false,
+  "timeoutSeconds": 600,
+  "durationSeconds": 4.08,
+  "log": "release-test-build.log"
+}

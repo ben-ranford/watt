@@ -1,0 +1,25 @@
+{
+  "story": "J10.3",
+  "status": "blocked",
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "AXTrusted": false,
+  "screenCapturePreauthorized": true,
+  "reason": "Capture blocked: Screen Recording or Accessibility not preauthorized; no permission requested.",
+  "reference": "reference.png",
+  "captureEvidence": "capture/window.json",
+  "observedWindow": {
+    "Height": 366,
+    "Width": 520,
+    "X": 640,
+    "Y": 214
+  },
+  "notes": [
+    "PID-owned Software Update window visible; fixture process terminated and reaped.",
+    "Native host title bar gives 366 total height rather than Figma 365; no custom chrome.",
+    "No app screenshot, AX control validation, live button interaction or clipping/pixel equivalence is claimed.",
+    "Explicit user copy overrides different rendered PNG headings; see reference.json.",
+    "Existing WattAppIcon asset reused instead of reference placeholder."
+  ]
+}

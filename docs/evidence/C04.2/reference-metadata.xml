@@ -1,0 +1,766 @@
+<canvas id="21:927" name="Core Screens" x="0" y="0" width="0" height="0">
+  <frame id="21:928" name="1 · Status Panel — Charging" x="0" y="0" width="900" height="640">
+    <instance id="21:929" name="Desktop Template" x="-612" y="0" width="1512" height="982">
+      <instance id="I21:929;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+      <instance id="I21:929;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+      <instance id="I21:929;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+        <frame id="I21:929;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+          <instance id="I21:929;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+          <instance id="I21:929;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+          <slot id="I21:929;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+            <instance id="I21:929;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+            <instance id="I21:929;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+            <instance id="I21:929;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+            <instance id="I21:929;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+            <instance id="I21:929;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+            <instance id="I21:929;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+          </slot>
+        </frame>
+        <frame id="I21:929;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+          <frame id="I21:929;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+            <vector id="I21:929;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+          </frame>
+          <frame id="I21:929;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+            <text id="I21:929;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+          </frame>
+          <frame id="I21:929;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+            <boolean-operation id="I21:929;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+          </frame>
+          <frame id="I21:929;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+            <text id="I21:929;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+            <text id="I21:929;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+          </frame>
+        </frame>
+      </instance>
+    </instance>
+    <frame id="21:1047" name="Status Item Anchor (right-aligned)" x="0" y="5" width="641" height="24">
+      <instance id="21:1044" name="Watt? Status Item" x="545" y="0" width="96" height="24" />
+    </frame>
+    <instance id="29:8875" name="Watt? Panel (MenuBarExtra .window)" x="551" y="40" width="320" height="473">
+      <instance id="I29:8875;488:1829" name="BG" x="0" y="0" width="320" height="473" />
+      <slot id="I29:8875;4353:3203" name="Items" x="12" y="5" width="296" height="463">
+        <frame id="I29:8875;4353:3203;29:9090" name="Content" x="0" y="0" width="296" height="463">
+          <frame id="I29:8875;4353:3203;29:9091" name="Header" x="9" y="9" width="278" height="66">
+            <frame id="I29:8875;4353:3203;29:9092" name="Title" x="0" y="0" width="278" height="66">
+              <text id="I29:8875;4353:3203;29:9093" name="Charging" x="0" y="0" width="60" height="16" />
+              <text id="I29:8875;4353:3203;29:9094" name="+42.1 W" x="0" y="18" width="99" height="32" />
+              <text id="I29:8875;4353:3203;29:9095" name="Into battery · 64% · full in 38 min" x="0" y="52" width="134" height="14" />
+            </frame>
+          </frame>
+          <instance id="I29:8875;4353:3203;29:9096" name="Form · Power" x="9" y="87" width="278" height="126">
+            <slot id="I29:8875;4353:3203;29:9096;4356:9284" name="Rows" x="10" y="0" width="258" height="126">
+              <instance id="I29:8875;4353:3203;29:9096;4356:9284;29:9104" name="Charger input" x="0" y="0" width="258" height="42" />
+              <instance id="I29:8875;4353:3203;29:9096;4356:9284;29:9105" name="System draw" x="0" y="42" width="258" height="42" />
+              <instance id="I29:8875;4353:3203;29:9096;4356:9284;29:9106" name="Battery" x="0" y="84" width="258" height="42" />
+            </slot>
+          </instance>
+          <text id="I29:8875;4353:3203;29:9097" name="Components" x="9" y="225" width="84" height="16" />
+          <instance id="I29:8875;4353:3203;29:9098" name="Form · Components" x="9" y="253" width="278" height="168">
+            <slot id="I29:8875;4353:3203;29:9098;4356:9284" name="Rows" x="10" y="0" width="258" height="168">
+              <instance id="I29:8875;4353:3203;29:9098;4356:9284;29:9108" name="CPU" x="0" y="0" width="258" height="42" />
+              <instance id="I29:8875;4353:3203;29:9098;4356:9284;29:9109" name="GPU" x="0" y="42" width="258" height="42" />
+              <instance id="I29:8875;4353:3203;29:9098;4356:9284;29:9110" name="Display" x="0" y="84" width="258" height="42" />
+              <instance id="I29:8875;4353:3203;29:9098;4356:9284;29:9111" name="Other" x="0" y="126" width="258" height="42" />
+            </slot>
+          </instance>
+          <frame id="I29:8875;4353:3203;29:9099" name="Footer" x="9" y="433" width="278" height="24">
+            <instance id="I29:8875;4353:3203;29:9100" name="Button · Settings…" x="0" y="0" width="96" height="24" />
+            <frame id="I29:8875;4353:3203;29:9101" name="Spacer" x="104" y="11.5" width="67" height="1" />
+            <instance id="I29:8875;4353:3203;29:9102" name="Button · Quit Watt?" x="179" y="0" width="99" height="24" />
+          </frame>
+        </frame>
+      </slot>
+    </instance>
+  </frame>
+  <frame id="22:130" name="2 · Status Panel — On Battery (Light)" x="960" y="0" width="900" height="640">
+    <instance id="22:131" name="Desktop Template" x="-612" y="0" width="1512" height="982">
+      <instance id="I22:131;164:9491" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+      <instance id="I22:131;4355:8851" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+      <instance id="I22:131;121:13309" name="Menu Bar" x="0" y="0" width="1512" height="34">
+        <frame id="I22:131;121:13309;121:13230" name="Group - Leading" x="10" y="5" width="395" height="24">
+          <instance id="I22:131;121:13309;121:13231" name="Apple Logo" x="0" y="0" width="33" height="24" />
+          <instance id="I22:131;121:13309;121:13232" name="App Name" x="33" y="0" width="64" height="24" />
+          <slot id="I22:131;121:13309;4355:7045" name="Menu Items" x="97" y="0" width="298" height="24">
+            <instance id="I22:131;121:13309;121:13233" name="File" x="0" y="0" width="41" height="24" />
+            <instance id="I22:131;121:13309;121:13234" name="Edit" x="41" y="0" width="43" height="24" />
+            <instance id="I22:131;121:13309;4355:7127" name="View" x="84" y="0" width="49" height="24" />
+            <instance id="I22:131;121:13309;4355:7161" name="Menu Item" x="133" y="0" width="47" height="24" />
+            <instance id="I22:131;121:13309;4355:7195" name="Window" x="180" y="0" width="70" height="24" />
+            <instance id="I22:131;121:13309;4355:7245" name="Help" x="250" y="0" width="48" height="24" />
+          </slot>
+        </frame>
+        <frame id="I22:131;121:13309;121:13221" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+          <frame id="I22:131;121:13309;4355:6903" name="Wifi" x="0" y="2" width="34.5" height="20">
+            <vector id="I22:131;121:13309;4355:7821" name="Vector" x="9" y="4" width="16.5" height="12" />
+          </frame>
+          <frame id="I22:131;121:13309;4355:6863" name="Spotlight" x="34.5" y="0" width="34" height="24">
+            <text id="I22:131;121:13309;4355:6864" name="Menu Label" x="9" y="4" width="16" height="16" />
+          </frame>
+          <frame id="I22:131;121:13309;4355:6787" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+            <boolean-operation id="I22:131;121:13309;4355:7752" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+          </frame>
+          <frame id="I22:131;121:13309;4355:6751" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+            <text id="I22:131;121:13309;4355:6752" name="Menu Label" x="9" y="0" width="65" height="16" />
+            <text id="I22:131;121:13309;4355:6941" name="Menu Label" x="82" y="0" width="53" height="16" />
+          </frame>
+        </frame>
+      </instance>
+    </instance>
+    <frame id="22:410" name="Status Item Anchor (right-aligned)" x="0" y="5" width="641" height="24">
+      <instance id="22:407" name="Watt? Status Item" x="544" y="0" width="97" height="24" />
+    </frame>
+    <instance id="29:9158" name="Watt? Panel (MenuBarExtra .window)" x="551" y="40" width="320" height="473">
+      <instance id="I29:9158;488:1829" name="BG" x="0" y="0" width="320" height="473" />
+      <slot id="I29:9158;4353:3203" name="Items" x="12" y="5" width="296" height="463">
+        <frame id="I29:9158;4353:3203;29:9273" name="Content" x="0" y="0" width="296" height="463">
+          <frame id="I29:9158;4353:3203;29:9274" name="Header" x="9" y="9" width="278" height="66">
+            <text id="I29:9158;4353:3203;29:9275" name="On Battery" x="0" y="0" width="71" height="16" />
+            <text id="I29:9158;4353:3203;29:9276" name="−18.4 W" x="0" y="18" width="100" height="32" />
+            <text id="I29:9158;4353:3203;29:9277" name="From battery · 64% · about 4 h 10 min le" x="0" y="52" width="141" height="14" />
+          </frame>
+          <instance id="I29:9158;4353:3203;29:9278" name="Form · Power" x="9" y="87" width="278" height="126">
+            <slot id="I29:9158;4353:3203;29:9278;4356:9284" name="Rows" x="10" y="0" width="258" height="126">
+              <instance id="I29:9158;4353:3203;29:9278;4356:9284;29:9286" name="Charger input" x="0" y="0" width="258" height="42" />
+              <instance id="I29:9158;4353:3203;29:9278;4356:9284;29:9287" name="System draw" x="0" y="42" width="258" height="42" />
+              <instance id="I29:9158;4353:3203;29:9278;4356:9284;29:9288" name="Battery" x="0" y="84" width="258" height="42" />
+            </slot>
+          </instance>
+          <text id="I29:9158;4353:3203;29:9279" name="Components" x="9" y="225" width="84" height="16" />
+          <instance id="I29:9158;4353:3203;29:9280" name="Form · Components" x="9" y="253" width="278" height="168">
+            <slot id="I29:9158;4353:3203;29:9280;4356:9284" name="Rows" x="10" y="0" width="258" height="168">
+              <instance id="I29:9158;4353:3203;29:9280;4356:9284;29:9290" name="CPU" x="0" y="0" width="258" height="42" />
+              <instance id="I29:9158;4353:3203;29:9280;4356:9284;29:9291" name="GPU" x="0" y="42" width="258" height="42" />
+              <instance id="I29:9158;4353:3203;29:9280;4356:9284;29:9292" name="Display" x="0" y="84" width="258" height="42" />
+              <instance id="I29:9158;4353:3203;29:9280;4356:9284;29:9293" name="Other" x="0" y="126" width="258" height="42" />
+            </slot>
+          </instance>
+          <frame id="I29:9158;4353:3203;29:9281" name="Footer" x="9" y="433" width="278" height="24">
+            <instance id="I29:9158;4353:3203;29:9282" name="Button · Settings…" x="0" y="0" width="96" height="24" />
+            <frame id="I29:9158;4353:3203;29:9283" name="Spacer" x="104" y="11.5" width="67" height="1" />
+            <instance id="I29:9158;4353:3203;29:9284" name="Button · Quit Watt?" x="179" y="0" width="99" height="24" />
+          </frame>
+        </frame>
+      </slot>
+    </instance>
+  </frame>
+  <frame id="22:1095" name="3 · Secondary-Click Menu (Dark)" x="1920" y="0" width="900" height="460">
+    <instance id="22:1096" name="Desktop Template" x="-612" y="0" width="1512" height="982">
+      <instance id="I22:1096;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+      <instance id="I22:1096;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+      <instance id="I22:1096;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+        <frame id="I22:1096;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+          <instance id="I22:1096;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+          <instance id="I22:1096;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+          <slot id="I22:1096;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+            <instance id="I22:1096;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+            <instance id="I22:1096;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+            <instance id="I22:1096;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+            <instance id="I22:1096;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+            <instance id="I22:1096;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+            <instance id="I22:1096;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+          </slot>
+        </frame>
+        <frame id="I22:1096;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+          <frame id="I22:1096;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+            <vector id="I22:1096;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+          </frame>
+          <frame id="I22:1096;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+            <text id="I22:1096;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+          </frame>
+          <frame id="I22:1096;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+            <boolean-operation id="I22:1096;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+          </frame>
+          <frame id="I22:1096;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+            <text id="I22:1096;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+            <text id="I22:1096;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+          </frame>
+        </frame>
+      </instance>
+    </instance>
+    <frame id="22:1344" name="Status Item Anchor (right-aligned)" x="0" y="5" width="641" height="24">
+      <instance id="22:1341" name="Watt? Status Item" x="545" y="0" width="96" height="24" />
+    </frame>
+    <instance id="22:1345" name="Status Item Context Menu" x="561" y="38" width="230" height="187">
+      <instance id="I22:1345;488:1829" name="BG" x="0" y="0" width="230" height="187" />
+      <slot id="I22:1345;4353:3203" name="Items" x="12" y="5" width="206" height="177">
+        <instance id="I22:1345;4353:3203;22:1666" name="Show in Menu Bar" x="0" y="0" width="206" height="24" />
+        <instance id="I22:1345;4353:3203;22:1670" name="Separators" x="0" y="24" width="206" height="11" />
+        <instance id="I22:1345;4353:3203;22:1691" name="Open Watt?" x="0" y="35" width="206" height="24" />
+        <instance id="I22:1345;4353:3203;22:1719" name="Settings…" x="0" y="59" width="206" height="24" />
+        <instance id="I22:1345;4353:3203;22:1729" name="Separators" x="0" y="83" width="206" height="11" />
+        <instance id="I22:1345;4353:3203;22:1744" name="About Watt?" x="0" y="94" width="206" height="24" />
+        <instance id="I22:1345;4353:3203;22:1772" name="Check for Updates…" x="0" y="118" width="206" height="24" />
+        <instance id="I22:1345;4353:3203;22:1788" name="Separators" x="0" y="142" width="206" height="11" />
+        <instance id="I22:1345;4353:3203;22:1803" name="Quit Watt?" x="0" y="153" width="206" height="24" />
+      </slot>
+    </instance>
+    <instance id="22:1811" name="Show in Menu Bar · Submenu" x="375" y="38" width="190" height="141">
+      <instance id="I22:1811;488:1829" name="BG" x="0" y="0" width="190" height="141" />
+      <slot id="I22:1811;4353:3203" name="Items" x="12" y="5" width="166" height="131">
+        <instance id="I22:1811;4353:3203;22:2040" name="Battery Delta" x="0" y="0" width="166" height="24" />
+        <instance id="I22:1811;4353:3203;22:2068" name="Charger Input" x="0" y="24" width="166" height="24" />
+        <instance id="I22:1811;4353:3203;22:2096" name="System Draw" x="0" y="48" width="166" height="24" />
+        <instance id="I22:1811;4353:3203;22:2124" name="Per Component" x="0" y="72" width="166" height="24" />
+        <instance id="I22:1811;4353:3203;22:2140" name="Separators" x="0" y="96" width="166" height="11" />
+        <instance id="I22:1811;4353:3203;22:2155" name="Icon Only" x="0" y="107" width="166" height="24" />
+      </slot>
+    </instance>
+  </frame>
+  <section id="24:389" name="4 · Status Item — States &amp; Modes" x="0" y="760" width="1260" height="680">
+    <frame id="24:390" name="Delta · charging" x="40" y="60" width="560" height="44">
+      <instance id="24:391" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:391;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:391;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:391;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:391;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:391;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:391;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:391;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:391;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:391;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:391;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:391;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:391;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:391;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:391;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:391;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:391;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:391;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:391;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:391;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:391;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:391;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:391;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:391;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:638" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:636" name="Watt? Status Item" x="205" y="0" width="96" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:639" name="Delta · on battery" x="660" y="60" width="560" height="44">
+      <instance id="24:640" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:640;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:640;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:640;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:640;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:640;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:640;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:640;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:640;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:640;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:640;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:640;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:640;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:640;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:640;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:640;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:640;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:640;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:640;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:640;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:640;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:640;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:640;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:640;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:757" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:755" name="Watt? Status Item" x="204" y="0" width="97" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:758" name="Delta · charged, on adapter" x="40" y="160" width="560" height="44">
+      <instance id="24:759" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:759;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:759;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:759;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:759;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:759;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:759;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:759;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:759;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:759;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:759;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:759;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:759;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:759;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:759;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:759;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:759;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:759;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:759;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:759;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:759;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:759;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:759;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:759;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:876" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:874" name="Watt? Status Item" x="220" y="0" width="81" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:877" name="Charger Input" x="660" y="160" width="560" height="44">
+      <instance id="24:878" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:878;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:878;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:878;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:878;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:878;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:878;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:878;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:878;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:878;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:878;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:878;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:878;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:878;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:878;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:878;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:878;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:878;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:878;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:878;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:878;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:878;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:878;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:878;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:995" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:993" name="Watt? Status Item" x="221" y="0" width="80" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:996" name="Charger Input · unplugged (falls back to System Draw)" x="40" y="260" width="560" height="44">
+      <instance id="24:997" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:997;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:997;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:997;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:997;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:997;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:997;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:997;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:997;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:997;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:997;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:997;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:997;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:997;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:997;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:997;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:997;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:997;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:997;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:997;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:997;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:997;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:997;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:997;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:1114" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:1112" name="Watt? Status Item" x="213" y="0" width="88" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:1115" name="System Draw (desktop Macs)" x="660" y="260" width="560" height="44">
+      <instance id="24:1116" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:1116;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:1116;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:1116;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:1116;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:1116;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:1116;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:1116;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:1116;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:1116;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:1116;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:1116;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:1116;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:1116;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:1116;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:1116;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:1116;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:1116;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:1116;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:1116;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:1116;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:1116;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:1116;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:1116;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:1233" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:1231" name="Watt? Status Item" x="221" y="0" width="80" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:1234" name="Per Component (max 2)" x="40" y="360" width="560" height="44">
+      <instance id="24:1235" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:1235;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:1235;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:1235;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:1235;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:1235;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:1235;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:1235;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:1235;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:1235;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:1235;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:1235;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:1235;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:1235;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:1235;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:1235;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:1235;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:1235;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:1235;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:1235;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:1235;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:1235;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:1235;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:1235;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:1352" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:1350" name="Watt? Status Item" x="153" y="0" width="148" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:1353" name="Icon Only (notch / crowded menu bar)" x="660" y="360" width="560" height="44">
+      <instance id="24:1354" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:1354;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:1354;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:1354;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:1354;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:1354;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:1354;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:1354;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:1354;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:1354;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:1354;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:1354;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:1354;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:1354;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:1354;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:1354;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:1354;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:1354;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:1354;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:1354;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:1354;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:1354;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:1354;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:1354;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:1471" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:1469" name="Watt? Status Item" x="260" y="0" width="41" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:1472" name="No reading yet / sensor unavailable" x="40" y="460" width="560" height="44">
+      <instance id="24:1473" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:1473;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:1473;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:1473;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:1473;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:1473;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:1473;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:1473;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:1473;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:1473;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:1473;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:1473;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:1473;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:1473;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:1473;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:1473;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:1473;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:1473;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:1473;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:1473;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:1473;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:1473;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:1473;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:1473;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:1590" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:1588" name="Watt? Status Item" x="230" y="0" width="71" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:1591" name="Panel open (selected)" x="660" y="460" width="560" height="44">
+      <instance id="24:1592" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:1592;164:9492" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:1592;4355:10115" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:1592;121:13276" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:1592;121:13276;121:13207" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:1592;121:13276;121:13208" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:1592;121:13276;121:13209" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:1592;121:13276;4355:7039" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:1592;121:13276;121:13210" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:1592;121:13276;164:9725" name="Menu Item - Leading" x="41" y="0" width="43" height="24" />
+              <instance id="I24:1592;121:13276;4355:7229" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:1592;121:13276;4355:7233" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:1592;121:13276;4355:7237" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:1592;121:13276;4355:7241" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:1592;121:13276;121:13198" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:1592;121:13276;4355:6901" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:1592;121:13276;4355:7568" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:1592;121:13276;4355:6865" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:1592;121:13276;4355:6866" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:1592;121:13276;4355:6789" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:1592;121:13276;4355:7743" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:1592;121:13276;4355:6749" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:1592;121:13276;4355:6750" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:1592;121:13276;4355:6939" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:1710" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:1707" name="Watt? Status Item" x="205" y="0" width="96" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:1711" name="Light menu bar · charging" x="40" y="560" width="560" height="44">
+      <instance id="24:1712" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:1712;164:9491" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:1712;4355:8851" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:1712;121:13309" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:1712;121:13309;121:13230" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:1712;121:13309;121:13231" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:1712;121:13309;121:13232" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:1712;121:13309;4355:7045" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:1712;121:13309;121:13233" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:1712;121:13309;121:13234" name="Edit" x="41" y="0" width="43" height="24" />
+              <instance id="I24:1712;121:13309;4355:7127" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:1712;121:13309;4355:7161" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:1712;121:13309;4355:7195" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:1712;121:13309;4355:7245" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:1712;121:13309;121:13221" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:1712;121:13309;4355:6903" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:1712;121:13309;4355:7821" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:1712;121:13309;4355:6863" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:1712;121:13309;4355:6864" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:1712;121:13309;4355:6787" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:1712;121:13309;4355:7752" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:1712;121:13309;4355:6751" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:1712;121:13309;4355:6752" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:1712;121:13309;4355:6941" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:1959" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:1957" name="Watt? Status Item" x="205" y="0" width="96" height="24" />
+      </frame>
+    </frame>
+    <frame id="24:1960" name="Light menu bar · on battery" x="660" y="560" width="560" height="44">
+      <instance id="24:1961" name="Desktop Template" x="-952" y="0" width="1512" height="982">
+        <instance id="I24:1961;164:9491" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+        <instance id="I24:1961;4355:8851" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+        <instance id="I24:1961;121:13309" name="Menu Bar" x="0" y="0" width="1512" height="34">
+          <frame id="I24:1961;121:13309;121:13230" name="Group - Leading" x="10" y="5" width="395" height="24">
+            <instance id="I24:1961;121:13309;121:13231" name="Apple Logo" x="0" y="0" width="33" height="24" />
+            <instance id="I24:1961;121:13309;121:13232" name="App Name" x="33" y="0" width="64" height="24" />
+            <slot id="I24:1961;121:13309;4355:7045" name="Menu Items" x="97" y="0" width="298" height="24">
+              <instance id="I24:1961;121:13309;121:13233" name="File" x="0" y="0" width="41" height="24" />
+              <instance id="I24:1961;121:13309;121:13234" name="Edit" x="41" y="0" width="43" height="24" />
+              <instance id="I24:1961;121:13309;4355:7127" name="View" x="84" y="0" width="49" height="24" />
+              <instance id="I24:1961;121:13309;4355:7161" name="Menu Item" x="133" y="0" width="47" height="24" />
+              <instance id="I24:1961;121:13309;4355:7195" name="Window" x="180" y="0" width="70" height="24" />
+              <instance id="I24:1961;121:13309;4355:7245" name="Help" x="250" y="0" width="48" height="24" />
+            </slot>
+          </frame>
+          <frame id="I24:1961;121:13309;121:13221" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+            <frame id="I24:1961;121:13309;4355:6903" name="Wifi" x="0" y="2" width="34.5" height="20">
+              <vector id="I24:1961;121:13309;4355:7821" name="Vector" x="9" y="4" width="16.5" height="12" />
+            </frame>
+            <frame id="I24:1961;121:13309;4355:6863" name="Spotlight" x="34.5" y="0" width="34" height="24">
+              <text id="I24:1961;121:13309;4355:6864" name="Menu Label" x="9" y="4" width="16" height="16" />
+            </frame>
+            <frame id="I24:1961;121:13309;4355:6787" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+              <boolean-operation id="I24:1961;121:13309;4355:7752" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+            </frame>
+            <frame id="I24:1961;121:13309;4355:6751" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+              <text id="I24:1961;121:13309;4355:6752" name="Menu Label" x="9" y="0" width="65" height="16" />
+              <text id="I24:1961;121:13309;4355:6941" name="Menu Label" x="82" y="0" width="53" height="16" />
+            </frame>
+          </frame>
+        </instance>
+      </instance>
+      <frame id="24:2078" name="Status Item Anchor (right-aligned)" x="0" y="5" width="301" height="24">
+        <instance id="24:2076" name="Watt? Status Item" x="204" y="0" width="97" height="24" />
+      </frame>
+    </frame>
+  </section>
+  <frame id="25:787" name="5 · Settings Window (Light)" x="1400" y="760" width="1512" height="982">
+    <instance id="25:788" name="Desktop Template" x="0" y="0" width="1512" height="982">
+      <instance id="I25:788;164:9491" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+      <instance id="I25:788;4355:8851" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+      <instance id="I25:788;121:13309" name="Menu Bar" x="0" y="0" width="1512" height="34">
+        <frame id="I25:788;121:13309;121:13230" name="Group - Leading" x="10" y="5" width="254" height="24">
+          <instance id="I25:788;121:13309;121:13231" name="Apple Logo" x="0" y="0" width="33" height="24" />
+          <instance id="I25:788;121:13309;121:13232" name="App Name" x="33" y="0" width="60" height="24" />
+          <slot id="I25:788;121:13309;4355:7045" name="Menu Items" x="93" y="0" width="161" height="24">
+            <instance id="I25:788;121:13309;4355:7045;25:1096" name="File" x="0" y="0" width="41" height="24" hidden="true" />
+            <instance id="I25:788;121:13309;4355:7045;25:1097" name="Edit" x="0" y="0" width="43" height="24" />
+            <instance id="I25:788;121:13309;4355:7045;25:1098" name="View" x="43" y="0" width="49" height="24" hidden="true" />
+            <instance id="I25:788;121:13309;4355:7045;25:1099" name="Menu Item" x="43" y="0" width="47" height="24" hidden="true" />
+            <instance id="I25:788;121:13309;4355:7045;25:1100" name="Window" x="43" y="0" width="70" height="24" />
+            <instance id="I25:788;121:13309;4355:7045;25:1101" name="Help" x="113" y="0" width="48" height="24" />
+          </slot>
+        </frame>
+        <frame id="I25:788;121:13309;121:13221" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+          <frame id="I25:788;121:13309;4355:6903" name="Wifi" x="0" y="2" width="34.5" height="20">
+            <vector id="I25:788;121:13309;4355:7821" name="Vector" x="9" y="4" width="16.5" height="12" />
+          </frame>
+          <frame id="I25:788;121:13309;4355:6863" name="Spotlight" x="34.5" y="0" width="34" height="24">
+            <text id="I25:788;121:13309;4355:6864" name="Menu Label" x="9" y="4" width="16" height="16" />
+          </frame>
+          <frame id="I25:788;121:13309;4355:6787" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+            <boolean-operation id="I25:788;121:13309;4355:7752" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+          </frame>
+          <frame id="I25:788;121:13309;4355:6751" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+            <text id="I25:788;121:13309;4355:6752" name="Menu Label" x="9" y="0" width="65" height="16" />
+            <text id="I25:788;121:13309;4355:6941" name="Menu Label" x="82" y="0" width="53" height="16" />
+          </frame>
+        </frame>
+      </instance>
+    </instance>
+    <instance id="25:1102" name="Watt? Settings" x="466" y="56" width="580" height="870">
+      <frame id="I25:1102;4363:18653" name="Title Bar" x="0" y="0" width="580" height="31">
+        <instance id="I25:1102;4363:18601" name="Scroll Edge Effect - Hard" x="0" y="0" width="580" height="32" />
+        <instance id="I25:1102;4363:18654" name="Window Controls" x="8" y="8.5" width="68" height="14" />
+        <instance id="I25:1102;4363:18655" name="Title" x="92" y="8" width="97" height="15" />
+      </frame>
+      <frame id="I25:1102;4363:18610" name="Content Area" x="0" y="31" width="580" height="839">
+        <slot id="I25:1102;4363:18606" name="Content Area" x="0" y="0" width="580" height="839">
+          <frame id="I25:1102;4363:18606;25:1130" name="Form (grouped)" x="20" y="20" width="540" height="799">
+            <frame id="I25:1102;4363:18606;25:1178" name="Section · Menu Bar" x="0" y="0" width="540" height="219">
+              <text id="I25:1102;4363:18606;25:1180" name="Section Header" x="0" y="0" width="62" height="16" />
+              <instance id="I25:1102;4363:18606;25:1500" name="Form · Menu Bar" x="0" y="22" width="540" height="168">
+                <slot id="I25:1102;4363:18606;25:1500;4356:9284" name="Rows" x="10" y="0" width="520" height="168">
+                  <instance id="I25:1102;4363:18606;25:1500;4356:9284;25:1580" name="Show" x="0" y="0" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:1500;4356:9284;25:1582" name="Show symbol" x="0" y="42" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:1500;4356:9284;25:1583" name="Precision" x="0" y="84" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:1500;4356:9284;25:1585" name="Components" x="0" y="126" width="520" height="42" />
+                </slot>
+              </instance>
+              <text id="I25:1102;4363:18606;25:1588" name="Section Footer" x="0" y="196" width="540" height="13" />
+            </frame>
+            <frame id="I25:1102;4363:18606;25:1612" name="Section · Readings" x="0" y="227" width="540" height="116">
+              <text id="I25:1102;4363:18606;25:1614" name="Section Header" x="0" y="0" width="61" height="16" />
+              <instance id="I25:1102;4363:18606;25:1750" name="Form · Readings" x="0" y="22" width="540" height="84">
+                <slot id="I25:1102;4363:18606;25:1750;4356:9284" name="Rows" x="10" y="0" width="520" height="84">
+                  <instance id="I25:1102;4363:18606;25:1750;4356:9284;25:1830" name="Update" x="0" y="0" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:1750;4356:9284;25:1832" name="Smooth readings" x="0" y="42" width="520" height="42" />
+                </slot>
+              </instance>
+            </frame>
+            <frame id="I25:1102;4363:18606;25:1855" name="Section · Component Readings" x="0" y="351" width="540" height="116">
+              <text id="I25:1102;4363:18606;25:1857" name="Section Header" x="0" y="0" width="44" height="16" />
+              <instance id="I25:1102;4363:18606;25:1993" name="Form · Component Readings" x="0" y="22" width="540" height="84">
+                <slot id="I25:1102;4363:18606;25:1993;4356:9284" name="Rows" x="10" y="0" width="520" height="84">
+                  <instance id="I25:1102;4363:18606;25:1993;4356:9284;25:2073" name="Status" x="0" y="0" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:1993;4356:9284;25:2074" name="Helper" x="0" y="42" width="520" height="42" />
+                </slot>
+              </instance>
+            </frame>
+            <frame id="I25:1102;4363:18606;25:2104" name="Section · Notifications" x="0" y="475" width="540" height="116">
+              <text id="I25:1102;4363:18606;25:2106" name="Section Header" x="0" y="0" width="85" height="16" />
+              <instance id="I25:1102;4363:18606;25:2242" name="Form · Notifications" x="0" y="22" width="540" height="84">
+                <slot id="I25:1102;4363:18606;25:2242;4356:9284" name="Rows" x="10" y="0" width="520" height="84">
+                  <instance id="I25:1102;4363:18606;25:2242;4356:9284;25:2322" name="Charger can’t keep up" x="0" y="0" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:2242;4356:9284;25:2323" name="Fully charged" x="0" y="42" width="520" height="42" />
+                </slot>
+              </instance>
+            </frame>
+            <frame id="I25:1102;4363:18606;25:2353" name="Section · General" x="0" y="599" width="540" height="200">
+              <text id="I25:1102;4363:18606;25:2355" name="Section Header" x="0" y="0" width="51" height="16" />
+              <instance id="I25:1102;4363:18606;25:2491" name="Form · General" x="0" y="22" width="540" height="168">
+                <slot id="I25:1102;4363:18606;25:2491;4356:9284" name="Rows" x="10" y="0" width="520" height="168">
+                  <instance id="I25:1102;4363:18606;25:2491;4356:9284;25:2571" name="Open at login" x="0" y="0" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:2491;4356:9284;25:2572" name="Check for updates automatically" x="0" y="42" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:2491;4356:9284;35:1034" name="Uninstall Watt?" x="0" y="84" width="520" height="42" />
+                  <instance id="I25:1102;4363:18606;25:2491;4356:9284;25:2573" name="Version" x="0" y="126" width="520" height="42" />
+                </slot>
+              </instance>
+            </frame>
+          </frame>
+        </slot>
+        <instance id="I25:1102;4363:18607" name="Scrollbar - Vertical" x="828" y="0" width="12" height="319" hidden="true" />
+      </frame>
+    </instance>
+  </frame>
+</canvas>

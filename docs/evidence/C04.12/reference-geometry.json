@@ -1,0 +1,28 @@
+{
+  "story": "C04.12/base",
+  "frame": "24:1960",
+  "component": "24:2076",
+  "anchor": "24:2078",
+  "framePoints": [
+    560,
+    44
+  ],
+  "anchorRect": [
+    0,
+    5,
+    301,
+    24
+  ],
+  "componentRect": [
+    204,
+    5,
+    97,
+    24
+  ],
+  "source": "Figma MCP design context + anchor metadata, 2026-09-22",
+  "appearance": "light",
+  "text": "\u221218.4 W",
+  "symbol": "battery.100percent",
+  "font": "SF Pro Semibold 13/16",
+  "selected": false
+}

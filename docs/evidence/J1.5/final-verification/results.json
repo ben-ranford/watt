@@ -1,0 +1,69 @@
+{
+  "worktree": "/Users/benranford/Projects/watt-worktrees/swiftui-implementation",
+  "developer_dir": "/Applications/Xcode.app/Contents/Developer",
+  "results": [
+    {
+      "name": "swift-test",
+      "command": [
+        "xcrun",
+        "swift",
+        "test",
+        "--scratch-path",
+        "/tmp/watt-g032-final-swift"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-09-22T11:21:13.799414+00:00",
+      "finished_utc": "2026-09-22T11:21:36.725740+00:00"
+    },
+    {
+      "name": "debug-build-analyze",
+      "command": [
+        "xcodebuild",
+        "-project",
+        "Watt.xcodeproj",
+        "-scheme",
+        "Watt",
+        "-configuration",
+        "Debug",
+        "-derivedDataPath",
+        "/tmp/watt-g032-final-debug",
+        "build",
+        "analyze"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-09-22T11:21:13.799736+00:00",
+      "finished_utc": "2026-09-22T11:21:30.982721+00:00"
+    },
+    {
+      "name": "release-build-analyze",
+      "command": [
+        "xcodebuild",
+        "-project",
+        "Watt.xcodeproj",
+        "-scheme",
+        "Watt",
+        "-configuration",
+        "Release",
+        "-derivedDataPath",
+        "/tmp/watt-g032-final-release",
+        "build",
+        "analyze"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-09-22T11:21:13.799857+00:00",
+      "finished_utc": "2026-09-22T11:21:33.886807+00:00"
+    },
+    {
+      "name": "git-diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-09-22T11:21:13.799929+00:00",
+      "finished_utc": "2026-09-22T11:21:13.822177+00:00"
+    }
+  ],
+  "source_changes_during_verification": []
+}

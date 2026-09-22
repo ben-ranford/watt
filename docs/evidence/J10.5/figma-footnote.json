@@ -1,0 +1,1 @@
+{"content":[{"type":"text","text":"This is an invalid node selection. Ask the user to select a node from a visible page on the canvas."},{"type":"text","text":"Figma Debug UUID: dee7f098-0feb-493d-a04e-d8d558ee3298"}],"structuredContent":{"error_code":"INVALID_ARGUMENT"},"isError":true}

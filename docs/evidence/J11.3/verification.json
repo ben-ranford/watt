@@ -1,0 +1,85 @@
+{
+  "story": "J11.3",
+  "goal": "G080",
+  "node": "36:5428",
+  "status": "implemented-validation-blocked",
+  "developerDirectory": "/Applications/Xcode.app/Contents/Developer",
+  "checks": {
+    "focused-tests": {
+      "exitCode": 0,
+      "log": "focused-tests.log",
+      "tests": 19,
+      "failures": 0
+    },
+    "package-tests": {
+      "exitCode": 0,
+      "log": "package-tests.log",
+      "tests": 684,
+      "skipped": 5,
+      "failures": 0
+    },
+    "debug-build-analyze": {
+      "exitCode": 0,
+      "log": "debug-build-analyze.log"
+    },
+    "release-build-analyze": {
+      "exitCode": 0,
+      "log": "release-build-analyze.log"
+    },
+    "release-build-for-testing": {
+      "exitCode": 65,
+      "log": "release-build-for-testing.log"
+    },
+    "static-checks": {
+      "exitCode": 0,
+      "log": "static-check.log"
+    },
+    "capture": {
+      "exitCode": 1,
+      "log": "capture.log"
+    },
+    "native-focused-tests": {
+      "exitCode": 143,
+      "log": "native-focused-tests.log"
+    },
+    "verify": {
+      "exitCode": 1,
+      "log": "verify.sh"
+    }
+  },
+  "visualPass": false,
+  "score": null,
+  "pixel_diff": null,
+  "implementationScreenshot": null,
+  "nativeCapture": {
+    "status": "blocked",
+    "exitCode": 1,
+    "screenCapturePreauthorized": true,
+    "AXTrusted": false,
+    "evidence": "capture-20260922T224834-49373/window.json",
+    "comparableCapture": false
+  },
+  "runtimeKeyboardVerified": false,
+  "voiceOverOrderVerified": false,
+  "exactGeometryVerified": false,
+  "blockers": [
+    "BLOCKED: Accessibility trust unavailable; no permission requested",
+    "No PID-owned on-screen compositor windows enumerated; no capture-attempt.json emitted during observation period.",
+    "Live Return/Escape, focus traversal, VoiceOver order and exact native geometry remain unverified.",
+    "Release test-bundle build exits 65: Unable to resolve Swift module dependency to a compatible module: 'Watt' (Xcode 27).",
+    "Additional native focused test execution yielded no XCTest results after approximately 120 seconds; owned xcodebuild was terminated (143). Host logs include com.apple.linkd.autoShortcut connection errors; causal relationship is unproven."
+  ],
+  "changedFiles": [
+    "App/J113FixtureLaunch.swift",
+    "App/WattApp.swift",
+    "Features/Settings/Views/SettingsRootView.swift",
+    "Tests/WattTests/J113DestructiveKeyboardTests.swift",
+    "Tests/WattTests/F05FixtureTests.swift",
+    "Tests/Fixtures/FixtureLaunchSelection.swift",
+    "Tests/Fixtures/StoryFixtures.swift",
+    "Watt.xcodeproj/project.pbxproj",
+    "SCREEN-BACKLOG.md",
+    "docs/evidence/J11.3/"
+  ],
+  "scope": "No commit; cumulative edits preserved; no hidden goal or leader ledger mutation."
+}

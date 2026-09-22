@@ -1,0 +1,27 @@
+{
+  "story": "J3.1",
+  "goal": "G041",
+  "node": "29:5253",
+  "score": null,
+  "verdict": "blocked",
+  "category_match": true,
+  "differences": [
+    "Native SwiftUI scene-attached alert has no app icon on this host; Figma uses an icon-bearing alert. OS owns this choice.",
+    "Native dark appearance and Settings backdrop differ from the light desktop reference.",
+    "Compositor returns the scene composite; alert bounds 260x204 versus Figma 260x260. No custom sizing applied."
+  ],
+  "suggestions": [
+    "Verify on an authorized light-appearance host with AX and signed helper composition.",
+    "Verify keyboard/default/cancel, VoiceOver, live denied/timeout and Login Items callback."
+  ],
+  "reasoning": "Exact copy and both native buttons are visible in the captured system alert. Native appearance/layout is preserved. No comparable viewport/appearance or live approval evidence, so no acceptance score or fabricated pixel-diff metric.",
+  "reference": "figma-reference.png",
+  "actual": "capture-final/native-window-10830.png",
+  "secondary_diff": null,
+  "visualPass": false,
+  "storyDone": false,
+  "captureSucceeded": true,
+  "liveInteractionVerified": false,
+  "AXTrusted": false,
+  "liveApprovalVerified": false
+}

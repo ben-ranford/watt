@@ -1,0 +1,100 @@
+<frame id="36:5186" name="11.2 Settings — control labels &amp; keyboard" x="1060" y="100" width="1512" height="982">
+  <instance id="36:5187" name="Desktop Template" x="0" y="0" width="1512" height="982">
+    <instance id="I36:5187;164:9491" name="Desktop Wallpaper" x="0" y="0" width="1512" height="982" />
+    <instance id="I36:5187;4355:8851" name="Dock" x="180" y="923" width="1152" height="55" hidden="true" />
+    <instance id="I36:5187;121:13309" name="Menu Bar" x="0" y="0" width="1512" height="34">
+      <frame id="I36:5187;121:13309;121:13230" name="Group - Leading" x="10" y="5" width="254" height="24">
+        <instance id="I36:5187;121:13309;121:13231" name="Apple Logo" x="0" y="0" width="33" height="24" />
+        <instance id="I36:5187;121:13309;121:13232" name="App Name" x="33" y="0" width="60" height="24" />
+        <slot id="I36:5187;121:13309;4355:7045" name="Menu Items" x="93" y="0" width="161" height="24">
+          <instance id="I36:5187;121:13309;4355:7045;36:5190" name="File" x="0" y="0" width="41" height="24" hidden="true" />
+          <instance id="I36:5187;121:13309;4355:7045;36:5191" name="Edit" x="0" y="0" width="43" height="24" />
+          <instance id="I36:5187;121:13309;4355:7045;36:5192" name="View" x="43" y="0" width="49" height="24" hidden="true" />
+          <instance id="I36:5187;121:13309;4355:7045;36:5193" name="Menu Item" x="43" y="0" width="47" height="24" hidden="true" />
+          <instance id="I36:5187;121:13309;4355:7045;36:5194" name="Window" x="43" y="0" width="70" height="24" />
+          <instance id="I36:5187;121:13309;4355:7045;36:5195" name="Help" x="113" y="0" width="48" height="24" />
+        </slot>
+      </frame>
+      <frame id="I36:5187;121:13309;121:13221" name="Frame - Trailing" x="1257.349609375" y="5" width="234.650390625" height="24">
+        <frame id="I36:5187;121:13309;4355:6903" name="Wifi" x="0" y="2" width="34.5" height="20">
+          <vector id="I36:5187;121:13309;4355:7821" name="Vector" x="9" y="4" width="16.5" height="12" />
+        </frame>
+        <frame id="I36:5187;121:13309;4355:6863" name="Spotlight" x="34.5" y="0" width="34" height="24">
+          <text id="I36:5187;121:13309;4355:6864" name="Menu Label" x="9" y="4" width="16" height="16" />
+        </frame>
+        <frame id="I36:5187;121:13309;4355:6787" name="Control Center" x="68.5" y="1.294921875" width="31.150390625" height="21.41015625">
+          <boolean-operation id="I36:5187;121:13309;4355:7752" name="Union" x="9" y="4" width="13.150390625" height="13.41015625" />
+        </frame>
+        <frame id="I36:5187;121:13309;4355:6751" name="Date and Time" x="99.650390625" y="4" width="135" height="16">
+          <text id="I36:5187;121:13309;4355:6752" name="Menu Label" x="9" y="0" width="65" height="16" />
+          <text id="I36:5187;121:13309;4355:6941" name="Menu Label" x="82" y="0" width="53" height="16" />
+        </frame>
+      </frame>
+    </instance>
+  </instance>
+  <instance id="36:5188" name="Watt? Settings" x="466" y="56" width="580" height="870">
+    <frame id="I36:5188;4363:18653" name="Title Bar" x="0" y="0" width="580" height="31">
+      <instance id="I36:5188;4363:18601" name="Scroll Edge Effect - Hard" x="0" y="0" width="580" height="32" />
+      <instance id="I36:5188;4363:18654" name="Window Controls" x="8" y="8.5" width="68" height="14" />
+      <instance id="I36:5188;4363:18655" name="Title" x="92" y="8" width="97" height="15" />
+    </frame>
+    <frame id="I36:5188;4363:18610" name="Content Area" x="0" y="31" width="580" height="839">
+      <slot id="I36:5188;4363:18606" name="Content Area" x="0" y="0" width="580" height="839">
+        <frame id="I36:5188;4363:18606;36:5197" name="Form (grouped)" x="20" y="20" width="540" height="799">
+          <frame id="I36:5188;4363:18606;36:5198" name="Section · Menu Bar" x="0" y="0" width="540" height="219">
+            <text id="I36:5188;4363:18606;36:5199" name="Section Header" x="0" y="0" width="62" height="16" />
+            <instance id="I36:5188;4363:18606;36:5200" name="Form · Menu Bar" x="0" y="22" width="540" height="168">
+              <slot id="I36:5188;4363:18606;36:5200;4356:9284" name="Rows" x="10" y="0" width="520" height="168">
+                <instance id="I36:5188;4363:18606;36:5200;4356:9284;36:5215" name="Show" x="0" y="0" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5200;4356:9284;36:5216" name="Show symbol" x="0" y="42" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5200;4356:9284;36:5217" name="Precision" x="0" y="84" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5200;4356:9284;36:5218" name="Components" x="0" y="126" width="520" height="42" />
+              </slot>
+            </instance>
+            <text id="I36:5188;4363:18606;36:5201" name="Section Footer" x="0" y="196" width="540" height="13" />
+          </frame>
+          <frame id="I36:5188;4363:18606;36:5202" name="Section · Readings" x="0" y="227" width="540" height="116">
+            <text id="I36:5188;4363:18606;36:5203" name="Section Header" x="0" y="0" width="61" height="16" />
+            <instance id="I36:5188;4363:18606;36:5204" name="Form · Readings" x="0" y="22" width="540" height="84">
+              <slot id="I36:5188;4363:18606;36:5204;4356:9284" name="Rows" x="10" y="0" width="520" height="84">
+                <instance id="I36:5188;4363:18606;36:5204;4356:9284;36:5220" name="Update" x="0" y="0" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5204;4356:9284;36:5221" name="Smooth readings" x="0" y="42" width="520" height="42" />
+              </slot>
+            </instance>
+          </frame>
+          <frame id="I36:5188;4363:18606;36:5205" name="Section · Component Readings" x="0" y="351" width="540" height="116">
+            <text id="I36:5188;4363:18606;36:5206" name="Section Header" x="0" y="0" width="44" height="16" />
+            <instance id="I36:5188;4363:18606;36:5207" name="Form · Component Readings" x="0" y="22" width="540" height="84">
+              <slot id="I36:5188;4363:18606;36:5207;4356:9284" name="Rows" x="10" y="0" width="520" height="84">
+                <instance id="I36:5188;4363:18606;36:5207;4356:9284;36:5223" name="Status" x="0" y="0" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5207;4356:9284;36:5224" name="Helper" x="0" y="42" width="520" height="42" />
+              </slot>
+            </instance>
+          </frame>
+          <frame id="I36:5188;4363:18606;36:5208" name="Section · Notifications" x="0" y="475" width="540" height="116">
+            <text id="I36:5188;4363:18606;36:5209" name="Section Header" x="0" y="0" width="85" height="16" />
+            <instance id="I36:5188;4363:18606;36:5210" name="Form · Notifications" x="0" y="22" width="540" height="84">
+              <slot id="I36:5188;4363:18606;36:5210;4356:9284" name="Rows" x="10" y="0" width="520" height="84">
+                <instance id="I36:5188;4363:18606;36:5210;4356:9284;36:5226" name="Charger can’t keep up" x="0" y="0" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5210;4356:9284;36:5227" name="Fully charged" x="0" y="42" width="520" height="42" />
+              </slot>
+            </instance>
+          </frame>
+          <frame id="I36:5188;4363:18606;36:5211" name="Section · General" x="0" y="599" width="540" height="200">
+            <text id="I36:5188;4363:18606;36:5212" name="Section Header" x="0" y="0" width="51" height="16" />
+            <instance id="I36:5188;4363:18606;36:5213" name="Form · General" x="0" y="22" width="540" height="168">
+              <slot id="I36:5188;4363:18606;36:5213;4356:9284" name="Rows" x="10" y="0" width="520" height="168">
+                <instance id="I36:5188;4363:18606;36:5213;4356:9284;36:5229" name="Open at login" x="0" y="0" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5213;4356:9284;36:5230" name="Check for updates automatically" x="0" y="42" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5213;4356:9284;36:5231" name="Uninstall Watt?" x="0" y="84" width="520" height="42" />
+                <instance id="I36:5188;4363:18606;36:5213;4356:9284;36:5232" name="Version" x="0" y="126" width="520" height="42" />
+              </slot>
+            </instance>
+          </frame>
+        </frame>
+      </slot>
+      <instance id="I36:5188;4363:18607" name="Scrollbar - Vertical" x="828" y="0" width="12" height="319" hidden="true" />
+    </frame>
+  </instance>
+</frame>
+IMPORTANT: After you call this tool, you MUST call get_design_context if trying to implement the design, since this tool only returns metadata. If you do not call get_design_context, the agent will not be able to implement the design.

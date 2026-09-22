@@ -1,0 +1,13 @@
+{
+  "story": "J9.2",
+  "node": "32:5844",
+  "status": "blocked",
+  "visualPass": false,
+  "score": null,
+  "pixel_diff": null,
+  "referenceReviewed": true,
+  "nativeStyling": "Native Settings scene, grouped Form/Section/LabeledContent/Picker/bordered Button and shared status label. No custom chrome or desktop.",
+  "reason": "AXTrusted false; no PID-owned compositor windows. Native pixel comparison and live button/keyboard interactions not verified.",
+  "evidence": "capture/window.json",
+  "referenceDiscrepancy": "Fresh screenshot section header says Helper; supplied hierarchy/context says Component Readings. Implementation follows explicit user hierarchy. Historic manifest export retained unchanged."
+}

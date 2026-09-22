@@ -1,0 +1,28 @@
+{
+  "status": "captured-and-inspected; parity-unverified",
+  "reference": "reference.png",
+  "capture": "capture/native-window.png",
+  "nativeBoundsPoints": [
+    260,
+    252
+  ],
+  "figmaBoundsPoints": [
+    260,
+    246
+  ],
+  "exactCopyVisible": true,
+  "stackedButtonsVisible": true,
+  "AXTrusted": false,
+  "screenCapturePreauthorized": true,
+  "liveInteractionVerified": false,
+  "score": null,
+  "pixel_diff": null,
+  "visualPass": false,
+  "differences": [
+    "OS-owned material and desktop context",
+    "OS-owned icon rendering",
+    "OS typography/line wrapping",
+    "6-point height difference"
+  ],
+  "method": "Manual inspection of exact reference and PID-owned compositor screenshot; no image transformation or numerical scoring"
+}

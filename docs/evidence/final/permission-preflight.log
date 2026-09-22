@@ -1,0 +1,9 @@
+{
+  "AXTrusted" : false,
+  "implementationCaptureAttempted" : false,
+  "permissionRequested" : false,
+  "runtimeKeyboardVerified" : false,
+  "screenCapturePreauthorized" : true,
+  "timestampUTC" : "2026-09-22T23:22:02Z",
+  "voiceOverVerified" : false
+}

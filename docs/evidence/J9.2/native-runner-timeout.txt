@@ -1,0 +1,1 @@
+Native unit target built; no test-case results after bounded 180-second attempt. Terminated only owned xcodebuild PID 62932. Native tests are blocked, not passed.
