@@ -8,6 +8,7 @@ final class StatusPanelVoiceOverSummaryTests: XCTestCase {
                        "Charging, +42.1 W, Into battery · 64% · full in 38 min")
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testDischargingPreservesOnBatteryPhrase() {
         XCTAssertEqual(StatusPanelModel(reading: .sampleOnBattery).voiceOverSummary,
                        "On battery, −18.4 W, From battery · 64% · about 4 h 10 min left")
@@ -41,4 +42,5 @@ final class StatusPanelVoiceOverSummaryTests: XCTestCase {
         XCTAssertEqual(StatusPanelModel(reading: reading).voiceOverSummary,
                        "Charging Paused, 0.0 W, 80%")
     }
+    #endif
 }

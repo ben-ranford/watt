@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J62ChargingHoldTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactChargingCopyAndPowerRowsWithoutComponents() {
         let model = StatusPanelModel(reading: .sampleChargingHold,
             chargerDescription: "96 W USB-C charger", includesComponents: false)
@@ -55,6 +56,7 @@ final class J62ChargingHoldTests: XCTestCase {
         XCTAssertEqual(StatusPanelModel(reading: .sampleChargingHold).state,
                        .optimisedChargingHold(percentage: 80))
     }
+    #endif
 
     func testExistingChargingPanelSemanticsArePreserved() {
         let ordinary = StatusPanelModel(reading: .sampleCharging)
@@ -71,6 +73,7 @@ final class J62ChargingHoldTests: XCTestCase {
 
     private static let explanation = "Because Optimised Battery Charging is on. Charging resumes before you usually unplug."
 
+    #if DEBUG || SWIFT_PACKAGE
     private func hold(watts: Double? = 0, percentage: Int? = 80,
                       state: BatteryState = .chargingHold,
                       batteryCapability: Capability = .available,
@@ -171,6 +174,7 @@ final class J62ChargingHoldTests: XCTestCase {
         XCTAssertFalse(router.statusPanelPresented)
         XCTAssertFalse(button.isHighlighted)
     }
+    #endif
 
     func testSharedPanelUsesNativeFormRowsAndBorderlessFooter() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -206,6 +210,7 @@ final class J62ChargingHoldTests: XCTestCase {
 
 @MainActor
 final class J62FixtureTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactBaseRegistryAndUnsupportedSelectorsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J6.2")
         XCTAssertEqual(fixture.story.node, "31:3754")
@@ -269,6 +274,7 @@ final class J62FixtureTests: XCTestCase {
         XCTAssertTrue(charging.onboarding.completed)
         XCTAssertEqual(J62FixtureLaunch.appearanceName, .darkAqua)
     }
+    #endif
 
     func testInvalidStoreInitializationDoesNotFabricateAHold() {
         let invalid = PowerReading(mode: .charged, watts: .nan, batteryPercentage: 80,
@@ -281,6 +287,7 @@ final class J62FixtureTests: XCTestCase {
         XCTAssertEqual(StatusPanelModel(reading: store.currentReading).title, "No reading")
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testRejectedSampleSuppressesHoldUntilValidRecovery() {
         let store = J62FixtureLaunch.makeStore()
         let invalid = PowerReading(mode: .charged, watts: .nan, batteryPercentage: 80,
@@ -346,4 +353,5 @@ final class J62FixtureTests: XCTestCase {
         XCTAssertNil(second.failure)
         XCTAssertEqual(second.freshness(maximumAge: 0), .fresh)
     }
+    #endif
 }

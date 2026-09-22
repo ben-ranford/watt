@@ -9,6 +9,7 @@ import WattFixtures
 
 @MainActor
 final class J72PerComponentMenuBarTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testSharedLabelUsesExactCompactCopyAndSelectionOrderWithoutSymbol() {
         let preferences = J72FixtureLaunch.makePreferences()
         let sample = PowerReading.samplePerComponent
@@ -226,4 +227,5 @@ final class J72PerComponentMenuBarTests: XCTestCase {
         PowerReading(mode: .perComponent, watts: nil, components: components, timestamp: timestamp,
                      capabilities: .init(components: capability), freshness: freshness, source: source)
     }
+    #endif
 }

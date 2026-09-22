@@ -9,6 +9,7 @@ import WattFixtures
 
 @MainActor
 final class J73ChooseComponentsTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactMenuUsesNativeCheckedAndDisabledItems() throws {
         let preferences = J73FixtureLaunch.makePreferences()
         let store = J73FixtureLaunch.makeStore()
@@ -36,6 +37,7 @@ final class J73ChooseComponentsTests: XCTestCase {
         }
         XCTAssertNil(menu.appearance)
     }
+    #endif
 
     func testNativeActionsPreserveOrderAndRejectThirdAvailableComponent() throws {
         let storage = InMemoryStorage()
@@ -55,6 +57,7 @@ final class J73ChooseComponentsTests: XCTestCase {
         XCTAssertFalse(try XCTUnwrap(button.item(withTitle: "CPU")).isEnabled)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testUnavailableAndStaleActionsRevalidateCurrentIdentity() throws {
         let preferences = J73FixtureLaunch.makePreferences()
         let clock = FakeWattClock(now: PowerReading.samplePerComponent.timestamp)
@@ -99,6 +102,7 @@ final class J73ChooseComponentsTests: XCTestCase {
         coordinator.toggle(try XCTUnwrap(button.item(withTitle: "GPU")))
         XCTAssertEqual(preferences.selectedComponents, ["gpu"])
     }
+    #endif
 
     func testSelectionPersistenceFailureAndInvalidWritesNeverPublish() {
         let storage = InMemoryStorage()
@@ -136,6 +140,7 @@ final class J73ChooseComponentsTests: XCTestCase {
         XCTAssertFalse(restored.onboarding.completed)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testPreferenceAndHelperLossDisableEvenPreviouslyEnabledAction() async throws {
         let preferences = J73FixtureLaunch.makePreferences()
         let router = AppRouter()
@@ -250,6 +255,7 @@ final class J73ChooseComponentsTests: XCTestCase {
             timestamp: PowerReading.samplePerComponent.timestamp, capabilities: .init(components: capability), source: .fixture)
         return PowerReadingStore(currentReading: sample, clock: FakeWattClock(now: sample.timestamp))
     }
+    #endif
 
     private func source(_ path: String) throws -> String {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()

@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J63FullOnAdapterTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFullCopyAndPowerRowsWithoutComponents() {
         let model = StatusPanelModel(reading: .sampleFullOnAdapter,
             chargerDescription: "96 W USB-C charger", includesComponents: false)
@@ -77,6 +78,7 @@ final class J63FullOnAdapterTests: XCTestCase {
         XCTAssertEqual(hold.panelHeight, 279)
         XCTAssertFalse(hold.showsComponents)
     }
+    #endif
 
     func testExistingChargingPanelSemanticsArePreserved() {
         let ordinary = StatusPanelModel(reading: .sampleCharging)
@@ -93,6 +95,7 @@ final class J63FullOnAdapterTests: XCTestCase {
 
     private static let explanation = "100% · running straight off the charger"
 
+    #if DEBUG || SWIFT_PACKAGE
     private func full(watts: Double? = 0, percentage: Int? = 100,
                       state: BatteryState = .full,
                       batteryCapability: Capability = .available,
@@ -193,6 +196,7 @@ final class J63FullOnAdapterTests: XCTestCase {
         XCTAssertFalse(router.statusPanelPresented)
         XCTAssertFalse(button.isHighlighted)
     }
+    #endif
 
     func testSharedPanelUsesNativeFormRowsAndBorderlessFooter() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -228,6 +232,7 @@ final class J63FullOnAdapterTests: XCTestCase {
 
 @MainActor
 final class J63FixtureTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactBaseRegistryAndUnsupportedSelectorsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J6.3")
         XCTAssertEqual(fixture.story.id, "J6.3")
@@ -304,6 +309,7 @@ final class J63FixtureTests: XCTestCase {
         XCTAssertTrue(charging.onboarding.completed)
         XCTAssertEqual(J63FixtureLaunch.appearanceName, .darkAqua)
     }
+    #endif
 
     func testInvalidStoreInitializationDoesNotFabricateFull() {
         let invalid = PowerReading(mode: .charged, watts: .nan, batteryPercentage: 100,
@@ -315,6 +321,7 @@ final class J63FixtureTests: XCTestCase {
         XCTAssertEqual(StatusPanelModel(reading: store.currentReading).title, "No reading")
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testRejectedSampleSuppressesFullUntilValidRecovery() {
         let store = J63FixtureLaunch.makeStore()
         let invalid = PowerReading(mode: .charged, watts: .nan, batteryPercentage: 100,
@@ -401,4 +408,5 @@ final class J63FixtureTests: XCTestCase {
         XCTAssertNil(second.failure)
         XCTAssertEqual(second.freshness(maximumAge: 0), .fresh)
     }
+    #endif
 }

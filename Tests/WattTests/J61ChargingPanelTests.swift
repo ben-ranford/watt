@@ -54,6 +54,7 @@ final class J61DarkChargingTests: XCTestCase {
         }
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeDarkHostGeometryAndFooterButtonCallbacks() throws {
         let preferences = J61FixtureLaunch.makePreferences()
         let original = preferences.onboarding
@@ -116,6 +117,7 @@ final class J61DarkChargingTests: XCTestCase {
         XCTAssertFalse(router.statusPanelPresented)
         XCTAssertFalse(button.isHighlighted)
     }
+    #endif
 
     func testSharedPanelUsesNativeFormRowsAndBorderlessFooter() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -139,6 +141,7 @@ final class J61DarkChargingTests: XCTestCase {
 
 @MainActor
 final class J61FixtureTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactBaseRegistryAndUnsupportedSelectorsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J6.1")
         XCTAssertEqual(fixture.story.node, "31:2745")
@@ -216,4 +219,5 @@ final class J61FixtureTests: XCTestCase {
         XCTAssertNil(second.failure)
         XCTAssertEqual(second.freshness(maximumAge: 0), .fresh)
     }
+    #endif
 }

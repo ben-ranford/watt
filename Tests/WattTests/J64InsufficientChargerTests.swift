@@ -10,6 +10,7 @@ import WattFixtures
 final class J64InsufficientChargerTests: XCTestCase {
     private static let message = "Because your Mac draws 78 W and this charger gives 65 W. The battery covers the rest."
 
+    #if DEBUG || SWIFT_PACKAGE
     func testExactWarningCopyAndThreePowerRowsWithoutComponents() {
         let model = StatusPanelModel(reading: .sampleInsufficientCharger,
             chargerDescription: "67 W USB-C charger")
@@ -82,7 +83,9 @@ final class J64InsufficientChargerTests: XCTestCase {
         XCTAssertTrue(store.accept(recovered, generation: store.generation))
         XCTAssertTrue(store.statusReading.hasInsufficientCharger)
     }
+    #endif
 
+    #if DEBUG || SWIFT_PACKAGE
     private static let timestamp = PowerReading.sampleInsufficientCharger.timestamp
     private func reading(watts: Double? = -13, charger: Double? = 65, system: Double? = 78,
                          source: ReadingSource = .fixture, freshness: ReadingFreshness = .fresh,
@@ -182,6 +185,7 @@ final class J64InsufficientChargerTests: XCTestCase {
         XCTAssertFalse(router.statusPanelPresented)
         XCTAssertFalse(button.isHighlighted)
     }
+    #endif
 
     func testSharedPanelUsesNativeFormRowsAndBorderlessFooter() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -218,6 +222,7 @@ final class J64InsufficientChargerTests: XCTestCase {
 
 @MainActor
 final class J64FixtureTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactRegistryAndInvalidSelectorsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J6.4")
         XCTAssertEqual(fixture.story.node, "31:4956")
@@ -389,6 +394,7 @@ final class J64FixtureTests: XCTestCase {
         }
         XCTAssertTrue(driver.intents.isEmpty)
     }
+    #endif
 }
 
 @MainActor

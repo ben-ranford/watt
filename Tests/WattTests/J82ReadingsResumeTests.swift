@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J82ReadingsResumeTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactStoryMetadataAndSelector() throws {
         let fixture = try ScenarioRegistry.resolve("J8.2")
         XCTAssertEqual(fixture.story.node, "32:4456")
@@ -68,6 +69,7 @@ final class J82ReadingsResumeTests: XCTestCase {
             XCTAssertEqual(store.statusReading, .sampleCharging)
         }
     }
+    #endif
 
     func testRecoveredStateUsesNativeStatusBridgeAndNoCustomChrome() throws {
         let app = try source("App/WattApp.swift")
@@ -89,6 +91,7 @@ final class J82ReadingsResumeTests: XCTestCase {
         XCTAssertFalse(app.contains("J82FixtureLaunch.requested { router.showStatusPanel()"))
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeSFRenderingAndExactRecoveredCopy() throws {
         let preferences = J82FixtureLaunch.makePreferences()
         let label = MenuBarStatusLabel(reading: .sampleCharging, preferences: preferences)
@@ -98,6 +101,7 @@ final class J82ReadingsResumeTests: XCTestCase {
         let image = try XCTUnwrap(NSImage(systemSymbolName: label.symbolName, accessibilityDescription: nil))
         XCTAssertTrue(image.isTemplate)
     }
+    #endif
 
     private func source(_ path: String) throws -> String {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()

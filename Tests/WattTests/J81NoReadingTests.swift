@@ -24,6 +24,7 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertNil(model.panelHeight, "Native Form content owns the retry panel height")
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNoReadingStatusItemAndNativeSymbols() throws {
         let label = MenuBarStatusLabel(reading: .unavailable, preferences: J81FixtureLaunch.makePreferences())
         XCTAssertEqual(label.text, "− − W")
@@ -52,6 +53,7 @@ final class J81NoReadingTests: XCTestCase {
             assertNoPower(sample)
         }
     }
+    #endif
 
     func testStatusOnlyTelemetryDoesNotPretendToMeasureWatts() {
         let sample = PowerReading(mode: .charging, watts: nil, batteryPercentage: 64,
@@ -64,6 +66,7 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertFalse(model.accessibilitySummary.contains("Power source: AC"))
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testStaleChargingAndDesktopSamplesExpireEvenWhenAdapterSaysFresh() {
         for sample in [PowerReading.sampleCharging, .sampleChargingHold, .sampleFullOnAdapter,
                        .sampleOnBattery, .sampleInsufficientCharger, .sampleDesktopSystemDraw] {
@@ -76,6 +79,7 @@ final class J81NoReadingTests: XCTestCase {
             assertNoPower(store.statusReading)
         }
     }
+    #endif
 
     func testWakeInvalidatesOldGenerationAndImmediatelyShowsNoReading() {
         let store = PowerReadingStore.preview
@@ -90,6 +94,7 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertEqual(store.statusReading, .sampleCharging)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testRetryUsesTelemetryAndRecoversOnlyOnValidatedData() async {
         let telemetry = FakeTelemetryService(outcome: .failure(.disconnected))
         let store = PowerReadingStore(currentReading: .unavailable, clock: FakeWattClock(), telemetry: telemetry)
@@ -222,6 +227,7 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertEqual(preferences.onboarding, original)
         XCTAssertEqual(preferences.displayMode, .delta)
     }
+    #endif
 
     func testRetryDisabledDuringRefreshAndNativeAppearanceOwnsMetrics() async throws {
         for appearance in [NSAppearance.Name.darkAqua, .accessibilityHighContrastDarkAqua] {
@@ -247,6 +253,7 @@ final class J81NoReadingTests: XCTestCase {
         }
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testFixtureIsolationFrozenClockAndRetryRemainUnavailable() async {
         let first = J81FixtureLaunch.makePreferences(), second = J81FixtureLaunch.makePreferences()
         XCTAssertFalse(first === second)
@@ -341,6 +348,7 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertEqual(StatusPanelModel(reading: store.statusReading).state, .noReading)
         XCTAssertTrue(StatusPanelModel(reading: store.statusReading).components.isEmpty)
     }
+    #endif
 
     func testNativeFormAndSharedBridgeHaveNoCustomChromeOrFixtureRenderer() throws {
         let panel = try source("Features/MenuBar/Views/StatusPanelView.swift")
@@ -373,6 +381,7 @@ final class J81NoReadingTests: XCTestCase {
         }
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     private func assertNoPower(_ sample: PowerReading, file: StaticString = #filePath, line: UInt = #line) {
         let model = StatusPanelModel(reading: sample)
         XCTAssertEqual(model.state, .noReading, file: file, line: line)
@@ -387,6 +396,7 @@ final class J81NoReadingTests: XCTestCase {
                            "No reading yet", file: file, line: line)
         }
     }
+    #endif
 
     private func reading(mode: PowerMode = .charging, source: ReadingSource = .system,
                          freshness: ReadingFreshness = .fresh, watts: Double? = 42.1,

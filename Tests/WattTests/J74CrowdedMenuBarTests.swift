@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J74CrowdedMenuBarTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactSelectorAndRegistry() throws {
         let fixture = try ScenarioRegistry.resolve("J7.4")
         XCTAssertEqual(fixture.story.node, "31:7764")
@@ -57,6 +58,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
         let image = try XCTUnwrap(NSImage(systemSymbolName: label.symbolName, accessibilityDescription: "Watt? power reading"))
         XCTAssertTrue(image.isTemplate, "The native SF Symbol supports system tint and contrast")
     }
+    #endif
 
     func testProductionSystemAndHelperSamplesUseSameIconSemantics() {
         let preferences = PreferencesStore(storage: InMemoryStorage())
@@ -69,6 +71,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
         }
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testInvalidStaleUnavailableAndUnsupportedReadingsDoNotClaimPower() {
         let preferences = J74FixtureLaunch.makePreferences()
         let invalid = [PowerReading.unavailable, reading(source: .unavailable), reading(freshness: .stale),
@@ -101,6 +104,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
             XCTAssertEqual(preferences.displayMode, .iconOnly)
         }
     }
+    #endif
 
     func testJ71IconActionPersistsPreferenceAndKeepsNativeMenuRouting() throws {
         let storage = InMemoryStorage()
@@ -127,6 +131,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
         XCTAssertEqual(preferences.displayMode, .iconOnly)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testReturningFromIconPreservesJ72ComponentLabelAndJ71Delta() {
         let preferences = J72FixtureLaunch.makePreferences()
         let label = MenuBarStatusLabel(reading: .samplePerComponent, preferences: preferences)
@@ -201,6 +206,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
             XCTAssertGreaterThan(host.fittingSize.height, 0)
         }
     }
+    #endif
 
     func testIconOnlySourceUsesTemplateAccessibilityAndExistingBridgeWithoutChrome() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()

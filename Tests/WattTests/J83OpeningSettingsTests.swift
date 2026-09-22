@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J83OpeningSettingsTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactStoryMetadataAndSelector() throws {
         let fixture = try ScenarioRegistry.resolve("J8.3")
         XCTAssertEqual(fixture.story.node, "32:4575")
@@ -61,6 +62,7 @@ final class J83OpeningSettingsTests: XCTestCase {
 
         XCTAssertEqual(routes, [.coachMark])
     }
+    #endif
 
     func testConfiguredValuesSurviveSettingsLaunchAndRestore() {
         let storage = InMemoryStorage()
@@ -82,6 +84,7 @@ final class J83OpeningSettingsTests: XCTestCase {
         XCTAssertEqual(restored.onboarding, expected.3)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testRelaunchExcerptUsesNativeSettingsFormRowsAndSystemControls() throws {
         let view = SettingsRootView(relaunchExcerpt: true)
             .environmentObject(J83FixtureLaunch.makePreferences())
@@ -105,6 +108,7 @@ final class J83OpeningSettingsTests: XCTestCase {
             XCTAssertFalse(source.contains(forbidden), forbidden)
         }
     }
+    #endif
 
     func testNativeAppCompositionReusesSettingsSceneAndRoutesConfiguredLaunch() throws {
         let app = try source("App/WattApp.swift")

@@ -9,6 +9,7 @@ import WattFixtures
 
 @MainActor
 final class J65OnBatteryTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactCopyRowsAndCompactGeometryPreserveC02() {
         let model = StatusPanelModel(reading: .sampleOnBattery, includesComponents: false)
         XCTAssertEqual(model.state, .standard)
@@ -207,6 +208,7 @@ final class J65OnBatteryTests: XCTestCase {
         XCTAssertFalse(router.statusPanelPresented)
         XCTAssertFalse(button.isHighlighted)
     }
+    #endif
 
     private func accessibilityLabels(in root: NSView) -> [String] {
         var seen = Set<ObjectIdentifier>()
@@ -239,6 +241,7 @@ final class J65OnBatteryTests: XCTestCase {
 
 @MainActor
 final class J65FixtureTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactRegistryAndInvalidSelectorsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J6.5")
         XCTAssertEqual(fixture.story.node, "31:5571")
@@ -303,4 +306,5 @@ final class J65FixtureTests: XCTestCase {
         XCTAssertEqual(other.statusReading, .sampleOnBattery)
         XCTAssertEqual(J63FixtureLaunch.makeStore().currentReading, .sampleFullOnAdapter)
     }
+    #endif
 }

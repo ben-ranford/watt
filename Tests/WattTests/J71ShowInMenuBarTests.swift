@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J71ShowInMenuBarTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactNativeMenuOrderingSelectionAndShortcuts() throws {
         let preferences = J71FixtureLaunch.makePreferences()
         let menu = StatusItemContextMenu.makeMenu(router: AppRouter(), preferences: preferences,
@@ -207,6 +208,7 @@ final class J71ShowInMenuBarTests: XCTestCase {
         XCTAssertFalse(untouched.settingsHelperSetup.helperOn)
         XCTAssertTrue(routes.isEmpty)
     }
+    #endif
 
     private func submenu(_ menu: NSMenu) throws -> NSMenu {
         try XCTUnwrap(menu.items.first { $0.title == "Show in Menu Bar" }?.submenu)
