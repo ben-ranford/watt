@@ -20,12 +20,17 @@ let package = Package(
                 "Package.swift",
                 "SCREEN-BACKLOG.md",
                 "Tests",
-                "Resources"
-            ]
+                "Resources",
+                "Watt.xcodeproj",
+                "docs",
+                "scripts"
+            ],
+            sources: ["App", "DesignSystem", "Features", "Models", "Services"]
         ),
+        .target(name: "WattFixtures", path: "Tests/Fixtures"),
         .testTarget(
             name: "WattTests",
-            dependencies: ["Watt"],
+            dependencies: ["Watt", "WattFixtures"],
             path: "Tests/WattTests"
         )
     ]

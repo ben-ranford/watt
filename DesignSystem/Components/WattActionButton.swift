@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// Shared intent, not custom chrome: AppKit/SwiftUI owns enabled, focus and accent rendering.
 struct WattActionButton: View {
     enum Style: Equatable {
         case bordered
@@ -12,23 +13,18 @@ struct WattActionButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(title, action: action)
-            .buttonStyle(.plain)
-            .padding(.horizontal, WattSpacing.md)
-            .frame(height: WattSpacing.buttonHeight)
-            .background(backgroundColor, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
-            .tint(tint)
+        styledButton.controlSize(.regular)
     }
 
-    private var backgroundColor: Color {
-        style == .prominent ? tint : Color.primary.opacity(0.08)
-    }
-
-    private var tint: Color {
+    @ViewBuilder
+    private var styledButton: some View {
         switch style {
-        case .bordered: return .accentColor
-        case .prominent: return .accentColor
-        case .destructive: return .wattDestructive
+        case .prominent:
+            Button(title, action: action).buttonStyle(.borderedProminent)
+        case .bordered:
+            Button(title, action: action).buttonStyle(.bordered)
+        case .destructive:
+            Button(title, role: .destructive, action: action).buttonStyle(.bordered)
         }
     }
 }

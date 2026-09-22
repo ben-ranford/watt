@@ -1,11 +1,13 @@
 import SwiftUI
 
+/// SF Pro via system text styles; macOS owns font metrics and accessibility behavior.
 enum WattTypography {
-    static let body = Font.system(size: 13, weight: .regular)
-    static let bodyEmphasized = Font.system(size: 13, weight: .semibold)
-    static let headline = Font.system(size: 13, weight: .bold)
-    static let title = Font.system(size: 17, weight: .bold)
-    static let largeTitle = Font.system(size: 26, weight: .bold)
-    static let subheadline = Font.system(size: 11, weight: .regular)
-    static let footnote = Font.system(size: 10, weight: .regular)
+    static let body = Font.body
+    static let bodyEmphasized = Font.body.weight(.semibold)
+    static let headline = Font.body.weight(.bold)
+    static let welcomeTitle = Font.title.weight(.bold)
+    static let title = Font.title2.weight(.bold)
+    static let largeTitle = Font.largeTitle.weight(.bold)
+    static let subheadline = Font.subheadline
+    static let footnote = Font.footnote
 }

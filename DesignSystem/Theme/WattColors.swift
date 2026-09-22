@@ -1,20 +1,17 @@
 import AppKit
 import SwiftUI
 
-extension Color {
-    static let wattAccentLight = Color(red: 0.0, green: 0.533, blue: 1.0)
-    static let wattAccentDark = Color(red: 0.0, green: 0.569, blue: 1.0)
-    static let wattSuccess = Color(red: 0.204, green: 0.780, blue: 0.361)
-    static let wattDestructive = Color(red: 0.961, green: 0.184, blue: 0.196)
-}
-
+/// AppKit semantic colors resolve against the host appearance, including increased contrast.
+/// Reference swatches live in DESIGN.md; controls follow the user's macOS accent choice.
 enum WattColors {
     static let accent = Color.accentColor
-    static let lightWindowBackground = Color(nsColor: .windowBackgroundColor)
-    static let lightRowFill = Color.black.opacity(0.03)
-    static let darkRowFill = Color.white.opacity(0.08)
-    static let lightPrimaryLabel = Color.black.opacity(0.85)
-    static let darkPrimaryLabel = Color.white.opacity(0.85)
-    static let lightSecondaryLabel = Color.black.opacity(0.50)
-    static let darkSecondaryLabel = Color.white.opacity(0.55)
+    static let primaryLabel = Color(nsColor: .labelColor)
+    static let secondaryLabel = Color(nsColor: .secondaryLabelColor)
+    static let disabledLabel = Color(nsColor: .disabledControlTextColor)
+    static let windowBackground = Color(nsColor: .windowBackgroundColor)
+    static let rowFill = Color(nsColor: .quaternaryLabelColor)
+    static let separator = Color(nsColor: .separatorColor)
+    static let focusRing = Color(nsColor: .keyboardFocusIndicatorColor)
+    static let success = Color(nsColor: .systemGreen)
+    static let destructive = Color(nsColor: .systemRed)
 }

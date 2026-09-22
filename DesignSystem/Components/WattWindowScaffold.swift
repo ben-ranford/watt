@@ -14,6 +14,7 @@ struct WattWindowScaffold<Content: View>: View {
             if let title {
                 Text(title)
                     .font(WattTypography.headline)
+                    .accessibilityAddTraits(.isHeader)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, WattSpacing.xl)
                     .padding(.top, WattSpacing.lg)
@@ -21,7 +22,7 @@ struct WattWindowScaffold<Content: View>: View {
             }
             content
         }
-        .background(.regularMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        // Window/Settings/MenuBarExtra owns material, corners and chrome.
+        .navigationTitle(title ?? "")
     }
 }

@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// Native label/value alignment; the containing Form owns row spacing and separators.
 struct WattFormRow<Leading: View, Trailing: View>: View {
     private let leading: Leading
     private let trailing: Trailing
@@ -10,35 +11,26 @@ struct WattFormRow<Leading: View, Trailing: View>: View {
     }
 
     var body: some View {
-        HStack(spacing: WattSpacing.md) {
-            leading
-                .frame(maxWidth: .infinity, alignment: .leading)
+        LabeledContent {
             trailing
+        } label: {
+            leading
         }
-        .font(WattTypography.body)
-        .frame(minHeight: WattSpacing.formRowHeight)
-        .padding(.horizontal, WattSpacing.md)
     }
 }
 
-struct WattFormSection<Content: View>: View {
-    private let title: String
-    private let content: Content
-
-    init(_ title: String, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.content = content()
-    }
+/// Descriptive copy is product content; control states remain system-managed.
+struct WattRowLabel: View {
+    let title: String
+    let subtitle: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: WattSpacing.sm) {
-            Text(title)
-                .font(WattTypography.headline)
-                .padding(.horizontal, WattSpacing.xs)
-            VStack(spacing: 0) {
-                content
-            }
-            .background(Color.primary.opacity(0.035), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        VStack(alignment: .leading, spacing: WattSpacing.xxs) {
+            Text(title).font(WattTypography.body)
+            Text(subtitle)
+                .font(WattTypography.footnote)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
