@@ -13,6 +13,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
         value.onboarding.completed = true
         return value
     }
+    #if DEBUG || SWIFT_PACKAGE
     func testExactCopyNativeControlsAndFixture() throws {
         XCTAssertEqual(SettingsRootView.title, "Watt? Settings")
         XCTAssertEqual(SettingsHelperRows.statusTitle, "Status")
@@ -36,6 +37,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
             XCTAssertTrue(source.contains(token), token)
         }
     }
+    #endif
     func testMissingServiceFailsClosedAndCanRetry() async {
         let setup = SettingsHelperSetup(); let prefs = preferences()
         XCTAssertEqual(setup.state, .notDetermined)

@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J25SettingsConnectedTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactConnectedCopySelectionStatusAndNativeWindow() async throws {
         let storage = InMemoryStorage()
         let session = J25FixtureSession(storage: storage)
@@ -164,4 +165,5 @@ final class J25SettingsConnectedTests: XCTestCase {
         StatusItemContextMenu.makeMenu(router: session.router, preferences: session.preferences,
                                       componentsAvailable: { session.componentsAvailable })
     }
+    #endif
 }

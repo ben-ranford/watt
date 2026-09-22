@@ -8,6 +8,7 @@ import XCTest
 
 @MainActor
 final class J43PanelSystemDrawTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactDesktopPresentationAndStatusLabel() throws {
         let reading = J43FixtureLaunch.reading
         try reading.validate()
@@ -120,6 +121,7 @@ final class J43PanelSystemDrawTests: XCTestCase {
         XCTAssertEqual(unrelated.displayMode, .delta)
         XCTAssertFalse(unrelated.onboarding.completed)
     }
+    #endif
 
     func testNativeChromeAndCapabilityBasedRows() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()

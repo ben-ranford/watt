@@ -8,6 +8,7 @@ import XCTest
 
 @MainActor
 final class J42ReadingBatteryUnavailableTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactCopyOptionsAndCapabilities() throws {
         let reading = J42FixtureLaunch.reading
         try reading.validate()
@@ -105,6 +106,7 @@ final class J42ReadingBatteryUnavailableTests: XCTestCase {
         window.close()
         XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
     }
+    #endif
 
     func testNativeStylingContract() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()

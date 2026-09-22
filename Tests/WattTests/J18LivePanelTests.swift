@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J18LivePanelTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testFixtureIsImplementedAndLaunchable() throws {
         let fixture = try ScenarioRegistry.resolve("J1.8")
         XCTAssertEqual(fixture.story.node, "28:2802")
@@ -15,6 +16,7 @@ final class J18LivePanelTests: XCTestCase {
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J1.8/base"])
         XCTAssertThrowsError(try ScenarioRegistry.resolve("J1.8", variant: "unavailable"))
     }
+    #endif
 
     func testExactChargingCopyAndRows() {
         let model = StatusPanelModel(reading: .sampleCharging, chargerDescription: "96 W USB-C charger")
@@ -56,6 +58,7 @@ final class J18LivePanelTests: XCTestCase {
         XCTAssertEqual(preferences.displayMode, .charger)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeSelectionTracksPresentationAndDismissal() {
         let item = NSStatusBar.system.statusItem(withLength: 96)
         defer { NSStatusBar.system.removeStatusItem(item) }
@@ -70,10 +73,12 @@ final class J18LivePanelTests: XCTestCase {
         selection.applySelection(isPresented: false)
         XCTAssertFalse(router.statusPanelPresented)
     }
+    #endif
 }
 
 @MainActor
 final class J22ComponentsOffTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndUnsupportedVariantsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J2.2")
         XCTAssertEqual(fixture.story.node, "29:2456")
@@ -84,6 +89,7 @@ final class J22ComponentsOffTests: XCTestCase {
             XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J2.2/" + variant])?.smokeLaunchArguments())
         }
     }
+    #endif
 
     func testOffHidesPreviouslyAvailableComponentsButPreservesPowerRows() {
         let model = StatusPanelModel(reading: .sampleCharging, componentReadingsEnabled: false)

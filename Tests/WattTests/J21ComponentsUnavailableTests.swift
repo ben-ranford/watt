@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J21ComponentsUnavailableTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testFixtureAndVariantsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J2.1")
         XCTAssertEqual(fixture.story.node, "29:1549")
@@ -17,6 +18,7 @@ final class J21ComponentsUnavailableTests: XCTestCase {
             XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J2.1/" + variant]))
         }
     }
+    #endif
 
     func testNativeRowsDisabledStateAndShortcuts() throws {
         let prefs = PreferencesStore(storage: InMemoryStorage())

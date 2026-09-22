@@ -29,6 +29,7 @@ final class J14ApprovalTests: XCTestCase {
         XCTAssertEqual(cancellations, 1)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativePendingContractAndFixture() throws {
         XCTAssertEqual(WaitingForApprovalView.title, "One switch in System Settings")
         XCTAssertEqual(WaitingForApprovalView.message, "Turn on “Watt? Helper” in Login Items & Extensions. This window moves on by itself.")
@@ -56,4 +57,5 @@ final class J14ApprovalTests: XCTestCase {
         XCTAssertEqual(window.frame.size, NSSize(width: 480, height: 224))
         window.close()
     }
+    #endif
 }

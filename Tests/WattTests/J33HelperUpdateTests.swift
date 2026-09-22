@@ -6,6 +6,7 @@ import WattFixtures
 
 @MainActor
 final class J33HelperUpdateTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactCopyAndNativeSemantics() throws {
         XCTAssertEqual(HelperChangedAlert.title, "The helper changed")
         XCTAssertEqual(HelperChangedAlert.message, "Watt? 1.1 comes with a new helper. macOS asks you to approve it once more.")
@@ -22,6 +23,7 @@ final class J33HelperUpdateTests: XCTestCase {
         XCTAssertFalse(source.contains(".frame("))
         XCTAssertFalse(source.contains("Image("))
     }
+    #endif
     func testLaterPreservesStateAndCallsNeitherBoundary() async {
         let prompt = HelperUpdatePrompt()
         var calls = 0

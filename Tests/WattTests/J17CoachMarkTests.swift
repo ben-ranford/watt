@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J17CoachMarkTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactCopyAndFixture() throws {
         XCTAssertEqual(CoachMarkView.title, "Watt? lives here")
         XCTAssertEqual(CoachMarkView.message, "Click for the detail. Right-click to change the number.")
@@ -16,6 +17,7 @@ final class J17CoachMarkTests: XCTestCase {
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J1.7/base"])
         XCTAssertThrowsError(try ScenarioRegistry.resolve("J1.7", variant: "unavailable"))
     }
+    #endif
 
     func testDoneThenGotItPersistsAndRoutesExactlyOnce() {
         let storage = InMemoryStorage()

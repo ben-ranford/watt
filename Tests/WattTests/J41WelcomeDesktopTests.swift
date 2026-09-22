@@ -23,6 +23,7 @@ final class J41WelcomeDesktopTests: XCTestCase {
                        NSSize(width: 256, height: 256))
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testFixtureRegistryAndIsolation() throws {
         let selection = try ScenarioRegistry.resolve("J4.1", variant: "base")
         XCTAssertEqual(selection.story.node, "30:2275")
@@ -35,6 +36,7 @@ final class J41WelcomeDesktopTests: XCTestCase {
         XCTAssertFalse(J41FixtureLaunch.requested)
         #endif
     }
+    #endif
 
     func testContinuePersistsPickerWithoutChangingOtherPreferences() {
         for _ in WelcomeView.Variant.allCases {
@@ -61,6 +63,7 @@ final class J41WelcomeDesktopTests: XCTestCase {
         XCTAssertEqual(preferences.onboarding, before)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeWelcomeCloseDefersSetup() {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         let window = J41FixtureLaunch.makeWindow(preferences: preferences)
@@ -75,6 +78,7 @@ final class J41WelcomeDesktopTests: XCTestCase {
         XCTAssertFalse(preferences.onboarding.completed)
         XCTAssertNotNil(preferences.onboarding.deferredSetupID)
     }
+    #endif
 
     func testNativeDefaultActionAndEscapeWiring() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()

@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J51WelcomeClosedTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactCopyAndFixtureRegistration() throws {
         XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.title, "Watt? is on, showing Delta.")
         XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.message,
@@ -26,6 +27,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         XCTAssertFalse(J51FixtureLaunch.requested)
         #endif
     }
+    #endif
 
     func testCloseWelcomePersistsBeforeRoutingOnceAndPreservesPreferences() throws {
         let storage = InMemoryStorage()
@@ -248,6 +250,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         }
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testFixturePreparationIsIsolatedAndPopoverUsesNativeLightTransientSurface() {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         let untouched = PreferencesStore(storage: InMemoryStorage())
@@ -267,6 +270,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         popover.close()
         XCTAssertEqual(preferences.onboarding, before)
     }
+    #endif
 
     func testExistingSavedOnboardingWithoutTokenStillDecodes() throws {
         let data = Data(#"{"checkpoint":"welcome","completed":false,"helperOptIn":true}"#.utf8)
@@ -301,6 +305,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .welcome)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testContextMenuResumeRejectsStalePromptAndFailedWrites() throws {
         let storage = InMemoryStorage()
         let preferences = PreferencesStore(storage: storage)
@@ -332,6 +337,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         XCTAssertEqual(preferences.onboarding, newer)
         XCTAssertEqual(destinations, [.onboarding])
     }
+    #endif
 
     private func act(_ finish: Bool, preferences: PreferencesStore, router: AppRouter, token: UUID) {
         if finish {

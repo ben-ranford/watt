@@ -220,6 +220,7 @@ final class J53FinishSetupTests: XCTestCase {
         }
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureRegistrationAndIsolatedPreparation() throws {
         let fixture = try ScenarioRegistry.resolve("J5.3")
         XCTAssertEqual(fixture.story.node, "30:4788")
@@ -242,6 +243,7 @@ final class J53FinishSetupTests: XCTestCase {
         XCTAssertFalse(J53FixtureLaunch.requested)
         #endif
     }
+    #endif
 
     private func finishItem(_ menu: NSMenu) throws -> NSMenuItem {
         try XCTUnwrap(menu.items.first { $0.title == "Finish Setup…" })

@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J16AllSetTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactCopyAndFixture() throws {
         XCTAssertEqual(AllSetView.title, "That’s it")
         XCTAssertEqual(AllSetView.message, "Watt? lives in your menu bar. Click it for the detail. Right-click to change the number.")
@@ -16,6 +17,7 @@ final class J16AllSetTests: XCTestCase {
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J1.6/base"])
         XCTAssertThrowsError(try ScenarioRegistry.resolve("J1.6", variant: "unavailable"))
     }
+    #endif
 
     func testDonePersistsAndDismissesBeforeOpeningCoachMarkOnce() {
         let storage = InMemoryStorage()
@@ -87,6 +89,7 @@ final class J16AllSetTests: XCTestCase {
         XCTAssertFalse(preferences.openAtLogin)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeWindowAndControlContract() throws {
         let window = J16FixtureLaunch.makeWindow()
         defer { window.close() }
@@ -106,4 +109,5 @@ final class J16AllSetTests: XCTestCase {
             XCTAssertFalse(view.contains(token), token)
         }
     }
+    #endif
 }

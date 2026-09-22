@@ -6,6 +6,7 @@ import WattFixtures
 
 @MainActor
 final class J31ApprovalNotGivenTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactCopyAndFixture() throws {
         XCTAssertEqual(HelperNotApprovedAlert.title, "Helper not approved")
         XCTAssertEqual(HelperNotApprovedAlert.message, "Watt? can’t read components without it. Delta, Charger and Draw still work. Turn it on any time in Settings.")
@@ -16,6 +17,7 @@ final class J31ApprovalNotGivenTests: XCTestCase {
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J3.1/base"])
         XCTAssertThrowsError(try FixtureLaunchSelection.story(ScenarioRegistry.resolve("J3.1", variant: "timeout")).smokeLaunchArguments())
     }
+    #endif
 
     func testFailureStatesPresentAndButtonsNeverApprove() async {
         for reason in [ServiceFailure.denied, .cancelled, .timedOut] {

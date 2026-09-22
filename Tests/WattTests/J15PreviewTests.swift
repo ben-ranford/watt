@@ -12,6 +12,7 @@ final class J15PreviewTests: XCTestCase {
         XCTAssertEqual(ComponentPreviewView.message, "Here’s where the power is going right now.")
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureReadingsAndUnavailableValues() throws {
         XCTAssertEqual(ComponentPreviewView.componentNames.map {
             ComponentPreviewView.value(for: $0, reading: .sampleCharging)
@@ -26,6 +27,7 @@ final class J15PreviewTests: XCTestCase {
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertThrowsError(try ScenarioRegistry.resolve("J1.5", variant: "unavailable"))
     }
+    #endif
 
     func testUnavailableTelemetryNeverShowsSampleValues() {
         for capability in [Capability.unsupported, .permissionRequired, .disconnected, .unknown] {
@@ -58,6 +60,7 @@ final class J15PreviewTests: XCTestCase {
         XCTAssertEqual(preferences.onboarding, expected)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testNativeWindowAndControls() throws {
         let window = J15FixtureLaunch.makeWindow()
         XCTAssertEqual(window.titleVisibility, .hidden)
@@ -79,4 +82,5 @@ final class J15PreviewTests: XCTestCase {
             XCTAssertFalse(view.contains(token), token)
         }
     }
+    #endif
 }

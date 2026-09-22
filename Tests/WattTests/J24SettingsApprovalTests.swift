@@ -13,6 +13,7 @@ final class J24SettingsApprovalTests: XCTestCase {
         return preferences
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testExactPendingRowsAndFixtureAreNotApproval() async throws {
         let helper = FakeHelperService(); helper.status = .pending
         let setup = SettingsHelperSetup(service: helper)
@@ -38,6 +39,7 @@ final class J24SettingsApprovalTests: XCTestCase {
         XCTAssertNil(window.appearance) // Follow native appearance; no production/fixture style override.
         window.close()
     }
+    #endif
 
     func testOpenSettingsCallbackDoesNotApproveOrNavigate() async {
         let router = AppRouter()

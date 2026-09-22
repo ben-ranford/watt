@@ -8,6 +8,7 @@ import WattFixtures
 
 @MainActor
 final class J13OfferTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testExactFactsAndFixture() throws {
         XCTAssertEqual(OfferComponentReadingsView.title, "See where the power goes")
         XCTAssertEqual(OfferComponentReadingsView.message, "Watt? needs a small helper to read CPU, GPU and display power. macOS asks you to approve it once.")
@@ -19,6 +20,7 @@ final class J13OfferTests: XCTestCase {
         XCTAssertEqual(selection.story.node, "27:1584")
         XCTAssertNoThrow(try selection.story.requireRenderTarget())
     }
+    #endif
 
     func testOfferUsesProvidedAssetAndNativeControls() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -66,6 +68,7 @@ final class J13OfferTests: XCTestCase {
         }
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testClosingNativeWindowPreservesOfferForReopen() {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .helperOffer
@@ -80,4 +83,5 @@ final class J13OfferTests: XCTestCase {
         window.close()
         XCTAssertEqual(preferences.onboarding, initial)
     }
+    #endif
 }

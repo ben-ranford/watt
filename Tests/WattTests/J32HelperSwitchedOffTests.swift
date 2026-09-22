@@ -7,6 +7,7 @@ import WattFixtures
 
 @MainActor
 final class J32HelperSwitchedOffTests: XCTestCase {
+    #if DEBUG || SWIFT_PACKAGE
     func testVerifiedDisconnectRetainsPowerAndUsesDeltaWithoutChangingSavedSelection() async throws {
         let session = J25FixtureSession()
         await session.connect()
@@ -63,6 +64,7 @@ final class J32HelperSwitchedOffTests: XCTestCase {
         XCTAssertTrue(session.router.settingsHelperSetup.helperSwitchedOff)
         XCTAssertFalse(session.router.settingsHelperSetup.helperOn)
     }
+    #endif
 
     func testExactCopyNativeSymbolAndCallbacks() throws {
         XCTAssertEqual(HelperOffPresentation.title, "Helper is off")
@@ -83,6 +85,7 @@ final class J32HelperSwitchedOffTests: XCTestCase {
         XCTAssertFalse(router.settingsHelperSetup.helperOn)
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     func testStaleUnavailableAndComponentsAreNeverFabricated() {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.displayMode = .components
@@ -122,6 +125,7 @@ final class J32HelperSwitchedOffTests: XCTestCase {
         XCTAssertTrue(session.preferences.componentReadings)
         XCTAssertEqual(session.preferences.displayMode, .components)
     }
+    #endif
 
     func testProductionStartupDoesNotUsePreviewTelemetry() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -132,6 +136,7 @@ final class J32HelperSwitchedOffTests: XCTestCase {
         XCTAssertFalse(source.contains("_powerStore = StateObject(wrappedValue: PowerReadingStore.preview)"))
     }
 
+    #if DEBUG || SWIFT_PACKAGE
     private func recoveredReading(freshness: ReadingFreshness = .fresh) -> PowerReading {
         PowerReading(mode: .perComponent, watts: nil,
                      components: PowerReading.samplePerComponent.components,
@@ -146,4 +151,5 @@ final class J32HelperSwitchedOffTests: XCTestCase {
                        ["--watt-fixture", "J3.2/base"])
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J3.2/live"]))
     }
+    #endif
 }
