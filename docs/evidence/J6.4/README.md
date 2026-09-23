@@ -1,6 +1,7 @@
 # G053 / J6.4 — Charger can’t keep up
 
 Exact source: [Figma node 31:4956](https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-4956).
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `7256ff7ac281ea2e2f26a22b6a70ccee4f874a6c72f3a70b222202328d54881b`).
 The exact supplied PNG is retained as `reference.png` (1000 × 720 pixels), SHA-256
 `7256ff7ac281ea2e2f26a22b6a70ccee4f874a6c72f3a70b222202328d54881b`.
 The inspected dark native panel is approximately x645/y38, 320 × 279 points.
