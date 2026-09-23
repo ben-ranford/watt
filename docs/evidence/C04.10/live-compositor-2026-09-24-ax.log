@@ -1,0 +1,5 @@
+copyElementAtPosition=0
+AXRole: status=0 value=Optional(AXMenuBarItem)
+AXTitle: status=0 value=Optional(19.6 W)
+AXDescription: status=0 value=Optional(Watt?, fully charged, 19.6 watts, menu extra.)
+AXRoleDescription: status=0 value=Optional(status menu)

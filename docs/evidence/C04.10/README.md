@@ -39,3 +39,29 @@ The unit test uses an internal lifecycle synchronization seam rather than openin
 `actual-status-item-1x.png` and `closed-status-item-1x.png` are direct AppKit 1x drawing; screen-scale PNG is diagnostic, not resampled.
 
 **Visual acceptance remains blocked:** relocated native button reports highlighted but does not reproduce compositor-owned selected-pill chrome in subtree drawing. No custom pill was added to fake it. Strict frame/item comparisons fail (all pixels changed; synthetic backdrop also differs). `frame-comparison.json` and `item-comparison.json` retain pass=false/storyDone=false. Full native menu-bar/compositor visual approval and accessibility review remain open. Semantic fixture and public lifecycle capture are implemented; no claim of Figma visual parity.
+
+## Fresh live compositor evidence — 2026-09-24
+
+The verified Release app at `/Users/benranford/Desktop/Watt.app` was opened with
+a real Quartz left-click at screen point `(1220, 15)`. WindowServer reported the
+Watt-owned native popover as window `22829`, layer `25`, bounds `346 × 291 pt`
+at `(1075, 31)` and the native Watt? fallback window as window `22824`, layer
+`0`. A full-screen `screencapture -x` was taken while the selected status item
+and popover were visible, then a diagnostic crop was made from Retina pixels
+`x=2150,y=0,width=692,height=700` around the native popover and selected item.
+
+- `live-compositor-2026-09-24-fullscreen.png`: 3600 × 2338 PNG,
+  SHA-256 `8c7e1396e9f8f4518180ab6af1f671416f308e318cb9e024e0b581eba03b1c41`.
+- `live-compositor-2026-09-24-crop.png`: 692 × 700 PNG,
+  SHA-256 `d62e7537167deea8c925c72fb7c866c7f69ca901e787cfe2270f718cbe475b18`.
+
+The live crop shows the actual menu-bar compositor selection pill, native
+popover material and anchor, with `Full`, `0.0 W`, `Charger input 6.8 W`,
+`System draw 6.8 W`, and `Battery 0.0 W`. The separate AX probe read a native
+`AXMenuBarItem` and a live value (`19.6 W` at its sample). This is stronger
+physical/compositor evidence than the previous app-owned subtree capture, but
+it does not by itself close the Figma visual threshold or replace the required
+AX/VoiceOver interaction audit; no custom chrome or private API was introduced.
+
+The focused regression run `live-compositor-2026-09-24-focused-tests.log` executed
+`C0410StatusItemTests` and `F05FixtureTests`: 25 tests, zero failures.

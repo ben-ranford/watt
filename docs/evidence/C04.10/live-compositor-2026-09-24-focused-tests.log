@@ -1,0 +1,136 @@
+Building for debugging...
+[Pre-planning 1 / 124]
+[Planning deferred tasks]
+[40 / 76]
+[43 / 79] WattFixtures
+[52 / 117]
+[56 / 174]
+[64 / 174]
+[66 / 174]
+[67 / 174]
+[73 / 174]
+[75 / 174]
+[78 / 174]
+[84 / 174]
+[87 / 174]
+[89 / 174]
+[90 / 174]
+[108 / 174] WattFixtures
+[115 / 174]
+[116 / 174]
+[119 / 174]
+[121 / 174]
+[130 / 174] Watt-product
+[133 / 174] WattFixtures
+[144 / 174] Watt
+[146 / 174] Watt
+[147 / 174] WattTests-product
+[151 / 174] Watt
+[152 / 174] Watt
+[153 / 174]
+[155 / 174] Watt
+[155 / 174] Watt-product
+[155 / 174] Watt
+[155 / 174] Watt-product
+[155 / 174] Watt
+/private/tmp/watt-g024-live-capture/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+187 | 
+188 |     static let title = "Pick one number for the menu bar"
+189 |     static let message = "Change it any time. Right-click Watt? or open Settings."
+    |                `- note: static property declared here
+190 | 
+191 |     enum Variant: Equatable {
+    :
+198 | 
+199 |         var message: String {
+200 |             self == .noBattery ? "No battery here, so it’s Draw or Components." : ChooseMenuReadingView.message
+    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+201 |         }
+202 |     }
+[155 / 174] Watt-product
+[157 / 174] Watt-product
+/private/tmp/watt-g024-live-capture/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+187 | 
+188 |     static let title = "Pick one number for the menu bar"
+189 |     static let message = "Change it any time. Right-click Watt? or open Settings."
+    |                `- note: static property declared here
+190 | 
+191 |     enum Variant: Equatable {
+    :
+198 | 
+199 |         var message: String {
+200 |             self == .noBattery ? "No battery here, so it’s Draw or Components." : ChooseMenuReadingView.message
+    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+201 |         }
+202 |     }
+[159 / 174] Watt
+[164 / 175] WattTests-product
+[168 / 191]
+[169 / 191]
+[180 / 191] WattTests-product
+[181 / 191] WattTests-product
+[185 / 191] WattTests-product
+[187 / 191] WattTests-product
+Build complete! (16.85 sec.)
+Test Suite 'Selected tests' started at 2026-09-24 03:50:02.875.
+Test Suite 'WattTests.xctest' started at 2026-09-24 03:50:02.876.
+Test Suite 'C0410StatusItemTests' started at 2026-09-24 03:50:02.876.
+Test Case '-[WattTests.C0410StatusItemTests testChargingSemanticsAndGeometry]' started.
+Test Case '-[WattTests.C0410StatusItemTests testChargingSemanticsAndGeometry]' passed (0.002 seconds).
+Test Case '-[WattTests.C0410StatusItemTests testNativeSelectionFollowsPanelLifecycle]' started.
+Test Case '-[WattTests.C0410StatusItemTests testNativeSelectionFollowsPanelLifecycle]' passed (0.088 seconds).
+Test Case '-[WattTests.C0410StatusItemTests testSelectorIsolation]' started.
+Test Case '-[WattTests.C0410StatusItemTests testSelectorIsolation]' passed (0.000 seconds).
+Test Suite 'C0410StatusItemTests' passed at 2026-09-24 03:50:02.968.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.091 (0.092) seconds
+Test Suite 'F05FixtureTests' started at 2026-09-24 03:50:02.968.
+Test Case '-[WattTests.F05FixtureTests testAll69ExactIDsResolveWithUniqueNodes]' started.
+Test Case '-[WattTests.F05FixtureTests testAll69ExactIDsResolveWithUniqueNodes]' passed (0.002 seconds).
+Test Case '-[WattTests.F05FixtureTests testAppCompositionRejectsUnimplementedStoriesAndGalleriesBeforeLaunch]' started.
+Test Case '-[WattTests.F05FixtureTests testAppCompositionRejectsUnimplementedStoriesAndGalleriesBeforeLaunch]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testBacklogAndPinnedReferenceMatch]' started.
+Test Case '-[WattTests.F05FixtureTests testBacklogAndPinnedReferenceMatch]' passed (0.082 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01AccessibilitySourceSemantics]' started.
+Test Case '-[WattTests.F05FixtureTests testC01AccessibilitySourceSemantics]' passed (0.003 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01ActionsUseSuppliedCallbacks]' started.
+Test Case '-[WattTests.F05FixtureTests testC01ActionsUseSuppliedCallbacks]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01ExactPresentation]' started.
+Test Case '-[WattTests.F05FixtureTests testC01ExactPresentation]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01FormatterSignsAndZeros]' started.
+Test Case '-[WattTests.F05FixtureTests testC01FormatterSignsAndZeros]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01RuntimeStorageIsIsolatedAndClockPinned]' started.
+Test Case '-[WattTests.F05FixtureTests testC01RuntimeStorageIsIsolatedAndClockPinned]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableAndDisabledCapabilitiesNeverLeakValues]' started.
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableAndDisabledCapabilitiesNeverLeakValues]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableSourceAndFreshnessOverrideAvailableCapabilities]' started.
+Test Case '-[WattTests.F05FixtureTests testC01UnavailableSourceAndFreshnessOverrideAvailableCapabilities]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02CallbacksAndPinnedStore]' started.
+Test Case '-[WattTests.F05FixtureTests testC02CallbacksAndPinnedStore]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02ExactPresentationAndStableFixture]' started.
+Test Case '-[WattTests.F05FixtureTests testC02ExactPresentationAndStableFixture]' passed (0.001 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02LaunchGateAndMalformedSelectors]' started.
+Test Case '-[WattTests.F05FixtureTests testC02LaunchGateAndMalformedSelectors]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testC02UnavailableDoesNotBecomeUnpluggedOrZero]' started.
+Test Case '-[WattTests.F05FixtureTests testC02UnavailableDoesNotBecomeUnpluggedOrZero]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testEveryUnimplementedFixtureRefusesRendering]' started.
+Test Case '-[WattTests.F05FixtureTests testEveryUnimplementedFixtureRefusesRendering]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testGalleryIsDistinctFromStories]' started.
+Test Case '-[WattTests.F05FixtureTests testGalleryIsDistinctFromStories]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testJ18LaunchAcceptsOnlyBase]' started.
+Test Case '-[WattTests.F05FixtureTests testJ18LaunchAcceptsOnlyBase]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testLaunchParserFailsClosed]' started.
+Test Case '-[WattTests.F05FixtureTests testLaunchParserFailsClosed]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testOnlyImplementedStoriesHaveRenderTargets]' started.
+Test Case '-[WattTests.F05FixtureTests testOnlyImplementedStoriesHaveRenderTargets]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testStorageIsNewForEveryLaunch]' started.
+Test Case '-[WattTests.F05FixtureTests testStorageIsNewForEveryLaunch]' passed (0.000 seconds).
+Test Case '-[WattTests.F05FixtureTests testTwoRunsAreDeterministicAndAllVariantsResolve]' started.
+Test Case '-[WattTests.F05FixtureTests testTwoRunsAreDeterministicAndAllVariantsResolve]' passed (0.004 seconds).
+Test Case '-[WattTests.F05FixtureTests testUnknownIDsAndVariantsFail]' started.
+Test Case '-[WattTests.F05FixtureTests testUnknownIDsAndVariantsFail]' passed (0.000 seconds).
+Test Suite 'F05FixtureTests' passed at 2026-09-24 03:50:03.065.
+	 Executed 22 tests, with 0 failures (0 unexpected) in 0.096 (0.098) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-24 03:50:03.065.
+	 Executed 25 tests, with 0 failures (0 unexpected) in 0.187 (0.189) seconds
+Test Suite 'Selected tests' passed at 2026-09-24 03:50:03.065.
+	 Executed 25 tests, with 0 failures (0 unexpected) in 0.187 (0.190) seconds

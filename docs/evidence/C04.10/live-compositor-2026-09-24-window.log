@@ -1,0 +1,12 @@
+window=22829 layer=25 name= bounds={
+    Height = 291;
+    Width = 346;
+    X = 1075;
+    Y = 31;
+}
+window=22824 layer=0 name=Watt? bounds={
+    Height = 297;
+    Width = 320;
+    X = 690;
+    Y = 157;
+}
