@@ -2523,3 +2523,11 @@ fallback status-item creation after `applicationDidFinishLaunching`, restores th
 native accessory activation policy, and keeps the native Watt? panel visible as
 the fallback. No custom menu-bar chrome is added. Evidence:
 `docs/evidence/P01/menu-bar-host-2026-09-24.md`.
+
+The follow-up physical-host probe at 02:49:07 local time measured a full AC
+battery with `BatteryPower=0 mW`, `SystemPowerIn=16301 mW` and
+`SystemLoad=16301 mW`. The installed native panel and menu-bar item showed
+`0.0 W` battery rate and `16.3 W` charger/system input. This is the expected
+distinction between battery charge rate and live adapter input; retain both
+values rather than replacing a full-battery zero with adapter nominal wattage.
+See `docs/evidence/P01/live-charge-rate-2026-09-24.md` and its capture.

@@ -89,3 +89,17 @@ as a fallback. See `menu-bar-host-2026-09-24.md`.
 Fresh focused verification: package P01 **12 tests / 1 intentional skip / 0
 failures**, hosted P01 + NativeStyling **23 tests / 1 skip / 0 failures**,
 and Release build/analyze passed (`g036-release-build-analyze-2026-09-24.log`).
+
+## 2026-09-24 live charge-rate follow-up
+
+A fresh physical-host probe passed at 02:49:07 local time and measured a full
+AC-connected battery: `batteryWatts = 0.0 W`, `chargerWatts = 16.301 W`, and
+`systemWatts = 16.301 W`. The running Desktop Release app showed the same
+charger/system values in its native panel and `16.3 W` in the menu bar. The
+capture and exact command/output are retained in
+[`live-charge-rate-2026-09-24.md`](live-charge-rate-2026-09-24.md) and
+[`live-charge-rate-2026-09-24.png`](live-charge-rate-2026-09-24.png).
+
+This strengthens local production sampling evidence but does not close the
+remaining physical unplug/wake, component-capability, signed-helper, or
+accessibility/compositor gates.
