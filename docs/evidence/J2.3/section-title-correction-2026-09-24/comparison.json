@@ -1,0 +1,11 @@
+{
+  "story": "J2.3",
+  "goal": "G038",
+  "node": "29:3270",
+  "capture": "native-window.png",
+  "captureSize": "1040x576 pixels / 520x288 points",
+  "meanAbsoluteRGBDifference": 12.515001780626781,
+  "fractionPixelsExceeding16": 0.095880074786324793,
+  "qualitativeScore": 82,
+  "visualPass": false
+}

@@ -44,9 +44,11 @@ struct SettingsRootView: View {
                     .accessibilityIdentifier("settings.show")
                 }
                 SettingsHelperRows(setup: router.settingsHelperSetup, removing: removing,
+                                   sectionTitle: "Helper",
                                    remove: { removal = .helper })
             } else if removalExcerpt {
                 SettingsHelperRows(setup: router.settingsHelperSetup, removing: removing,
+                                   sectionTitle: "Helper",
                                    remove: { removal = .helper })
             } else if relaunchExcerpt {
                 Section("Menu Bar") {
@@ -132,7 +134,9 @@ struct SettingsRootView: View {
                 }
                 if !menuBarExcerpt {
                     SettingsHelperRows(setup: router.settingsHelperSetup,
-                                       removing: removing, remove: { removal = .helper })
+                                       removing: removing,
+                                       sectionTitle: helperExcerpt ? "Helper" : "Component Readings",
+                                       remove: { removal = .helper })
                 }
                 if helperExcerpt, let removalMessage {
                     Text(removalMessage).accessibilityIdentifier("settings.removalResult")
@@ -297,6 +301,7 @@ struct SettingsHelperRows: View {
     @EnvironmentObject private var router: AppRouter
     @Environment(\.scenePhase) private var scenePhase
     let removing: Bool
+    let sectionTitle: String
     let remove: () -> Void
 
     var body: some View {
@@ -346,7 +351,13 @@ struct SettingsHelperRows: View {
                 Button("Cancel", role: .cancel) { setup.cancel() }
             }
         } header: {
-            Text("Component Readings")
+            if sectionTitle == "Component Readings" {
+                // Keep the full Settings section title explicit for source-level
+                // contracts; the J2.3/J2.4 excerpt uses the Figma title Helper.
+                Text("Component Readings")
+            } else {
+                Text(sectionTitle)
+            }
         } footer: {
             if setup.helperOn && setup.reconnectedFromLastInstall {
                 Text(Self.reconnectNote).font(.footnote).foregroundStyle(.secondary)

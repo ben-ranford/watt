@@ -33,7 +33,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
         window.close()
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"), encoding: .utf8)
-        for token in ["Form {", "Picker(\"Show\"", ".pickerStyle(.menu)", ".buttonStyle(.borderedProminent)", ".disabled(removing || !setup.canTurnOn)", "ProgressView()", "role: .cancel", "router.openApprovalSettings()"] {
+        for token in ["Form {", "Picker(\"Show\"", ".pickerStyle(.menu)", ".buttonStyle(.borderedProminent)", ".disabled(removing || !setup.canTurnOn)", "ProgressView()", "role: .cancel", "router.openApprovalSettings()", "sectionTitle: helperExcerpt ? \"Helper\" : \"Component Readings\"", "Text(sectionTitle)"] {
             XCTAssertTrue(source.contains(token), token)
         }
     }

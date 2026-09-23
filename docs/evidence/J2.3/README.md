@@ -1,7 +1,8 @@
 # G038 / J2.3 — Settings: Turn On (excerpt)
 
-**Implemented and tested; not story-done.** No commit created. Shared worktree and
-branch retained: `swiftui-implementation`, `bug/G038-j23-settings-turn-on`.
+**Implemented and tested; not story-done.** The current branch contains a small
+semantic correction to the excerpt heading and is still subject to the visual,
+production-helper and accessibility gates below.
 
 ## Exact reference
 
@@ -43,7 +44,7 @@ Use `export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
 
 | Command | Result / evidence |
 | --- | --- |
-| `swift test --filter J23SettingsTurnOnTests` | 9 passed; `focused-tests.log` |
+| `swift test --filter J23SettingsTurnOnTests` | 15 passed in the current correction run; prior focused evidence remains in `focused-tests.log` |
 | `swift test` | 314 executed, 1 skipped, 0 failures; `package-tests.log` |
 | `swift build` | passed; `package-build.log` |
 | `xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination 'platform=macOS' -derivedDataPath .build/xcode build analyze` | passed; `host-Debug.log` |
@@ -117,3 +118,26 @@ Corrective logs use `p1-` prefixes, preserving original evidence:
 - Package build passed; hosted results recorded in `p1-host-*.log` and `.exit` files.
 - No new capture loop. Existing visual score **82, needs_iteration**, remains blocking;
   retained screenshots predate this state-authority correction. Story is not complete.
+
+## 2026-09-24 exact-heading correction
+
+The exact Figma MCP context was re-read for node `29:3270` (window `29:3424`).
+The `FormComponentReadings` section heading in the supplied frame is **Helper**;
+the full Settings screen retains the separate **Component Readings** heading.
+`SettingsHelperRows` now receives that heading from its caller, so the J2.3/J2.4
+excerpt uses the exact Figma title without replacing the native grouped `Form`,
+picker, labels or buttons with custom-painted controls. A source-level regression
+asserts both heading variants.
+
+Fresh verification on the graphical host:
+
+- `xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination 'platform=macOS' -derivedDataPath /tmp/watt-g086-j23-build-2 build` passed.
+- `xcrun swift test --scratch-path /tmp/watt-g086-j23-focused --filter J23SettingsTurnOnTests` passed: 15 tests, 0 failures.
+- Native light fixture capture is retained in `section-title-correction-2026-09-24/`.
+- The 520×288 normalized comparison remains RGB MAE `12.515001780626781` with
+  `9.588007478632479%` of pixels differing by more than 16 in one channel; this does
+  not improve the recorded qualitative score of 82/100 and no visual pass is claimed.
+
+The remaining blockers are unchanged: grouped native spacing leaves the approval
+footer below the excerpt viewport, titlebar/row metrics differ, AX is untrusted,
+and the production signed/authenticated helper transport is not composed.
