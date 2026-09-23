@@ -1,8 +1,18 @@
 # G021 / C04.7 — Component-selection status item
 
-Retained evidence, 2026-09-22. Native fixture and automated checks are recorded
-below; **visual acceptance remains open**. This documentation update does not
-rerun tests, builds or capture. No commit or checkpoint.
+Fresh evidence, 2026-09-23: the exact Figma frame was re-inspected and the
+final-source DEBUG app was rebuilt, tested and captured again. See [current
+Figma context](current-figma-context-2026-09-23.md), [build/analyze
+log](debug-build-analyze-2026-09-23.log), [native focused test
+log](native-focused-2026-09-23.log), [capture log](capture-run-2026-09-23.log)
+and [comparison log](compare-run-2026-09-23.log). The fresh run produced a
+real `NSStatusBarButton` with the expected `CPU 9.8 · GPU 4.1 W` label and
+geometry. Strict comparisons still remain diagnostics with `storyDone: false`;
+the bounded capture does not prove live compositor/AX evidence.
+
+Retained evidence from 2026-09-22 remains recorded below; **visual acceptance
+remains open**. The fresh run above supersedes the prior “no rerun” note for
+this story.
 
 ## Exact reference and native contract
 

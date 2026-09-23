@@ -814,7 +814,7 @@ item 1,918/1,920. Both reports retain `storyDone: false`. Synthetic capture
 backdrop/native rasterization are not Figma desktop parity; visual acceptance,
 live compositor, AX/VoiceOver, interaction and real telemetry proof remain open.
 
-### Native component-selection status item — G021/C04.7, 2026-09-22
+### Native component-selection status item — G021/C04.7, 2026-09-23
 
 Exact Figma frame **24:1234**, component **24:1350**, anchor **24:1352**.
 DEBUG `C04.7/base` uses a fixed-clock `.perComponent` fixture and isolated
@@ -824,11 +824,13 @@ max-two distinct, nonblank IDs contract; invalid three-item assignments preserve
 the prior selection. Shared trailing units apply only to available explicit
 per-component values; legacy charging/C03 formatting remains unchanged.
 
-[Retained C04.7 evidence](docs/evidence/C04.7/README.md): focused package/hosted
-suites pass **26 each**; full package/hosted suites execute **234 each**, with
-**one opt-in physical-host probe skipped and zero failures**. Debug and Release
-build/analysis logs record success. These are existing results, not reruns for
-this documentation update.
+[Current Figma context and fresh evidence](docs/evidence/C04.7/README.md): the
+exact node was re-inspected through Figma MCP. A final-source Debug build and
+analysis succeeded; the focused native suite reran **26 tests with zero
+failures**. The native capture again found an `NSStatusBarButton` at
+`{{153, 15}, {148, 24}}` in a direct 560×44 bitmap and rendered the expected
+`CPU 9.8 · GPU 4.1 W` label. The retained full package/hosted suites execute
+**234 each**, with **one opt-in physical-host probe skipped and zero failures**.
 
 Capture retains an app-owned NSStatusBarButton in a direct **560×44** bitmap,
 with **148×24** component at **x153,y5**, plus a separate screen-scale diagnostic;
@@ -837,8 +839,11 @@ and 3,552/3,552 changed pixels; fraction 1.0). Both reports retain `storyDone: f
 **Independent visual review is pending; visual acceptance remains open.** The
 relocated button/synthetic backdrop cannot prove live MenuBarExtra compositor
 pixels, global placement, AX/VoiceOver, physical interaction or real telemetry.
-No source/test changes, story-completion claim, commit or checkpoint in this
- documentation update.
+The fresh strict comparisons remain diagnostic-only and retain
+`storyDone: false`; visual acceptance, live compositor, AX/VoiceOver,
+physical interaction and real component telemetry proof remain open. No
+custom chrome, bitmap UI, source/test behavior change or story-completion
+claim is made.
 
 ### Native icon-only status item — G022/C04.8, 2026-09-22
 
