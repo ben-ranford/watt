@@ -983,6 +983,29 @@ the existing route shell. Native close and Escape dismiss without changing prefe
 DEBUG fixture `J1.1/base` isolates preferences in memory; release excludes capture logic.
 Verification and limitations: `docs/evidence/J1.1/README.md`.
 
+### G031 / J1.4 — Waiting for approval (system notification)
+Exact Figma frame `28:1206`, onboarding window `28:1521`, content slot `28:1535`,
+spinner `28:1537` and system notification `28:1584`. The qualified parent
+context was freshly retrieved through Figma MCP on 2026-09-23; the nested content
+slot is not independently selectable in MCP.
+
+`WaitingForApprovalView` keeps the `.approval` checkpoint pending with native
+small indeterminate `ProgressView`, semantic SF Pro title/body, native bordered
+Cancel and bordered-prominent/default Open System Settings. Cancel withdraws the
+onboarding interest; Open delegates to AppRouter. Neither action grants helper
+approval, marks setup complete or invents a notification. The Figma Inter Title 2
+reference maps to the existing semantic native title style; no font dependency or
+private glyph is introduced.
+
+DEBUG `J1.4/base` uses fresh in-memory storage, fixed preview telemetry and Aqua.
+Fresh package J14 tests pass 2/2; the native J14 + NativeStyling run passes 13/13;
+Debug build/analyze succeeds. The native app-owned window is 960×448 pixels at 2×
+(480×224 points), and its content crop is retained under `docs/evidence/J1.4/`.
+The direct cache-display image is host-specific and not used for acceptance.
+The `Background Items Added` Notification Center card is system-owned and excluded
+from the safe capture; live approval effects, TCC/AX and whole-frame visual
+acceptance remain explicit blockers. Evidence: `docs/evidence/J1.4/`.
+
 ### Onboarding reading selection
 Use the shared native radio-group Picker with four enum-tagged choices; Icon Only
 belongs to Settings, not this onboarding choice. Components remains selectable as

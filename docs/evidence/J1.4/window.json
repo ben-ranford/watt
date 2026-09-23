@@ -1,7 +1,8 @@
 {
   "fixture" : "J1.4\/base",
-  "limitation" : "Independent visual comparison and AX\/VoiceOver audit not performed",
-  "method" : "PID-scoped native screencapture",
+  "limitation" : "System notification excluded; AX\/VoiceOver and full-frame comparison not performed",
+  "method" : "PID-scoped native screencapture; native-content is titlebar crop",
+  "nativeContent" : "native-content.png",
   "reference" : "28:1206",
   "visualPass" : false,
   "window" : {
@@ -16,9 +17,9 @@
     "kCGWindowLayer" : 0,
     "kCGWindowMemoryUsage" : 2432,
     "kCGWindowName" : "",
-    "kCGWindowNumber" : 9866,
+    "kCGWindowNumber" : 21463,
     "kCGWindowOwnerName" : "Watt?",
-    "kCGWindowOwnerPID" : 58036,
+    "kCGWindowOwnerPID" : 40574,
     "kCGWindowSharingState" : 1,
     "kCGWindowStoreType" : 1
   }
