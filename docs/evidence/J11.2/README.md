@@ -66,3 +66,10 @@ Process cleanup evidence is retained in `capture/process-cleanup.log`.
 false**, **score: null**, **pixel_diff: null**, **visualPass: false** and no verified
 live interaction. Reference assets are not implementation captures. Neither a
 pixel comparison nor native Settings visual acceptance is claimed.
+
+## Fresh Figma and native evidence — 2026-09-23
+- Figma MCP re-queried for exact frame `36:5186` with design context, metadata, variables and screenshot; screenshot pinned at `fresh-figma/reference-2026-09-23.png` with SHA-256 `cbb3f9b6b84c6051b937cec90968b5a5a6cfc0a6278862cf63c54860dabe15b1`.
+- Exact hierarchy, control copy, accessibility annotations, keyboard behavior, tokens and native control boundary are recorded in `fresh-figma/context-2026-09-23.md`.
+- `J11.2/base` was launched, `Settings…` was activated through AX, and a PID-owned native Settings window appeared. Its measured 580 × 831 geometry and live Off/Turn On state did not match the 580 × 870 On/Remove Figma reference; strict capture therefore failed closed.
+- A diagnostic native PNG is retained but no visual-pass, pixel-parity, keyboard or VoiceOver claim is made. The mismatch is now a concrete follow-up rather than an implicit success.
+- The fixture was reaped; the normal Desktop app remained running.

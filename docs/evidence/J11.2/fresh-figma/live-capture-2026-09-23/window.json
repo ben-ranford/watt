@@ -1,0 +1,40 @@
+{
+  "AXTrusted" : true,
+  "AXWindowCount" : 1,
+  "captureAPI" : "screencapture -l; AX-content\/geometry-verified app-owned native Settings window only",
+  "comparableCapture" : false,
+  "fixture" : "J11.2\/base",
+  "formNode" : "36:5197",
+  "liveInteractionVerified" : false,
+  "nativeCapture" : null,
+  "node" : "36:5186",
+  "pixel_diff" : null,
+  "processIdentifier" : 92736,
+  "reason" : "BLOCKED: No unique live AX Settings window matched exact J11.2 content",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "status" : "blocked",
+  "timestampUTC" : "2026-09-23T11:21:21Z",
+  "visualPass" : false,
+  "windowNode" : "36:5188",
+  "windows" : [
+    {
+      "kCGWindowAlpha" : 1,
+      "kCGWindowBounds" : {
+        "Height" : 831,
+        "Width" : 580,
+        "X" : 610,
+        "Y" : 155
+      },
+      "kCGWindowIsOnscreen" : true,
+      "kCGWindowLayer" : 0,
+      "kCGWindowMemoryUsage" : 2432,
+      "kCGWindowName" : "Watt? Settings",
+      "kCGWindowNumber" : 20549,
+      "kCGWindowOwnerName" : "Watt?",
+      "kCGWindowOwnerPID" : 92736,
+      "kCGWindowSharingState" : 1,
+      "kCGWindowStoreType" : 1
+    }
+  ]
+}
