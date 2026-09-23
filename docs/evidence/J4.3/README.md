@@ -1,6 +1,6 @@
 # G046 / J4.3 — panel, system draw only
 
-Native implementation present; **visual/AX/live acceptance blocked**, not story complete. No commit.
+Native implementation present; **visual/live acceptance remains blocked**, not story complete. Fresh native AX registration evidence is recorded below; no compositor capture or successful status-item interaction is claimed.
 
 ## Exact design and implementation
 Figma file `9DKDgUfEqidZdZQEVlQgLS`, exact node **30:2786**, panel **30:2930**.
@@ -41,7 +41,7 @@ The verification script overwrites logs and exit files for focused/full package 
 package build, Debug/Release host build+analyze, host unit tests and diff check.
 Final results are recorded below and in `verification.json`; earlier failures are not
 acceptance evidence. No independent lint tool is configured; compiler diagnostics and
-Xcode analyze provide type/static checks. No live AX/UI interaction test is claimed.
+Xcode analyze provide type/static checks. No automated live AX/UI interaction test is claimed; the manual registration probe is recorded below.
 
 ## Capture / fail-closed acceptance
 The capture helper records only PID-scoped live compositor windows, preauthorization and
@@ -53,6 +53,12 @@ verification means null score and pixel diff, visualPass=false and storyDone=fal
 Real desktop draw/helper telemetry remains an upstream production-service proof gap;
 fixture values are not hardware evidence.
 
+## Fresh live AX registration evidence
+
+On 2026-09-23 UTC, the rebuilt `J4.3/base` fixture was launched as PID 58150 with shell Accessibility trust returning `true`. The app-owned AX tree registered a native `AXMenuExtra` titled `Watt?, no battery, 38.2 watts, menu extra.` at position `x=-1, y=1157` with size `80.5×24`. An `AXPress` was accepted by the API (`press=0`), but no app-owned panel window appeared and the status item remained edge-clipped at the left display boundary. The complete transcript is pinned in `live-ax-2026-09-23.log`.
+
+This proves registration and exposes the remaining host compositor problem; it does not prove a user-hittable menu-bar interaction or visual parity, so the story stays open.
+
 ## Final post-fix result
 - Focused: **53 tests, 0 failures**.
 - Full package: **387 tests, 1 skipped, 0 failures**.
@@ -61,7 +67,7 @@ fixture values are not hardware evidence.
 - Final isolated capture retry: **exit 1**, no app-owned compositor window; screen capture
   preauthorized but **AXTrusted=false**. No successful native PNG exists. This is the exact
   bounded blocker, not a visual pass. Both attempts left no fixture process running.
-- Null score/pixel diff; visualPass=false, storyDone=false. No commit or goal-state changes.
+- Null score/pixel diff; visualPass=false, storyDone=false. The fresh manual AX registration probe is evidence only and does not change the blocked story state.
 
 ## Exact files changed in this slice
 - `App/WattApp.swift`
