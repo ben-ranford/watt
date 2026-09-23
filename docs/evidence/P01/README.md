@@ -103,3 +103,8 @@ capture and exact command/output are retained in
 This strengthens local production sampling evidence but does not close the
 remaining physical unplug/wake, component-capability, signed-helper, or
 accessibility/compositor gates.
+
+The later live native status-item → popover capture is retained in
+[`live-native-panel-2026-09-24/`](live-native-panel-2026-09-24/). It records the
+full-battery `0.0 W` delta alongside independently sampled charger/system rows
+and confirms the visible menu-bar path is not a frozen fixture.
