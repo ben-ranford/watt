@@ -1,5 +1,7 @@
 # G059 / J8.1 — No reading after wake
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `524141281b61d5cdb627ea8f4cf8cc12658e6f94a802f87d77231472568eb0da`).
+
 Implemented in the cumulative SwiftUI/macOS worktree on
 `bug/G059-j81-no-reading-after-wake`. No commit was created; prior changes are
 preserved against [pre-edit hashes](pre-edit-hashes.json).
@@ -125,3 +127,5 @@ Core edits: `Models/PowerReading.swift`, `Services/PowerReadingStore.swift`,
 Added `App/J81FixtureLaunch.swift` and `Tests/WattTests/J81NoReadingTests.swift`;
 updated native project entries, fixture registry/selector, affected regression
 expectations, `DESIGN.md`, `SCREEN-BACKLOG.md` and this evidence directory.
+
+Fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`; the no-reading status item registered, but no accepted fixture-owned panel window was available and visual/live acceptance remains open.
