@@ -1,0 +1,34 @@
+Test Suite 'Selected tests' started at 2026-09-24 00:58:36.499.
+Test Suite 'WattTests.xctest' started at 2026-09-24 00:58:36.500.
+Test Suite 'P01TelemetryTests' started at 2026-09-24 00:58:36.500.
+Test Case '-[WattTests.P01TelemetryTests testAbsentBatteryAndUPSDoNotBecomeInternalBattery]' started.
+Test Case '-[WattTests.P01TelemetryTests testAbsentBatteryAndUPSDoNotBecomeInternalBattery]' passed (0.002 seconds).
+Test Case '-[WattTests.P01TelemetryTests testCancellationBeforeAndDuringProvider]' started.
+Test Case '-[WattTests.P01TelemetryTests testCancellationBeforeAndDuringProvider]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testChargedIsNotInferredFromPercentageAndHoldIsNotGuessed]' started.
+Test Case '-[WattTests.P01TelemetryTests testChargedIsNotInferredFromPercentageAndHoldIsNotGuessed]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testClockFreshStaleRecoveryAndFailures]' started.
+Test Case '-[WattTests.P01TelemetryTests testClockFreshStaleRecoveryAndFailures]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testDischargingAndProvidingSourcesRemainIndependent]' started.
+Test Case '-[WattTests.P01TelemetryTests testDischargingAndProvidingSourcesRemainIndependent]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testMalformedRegistryTelemetryDoesNotFabricateMeasurements]' started.
+Test Case '-[WattTests.P01TelemetryTests testMalformedRegistryTelemetryDoesNotFabricateMeasurements]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testMissingAndInvalidKeysNeverBecomeFalseOrZero]' started.
+Test Case '-[WattTests.P01TelemetryTests testMissingAndInvalidKeysNeverBecomeFalseOrZero]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke]' started.
+/private/tmp/watt-g036-live-menu-bar/Tests/WattTests/P01TelemetryTests.swift:226: -[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke] : Test skipped - Opt-in physical-host metadata probe; not fixture evidence
+Test Case '-[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke]' skipped (0.001 seconds).
+Test Case '-[WattTests.P01TelemetryTests testPresentChargingBatteryHasMetadataButNeverWatts]' started.
+Test Case '-[WattTests.P01TelemetryTests testPresentChargingBatteryHasMetadataButNeverWatts]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testRegistryTelemetryMapsChargingRateChargerInputAndSystemDraw]' started.
+Test Case '-[WattTests.P01TelemetryTests testRegistryTelemetryMapsChargingRateChargerInputAndSystemDraw]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testRegistryTelemetryPreservesZeroRateForFullBattery]' started.
+Test Case '-[WattTests.P01TelemetryTests testRegistryTelemetryPreservesZeroRateForFullBattery]' passed (0.000 seconds).
+Test Case '-[WattTests.P01TelemetryTests testRegistryTelemetryUsesNegativeBatteryRateWhenDischarging]' started.
+Test Case '-[WattTests.P01TelemetryTests testRegistryTelemetryUsesNegativeBatteryRateWhenDischarging]' passed (0.000 seconds).
+Test Suite 'P01TelemetryTests' passed at 2026-09-24 00:58:36.506.
+	 Executed 12 tests, with 1 test skipped and 0 failures (0 unexpected) in 0.005 (0.006) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-24 00:58:36.506.
+	 Executed 12 tests, with 1 test skipped and 0 failures (0 unexpected) in 0.005 (0.006) seconds
+Test Suite 'Selected tests' passed at 2026-09-24 00:58:36.506.
+	 Executed 12 tests, with 1 test skipped and 0 failures (0 unexpected) in 0.005 (0.007) seconds
