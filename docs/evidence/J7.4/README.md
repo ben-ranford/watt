@@ -1,5 +1,7 @@
 # J7.4 / G058 — Crowded menu bar — Icon Only
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `43c40d136771931bcde6be9c589a0f76ec23271830ae02c52e809fa3adff311d`).
+
 Implemented in the cumulative worktree on branch
 `bug/G058-j74-crowded-menu-bar-icon-only`. No commit is made.
 
@@ -106,3 +108,5 @@ this evidence directory. [Changed-file manifest](changed-files.json) records has
 [pre-edit hashes](pre-edit-hashes.json) preserve the cumulative baseline. Other source
 files, including J7.1/J7.2 tests, NativeStylingTests, menu routing and authority guards,
 remain byte-identical to the slice baseline.
+
+Fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`; the native icon-only fixture registered with the expected semantic label, but host edge placement and missing compositor capture keep visual acceptance open.
