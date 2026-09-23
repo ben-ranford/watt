@@ -2,6 +2,8 @@
 
 Implemented in the existing worktree on `bug/G071-j107-couldnt-check`. No commit created; pre-existing work retained.
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `b7f4f7685a41956aba515c9ba974fd152c7f5a9841715779901fb7a7868dc361`).
+
 ## Implementation and source
 - `App/AppRouter.swift`: ephemeral generation/presentation identity, receipt-free failure guard, retry/OK routing, stale/closed/restored-result rejection. Checking is persisted before renewing generation so a failed retry write preserves the current error token.
 - `App/RootSceneView.swift`: informational **NSAlert**, exact title/description, **Try Again** default and **OK** secondary; native presentation and DEBUG-only fixture. macOS owns icon, typography, material, buttons, chrome and layout.
@@ -30,3 +32,5 @@ Commands, logs and exits are in `verification.json`; `verify.sh` reproduces the 
 `capture/window.json` records the exact PID, timestamp, window and permissions; `capture/process-cleanup.log` confirms cleanup. Screen Recording is preauthorized; Accessibility is not. AX interaction acceptance is blocked by TCC. `visual-review.json` therefore records **score: null**, **pixel_diff: null**, **visualPass: false**—not a fabricated score or visual approval.
 
 This story adds no automatic scheduler, production updater endpoint or installer effects. The requested description is exact; those dependencies are not claimed complete.
+
+Fresh live AX evidence confirms the native failure alert copy and Try Again/OK semantics; the visual comparison gate remains open.
