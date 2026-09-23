@@ -1,5 +1,7 @@
 # G064 / J9.3 — After Quit
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `dbb12c0ff5fdb072f77626740af6954b710d6f046cf2feb622ae660e7f506a84`).
+
 Exact node `32:6494`, no app-owned after-quit surface. See `reference.json` and
 `figma-{context,metadata,screenshot}.json`. Both PNG hashes match (`reference.sha256`).
 
@@ -41,3 +43,5 @@ was removed. Cleanup success is not proof that the production Quit action ran.
 All existing cumulative edits were preserved, on the supplied worktree/branch,
 without a commit. Remaining acceptance: unlocked/trusted desktop verification of
 native Quit, status item disappearance, and fresh Applications launch routing.
+
+Fresh lifecycle probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`. It used the normal Desktop app: AXPress on `Quit Watt?` removed the process and status item, then `open` relaunched the bundle with a new PID and native status-item/menu semantics. No compositor visual pass is claimed.

@@ -1,0 +1,21 @@
+--- normal Desktop app before quit ---
+pid=59860
+title=— position=Optional(<AXValue 0x7cb5048060> {value = x:7.000000 y:1157.000000 type = kAXValueCGPointType}) size=Optional(<AXValue 0x7cb5048030> {value = w:44.500000 h:24.000000 type = kAXValueCGSizeType})
+        role=AXButton subrole= title= desc=Settings… value= enabled=true
+        role=AXButton subrole= title= desc=Quit Watt? value= enabled=true
+    role=AXMenuBarItem subrole= title=Watt desc= value= enabled=true
+    role=AXMenuBarItem subrole=AXMenuExtra title=— desc=Watt?, fully charged, No reading yet, menu extra. value= enabled=true
+--- AXPress Quit Watt? ---
+found role=AXButton title= desc=Quit Watt?
+press=-25204
+wanted=Quit Watt?, found=true
+--- after quit ---
+desktop_process=absent
+--- relaunch from Applications/Desktop app bundle ---
+relaunch_pid=78064
+title=— position=Optional(<AXValue 0x777343c060> {value = x:7.000000 y:1157.000000 type = kAXValueCGPointType}) size=Optional(<AXValue 0x777343c030> {value = w:44.500000 h:24.000000 type = kAXValueCGSizeType})
+        role=AXUnknown subrole= title= desc=No reading value= enabled=true
+        role=AXButton subrole= title= desc=Settings… value= enabled=true
+        role=AXButton subrole= title= desc=Quit Watt? value= enabled=true
+    role=AXMenuBarItem subrole= title=Watt desc= value= enabled=true
+    role=AXMenuBarItem subrole=AXMenuExtra title=— desc=Watt?, fully charged, No reading yet, menu extra. value= enabled=true
