@@ -1,5 +1,7 @@
 # G060 / J8.2 — Readings resume automatically (no alert)
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `da0dd0feb4c8b23667c90125bdadcd8dc1e45fc6425cccf76fe0f99d54ac14a7`).
+
 Implemented in the cumulative worktree on `bug/G060-j82-readings-resume`. No
 commit was created and prior worktree changes were preserved.
 
@@ -47,3 +49,5 @@ pre-existing `SwiftUIMacros.StateMacro` component-gallery plugin failure. With
 Xcode selected via `DEVELOPER_DIR`, the full package suite passed (555 tests,
 5 skipped). Native Xcode verification and the host capture gate are recorded
 in [`verification.json`](verification.json).
+
+Fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`; the isolated launch remained in its no-reading status before termination, so the recovery transition was not claimed. Host compositor placement keeps visual acceptance open.
