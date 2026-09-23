@@ -1,5 +1,7 @@
 # G065 / J10.1 — Right-click → Check for Updates…
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `8357a137d6beec57fa659f0b008a311c585d7b8b09ae868eee39295266fa9723`).
+
 Native menu admission/routing is implemented. **Story acceptance remains blocked:**
 there is no configured production UpdateService (endpoint, trust and install driver).
 The default native item is therefore disabled, not falsely usable. J10.2 presentation
@@ -116,3 +118,5 @@ launched process. Fresh capture directory required to avoid stale evidence.
   No product/source/test changes, commit, branch change, or worktree creation in this pass.
   Production updater, J10.2 presentation, and visual acceptance remain blocked;
   this green regression verification is not a completed Ultragoal story claim.
+
+Fresh evidence confirms the native status item/menu semantics on the running Desktop app; the local build remains fail-closed because no production UpdateService is configured, so no enabled-hover visual pass is claimed.
