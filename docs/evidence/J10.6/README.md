@@ -2,6 +2,8 @@
 
 Evidence completed in the existing worktree on `bug/G070-j106-up-to-date`. This update adds documentation only; no source changes, builds or commit.
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `7171d3276645906a92685db8f2871c18d351c74149bdf14c94db61f198561877`).
+
 ## Source and implementation
 Figma frame **34:5822**, native alert **34:5976**, title **34:5976;152:9962**, description **34:5976;152:9963**, and button **34:6002**. Retrieved responses are retained in `figma-*.json`; `reference.png` and `reference.sha256` record the 1000×720 reference.
 
@@ -26,3 +28,5 @@ Five skips are four existing J6.2–J6.5 AX-label checks and the opt-in P01 phys
 `capture/window.json` is the exact native capture record and is embedded unchanged as data in both JSON reports. It records `J10.6/base`, PID **93034**, timestamp **2026-09-22T20:23:43Z**, window **14519**, and bounds **260×202 points at (770,255)**. `capture/native-window.png` contains the captured window; `capture/process-cleanup.log` confirms that exact PID was terminated and reaped.
 
 Screen Recording was preauthorized; Accessibility was not. AX interaction/comparison remains blocked by **Accessibility TCC**. `visual-review.json` records **score: null**, **pixel_diff: null**, and **visualPass: false**. No numerical comparison or visual acceptance is claimed. No new image inspection was performed in this documentation-only update.
+
+Fresh live AX evidence confirms the native up-to-date alert title, version copy and OK action; the visual comparison gate remains open.

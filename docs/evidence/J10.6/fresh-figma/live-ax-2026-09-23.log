@@ -1,0 +1,14 @@
+binary=/tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+launch=--watt-fixture J10.6/base
+launcher_pid=86478
+sandbox_extension_issue_file_to_process failed for /tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app: 1 (Operation not permitted)
+--- axprobe ---
+true
+--- native up-to-date alert semantics ---
+actual_pid=86478
+  role=AXWindow subrole=AXDialog title= desc=alert value= enabled=
+    role=AXStaticText subrole= title= desc= value=You’re up to date enabled=true
+    role=AXStaticText subrole= title= desc= value=1.0 is the latest. enabled=true
+    role=AXButton subrole= title=OK desc= value= enabled=true
+--- cleanup ---
+fixture_process=absent
