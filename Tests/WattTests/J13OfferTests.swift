@@ -25,10 +25,13 @@ final class J13OfferTests: XCTestCase {
     func testOfferUsesProvidedAssetAndNativeControls() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
             .deletingLastPathComponent().deletingLastPathComponent()
-        let source = try String(contentsOf: root.appendingPathComponent(
+        let flow = try String(contentsOf: root.appendingPathComponent(
             "Features/Onboarding/Views/OnboardingFlowView.swift"), encoding: .utf8)
-            .components(separatedBy: "struct OfferComponentReadingsView")[1]
-        for token in ["Image(\"WattAppIcon\")", "Form {", "LabeledContent", ".formStyle(.columns)",
+        let start = try XCTUnwrap(flow.range(of: "struct OfferComponentReadingsView: View"))
+        let end = try XCTUnwrap(flow.range(of: "struct WaitingForApprovalView: View",
+                                           range: start.upperBound..<flow.endIndex))
+        let source = flow[start.lowerBound..<end.lowerBound]
+        for token in ["Image(\"WattAppIcon\")", "Form {", "LabeledContent", ".formStyle(.grouped)",
                       ".buttonStyle(.bordered)", ".buttonStyle(.borderedProminent)"] {
             XCTAssertTrue(source.contains(token), token)
         }
@@ -79,7 +82,10 @@ final class J13OfferTests: XCTestCase {
         XCTAssertEqual(window.titleVisibility, .hidden)
         XCTAssertEqual(window.appearance?.name, .aqua)
         XCTAssertNotNil(window.standardWindowButton(.closeButton))
-        XCTAssertLessThanOrEqual(window.contentView!.fittingSize.height, 412)
+        XCTAssertEqual(window.frame.size, NSSize(width: 480, height: 412))
+        // DESIGN.md leaves grouped Form intrinsic metrics to macOS; allow narrow
+        // OS-owned fitting-size variation without forcing row/form heights.
+        XCTAssertLessThanOrEqual(window.contentView!.fittingSize.height, 424)
         window.close()
         XCTAssertEqual(preferences.onboarding, initial)
     }

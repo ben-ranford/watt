@@ -13,7 +13,17 @@ final class NativeStylingTests: XCTestCase {
                           ".padding(.bottom, -", "height: 296", "height: 332"] {
             XCTAssertFalse(flow.contains(forbidden), forbidden)
         }
-        XCTAssertEqual(flow.components(separatedBy: ".formStyle(.columns)").count - 1, 3)
+        for (view, nextView, style) in [
+            ("OfferComponentReadingsView", "WaitingForApprovalView", "grouped"),
+            ("AllSetView", "ComponentPreviewView", "columns"),
+            ("ComponentPreviewView", "CoachMarkView", "columns")
+        ] {
+            let start = try XCTUnwrap(flow.range(of: "struct \(view): View"))
+            let end = try XCTUnwrap(flow.range(of: "struct \(nextView): View",
+                                               range: start.upperBound..<flow.endIndex))
+            let source = flow[start.lowerBound..<end.lowerBound]
+            XCTAssertTrue(source.contains(".formStyle(.\(style))"), view)
+        }
         let typography = try String(contentsOf: root.appendingPathComponent("DesignSystem/Theme/WattTypography.swift"))
         XCTAssertFalse(typography.contains("Font.system(size:"))
         XCTAssertEqual(WattTypography.title, Font.title2.weight(.bold))

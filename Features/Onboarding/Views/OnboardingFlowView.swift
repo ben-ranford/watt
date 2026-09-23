@@ -333,7 +333,7 @@ struct OfferComponentReadingsView: View {
                     LabeledContent(fact.label, value: fact.value)
                 }
             }
-            .formStyle(.columns)
+            .formStyle(.grouped)
             .accessibilityIdentifier("onboarding.helper.facts")
             HStack {
                 Spacer()
