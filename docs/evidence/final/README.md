@@ -120,3 +120,21 @@ For the historical prior pass, `scope-preservation.json` verifies all **2,882 ba
 **Do not `git add .`:** the historical prior pass recorded unignored `build/` containing 77,431 files / 8,237,063,309 bytes. Ignored `.omx` F00 references require a separate portable handoff. Final-completion readiness is false; preserving partial work is a different claim.
 
 Historical prior-pass index: `verification.json` (unchanged). Current follow-up index: [current-followup.json](current-followup/current-followup.json). Details: `suite-summary.json`, `target-membership.json`, `supersession-review.json`, `evidence-audit-detail.json`, `resolved-findings.json`, and `diagnostics-summary.json`. Historical `package-build.*`, `registry-probe-build.*`, `native-tests.*`, and `native-process-cleanup.json` were not rerun and must not be read as fresh evidence. No current visual/accessibility scores were assigned.
+
+## Fresh current-main verification — 2026-09-24
+
+After the native live telemetry/status-item fixes and compositor evidence refresh,
+current `main` at `a8e97c9` was freshly verified with the Xcode toolchain:
+
+| Check | Result |
+|---|---|
+| Full Swift package tests | **713 executed, 5 skipped, 0 failures** |
+| Release native app build | **PASS** |
+| Release native app analyze | **PASS** |
+| Running status-item AX probe | **PASS** — native `AXMenuBarItem`, live `17.2 W` sample |
+
+The reproducible commands and raw logs are retained under
+[`current-2026-09-24/`](current-2026-09-24/). The running app remains a native
+AppKit status item backed by live `SystemPowerIn`/`SystemLoad` telemetry. This
+fresh verification still does not claim closure for the explicit compositor
+visual, TCC/VoiceOver, hardware, or production-effect gates.
