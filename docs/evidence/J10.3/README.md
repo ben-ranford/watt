@@ -1,5 +1,7 @@
 # J10.3 — Update available (G067)
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `b254adecabe4525bfc656ae429fa4b201e3646f64c3b8bcde9fd814b957b4f80`).
+
 Exact Figma file `9DKDgUfEqidZdZQEVlQgLS`, frame `34:4695`, window `34:4849`.
 Fresh MCP context, metadata, screenshot response and both retrieved/supplied PNGs
 are retained with SHA256 hashes. The PNGs are identical. Rendered PNG headings
@@ -45,3 +47,5 @@ interaction, clipping proof, pixel diff or visual score. `visualPass` is false;
 Cumulative edits were preserved in the existing worktree. The existing branch was
 renamed from `bug/G066-j102-checking` to `bug/G067-j103-update-available` to follow the
 required issue naming convention; no new worktree, branch fork or commit was made.
+
+Fresh live AX evidence confirms the native update-available window, grouped rows, checkbox and actions; production updater/install effects and visual comparison remain explicitly unclaimed.
