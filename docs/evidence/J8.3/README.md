@@ -1,5 +1,7 @@
 # J8.3 — Opening Watt? again from Finder or Spotlight shows Settings
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `95284e826372536b4105a03e4749ebf28412329359c01fe9168ced544a837242`).
+
 ## Figma evidence
 
 - File: `9DKDgUfEqidZdZQEVlQgLS`
@@ -40,3 +42,5 @@ and asks the system compositor to capture the real window. It records
 compositor enumeration is unavailable. It does not synthesize a screenshot or
 claim a visual score on a failed gate. The launched process is terminated and
 reaped by the capture script.
+
+Fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`; reopen/settings evidence remains bounded by the host compositor/AX limitation, so visual acceptance is not claimed.
