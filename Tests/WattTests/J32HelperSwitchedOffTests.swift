@@ -131,7 +131,8 @@ final class J32HelperSwitchedOffTests: XCTestCase {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
             .deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
-        XCTAssertTrue(source.contains("_powerStore = StateObject(wrappedValue: PowerReadingStore(currentReading: .unavailable,"))
+        XCTAssertTrue(source.contains("let appPowerStore = PowerReadingStore(currentReading: .unavailable,"))
+        XCTAssertTrue(source.contains("_powerStore = StateObject(wrappedValue: appPowerStore)"))
         XCTAssertTrue(source.contains("telemetry: SystemPowerSourceTelemetryService()"))
         XCTAssertFalse(source.contains("_powerStore = StateObject(wrappedValue: PowerReadingStore.preview)"))
     }
