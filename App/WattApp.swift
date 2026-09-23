@@ -30,7 +30,7 @@ struct WattApp: App {
             let appRouter = AppRouter()
             appRouter.onUninstalled = { NSApplication.shared.terminate(nil) }
             _router = StateObject(wrappedValue: appRouter)
-            _powerStore = StateObject(wrappedValue: (J121FixtureLaunch.requested || J122FixtureLaunch.requested || J113FixtureLaunch.requested)
+            let fixturePowerStore = (J121FixtureLaunch.requested || J122FixtureLaunch.requested || J113FixtureLaunch.requested)
                 ? J121FixtureLaunch.makeStore()
                 : J108FixtureLaunch.requested
                 ? J61FixtureLaunch.makeStore()
@@ -90,7 +90,8 @@ struct WattApp: App {
                 ? C042FixtureLaunch.makeStore()
                 : C02FixtureLaunch.requested
                     ? PowerReadingStore(currentReading: .sampleOnBattery, clock: FakeWattClock(now: PowerReading.sampleOnBattery.timestamp))
-                    : PowerReadingStore.preview)
+                    : PowerReadingStore.preview
+            _powerStore = StateObject(wrappedValue: fixturePowerStore)
             let fixturePreferences = (J121FixtureLaunch.requested || J122FixtureLaunch.requested || J113FixtureLaunch.requested)
                 ? J121FixtureLaunch.makePreferences()
                 : J108FixtureLaunch.requested
@@ -183,6 +184,20 @@ struct WattApp: App {
                 C03FixtureLaunch.preferences = fixturePreferences
             }
             _preferences = StateObject(wrappedValue: fixturePreferences)
+            if J18FixtureLaunch.requested {
+                // MenuBarExtra is intentionally not relied on as the launch
+                // trigger for this status-item fixture. Some macOS hosts do
+                // not materialise its embedded bridge until the item is
+                // clicked, which makes a first-open capture impossible. The
+                // fixture still uses the same native NSStatusItem and
+                // NSPopover implementation as production; this only starts it
+                // from the app lifecycle for deterministic verification.
+                DispatchQueue.main.async {
+                    J18FixtureLaunch.launch(preferences: fixturePreferences,
+                                            store: fixturePowerStore,
+                                            router: appRouter)
+                }
+            }
             if J112FixtureLaunch.requested {
                 // The MenuBarExtra label is not guaranteed to materialise its
                 // embedded bridge before Settings is opened. Prepare the
@@ -1453,6 +1468,10 @@ private struct StatusItemAdapter: NSViewRepresentable {
             }
             if J52FixtureLaunch.requested || J18FixtureLaunch.requested || J22FixtureLaunch.requested {
                 NSApplication.shared.appearance = NSAppearance(named: .aqua)
+                if J18FixtureLaunch.requested {
+                    J18FixtureLaunch.launch(preferences: preferences, store: powerStore, router: router)
+                    return
+                }
                 router.showStatusPanel()
                 return
             }
@@ -2474,6 +2493,10 @@ enum J17FixtureLaunch {
 #if DEBUG
 @MainActor
 enum J18FixtureLaunch {
+    private static var statusItem: NSStatusItem?
+    private static var selection: C0410PanelSelection?
+    private static var anchorWindow: NSWindow?
+
     static var requested: Bool {
         #if SWIFT_PACKAGE
         false
@@ -2483,6 +2506,49 @@ enum J18FixtureLaunch {
         }
         return false
         #endif
+    }
+
+    static func launch(preferences: PreferencesStore, store: PowerReadingStore, router: AppRouter) {
+        guard statusItem == nil else { return }
+        let item = NSStatusBar.system.statusItem(withLength: 96)
+        statusItem = item
+        guard let button = item.button else { return }
+        let label = NSHostingView(rootView: MenuBarStatusLabel(reading: store.statusReading, preferences: preferences))
+        label.frame = button.bounds
+        label.autoresizingMask = [.width, .height]
+        button.addSubview(label)
+        MenuBarStatusAccessibility.apply(to: button,
+                                         label: MenuBarStatusLabel(reading: store.statusReading, preferences: preferences))
+        let panel = C0410PanelSelection(button: button, router: router, preferences: preferences, store: store)
+        selection = panel
+        router.present = { destination in
+            if destination == .statusPanel { panel.togglePanel() }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // Some verification hosts expose the status-item window but do
+            // not expose the attached popover to the compositor. Anchor the
+            // same real NSPopover to a temporary native AppKit view for this
+            // DEBUG-only fixture so the panel itself can be captured without
+            // replacing its native surface with custom chrome.
+            let host = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 320, height: 40),
+                               styleMask: .borderless, backing: .buffered, defer: false)
+            NSApp.setActivationPolicy(.regular)
+            host.isReleasedWhenClosed = false
+            host.isOpaque = false
+            host.backgroundColor = .clear
+            host.appearance = NSAppearance(named: .aqua)
+            let anchor = NSView(frame: NSRect(x: 296, y: 8, width: 24, height: 24))
+            host.contentView = anchor
+            if let screen = NSScreen.main?.visibleFrame {
+                host.setFrameOrigin(NSPoint(x: screen.maxX - host.frame.width - 32,
+                                             y: screen.maxY - host.frame.height - 32))
+            }
+            host.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            panel.popover.show(relativeTo: anchor.bounds, of: anchor, preferredEdge: .minY)
+            panel.applySelection(isPresented: true)
+            anchorWindow = host
+        }
     }
 }
 

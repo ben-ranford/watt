@@ -2450,3 +2450,24 @@ succeeds. App-owned visual composition is manually acceptable with no
 pixel-diff claim. Production status-item activation, live AX/VoiceOver and
 cross-process interaction remain explicit acceptance blockers.
 Evidence: docs/evidence/J1.7/.
+
+
+### G035 / J1.8 — First-open live panel (2026-09-24)
+
+Exact Figma MCP reinspection for file `9DKDgUfEqidZdZQEVlQgLS` confirms frame
+`28:2802`, Desktop Template `28:2803`, status anchor `28:2952`, selected status
+item `28:2949`, and native panel `29:9338`. The selected item reads `+42.1 W`.
+The native panel reads Charging / `+42.1 W` / `64% · full in about 38 min`; Power
+rows are Charger input `65.0 W` with `96 W USB-C charger`, System draw `22.9 W`,
+and Battery `+42.1 W`; Components are CPU `9.8 W`, GPU `4.1 W`, Display `5.2 W`,
+and Other `3.8 W`; actions are native Settings… and Quit Watt?.
+
+The implementation retains native SwiftUI `Form`/`Section`/`LabeledContent` and
+the production AppKit `NSStatusItem`/`NSPopover` bridge. The DEBUG fixture now
+starts that same native status item directly from the app lifecycle and anchors the
+real popover to a temporary native AppKit view so this host can expose the panel to
+the compositor. It does not paint replacement chrome or alter the production path.
+The captured native panel is materially aligned with the Figma hierarchy and copy;
+no calibrated pixel score is claimed because the reference is a full desktop
+composition and AppKit owns material/rasterization. Production first-open
+interaction and AX/VoiceOver remain explicit blockers. Evidence: `docs/evidence/J1.8/`.
