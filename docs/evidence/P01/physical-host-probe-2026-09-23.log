@@ -1,0 +1,1388 @@
+command: xcodebuild build-for-testing + xcrun xctest
+date: 2026-09-23T06:41:06Z
+developer_dir: /Applications/Xcode.app/Contents/Developer
+derived_data: /tmp/WattP01ScriptDerived
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj -scheme Watt -configuration Debug -destination platform=macOS -derivedDataPath /tmp/WattP01ScriptDerived build-for-testing -parallel-testing-enabled NO
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'WattUITests' in project 'Watt'
+        ➜ Explicit dependency on target 'Watt' in project 'Watt'
+    Target 'WattTests' in project 'Watt'
+        ➜ Explicit dependency on target 'Watt' in project 'Watt'
+    Target 'Watt' in project 'Watt' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 9cfe060cd4e124b67e3f86bfa9eb7572
+Build description path: /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/XCBuildData/9cfe060cd4e124b67e3f86bfa9eb7572.xcbuilddata
+CreateBuildDirectory /tmp/WattP01ScriptDerived/CompilationCache.noindex
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/CompilationCache.noindex
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/ModuleCache.noindex
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/ModuleCache.noindex
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/Build/Products
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/Build/Products
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/Build/Products/Debug
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/Build/Products/Debug
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/PrecompiledHeaders
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/PrecompiledHeaders
+
+CreateBuildDirectory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    builtin-create-build-directory /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.hmap (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyStaticMetadataFileList (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyMetadataFileList (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/empty-WattUITests.plist (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/empty-WattUITests.plist
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-non-framework-target-headers.hmap (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/ProductTypeInfoPlistAdditions.plist (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/ProductTypeInfoPlistAdditions.plist
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftConstValuesFileList (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.LinkFileList (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.LinkFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/Entitlements.plist (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/Entitlements.plist
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.hmap (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/empty-WattTests.plist (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/empty-WattTests.plist
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyStaticMetadataFileList (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyMetadataFileList (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-non-framework-target-headers.hmap (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftConstValuesFileList (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.LinkFileList (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.LinkFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Entitlements.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    write-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Entitlements.plist
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Resources (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Resources
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app
+
+ProcessProductPackaging "" /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+    Entitlements:
+    
+    {
+    "com.apple.security.get-task-allow" = 1;
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent
+
+ProcessProductPackagingDER /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /usr/bin/derq query -f xml -i /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent -o /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der --raw
+
+Ld /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/WattP01ScriptDerived/Build/Products/Debug -F/tmp/WattP01ScriptDerived/Build/Products/Debug -install_name @rpath/Watt.debug.dylib -rdynamic -Xlinker -dependency_info -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat -Xlinker -no_adhoc_codesign -o /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+
+MkDir /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned
+
+MkDir /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned
+
+GenerateAssetSymbols /Users/benranford/Projects/watt-p01-live-accessibility-verification/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/benranford/Projects/watt-p01-live-accessibility-verification/Resources/Assets.xcassets --compile /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Resources --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies --output-partial-info-plist /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 13.0 --platform macosx --bundle-identifier dev.watt.verification --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/* com.apple.actool.compilation-results */
+/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.h
+/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift
+
+
+CompileAssetCatalogVariant thinned /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Resources /Users/benranford/Projects/watt-p01-live-accessibility-verification/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/benranford/Projects/watt-p01-live-accessibility-verification/Resources/Assets.xcassets --compile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned --output-partial-info-plist /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 13.0 --platform macosx
+/* com.apple.actool.compilation-results */
+/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned
+/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned/Assets.car
+
+
+LinkAssetCatalog /Users/benranford/Projects/watt-p01-live-accessibility-verification/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-linkAssetCatalog --thinned /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned --thinned-dependencies /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned --unthinned /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned --unthinned-dependencies /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_unthinned --output /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Resources --plist-output /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist
+note: Emplaced /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Resources/Assets.car (in target 'Watt' from project 'Watt')
+
+ProcessInfoPlistFile /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Info.plist /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-infoPlistUtility /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Info.plist
+
+SwiftDriver Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -F /tmp/WattP01ScriptDerived/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_float-9ZZ3PZGTYFGBQ870GDIT387H5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/ptrauth-AOCNC4JD6VIF9UVC4R1C8TLK0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/DeveloperToolsSupport-UU6H78I7J634BNXV3JBV3N5O.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_stdbool-855DQE738B2P7HVMFCXIX6N6I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/ptrcheck-35BDC0WVZTM7U086YLMKGD9MG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_stdarg-4BH8E0HQWIEE0GCWQ6U6IJ9PE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_stddef-5VS98O9G323OYI1FFPF53T4UW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-9BIS6P9M3MDPOB5DPDIF2K4HA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/SwiftShims-4M9N1J9DY5193Z4HSZO9AHK38.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_AvailabilityInternal-5QUTCSCLFWFGFYO7SNFEHMOV9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_DarwinFoundation1-BU6J0B2VDOAZ3MC7AZRDMID0I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_limits-CS6GSQ0724YLI4GEX3IP8DQHE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_DarwinFoundation2-10JCX70YH3YD17YWI1AAXJMYE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/sys_types-E2Q9KZ0CNEV41CJIL5W2407IV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_stdint-BQX0CP480F6A5N397JOIUNYM6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_tgmath-C2ZSSMNFIBKWPKQ5YJ0HNCYI3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/string_h-5V0IBG24OPK1QL90HUNEOXTE0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_stdatomic-7173YKKF6JXMSQ0O7199YUJI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/libDER-EH3UIF3Z9AVFBQWC7JLBQAPAR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_DarwinFoundation3-AM0B4V91HBKUFQDHQ5UB1WPVK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_intrinsics-A9WCDGHS3BFRYB9U72JZ7K4X3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/_Builtin_inttypes-CMUOC3WVQJ4ZX8OXS58R4VGU6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/Darwin-617LMT1U7DCZFMDQZKLDR5TEO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/simd-8OWBKJTU4JWW4UM98XHESOPS4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/MachO-AIC4VLN5XEZUTSX0C9TAVTFUL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/launch-DHP1PSZ9CDVTJOLZGVPGYULPE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/libkern-3UHW463UZGF4BQAM2Y4CG4FG2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CUPS-ARK4CWCQYHRW0E0W1QBU3EC5P.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/ObjectiveC-A38CTW2SB2XKWGYZEQTJTJKJH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/Spatial-L5KBU6HWIRJ6AQLLJM5V39N7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/os_object-8N3NFEEGGZC1E5NKFYQ6SBDTA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/os_workgroup-5O4E77Z5M8L1SXDF3BHQGO9JH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/Dispatch-847P5SSBMYSVSGKDIMF6J81GI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreFoundation-7GRQFHT124X9MOHNPP06JHZGZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/XPC-86PE6VB9AMST5O418Z8X6IGLR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/os-DL2LS65F01Y1RRFYINNAO7GJG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CFNetwork-B7IO9V9BINF7SNPUIZTGJ8VQV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreAudioTypes-CQK5ERUAV4YSRJ5A197MYMZUS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/Security-91ZF6HAFA5NJXPLTT2BZ8HDF8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/ColorSync-9ZL7QV81NB23BOVCSTBXEZGL7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/IOKit-8Y3O66BE0CH6L8UHFRZHHTANG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/DiskArbitration-EACCDP1KLVAS8R84R76L2KACD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreGraphics-6J7XUTVZPNL3QOLE70GB7SREA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreServices-7TSAESW2JIZHS8NLVDRMA76CZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/ImageIO-31MSLNBZATZQ5R6S94ZU88LEK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreText-3S5XJTZ5S2I5FUIF5G0EWJATZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/Foundation-6836FFCJ3IN9775ZH5NJWMB97.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/Accessibility-B24MI84TO3LU54TT9KCYWD9SS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/ServiceManagement-71KUTPQFHUW9PXXLSEUREU9GQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreTransferable-B2XYHOA4KQEW9H9HBVQI4IDFQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/LocalAuthentication-81EZ1TYLH5HAAORPJR0PF3HNI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreAudio-MKBUZZQBP5KTKEO8C4WQM0OS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/IOSurface-7CDDB4IIBMR4PRCZ6UPMO77EB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/DataDetection-9DVXWS00Q77FIW09SV91Z9ODG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreData-7GGVWLS7T22V29PV38NV4NI75.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/UserNotifications-891M4X5GFYMKGVQY0BSE1O9VS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/Symbols-5HLVQRVJVQ4E1G2Z428J8ACDT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/ApplicationServices-803FIYFWRLK1FT061XZVX7X0J.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-9KA3X2S7RMLKSUKWY6FW2US45.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/OSLog-7J7ZVPVKOXGWR4AD15Z8948CJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/OpenGL-3PSMY1QFT8VR5VOYHF10IMCCH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/Metal-9D2NKUHV5RIWZQGOEAET9WRZC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreVideo-5WRHWILCKERH3BC8JBMUEBAJG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/QuartzCore-ZCV2HJSG86C38NW8RYP1L5Y3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreMedia-CRW0L3YYMODFKTDJHF5IMRBE2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/CoreImage-2P9EKKU4IZHQYTCSBQXMT2AX7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/SwiftUICore-13S0FV9C6T9YGF5CFGX5DND61.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/AppKit-3MJ4J12NGRQ1LVL7OHH2XF79G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules/SwiftUI-8DKQEOX9P37Q8WI3TGFV73EF6.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Watt (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+
+SwiftCompile normal arm64 Compiling\ StatusItemContextMenu.swift,\ StatusPanelView.swift,\ OnboardingFlowView.swift,\ SettingsRootView.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/MenuBar/Views/StatusItemContextMenu.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/MenuBar/Views/StatusPanelView.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/Onboarding/Views/OnboardingFlowView.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/MenuBar/Views/StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile StatusItemContextMenu.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/MenuBar/Views/StatusPanelView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile StatusPanelView.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/Onboarding/Views/OnboardingFlowView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile OnboardingFlowView.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile SettingsRootView.swift
+
+/Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+187 | 
+188 |     static let title = "Pick one number for the menu bar"
+189 |     static let message = "Change it any time. Right-click Watt? or open Settings."
+    |                `- note: static property declared here
+190 | 
+191 |     enum Variant: Equatable {
+    :
+198 | 
+199 |         var message: String {
+200 |             self == .noBattery ? "No battery here, so it’s Draw or Components." : ChooseMenuReadingView.message
+    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+201 |         }
+202 |     }
+SwiftCompile normal arm64 Compiling\ WattApp.swift,\ WattActionButton.swift,\ WattFormRow.swift,\ WattWindowScaffold.swift,\ WattColors.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/WattApp.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/WattActionButton.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/WattFormRow.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/WattWindowScaffold.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Theme/WattColors.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/WattApp.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattApp.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/WattActionButton.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattActionButton.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/WattFormRow.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattFormRow.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattWindowScaffold.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Theme/WattColors.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattColors.swift
+
+SwiftCompile normal arm64 Compiling\ PowerReading.swift,\ WattPreferences.swift,\ PowerReadingStore.swift,\ GeneratedAssetSymbols.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Models/PowerReading.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Models/WattPreferences.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Services/PowerReadingStore.swift /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Models/PowerReading.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile PowerReading.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Models/WattPreferences.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattPreferences.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Services/PowerReadingStore.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile PowerReadingStore.swift
+
+SwiftCompile normal arm64 /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
+
+SwiftCompile normal arm64 Compiling\ LeftoverHelperPresentation.swift,\ J92FixtureLaunch.swift,\ J93FixtureLaunch.swift,\ J82FixtureLaunch.swift,\ J81FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/LeftoverHelperPresentation.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J92FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J93FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J82FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J81FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/LeftoverHelperPresentation.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile LeftoverHelperPresentation.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J92FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J92FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J93FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J93FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J82FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J82FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J81FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J81FixtureLaunch.swift
+
+SwiftCompile normal arm64 Compiling\ HelperUpdatePresentation.swift,\ SystemPowerSourceTelemetryService.swift,\ StoryFixtures.swift,\ StoryFixtureData.swift,\ FixtureLaunchSelection.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/HelperUpdatePresentation.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Services/SystemPowerSourceTelemetryService.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/Fixtures/StoryFixtures.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/Fixtures/StoryFixtureData.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/Fixtures/FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/HelperUpdatePresentation.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile HelperUpdatePresentation.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Services/SystemPowerSourceTelemetryService.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile SystemPowerSourceTelemetryService.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/Fixtures/StoryFixtures.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile StoryFixtures.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/Fixtures/StoryFixtureData.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile StoryFixtureData.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/Fixtures/FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile FixtureLaunchSelection.swift
+
+SwiftCompile normal arm64 Compiling\ J74FixtureLaunch.swift,\ J73FixtureLaunch.swift,\ ComponentSelectionMenu.swift,\ ScopedRemovalAdapter.swift,\ UpdateAdapter.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J74FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J73FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/ComponentSelectionMenu.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Services/ScopedRemovalAdapter.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Services/UpdateAdapter.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J74FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J74FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J73FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J73FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/ComponentSelectionMenu.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile ComponentSelectionMenu.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Services/ScopedRemovalAdapter.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile ScopedRemovalAdapter.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Services/UpdateAdapter.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile UpdateAdapter.swift
+
+SwiftCompile normal arm64 Compiling\ J124FixtureLaunch.swift,\ J125FixtureLaunch.swift,\ J111FixtureLaunch.swift,\ J112FixtureLaunch.swift,\ J113FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J124FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J125FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J111FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J112FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J113FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J124FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J124FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J125FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J125FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J111FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J111FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J112FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J112FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J113FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J113FixtureLaunch.swift
+
+SwiftCompile normal arm64 Compiling\ WattSpacing.swift,\ WattTypography.swift,\ MenuBarStatusLabel.swift,\ MenuBarRootView.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Theme/WattSpacing.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Theme/WattTypography.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/MenuBar/Components/MenuBarStatusLabel.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Theme/WattSpacing.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattSpacing.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Theme/WattTypography.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattTypography.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/MenuBar/Components/MenuBarStatusLabel.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile MenuBarStatusLabel.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile MenuBarRootView.swift
+
+SwiftCompile normal arm64 Compiling\ WattComponentGallery.swift,\ ReadingPicker.swift,\ AppDestination.swift,\ AppRouter.swift,\ RootSceneView.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Verification/WattComponentGallery.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/ReadingPicker.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/AppDestination.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/AppRouter.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Verification/WattComponentGallery.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile WattComponentGallery.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/DesignSystem/Components/ReadingPicker.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile ReadingPicker.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/AppDestination.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile AppDestination.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/AppRouter.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile AppRouter.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile RootSceneView.swift
+
+SwiftCompile normal arm64 Compiling\ J83FixtureLaunch.swift,\ J91FixtureLaunch.swift,\ J121FixtureLaunch.swift,\ J122FixtureLaunch.swift,\ J123FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J83FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J91FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J121FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J122FixtureLaunch.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J123FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J83FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J83FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J91FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J91FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J121FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J121FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J122FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J122FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/App/J123FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J123FixtureLaunch.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for Watt (in target 'Watt' from project 'Watt')
+
+SwiftDriver\ Compilation\ Requirements Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -F /tmp/WattP01ScriptDerived/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling J124FixtureLaunch.swift, J125FixtureLaunch.swift, J111FixtureLaunch.swift, J112FixtureLaunch.swift, J113FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J83FixtureLaunch.swift, J91FixtureLaunch.swift, J121FixtureLaunch.swift, J122FixtureLaunch.swift, J123FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling LeftoverHelperPresentation.swift, J92FixtureLaunch.swift, J93FixtureLaunch.swift, J82FixtureLaunch.swift, J81FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftMergeGeneratedHeaders /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Watt-Swift.h /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-swiftHeaderTool -arch arm64 /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -o /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Watt-Swift.h
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+ProcessProductPackaging "" /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+    Entitlements:
+    
+    {
+    "com.apple.application-identifier" = "dev.watt.verification.WattUITests.xctrunner";
+    "com.apple.security.app-sandbox" = 1;
+    "com.apple.security.get-task-allow" = 1;
+    "com.apple.security.network.client" = 1;
+    "com.apple.security.temporary-exception.files.absolute-path.read-only" =     (
+        "/"
+    );
+    "com.apple.security.temporary-exception.mach-lookup.global-name" =     (
+        "com.apple.testmanagerd",
+        "com.apple.dt.testmanagerd.runner",
+        "com.apple.coresymbolicationd",
+        "com.apple.coredevice.version",
+        "com.apple.coredevice.service",
+        "com.apple.remoted"
+    );
+    "com.apple.security.temporary-exception.mach-lookup.local-name" =     (
+        "com.apple.axserver"
+    );
+    "com.apple.security.temporary-exception.sbpl" =     (
+        "(allow hid-control)",
+        "(allow signal)"
+    );
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent
+
+ProcessProductPackagingDER /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent.der (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /usr/bin/derq query -f xml -i /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent -o /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent.der --raw
+
+SwiftDriver WattTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattTests -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/WattP01ScriptDerived/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver WattUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattUITests -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/WattP01ScriptDerived/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattSpacing.swift, WattTypography.swift, MenuBarStatusLabel.swift, MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling HelperUpdatePresentation.swift, SystemPowerSourceTelemetryService.swift, StoryFixtures.swift, StoryFixtureData.swift, FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattApp.swift, WattActionButton.swift, WattFormRow.swift, WattWindowScaffold.swift, WattColors.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PowerReading.swift, WattPreferences.swift, PowerReadingStore.swift, GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattComponentGallery.swift, ReadingPicker.swift, AppDestination.swift, AppRouter.swift, RootSceneView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling StatusItemContextMenu.swift, StatusPanelView.swift, OnboardingFlowView.swift, SettingsRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J74FixtureLaunch.swift, J73FixtureLaunch.swift, ComponentSelectionMenu.swift, ScopedRemovalAdapter.swift, UpdateAdapter.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriver\ Compilation Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -F /tmp/WattP01ScriptDerived/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+Ld /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/tmp/WattP01ScriptDerived/Build/Products/Debug -F/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/tmp/WattP01ScriptDerived/Build/Products/Debug -filelist /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList -install_name @rpath/Watt.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/../Frameworks -Xlinker -object_path_lto -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCUIAutomation-D57ORHM59Z95G1AND7WEGCJN7.pcm
+
+SwiftExplicitDependencyCompileModuleFromInterface arm64 /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCUIAutomation-358U8KULYMD9Q.swiftmodule
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCTest-BS894ZRET4MRH0EDCS1SLOXIU.pcm
+
+ConstructStubExecutorLinkFileList /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    construct-stub-executor-link-file-list /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'Watt' from project 'Watt')
+
+Ld /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/WattP01ScriptDerived/Build/Products/Debug -F/tmp/WattP01ScriptDerived/Build/Products/Debug -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/../Frameworks -rdynamic -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib -Xlinker -no_adhoc_codesign -o /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+
+CopySwiftLibs /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Frameworks --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Library/SystemExtensions --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name Watt --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk --xcode-version 27A266a --platform-family macOS --deployment-target 13.0 --bundle-identifier dev.watt.verification --output /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt --dependency-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat --stringsdata-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList --metadata-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList --static-metadata-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-09-23 16:41:20.186 appintentsmetadataprocessor[8775:8576989] Starting appintentsmetadataprocessor export
+2026-09-23 16:41:20.188 appintentsmetadataprocessor[8775:8576989] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+ProcessInfoPlistFile /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Info.plist /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/empty-WattTests.plist (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-infoPlistUtility /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/empty-WattTests.plist -producttype com.apple.product-type.bundle.unit-test -expandbuildsettings -platform macosx -o /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Info.plist
+
+SwiftExplicitDependencyCompileModuleFromInterface arm64 /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCTest-3J6QVTR8IKZQ1.swiftmodule
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ WattUITests (in target 'WattUITests' from project 'Watt')
+
+SwiftCompile normal arm64 (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+
+SwiftCompile normal arm64 Compiling\ NativeHostTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattUITests/NativeHostTests.swift (in target 'WattUITests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattUITests/NativeHostTests.swift (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile NativeHostTests.swift
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ WattTests (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+
+SwiftCompile normal arm64 Compiling\ F05StoryRenderTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattUITests/F05StoryRenderTests.swift (in target 'WattUITests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattUITests/F05StoryRenderTests.swift (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile F05StoryRenderTests.swift
+
+SwiftCompile normal arm64 Compiling\ P05RemovalTests.swift,\ P04UpdaterTests.swift,\ P01TelemetryTests.swift,\ F05FixtureTests.swift,\ AppRouterTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/P05RemovalTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/P04UpdaterTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/P01TelemetryTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/F05FixtureTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/AppRouterTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/P05RemovalTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile P05RemovalTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/P04UpdaterTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile P04UpdaterTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/P01TelemetryTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile P01TelemetryTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/F05FixtureTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile F05FixtureTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/AppRouterTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile AppRouterTests.swift
+
+SwiftCompile normal arm64 Compiling\ StatusPanelVoiceOverSummaryTests.swift,\ UpdateOfferInstallTests.swift,\ J13OfferTests.swift,\ J14ApprovalTests.swift,\ J15PreviewTests.swift,\ J108HelperUpdateTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/StatusPanelVoiceOverSummaryTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/UpdateOfferInstallTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J13OfferTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J14ApprovalTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J15PreviewTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J108HelperUpdateTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/StatusPanelVoiceOverSummaryTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile StatusPanelVoiceOverSummaryTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/UpdateOfferInstallTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile UpdateOfferInstallTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J13OfferTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J13OfferTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J14ApprovalTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J14ApprovalTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J15PreviewTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J15PreviewTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J108HelperUpdateTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J108HelperUpdateTests.swift
+
+SwiftCompile normal arm64 Compiling\ J107CouldntCheckTests.swift,\ J106UpToDateTests.swift,\ J105ReadyTests.swift,\ J83OpeningSettingsTests.swift,\ J91RemoveHelperTests.swift,\ J121SettingsUninstallTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J107CouldntCheckTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J106UpToDateTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J105ReadyTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J83OpeningSettingsTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J91RemoveHelperTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J121SettingsUninstallTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J107CouldntCheckTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J107CouldntCheckTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J106UpToDateTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J106UpToDateTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J105ReadyTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J105ReadyTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J83OpeningSettingsTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J83OpeningSettingsTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J91RemoveHelperTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J91RemoveHelperTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J121SettingsUninstallTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J121SettingsUninstallTests.swift
+
+SwiftCompile normal arm64 Compiling\ J113DestructiveKeyboardTests.swift,\ J92HelperRemovedTests.swift,\ J93AfterQuitTests.swift,\ J101CheckForUpdatesTests.swift,\ J102CheckingTests.swift,\ J103AvailableTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J113DestructiveKeyboardTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J92HelperRemovedTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J93AfterQuitTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J101CheckForUpdatesTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J102CheckingTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J103AvailableTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J113DestructiveKeyboardTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J113DestructiveKeyboardTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J92HelperRemovedTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J92HelperRemovedTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J93AfterQuitTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J93AfterQuitTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J101CheckForUpdatesTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J101CheckForUpdatesTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J102CheckingTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J102CheckingTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J103AvailableTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J103AvailableTests.swift
+
+SwiftCompile normal arm64 Compiling\ J32HelperSwitchedOffTests.swift,\ J33HelperUpdateTests.swift,\ J31ApprovalNotGivenTests.swift,\ J25SettingsConnectedTests.swift,\ J24SettingsApprovalTests.swift,\ J23SettingsTurnOnTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J32HelperSwitchedOffTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J33HelperUpdateTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J31ApprovalNotGivenTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J25SettingsConnectedTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J24SettingsApprovalTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J23SettingsTurnOnTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J32HelperSwitchedOffTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J32HelperSwitchedOffTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J33HelperUpdateTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J33HelperUpdateTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J31ApprovalNotGivenTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J31ApprovalNotGivenTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J25SettingsConnectedTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J25SettingsConnectedTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J24SettingsApprovalTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J24SettingsApprovalTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J23SettingsTurnOnTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J23SettingsTurnOnTests.swift
+
+SwiftCompile normal arm64 Compiling\ J104DownloadingTests.swift,\ J82ReadingsResumeTests.swift,\ J81NoReadingTests.swift,\ J74CrowdedMenuBarTests.swift,\ J73ChooseComponentsTests.swift,\ J72PerComponentMenuBarTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J104DownloadingTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J82ReadingsResumeTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J81NoReadingTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J74CrowdedMenuBarTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J73ChooseComponentsTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J72PerComponentMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J104DownloadingTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J104DownloadingTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J82ReadingsResumeTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J82ReadingsResumeTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J81NoReadingTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J81NoReadingTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J74CrowdedMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J74CrowdedMenuBarTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J73ChooseComponentsTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J73ChooseComponentsTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J72PerComponentMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J72PerComponentMenuBarTests.swift
+
+SwiftCompile normal arm64 Compiling\ J53FinishSetupTests.swift,\ J52FinishSetupTests.swift,\ J51WelcomeClosedTests.swift,\ J43PanelSystemDrawTests.swift,\ J42ReadingBatteryUnavailableTests.swift,\ J41WelcomeDesktopTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J53FinishSetupTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J52FinishSetupTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J51WelcomeClosedTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J43PanelSystemDrawTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J42ReadingBatteryUnavailableTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J41WelcomeDesktopTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J53FinishSetupTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J53FinishSetupTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J52FinishSetupTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J52FinishSetupTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J51WelcomeClosedTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J51WelcomeClosedTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J43PanelSystemDrawTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J43PanelSystemDrawTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J42ReadingBatteryUnavailableTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J42ReadingBatteryUnavailableTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J41WelcomeDesktopTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J41WelcomeDesktopTests.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for WattUITests (in target 'WattUITests' from project 'Watt')
+
+SwiftDriver\ Compilation\ Requirements WattUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattUITests -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/WattP01ScriptDerived/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling NativeHostTests.swift (in target 'WattUITests' from project 'Watt')
+
+SwiftCompile normal arm64 Compiling\ J122ConfirmUninstallTests.swift,\ J123UninstalledTests.swift,\ J124LeftoverHelperTests.swift,\ J125ReconnectedTests.swift,\ J111VoiceOverOrderTests.swift,\ J112SettingsTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J122ConfirmUninstallTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J123UninstalledTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J124LeftoverHelperTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J125ReconnectedTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J111VoiceOverOrderTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J112SettingsTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J122ConfirmUninstallTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J122ConfirmUninstallTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J123UninstalledTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J123UninstalledTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J124LeftoverHelperTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J124LeftoverHelperTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J125ReconnectedTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J125ReconnectedTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J111VoiceOverOrderTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J111VoiceOverOrderTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J112SettingsTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J112SettingsTests.swift
+
+SwiftMergeGeneratedHeaders /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/WattUITests-Swift.h /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-swiftHeaderTool -arch arm64 /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h -o /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/WattUITests-Swift.h
+
+SwiftDriverJobDiscovery normal arm64 Compiling F05StoryRenderTests.swift (in target 'WattUITests' from project 'Watt')
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.swiftmodule /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.swiftmodule
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.swiftdoc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftdoc (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftdoc /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.swiftdoc
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.abi.json /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.abi.json (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.abi.json /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftsourceinfo (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftsourceinfo /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+SwiftDriver\ Compilation WattUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattUITests -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/WattP01ScriptDerived/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+SwiftCompile normal arm64 Compiling\ J71ShowInMenuBarTests.swift,\ J65OnBatteryTests.swift,\ J64InsufficientChargerTests.swift,\ J63FullOnAdapterTests.swift,\ J62ChargingHoldTests.swift,\ J61ChargingPanelTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J71ShowInMenuBarTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J65OnBatteryTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J64InsufficientChargerTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J63FullOnAdapterTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J62ChargingHoldTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J61ChargingPanelTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J71ShowInMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J71ShowInMenuBarTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J65OnBatteryTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J65OnBatteryTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J64InsufficientChargerTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J64InsufficientChargerTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J63FullOnAdapterTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J63FullOnAdapterTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J62ChargingHoldTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J62ChargingHoldTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J61ChargingPanelTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J61ChargingPanelTests.swift
+
+SwiftCompile normal arm64 Compiling\ J21ComponentsUnavailableTests.swift,\ J18LivePanelTests.swift,\ J17CoachMarkTests.swift,\ J16AllSetTests.swift,\ NativeStylingTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J21ComponentsUnavailableTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J18LivePanelTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J17CoachMarkTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J16AllSetTests.swift /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/NativeStylingTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J21ComponentsUnavailableTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J21ComponentsUnavailableTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J18LivePanelTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J18LivePanelTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J17CoachMarkTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J17CoachMarkTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/J16AllSetTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile J16AllSetTests.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-p01-live-accessibility-verification/Tests/WattTests/NativeStylingTests.swift (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-SwiftPerFileCompile NativeStylingTests.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for WattTests (in target 'WattTests' from project 'Watt')
+
+SwiftDriver\ Compilation\ Requirements WattTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattTests -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/WattP01ScriptDerived/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling StatusPanelVoiceOverSummaryTests.swift, UpdateOfferInstallTests.swift, J13OfferTests.swift, J14ApprovalTests.swift, J15PreviewTests.swift, J108HelperUpdateTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftMergeGeneratedHeaders /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/WattTests-Swift.h /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-swiftHeaderTool -arch arm64 /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h -o /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/WattTests-Swift.h
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftmodule /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule /tmp/WattP01ScriptDerived/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftmodule
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftdoc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftdoc (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftdoc /tmp/WattP01ScriptDerived/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftdoc
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.abi.json /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.abi.json (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.abi.json /tmp/WattP01ScriptDerived/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattTests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftsourceinfo (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftsourceinfo /tmp/WattP01ScriptDerived/Build/Products/Debug/WattTests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling J107CouldntCheckTests.swift, J106UpToDateTests.swift, J105ReadyTests.swift, J83OpeningSettingsTests.swift, J91RemoveHelperTests.swift, J121SettingsUninstallTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J113DestructiveKeyboardTests.swift, J92HelperRemovedTests.swift, J93AfterQuitTests.swift, J101CheckForUpdatesTests.swift, J102CheckingTests.swift, J103AvailableTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J53FinishSetupTests.swift, J52FinishSetupTests.swift, J51WelcomeClosedTests.swift, J43PanelSystemDrawTests.swift, J42ReadingBatteryUnavailableTests.swift, J41WelcomeDesktopTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J122ConfirmUninstallTests.swift, J123UninstalledTests.swift, J124LeftoverHelperTests.swift, J125ReconnectedTests.swift, J111VoiceOverOrderTests.swift, J112SettingsTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J32HelperSwitchedOffTests.swift, J33HelperUpdateTests.swift, J31ApprovalNotGivenTests.swift, J25SettingsConnectedTests.swift, J24SettingsApprovalTests.swift, J23SettingsTurnOnTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J21ComponentsUnavailableTests.swift, J18LivePanelTests.swift, J17CoachMarkTests.swift, J16AllSetTests.swift, NativeStylingTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J104DownloadingTests.swift, J82ReadingsResumeTests.swift, J81NoReadingTests.swift, J74CrowdedMenuBarTests.swift, J73ChooseComponentsTests.swift, J72PerComponentMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J71ShowInMenuBarTests.swift, J65OnBatteryTests.swift, J64InsufficientChargerTests.swift, J63FullOnAdapterTests.swift, J62ChargingHoldTests.swift, J61ChargingPanelTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling P05RemovalTests.swift, P04UpdaterTests.swift, P01TelemetryTests.swift, F05FixtureTests.swift, AppRouterTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriver\ Compilation WattTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattTests -Onone @/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/WattP01ScriptDerived/Index.noindex/DataStore -swift-version 6 -I /tmp/WattP01ScriptDerived/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/WattP01ScriptDerived/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/WattP01ScriptDerived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/WattP01ScriptDerived/ModuleCache.noindex -sdk-module-cache-path /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/WattP01ScriptDerived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap -Xcc -I/tmp/WattP01ScriptDerived/Build/Products/Debug/include -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/arm64 -Xcc -I/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h -working-directory /Users/benranford/Projects/watt-p01-live-accessibility-verification -experimental-emit-module-separately -disable-cmo
+
+Ld /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests normal (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/tmp/WattP01ScriptDerived/Build/Products/Debug -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/tmp/WattP01ScriptDerived/Build/Products/Debug -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -filelist /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path/../Frameworks -Xlinker -rpath -Xlinker @executable_path/../Frameworks -bundle_loader /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt -Xlinker -object_path_lto -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib -Xlinker -no_adhoc_codesign -o /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests
+/Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj: WattTests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0
+/Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj: WattTests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0
+
+CopySwiftLibs /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Frameworks --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/PlugIns --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Library/SystemExtensions --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name WattTests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk --xcode-version 27A266a --platform-family macOS --deployment-target 13.0 --bundle-identifier dev.watt.verification.WattTests --output /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests --dependency-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_dependency_info.dat --stringsdata-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList --metadata-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyMetadataFileList --static-metadata-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-09-23 16:41:25.535 appintentsmetadataprocessor[8808:8577182] Starting appintentsmetadataprocessor export
+2026-09-23 16:41:25.536 appintentsmetadataprocessor[8808:8577182] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CodeSign /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest
+
+RegisterExecutionPolicyException /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-RegisterExecutionPolicyException /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest
+
+Touch /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /usr/bin/touch -c /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest
+
+CodeSign /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
+
+CodeSign /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+
+CodeSign /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent --timestamp\=none --generate-entitlement-der /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app
+
+RegisterExecutionPolicyException /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-RegisterExecutionPolicyException /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app
+
+Validate /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-validationUtility /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+Touch /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /usr/bin/touch -c /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app
+
+RegisterWithLaunchServices /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-lsregisterurl --record-path /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/XCBuildData/registered-launchservices.txt -- /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app
+
+ProcessInfoPlistFile /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Info.plist /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/empty-WattUITests.plist (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-infoPlistUtility /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/empty-WattUITests.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -platform macosx -additionalcontentfile /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/ProductTypeInfoPlistAdditions.plist -o /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Info.plist
+
+Ld /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS/WattUITests normal (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/tmp/WattP01ScriptDerived/Build/Products/Debug -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F/tmp/WattP01ScriptDerived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/tmp/WattP01ScriptDerived/Build/Products/Debug -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -filelist /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path/../Frameworks -Xlinker -rpath -Xlinker @executable_path/../Frameworks -Xlinker -object_path_lto -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport -Xlinker -no_adhoc_codesign -o /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS/WattUITests
+/Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0
+/Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0
+/Users/benranford/Projects/watt-p01-live-accessibility-verification/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCUIAutomation.framework/Versions/A/XCUIAutomation' which was built for newer version 14.0
+
+CopySwiftLibs /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS/WattUITests --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Frameworks --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/PlugIns --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Library/SystemExtensions --scan-folder /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name WattUITests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk --xcode-version 27A266a --platform-family macOS --deployment-target 13.0 --bundle-identifier dev.watt.verification.WattUITests --output /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS/WattUITests --dependency-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_dependency_info.dat --stringsdata-file /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList --metadata-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyMetadataFileList --static-metadata-file-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-09-23 16:41:25.970 appintentsmetadataprocessor[8818:8577283] Starting appintentsmetadataprocessor export
+2026-09-23 16:41:25.971 appintentsmetadataprocessor[8818:8577283] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CopyPlistFile /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/Info.plist /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/Info.plist (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copyPlist --validate --convert xml1 --macro-expansion WRAPPEDPRODUCTNAME WattUITests-Runner --macro-expansion WRAPPEDPRODUCTBUNDLEIDENTIFIER dev.watt.verification.WattUITests.xctrunner --macro-expansion TESTPRODUCTNAME WattUITests --macro-expansion TESTPRODUCTBUNDLEIDENTIFIER dev.watt.verification.WattUITests --copy-value UIDeviceFamily /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Info.plist --outdir /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents -- /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/Info.plist
+
+MkDir /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /bin/mkdir -p /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app
+
+Copy /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PkgInfo /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/PkgInfo (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/PkgInfo /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents
+
+CopyAndPreserveArchs /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/MacOS/WattUITests-Runner (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/MacOS/XCTRunner -output /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/MacOS/WattUITests-Runner -extract arm64
+
+CodeSign /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent --timestamp\=none --generate-entitlement-der /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest
+
+CodeSign /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent --timestamp\=none --generate-entitlement-der /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app
+/tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app: replacing existing signature
+
+RegisterExecutionPolicyException /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    builtin-RegisterExecutionPolicyException /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest
+
+Touch /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /Users/benranford/Projects/watt-p01-live-accessibility-verification
+    /usr/bin/touch -c /tmp/WattP01ScriptDerived/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest
+
+PruneExplicitPrecompiledModules /tmp/WattP01ScriptDerived/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/WattP01ScriptDerived/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+** TEST BUILD SUCCEEDED **
+
+/tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest: replacing existing signature
+--prepared:/private/tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Frameworks/Watt.debug.dylib
+--validated:/private/tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Frameworks/Watt.debug.dylib
+/tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest: valid on disk
+/tmp/WattP01ScriptDerived/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest: satisfies its Designated Requirement
+Test Suite 'Selected tests' started at 2026-09-23 16:41:26.780.
+Test Suite 'WattTests.xctest' started at 2026-09-23 16:41:26.782.
+Test Suite 'P01TelemetryTests' started at 2026-09-23 16:41:26.782.
+Test Case '-[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke]' started.
+Test Case '-[WattTests.P01TelemetryTests testPhysicalHostPublicAPISmoke]' passed (0.003 seconds).
+Test Suite 'P01TelemetryTests' passed at 2026-09-23 16:41:26.785.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-23 16:41:26.785.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'Selected tests' passed at 2026-09-23 16:41:26.785.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.003 (0.006) seconds
+P01 HOST: battery=full percentage=Optional(100) source=Power source: AC observedAt=2026-09-23 06:41:26 +0000

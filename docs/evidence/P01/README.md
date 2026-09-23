@@ -18,7 +18,13 @@ Copy results use `takeRetainedValue`; Get results use `takeUnretainedValue` whil
 
 ## Physical-host limits
 
-`WATT_P01_HOST_PROBE=1` enables a real on-demand API smoke test, not a fixture. The final recorded run observed a present **charging battery, 92%, AC source**, with `.system` provenance and nil watts. See `targeted-tests.log` for the latest observation timestamp and values; reruns can legitimately change percentage/state.
+`WATT_P01_HOST_PROBE=1` enables a real on-demand API smoke test, not a fixture.
+The repeatable native-host wrapper is `scripts/probe-native-p01.sh`; it builds
+with the full Xcode toolchain, stages the debug dylib required by standalone
+`xctest`, and records the probe output here. The 2026-09-23 run observed a
+present **full battery, 100%, AC source**, with `.system` provenance and nil
+watts. See `physical-host-probe-2026-09-23.log`; reruns can legitimately change
+percentage/state.
 
 This host/API probe can prove battery presence, charging state, percentage, supplying source and (if separately queried) optional adapter metadata only. Adapter metadata was not queried in this implementation. It cannot prove live charger-input watts, total system draw or per-component power; ratings are not measured input. No powermetrics, SMC, IOReport guesses, root, helpers or credentials were used. Discharge/full/UPS/absent/invalid cases are parser-test evidence, **not physical-host transitions**. Snapshot acquisition time is not proof of underlying sensor refresh cadence.
 
@@ -33,10 +39,11 @@ Eight targeted tests cover metadata, state/source independence, percentage and z
 
 ## Verification
 
-Run from the assigned worktree with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`:
+Run from the repository with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`:
 
 ```sh
-WATT_P01_HOST_PROBE=1 xcrun swift test --filter P01TelemetryTests
+./scripts/probe-native-p01.sh
+xcrun swift test --filter P01TelemetryTests
 xcrun swift test
 xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination 'platform=macOS' -derivedDataPath .build/p01-native build
 xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination 'platform=macOS' -derivedDataPath .build/p01-native test -only-testing:WattTests -parallel-testing-enabled NO

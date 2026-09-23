@@ -1,0 +1,8 @@
+command: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination platform=macOS -derivedDataPath /tmp/WattUIProbeDerived test -only-testing:WattUITests/NativeHostTests/testMenuBarPanelCapture -parallel-testing-enabled NO
+result: failed live host smoke; build and runner launch succeeded
+test: NativeHostTests.testMenuBarPanelCapture
+observed: XCTest found the real Watt status item and read its AX title:
+  Watt?, fully charged, No reading yet, menu extra.
+failure: Element StatusItem, {{-1.0, 1157.0}, {48.5, 24.0}}, title: 'Watt?, fully charged, No reading yet, menu extra.' is not hittable
+interpretation: no compiler failure; the current host menu-bar compositor placed the item at the left edge and the menu did not open. This is retained as a live-host failure, not accessibility/visual sign-off.
+follow-up: authenticate the host TCC prompt and rerun on an unlocked, non-crowded graphical host; do not bypass TCC.

@@ -45,7 +45,7 @@ See [retained F01 evidence](evidence/f01/README.md). Accessibility claims remain
 source-native/in-process semantics only, not a runtime AX dump or VoiceOver audit.
 The experimental failing NativePanelCaptureTests is absent; do not restore it.
 
-## UI-automation workflow (currently TCC-blocked; not used for F01 capture)
+## UI-automation workflow (requires host trust; not used for F01 capture)
 
 Use a logged-in, unlocked macOS graphical session, full Xcode, and OS-granted
 UI automation/accessibility permission for the test runner. Do not bypass TCC or
@@ -80,6 +80,33 @@ The hierarchy records element frames; the exported PNG retains pixel dimensions.
 Do not crop desktop references to match without documenting the transform.
 A locked session, missing automation permission, or hidden/crowded menu bar can
 block the UI test even when compilation/unit tests pass; retain that failure.
+
+### Current local verification state (2026-09-23)
+
+- The opt-in physical P01 probe passed against the real host through
+  `./scripts/probe-native-p01.sh`. It observed the host's current battery/source
+  metadata and intentionally reported no watts; see
+  `docs/evidence/P01/physical-host-probe-2026-09-23.log`.
+- A local-only macOS 27 UTM guest was configured without an Apple ID and the
+  ad-hoc signed Watt app was launched there. The native menu-bar item and its
+  Settings/Quit actions were manually rendered with computer use; no
+  notarization or production service was involved.
+- The host XCTest runner built and launched the real app, but the current host
+  run could not complete the status-item click. XCTest reported the item at
+  `{{-1.0, 1157.0}, {48.5, 24.0}}` as not hittable, consistent with the current
+  crowded/edge-clipped menu-bar compositor state. This is retained as a failed
+  live-host smoke result, not treated as visual or accessibility sign-off.
+
+To finish the host UI-test gate, authenticate the host Mac's System Settings
+prompt once, then add the exact runner bundle produced by the build (for
+example, `.build/xcode/Build/Products/Debug/WattUITests-Runner.app`) under
+**System Settings → Privacy & Security → Device Control and Data Access**.
+This is the macOS 27 TCC category for UI automation. Trust the test runner,
+not the Watt app; no Apple ID, notarization or production account is needed.
+Afterward rerun `scripts/verify-native-host.sh` from an unlocked session with a
+non-crowded menu bar. If the status item remains edge-clipped, use a clean
+graphical host/VM or hide unrelated menu-bar extras rather than weakening the
+test or bypassing TCC.
 
 ## Production boundary
 
