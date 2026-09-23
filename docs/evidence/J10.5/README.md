@@ -2,6 +2,8 @@
 
 Implemented in the existing worktree on `bug/G069-j105-ready-to-install`; no commit or new worktree. Cumulative edits retained.
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `a95f45ab4ed2a7b994aee2274921453abe61c69c23acfbabce68aea15e92e107`).
+
 ## Source and implementation
 Fresh Figma MCP context, metadata, screenshot and variables are retained as `figma-*.json`; `reference.png` and `reference.sha256` record the 1000×720 reference. Bare footnote node lookup failed; the qualified instance lookup succeeded. Exact text is **“Watt? quits, updates and comes back to the menu bar. About 5 seconds.”** The layer name is stale.
 
@@ -35,3 +37,5 @@ Five skips are four pre-existing J6.2–J6.5 AX-label checks and the opt-in P01 
 The captured image was qualitatively inspected: exact ready title/copy, full progress and both buttons are visible. Screen Recording is preauthorized; Accessibility is not. AX comparison/live interaction acceptance remains blocked. `visual-review.json` deliberately records **score: null**, **pixel_diff: null**, **visualPass: false**. No fabricated score or pixel comparison.
 
 Release test-build import failure is not a Release app build failure; Release app build/analyze and fixture-symbol exclusion pass. Production updater composition, explicit adapter recovery, real install/relaunch and post-relaunch helper work belong to later integration/stories.
+
+Fresh live AX evidence confirms the native ready-to-install semantics and exact copy; install/relaunch effects and visual comparison remain explicitly unclaimed.

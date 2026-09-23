@@ -1,0 +1,22 @@
+binary=/tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+launch=--watt-fixture J10.5/base
+launcher_pid=85989
+sandbox_extension_issue_file_to_process failed for /tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app: 1 (Operation not permitted)
+--- axprobe ---
+true
+--- native ready-to-install semantics ---
+actual_pid=85989
+  role=AXWindow subrole=AXStandardWindow title=Software Update desc= value= enabled=
+      role=AXStaticText subrole= title= desc= value=Ready to install enabled=true
+      role=AXProgressIndicator subrole= title= desc=Download complete value= enabled=true
+      role=AXStaticText subrole= title= desc= value=Watt? quits, updates and comes back to the menu bar. About 5 seconds. enabled=true
+      role=AXButton subrole= title= desc=Later value= enabled=true
+      role=AXButton subrole= title= desc=Install and Relaunch value= enabled=true
+    role=AXButton subrole=AXCloseButton title= desc= value= enabled=true
+    role=AXButton subrole=AXZoomButton title= desc= value= enabled=false
+    role=AXButton subrole=AXMinimizeButton title= desc= value= enabled=false
+    role=AXStaticText subrole= title= desc= value=Software Update enabled=true
+        role=AXMenuItem subrole= title=Software Update desc= value= enabled=true
+        role=AXMenuItem subrole= title=Software Update desc= value= enabled=true
+--- cleanup ---
+fixture_process=absent
