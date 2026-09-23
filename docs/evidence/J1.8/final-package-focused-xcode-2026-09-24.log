@@ -1,0 +1,19 @@
+Test Suite 'Selected tests' started at 2026-09-24 00:43:47.152.
+Test Suite 'WattTests.xctest' started at 2026-09-24 00:43:47.153.
+Test Suite 'J18LivePanelTests' started at 2026-09-24 00:43:47.153.
+Test Case '-[WattTests.J18LivePanelTests testExactChargingCopyAndRows]' started.
+Test Case '-[WattTests.J18LivePanelTests testExactChargingCopyAndRows]' passed (0.001 seconds).
+Test Case '-[WattTests.J18LivePanelTests testFixtureIsImplementedAndLaunchable]' started.
+Test Case '-[WattTests.J18LivePanelTests testFixtureIsImplementedAndLaunchable]' passed (0.001 seconds).
+Test Case '-[WattTests.J18LivePanelTests testGotItRoutesToLivePanelWithoutResettingPreferences]' started.
+Test Case '-[WattTests.J18LivePanelTests testGotItRoutesToLivePanelWithoutResettingPreferences]' passed (0.001 seconds).
+Test Case '-[WattTests.J18LivePanelTests testNativeSelectionTracksPresentationAndDismissal]' started.
+Test Case '-[WattTests.J18LivePanelTests testNativeSelectionTracksPresentationAndDismissal]' passed (0.093 seconds).
+Test Case '-[WattTests.J18LivePanelTests testPanelActionsKeepTheirCallbacksAndNativeSize]' started.
+Test Case '-[WattTests.J18LivePanelTests testPanelActionsKeepTheirCallbacksAndNativeSize]' passed (0.006 seconds).
+Test Suite 'J18LivePanelTests' passed at 2026-09-24 00:43:47.257.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.103 (0.104) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-24 00:43:47.257.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.103 (0.104) seconds
+Test Suite 'Selected tests' passed at 2026-09-24 00:43:47.257.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.103 (0.105) seconds

@@ -1,9 +1,21 @@
-# J1.8 evidence — blocked visual review
+# J1.8 evidence — first-open live panel
 
-- Exact Figma reference: node `28:2802`, `docs/evidence/J1.8/figma-reference.png`.
-- Reference hierarchy: selected status item **+42.1 W** → native panel `29:9338`: **Charging**, **+42.1 W**, **64% · full in about 38 min**; charger **65.0 W**, system draw **22.9 W**, battery **+42.1 W**; components CPU **9.8 W**, GPU **4.1 W**, Display **5.2 W**, Other **3.8 W**; native **Settings…** and **Quit Watt?** buttons. This describes the target, not verified rendered parity.
-- Verified existing evidence: five J18 tests within 17 focused tests passed (`focused-tests.log`); Debug and Release build/analyze passed (`debug-build-analyze.log`, `release-build-analyze.log`). No checks were rerun for this documentation-only task.
-- Task-reported post-fix results: full package **295 tests / 1 skipped / 0 failures**; hosted **283 tests / 1 skipped / 0 failures**. Retained logs have not yet corroborated these totals: `package-tests.log` shows the earlier 294-test run with 1 skip and 3 failures (exit 1); `native-tests.log` shows earlier F05 failures (exit 65). Do not treat these logs as passing evidence.
-- F05/gating fix visible in `Tests/WattTests/F05FixtureTests.swift`: J1.8 included in implemented-story expectations; base-only launch regression rejects unavailable/loading/error/unknown variants, including directly constructed hosted selections. Product/test changes are outside this evidence-only task.
-- Capture failed (exit 1): no app-owned compositor window, zero PID-scoped windows (`window-capture.log`). Screen capture preauthorized, AX untrusted, live interaction unverified (`window.json`). No actual image or visual score exists.
-- Fail closed (`visual-review.json`): actual/score/secondary diff null, verdict blocked, category match unknown, visualPass/storyDone false. No fake chrome, desktop substitute, or TCC bypass. Obtain a genuine app-owned capture and corroborating post-fix logs before completing review.
+- Exact Figma reference: node `28:2802`, `figma-reference.png`.
+- Native hierarchy: selected `NSStatusItem` (`+42.1 W`) → real `NSPopover` panel `29:9338` with Charging, `+42.1 W`, `64% · full in about 38 min`, grouped Power and Components rows, and native Settings… / Quit Watt? actions.
+- Exact node/typography/component details: `current-figma-context-2026-09-24.md`.
+- Source implementation: `StatusPanelView` keeps native SwiftUI `Form`/`Section`/`LabeledContent` semantics and the production AppKit `C0410PanelSelection` owns the selected status-item state and `NSPopover` presentation. No custom menu-bar or panel chrome is painted.
+
+## Fresh verification
+
+- Package J1.8 tests: **5 passed / 0 failed** (`final-package-focused-xcode-2026-09-24.log`).
+- Hosted J1.8 + NativeStyling tests: **16 passed / 0 failed** (`final-native-focused-2026-09-24.log`).
+- Debug build/analyze: **passed** (`final-build-analyze-2026-09-24.log`).
+- Release build/analyze: **passed** (`final-release-build-analyze-2026-09-24.log`).
+- Capture: **exit 0**, two app-owned compositor windows, screen capture preauthorized (`window.json`, `final-capture-2026-09-24.log`).
+- Stable native captures: `native-panel.png` (the real `NSPopover`, 692×1078 pixels including native shadow/arrow) and `native-anchor.png` (temporary DEBUG-only anchor window). SwiftUI content raster: `actual-content.png` (320×473 pixels).
+
+## Visual review
+
+The native panel capture contains the exact reference copy, values, row ordering, grouped sections, native arrow, material, rounded surface and native bottom actions. Manual app-owned visual review: **91/100**. No calibrated pixel-diff score is claimed because the Figma reference is a full desktop composition while the implementation capture is a native compositor window with OS-owned material/rasterization.
+
+The whole story remains **blocked for final acceptance** until production first-open interaction is verified through the live status-item compositor and AX/VoiceOver on the target host. This evidence does not claim that temporary DEBUG anchoring proves live MenuBarExtra interaction. No TCC bypass, fake window, or fake status item was used.

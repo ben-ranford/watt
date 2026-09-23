@@ -1,9 +1,44 @@
 {
-  "AXTrusted" : false,
+  "AXTrusted" : true,
   "fixture" : "J1.8\/base",
   "liveInteractionVerified" : false,
   "screenCapturePreauthorized" : true,
   "windows" : [
-
+    {
+      "kCGWindowAlpha" : 1,
+      "kCGWindowBounds" : {
+        "Height" : 499,
+        "Width" : 346,
+        "X" : 1435,
+        "Y" : 111
+      },
+      "kCGWindowIsOnscreen" : true,
+      "kCGWindowLayer" : 0,
+      "kCGWindowMemoryUsage" : 2432,
+      "kCGWindowName" : "",
+      "kCGWindowNumber" : 21802,
+      "kCGWindowOwnerName" : "Watt?",
+      "kCGWindowOwnerPID" : 57921,
+      "kCGWindowSharingState" : 1,
+      "kCGWindowStoreType" : 1
+    },
+    {
+      "kCGWindowAlpha" : 1,
+      "kCGWindowBounds" : {
+        "Height" : 40,
+        "Width" : 320,
+        "X" : 1448,
+        "Y" : 71
+      },
+      "kCGWindowIsOnscreen" : true,
+      "kCGWindowLayer" : 0,
+      "kCGWindowMemoryUsage" : 2432,
+      "kCGWindowName" : "",
+      "kCGWindowNumber" : 21801,
+      "kCGWindowOwnerName" : "Watt?",
+      "kCGWindowOwnerPID" : 57921,
+      "kCGWindowSharingState" : 1,
+      "kCGWindowStoreType" : 1
+    }
   ]
 }
