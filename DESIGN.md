@@ -2318,3 +2318,10 @@ SF Pro Semibold 13/16. Focused C04.3 package/native tests passed 4/4 per host an
 Release build/analyze passed. The existing native visual gate remains open because
 the retained 88/100 review does not establish live compositor parity. Evidence:
 `docs/evidence/C04.3/current-figma-context-2026-09-23.md`.
+
+The exact C04.4 Figma MCP reinspection confirms frame `24:877`, status item
+`24:993`, anchor `24:995`, native `bolt.fill`, `65.0 W`, and SF Pro Semibold
+13/16. The native `.charger` mode reads the live `chargerWatts` field separately
+from battery Delta; on the current full host that field is available even though
+the battery charge rate is `0.0 W`. Evidence:
+`docs/evidence/C04.4/current-figma-context-2026-09-23.md`.
