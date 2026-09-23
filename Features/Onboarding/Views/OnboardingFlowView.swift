@@ -338,12 +338,12 @@ struct OfferComponentReadingsView: View {
             HStack {
                 Spacer()
                 Button { Self.perform(.notNow, preferences: preferences) } label: {
-                    Text("Not Now").padding(.horizontal, WattSpacing.xs)
+                    Text("Not Now")
                 }
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("onboarding.helper.notNow")
                 Button { Self.perform(.turnOn, preferences: preferences) } label: {
-                    Text("Turn On…").padding(.horizontal, WattSpacing.xs)
+                    Text("Turn On…")
                 }
                 .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.defaultAction)

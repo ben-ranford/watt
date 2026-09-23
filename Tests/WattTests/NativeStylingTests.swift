@@ -23,6 +23,21 @@ final class NativeStylingTests: XCTestCase {
         XCTAssertTrue(panel.contains(".frame(width: WattSpacing.panelWidth, height: model.panelHeight)"))
     }
 
+    func testOnboardingHelperActionsUseNativeHorizontalSpacing() throws {
+        let flow = try source("Features/Onboarding/Views/OnboardingFlowView.swift")
+        for action in ["notNow", "turnOn"] {
+            let start = try XCTUnwrap(flow.range(of: "Button { Self.perform(.\(action),"))
+            let end = try XCTUnwrap(flow.range(
+                of: ".accessibilityIdentifier(\"onboarding.helper.\(action)\")",
+                range: start.lowerBound..<flow.endIndex
+            ))
+            let control = flow[start.lowerBound..<end.upperBound]
+                .filter { !$0.isWhitespace }
+            XCTAssertFalse(control.contains(".padding(.horizontal"),
+                           "\(action) must use native button horizontal spacing")
+        }
+    }
+
     func testProductionAppearanceAndMetricsAreNative() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         func source(_ path: String) throws -> String {
