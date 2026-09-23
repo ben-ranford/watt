@@ -97,3 +97,10 @@ also cleaned up. See `native-focused-tests.log`, `native-focused-tests.exit`,
 Host logs include com.apple.linkd.autoShortcut connection errors, but their causal
 role is unproven. This is not a native runtime pass; the 19 focused tests above
 are the successfully executed package XCTest tests.
+
+## Fresh Figma and native evidence — 2026-09-23
+- Figma MCP re-queried for exact frame `36:5428` with design context, metadata, variables and screenshot; screenshot pinned at `fresh-figma/reference-2026-09-23.png` with SHA-256 `1466b6e3c198db2ab44c628c4a899604f8f600e9e489e74c52c82723ae3d383c`.
+- Exact hierarchy, destructive copy, Return/Escape/VoiceOver annotations, tokens and native alert boundary are recorded in `fresh-figma/context-2026-09-23.md`.
+- `J11.3/base` was launched, `Settings…` and `Uninstall…` were activated through AX, and the exact native `AXSheet` title/message/Cancel/Uninstall semantics were observed. The final destructive action was not pressed.
+- A diagnostic PID-owned native capture is retained, but no visual-pass or pixel-parity claim is made because AppKit renders horizontal buttons/no custom icon versus the Figma stacked-button/icon reference.
+- The fixture was reaped; the normal Desktop app remained running.

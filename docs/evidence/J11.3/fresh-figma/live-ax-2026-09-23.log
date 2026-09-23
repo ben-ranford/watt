@@ -1,0 +1,53 @@
+launch_pid=94069
+actual_pid=94069
+--- PRESS SETTINGS ---
+found role=AXMenuItem title=Settings… desc=
+press=0
+wanted=Settings…, found=true
+--- SETTINGS AX ---
+  role=AXWindow subrole=AXStandardWindow title=Watt? Settings desc= value= enabled=
+        role=AXHeading subrole= title= desc=General value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Open at login enabled=true
+          role=AXStaticText subrole= title= desc= value=Uninstall Watt? enabled=true
+          role=AXStaticText subrole= title= desc= value=Removes the helper, your settings and the login item, then moves Watt? to the Trash. Nothing is left behind. enabled=true
+          role=AXButton subrole= title= desc=Uninstall… value= enabled=false
+          role=AXButton subrole=AXIncrementArrow title= desc= value= enabled=
+          role=AXButton subrole=AXDecrementArrow title= desc= value= enabled=
+          role=AXButton subrole=AXIncrementPage title= desc= value= enabled=
+          role=AXButton subrole=AXDecrementPage title= desc= value= enabled=
+    role=AXButton subrole=AXCloseButton title= desc= value= enabled=false
+    role=AXButton subrole=AXZoomButton title= desc= value= enabled=false
+    role=AXButton subrole=AXMinimizeButton title= desc= value= enabled=false
+    role=AXStaticText subrole= title= desc= value=Watt? Settings enabled=true
+      role=AXStaticText subrole= title= desc= value=Uninstall Watt? enabled=true
+      role=AXStaticText subrole= title= desc= value=Removes the helper, your settings and the login item, then moves Watt? to the Trash. Nothing is left behind. enabled=true
+      role=AXButton subrole= title= desc=Cancel value= enabled=true
+      role=AXButton subrole= title= desc=Uninstall value= enabled=true
+        role=AXMenuItem subrole= title=Watt? Settings desc= value= enabled=true
+--- PRESS UNINSTALL ---
+found role=AXButton title= desc=Uninstall…
+press=0
+wanted=Uninstall…, found=true
+--- ALERT AX ---
+  role=AXWindow subrole=AXStandardWindow title=Watt? Settings desc= value= enabled=
+        role=AXHeading subrole= title= desc=General value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Open at login enabled=true
+          role=AXStaticText subrole= title= desc= value=Uninstall Watt? enabled=true
+          role=AXStaticText subrole= title= desc= value=Removes the helper, your settings and the login item, then moves Watt? to the Trash. Nothing is left behind. enabled=true
+          role=AXButton subrole= title= desc=Uninstall… value= enabled=false
+          role=AXButton subrole=AXIncrementArrow title= desc= value= enabled=
+          role=AXButton subrole=AXDecrementArrow title= desc= value= enabled=
+          role=AXButton subrole=AXIncrementPage title= desc= value= enabled=
+          role=AXButton subrole=AXDecrementPage title= desc= value= enabled=
+    role=AXButton subrole=AXCloseButton title= desc= value= enabled=false
+    role=AXButton subrole=AXZoomButton title= desc= value= enabled=false
+    role=AXButton subrole=AXMinimizeButton title= desc= value= enabled=false
+    role=AXStaticText subrole= title= desc= value=Watt? Settings enabled=true
+      role=AXStaticText subrole= title= desc= value=Uninstall Watt? enabled=true
+      role=AXStaticText subrole= title= desc= value=Removes the helper, your settings and the login item, then moves Watt? to the Trash. Nothing is left behind. enabled=true
+      role=AXButton subrole= title= desc=Cancel value= enabled=true
+      role=AXButton subrole= title= desc=Uninstall value= enabled=true
+        role=AXMenuItem subrole= title=Watt? Settings desc= value= enabled=true
+--- CG WINDOWS ---
+owner=Watt? name=Watt? Settings number=20583 layer=0 alpha=1 bounds={
+owner=Watt? name=Watt? number=20358 layer=0 alpha=1 bounds={

@@ -1,0 +1,10 @@
+fixture_pid=94206
+found role=AXMenuItem title=Settings… desc=
+press=0
+wanted=Settings…, found=true
+found role=AXButton title= desc=Uninstall…
+press=0
+wanted=Uninstall…, found=true
+window_line=owner=Watt? name=Watt? Settings number=20594 layer=0 alpha=1 bounds={
+window_id=20594
+capture_rc=0
