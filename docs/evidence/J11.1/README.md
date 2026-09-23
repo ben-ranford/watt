@@ -74,3 +74,10 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer bash docs/evidence/J11.
   `screenCapturePreauthorized: true`, `AXTrusted: false`, no owned compositor
   window, and null visual metrics. `visual-review.json` makes no visual-pass
   claim.
+
+## Fresh Figma and native evidence — 2026-09-23
+- Figma MCP re-queried for exact frame `36:5057` with design context, metadata, variables and screenshot; screenshot pinned at `fresh-figma/reference-2026-09-23.png` with SHA-256 `505f0fa2334ae245ba6e4b8573eb5b27f564a3673abdaa99241bccf1f2bcde49`.
+- Exact hierarchy, VoiceOver annotations, keyboard behavior, tokens and native `.window` boundary are recorded in `fresh-figma/context-2026-09-23.md`.
+- `J11.1/base` was launched from the current Debug binary. Fresh AX evidence confirms the native status item label/hint boundary and `+42.1 W`; AXPress returned success, but no PID-owned panel window surfaced on this compositor host.
+- No visual-pass, VoiceOver speech, keyboard traversal or pixel-parity claim is made. The panel capture limitation is recorded in `fresh-figma/live-ax-2026-09-23.log`.
+- The fixture was reaped; the normal Desktop app remained running.
