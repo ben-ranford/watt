@@ -1,4 +1,5 @@
 import Foundation
+import IOKit
 import IOKit.ps
 
 // Observation time is app acquisition time, not a hardware measurement timestamp.
@@ -6,9 +7,23 @@ struct SystemPowerSourceSnapshot {
     let descriptions: [[String: Any]]
     let providingSource: String?
     let timestamp: Date
+    /// The public IOPS description intentionally omits live watt telemetry.
+    /// AppleSmartBattery exposes the measured values through its IORegistry
+    /// properties; this is collected separately and remains optional so the
+    /// metadata-only path still fails closed on unsupported hardware.
+    let batteryProperties: [String: Any]?
+
+    init(descriptions: [[String: Any]], providingSource: String?, timestamp: Date,
+         batteryProperties: [String: Any]? = nil) {
+        self.descriptions = descriptions
+        self.providingSource = providingSource
+        self.timestamp = timestamp
+        self.batteryProperties = batteryProperties
+    }
 }
 
-// Pure parser: only documented IOPS keys; no voltage/current or adapter-rating inference.
+// Pure parser: public IOPS keys determine state; IORegistry telemetry supplies
+// measured battery input/output, charger input and system draw when available.
 enum SystemPowerSourceParser {
     static func parse(_ snapshot: SystemPowerSourceSnapshot) throws -> PowerReading {
         let batteries = snapshot.descriptions.filter { ($0[kIOPSTypeKey] as? String) == kIOPSInternalBatteryType }
@@ -45,12 +60,20 @@ enum SystemPowerSourceParser {
         case kIOPMUPSPowerKey: "Power source: UPS"
         default: nil
         }
+        let telemetry = measurement(snapshot.batteryProperties?["PowerTelemetryData"])
+        let systemWatts = watts(telemetry?["SystemLoad"])
+        let chargerWatts = watts(telemetry?["SystemPowerIn"])
+        let batteryWatts = batteryWatts(telemetry?["BatteryPower"], state: state)
+        let hasSystemDraw = systemWatts != nil
+        let hasChargerInput = chargerWatts != nil && snapshot.providingSource == kIOPSACPowerValue
         let reading = PowerReading(
-            mode: mode, watts: nil, batteryPercentage: battery.flatMap(percentage), detail: detail,
+            mode: mode, watts: batteryWatts, batteryPercentage: battery.flatMap(percentage), detail: detail,
             timestamp: snapshot.timestamp, batteryState: state,
             capabilities: .init(battery: battery != nil ? .available : (knownAbsent ? .unsupported : .unknown),
-                                charger: .unsupported, systemDraw: .unsupported, components: .unsupported),
-            source: .system)
+                                charger: hasChargerInput ? .available : (snapshot.providingSource == kIOPSBatteryPowerValue ? .disconnected : .unsupported),
+                                systemDraw: hasSystemDraw ? .available : .unsupported, components: .unsupported),
+            source: .system, chargerWatts: hasChargerInput ? chargerWatts : nil,
+            systemWatts: systemWatts)
         try reading.validate()
         return reading
     }
@@ -65,6 +88,36 @@ enum SystemPowerSourceParser {
         let value = number.doubleValue
         guard value.isFinite, value >= 0, value.rounded() == value else { return nil }
         return value
+    }
+
+    private static func measurement(_ value: Any?) -> [String: Any]? {
+        if let value = value as? [String: Any] { return value }
+        if let value = value as? NSDictionary {
+            return value.reduce(into: [String: Any]()) { result, pair in
+                guard let key = pair.key as? String else { return }
+                result[key] = pair.value
+            }
+        }
+        return nil
+    }
+
+    /// PowerTelemetryData values are milliwatts. Keep zero as a real reading;
+    /// only malformed, non-finite and negative input values are unavailable.
+    private static func watts(_ value: Any?) -> Double? {
+        guard let number = value as? NSNumber,
+              CFGetTypeID(number) != CFBooleanGetTypeID() else { return nil }
+        let value = number.doubleValue / 1_000
+        guard value.isFinite, value >= 0 else { return nil }
+        return value
+    }
+
+    private static func batteryWatts(_ value: Any?, state: BatteryState) -> Double? {
+        guard let value = watts(value) else { return nil }
+        switch state {
+        case .discharging: return -value
+        case .charging, .chargingHold, .full: return value
+        case .noBattery, .unknown: return nil
+        }
     }
 
     private static func percentage(_ battery: [String: Any]) -> Int? {
@@ -110,6 +163,19 @@ final class SystemPowerSourceTelemetryService: TelemetryService {
         }
         return SystemPowerSourceSnapshot(descriptions: descriptions,
                                          providingSource: IOPSGetProvidingPowerSourceType(info)?.takeUnretainedValue() as String?,
-                                         timestamp: timestamp)
+                                         timestamp: timestamp,
+                                         batteryProperties: Self.smartBatteryProperties())
+    }
+
+    private static func smartBatteryProperties() -> [String: Any]? {
+        let service = IOServiceGetMatchingService(kIOMainPortDefault,
+                                                   IOServiceMatching("AppleSmartBattery"))
+        guard service != 0 else { return nil }
+        defer { IOObjectRelease(service) }
+
+        var properties: Unmanaged<CFMutableDictionary>?
+        guard IORegistryEntryCreateCFProperties(service, &properties, kCFAllocatorDefault, 0) == 0,
+              let properties else { return nil }
+        return properties.takeRetainedValue() as? [String: Any]
     }
 }

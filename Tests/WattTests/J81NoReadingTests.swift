@@ -369,6 +369,8 @@ final class J81NoReadingTests: XCTestCase {
         let app = try source("App/WattApp.swift")
         for token in ["MenuBarExtra(isInserted:", ".menuBarExtraStyle(.window)", "ScenePresentationBridge(",
                       "await powerStore.runSampling()", "NSWorkspace.didWakeNotification", "powerStore.handleWake()",
+                      "private var samplingTask: Task<Void, Never>?", "samplingTask = Task { [powerStore] in",
+                      "samplingTask?.cancel()",
                       "await J81FixtureLaunch.prepare(router: router)", "view.observeJ81StatusFixture(router: router)"] {
             XCTAssertTrue(app.contains(token), token)
         }

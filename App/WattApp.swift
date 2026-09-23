@@ -1070,6 +1070,7 @@ private final class WattFallbackStatusItem: NSObject {
     private var fallbackWindow: NSWindow?
     private var contextMenuMonitor: Any?
     private var observations = Set<AnyCancellable>()
+    private var samplingTask: Task<Void, Never>?
 
     init(router: AppRouter, powerStore: PowerReadingStore, preferences: PreferencesStore) {
         self.router = router
@@ -1088,6 +1089,14 @@ private final class WattFallbackStatusItem: NSObject {
         button.sendAction(on: [.leftMouseUp])
         button.font = NSFont.systemFont(ofSize: 13, weight: .semibold)
         updateButton()
+
+        // The normal app deliberately suppresses MenuBarExtra because some
+        // hosts do not materialise its status item. The fallback is therefore
+        // also the owner of the production sampling task; attaching polling
+        // only to the hidden SwiftUI label leaves the visible widget at “—”.
+        samplingTask = Task { [powerStore] in
+            await powerStore.runSampling()
+        }
 
         contextMenuMonitor = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [weak self] event in
             guard let self, let button = self.item?.button,
@@ -1133,6 +1142,8 @@ private final class WattFallbackStatusItem: NSObject {
     }
 
     func uninstall() {
+        samplingTask?.cancel()
+        samplingTask = nil
         observations.removeAll()
         if let contextMenuMonitor { NSEvent.removeMonitor(contextMenuMonitor) }
         contextMenuMonitor = nil

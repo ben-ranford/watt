@@ -14,6 +14,12 @@ final class P01TelemetryTests: XCTestCase {
         try SystemPowerSourceParser.parse(.init(descriptions: descriptions, providingSource: source, timestamp: time))
     }
 
+    private func parseTelemetry(_ telemetry: [String: Any], source: String? = kIOPSACPowerValue) throws -> PowerReading {
+        try SystemPowerSourceParser.parse(.init(
+            descriptions: [battery()], providingSource: source, timestamp: time,
+            batteryProperties: ["PowerTelemetryData": telemetry]))
+    }
+
     func testPresentChargingBatteryHasMetadataButNeverWatts() throws {
         let reading = try parse([battery(["Watts": 140, "Voltage": 12000, "Amperage": 2000])])
         XCTAssertEqual(reading.batteryState, .charging)
@@ -28,6 +34,85 @@ final class P01TelemetryTests: XCTestCase {
         XCTAssertTrue(reading.components.isEmpty)
         for mode in WattDisplayMode.allCases { XCTAssertNil(reading.value(for: mode)) }
         XCTAssertEqual(PowerFormatter.watts(reading.watts), "—")
+        try reading.validate()
+    }
+
+    func testRegistryTelemetryMapsChargingRateChargerInputAndSystemDraw() throws {
+        let reading = try parseTelemetry([
+            "BatteryPower": 42_100,
+            "SystemPowerIn": 65_000,
+            "SystemLoad": 22_900
+        ])
+
+        XCTAssertEqual(reading.batteryState, .charging)
+        XCTAssertEqual(try XCTUnwrap(reading.watts), 42.1, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 65, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 22.9, accuracy: 0.001)
+        XCTAssertEqual(reading.capabilities,
+                       .init(battery: .available, charger: .available,
+                             systemDraw: .available, components: .unsupported))
+        XCTAssertEqual(try XCTUnwrap(reading.value(for: .delta)), 42.1, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.value(for: .charger)), 65, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.value(for: .draw)), 22.9, accuracy: 0.001)
+        try reading.validate()
+    }
+
+    func testRegistryTelemetryUsesNegativeBatteryRateWhenDischarging() throws {
+        let discharging = battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false,
+            kIOPSPowerSourceStateKey: kIOPSBatteryPowerValue
+        ])
+        let reading = try SystemPowerSourceParser.parse(.init(
+            descriptions: [discharging], providingSource: kIOPSBatteryPowerValue,
+            timestamp: time,
+            batteryProperties: ["PowerTelemetryData": [
+                "BatteryPower": 18_400,
+                "SystemPowerIn": 0,
+                "SystemLoad": 18_400
+            ]]))
+
+        XCTAssertEqual(try XCTUnwrap(reading.watts), -18.4, accuracy: 0.001)
+        XCTAssertNil(reading.chargerWatts)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 18.4, accuracy: 0.001)
+        XCTAssertEqual(reading.capabilities.charger, .disconnected)
+        try reading.validate()
+    }
+
+    func testRegistryTelemetryPreservesZeroRateForFullBattery() throws {
+        let full = battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: true,
+            kIOPSCurrentCapacityKey: 100
+        ])
+        let reading = try SystemPowerSourceParser.parse(.init(
+            descriptions: [full], providingSource: kIOPSACPowerValue,
+            timestamp: time,
+            batteryProperties: ["PowerTelemetryData": [
+                "BatteryPower": 0,
+                "SystemPowerIn": 6_193,
+                "SystemLoad": 6_193
+            ]]))
+
+        XCTAssertEqual(reading.batteryState, .full)
+        XCTAssertEqual(try XCTUnwrap(reading.watts), 0, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 6.193, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 6.193, accuracy: 0.001)
+        try reading.validate()
+    }
+
+    func testMalformedRegistryTelemetryDoesNotFabricateMeasurements() throws {
+        let reading = try parseTelemetry([
+            "BatteryPower": -1,
+            "SystemPowerIn": "65000",
+            "SystemLoad": true
+        ])
+
+        XCTAssertNil(reading.watts)
+        XCTAssertNil(reading.chargerWatts)
+        XCTAssertNil(reading.systemWatts)
+        XCTAssertEqual(reading.capabilities.charger, .unsupported)
+        XCTAssertEqual(reading.capabilities.systemDraw, .unsupported)
         try reading.validate()
     }
 
@@ -144,10 +229,17 @@ final class P01TelemetryTests: XCTestCase {
         guard case .success(let reading) = await service.sample() else { return XCTFail("Host snapshot unavailable") }
         try reading.validate()
         XCTAssertEqual(reading.source, .system)
-        XCTAssertNil(reading.watts)
-        XCTAssertNil(reading.chargerWatts)
-        XCTAssertNil(reading.systemWatts)
-        print("P01 HOST: battery=\(reading.batteryState.rawValue) percentage=\(String(describing: reading.batteryPercentage)) source=\(reading.detail ?? "unknown") observedAt=\(reading.timestamp)")
+        if reading.batteryState != .noBattery {
+            XCTAssertEqual(reading.capabilities.battery, .available)
+            XCTAssertNotNil(reading.watts)
+        }
+        XCTAssertEqual(reading.capabilities.systemDraw, .available)
+        XCTAssertNotNil(reading.systemWatts)
+        if reading.detail == "Power source: AC" {
+            XCTAssertEqual(reading.capabilities.charger, .available)
+            XCTAssertNotNil(reading.chargerWatts)
+        }
+        print("P01 HOST: battery=\(reading.batteryState.rawValue) percentage=\(String(describing: reading.batteryPercentage)) batteryWatts=\(String(describing: reading.watts)) chargerWatts=\(String(describing: reading.chargerWatts)) systemWatts=\(String(describing: reading.systemWatts)) source=\(reading.detail ?? "unknown") observedAt=\(reading.timestamp)")
     }
 
     private func assertFailure(_ outcome: ServiceOutcome<PowerReading>, _ expected: ServiceFailure, file: StaticString = #filePath, line: UInt = #line) {
