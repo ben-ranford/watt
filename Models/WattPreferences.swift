@@ -149,6 +149,17 @@ final class PreferencesStore: ObservableObject {
             && ids.allSatisfy { !$0.isEmpty && $0 == $0.trimmingCharacters(in: .whitespacesAndNewlines) }
     }
 
+    static func seconds(for updateInterval: String) -> TimeInterval {
+        switch updateInterval {
+        case "Every second": return 1
+        case "Every 2 seconds": return 2
+        case "Every 5 seconds": return 5
+        default: return 2
+        }
+    }
+
+    var updateIntervalSeconds: TimeInterval { Self.seconds(for: updateInterval) }
+
     /// Available identities are re-read by the caller at invocation, never cached menu state.
     @discardableResult
     func toggleComponent(_ id: String, availableIDs: [String]) -> Bool {

@@ -24,7 +24,12 @@ struct StatusPanelModel {
     var state: StatusPanelState {
         guard hasReading else { return .noReading }
         // A battery/source status without measured watts is not a power reading.
+        // Keep independently valid charger/system telemetry visible while the
+        // battery state is temporarily unknown.
+        let hasIndependentTelemetry = [.chargerInput, .systemDraw].contains(reading.mode) &&
+            (reading.value(for: .charger) != nil || reading.value(for: .draw) != nil)
         guard reading.value(for: isDesktop ? .draw : .delta) != nil ||
+                hasIndependentTelemetry ||
                 (reading.mode == .perComponent && !components.isEmpty) else { return .noReading }
         if reading.hasInsufficientCharger { return .insufficientCharger }
         guard hasReading, reading.freshness == .fresh,

@@ -48,12 +48,6 @@ enum SystemPowerSourceParser {
             }
             // Not charging on AC is not proof of an intentional charging hold.
         }
-        let mode: PowerMode = switch state {
-        case .charging: .charging
-        case .discharging: .onBattery
-        case .full: .charged
-        default: .noReading
-        }
         let detail: String? = switch snapshot.providingSource {
         case kIOPSACPowerValue: "Power source: AC"
         case kIOPSBatteryPowerValue: "Power source: Battery"
@@ -63,9 +57,21 @@ enum SystemPowerSourceParser {
         let telemetry = measurement(snapshot.batteryProperties?["PowerTelemetryData"])
         let systemWatts = watts(telemetry?["SystemLoad"])
         let chargerWatts = watts(telemetry?["SystemPowerIn"])
-        let batteryWatts = batteryWatts(telemetry?["BatteryPower"], state: state)
         let hasSystemDraw = systemWatts != nil
         let hasChargerInput = chargerWatts != nil && snapshot.providingSource == kIOPSACPowerValue
+        // Battery state and power telemetry are independent. Keep a valid
+        // charger/system sample visible while the battery state is briefly
+        // unknown (and expose system draw on battery-less Macs).
+        let mode: PowerMode = switch state {
+        case .charging: .charging
+        case .discharging: .onBattery
+        case .full: .charged
+        default:
+            if hasChargerInput { .chargerInput }
+            else if hasSystemDraw { .systemDraw }
+            else { .noReading }
+        }
+        let batteryWatts = batteryWatts(telemetry?["BatteryPower"], state: state)
         let reading = PowerReading(
             mode: mode, watts: batteryWatts, batteryPercentage: battery.flatMap(percentage), detail: detail,
             timestamp: snapshot.timestamp, batteryState: state,

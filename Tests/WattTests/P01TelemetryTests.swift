@@ -57,6 +57,48 @@ final class P01TelemetryTests: XCTestCase {
         try reading.validate()
     }
 
+    func testRegistryTelemetrySurvivesUnknownBatteryState() throws {
+        let snapshot = battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false
+        ])
+        let reading = try SystemPowerSourceParser.parse(.init(
+            descriptions: [snapshot], providingSource: kIOPSACPowerValue,
+            timestamp: time,
+            batteryProperties: ["PowerTelemetryData": [
+                "BatteryPower": 0,
+                "SystemPowerIn": 24_000,
+                "SystemLoad": 18_000
+            ]]))
+
+        XCTAssertEqual(reading.batteryState, .unknown)
+        XCTAssertEqual(reading.mode, .chargerInput)
+        XCTAssertEqual(reading.capabilities.battery, .available)
+        XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 24, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 18, accuracy: 0.001)
+        XCTAssertTrue(reading.hasCurrentSample)
+        XCTAssertEqual(try XCTUnwrap(reading.value(for: .charger)), 24, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.value(for: .draw)), 18, accuracy: 0.001)
+        XCTAssertNil(reading.value(for: .delta))
+        let panel = StatusPanelModel(reading: reading)
+        XCTAssertEqual(panel.state, .standard)
+        XCTAssertEqual(panel.charger, "24.0 W")
+        XCTAssertEqual(panel.system, "18.0 W")
+        try reading.validate()
+    }
+
+    func testBatterylessSystemTelemetryUsesSystemDrawMode() throws {
+        let reading = try SystemPowerSourceParser.parse(.init(
+            descriptions: [], providingSource: kIOPSACPowerValue, timestamp: time,
+            batteryProperties: ["PowerTelemetryData": ["SystemLoad": 12_500]]))
+
+        XCTAssertEqual(reading.batteryState, .noBattery)
+        XCTAssertEqual(reading.mode, .systemDraw)
+        XCTAssertTrue(reading.hasCurrentSample)
+        XCTAssertEqual(try XCTUnwrap(reading.value(for: .draw)), 12.5, accuracy: 0.001)
+        try reading.validate()
+    }
+
     func testRegistryTelemetryUsesNegativeBatteryRateWhenDischarging() throws {
         let discharging = battery([
             kIOPSIsChargingKey: false,

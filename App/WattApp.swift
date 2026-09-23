@@ -246,6 +246,12 @@ struct WattApp: App {
         let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
+        // The fallback owns the visible production status item on hosts where
+        // MenuBarExtra does not materialise, so keep reopen routing alive there
+        // as well as in the SwiftUI scene bridge.
+        applicationDelegate.onReopen = { [weak appRouter] in
+            appRouter?.reopen(preferences: appPreferences)
+        }
         // MenuBarExtra is the preferred SwiftUI path, but it is not materialising
         // an item on some macOS hosts (including the local verification host). Keep
         // the user-facing app usable with the public AppKit status-item API while
@@ -333,7 +339,7 @@ struct WattApp: App {
                 .environmentObject(preferences)
         } label: {
             statusLabel
-                .task { await powerStore.runSampling() }
+                .task { await powerStore.runSampling(interval: { preferences.updateIntervalSeconds }) }
                 .onReceive(NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.didWakeNotification)) { _ in
                     guard powerStore.observesSystemWake else { return }
                     powerStore.handleWake()
@@ -1137,6 +1143,7 @@ private final class WattFallbackStatusItem: NSObject {
     private var panel: NSPopover?
     private var fallbackWindow: NSWindow?
     private var contextMenuMonitor: Any?
+    private var wakeObserver: NSObjectProtocol?
     private var observations = Set<AnyCancellable>()
     private var samplingTask: Task<Void, Never>?
     private var buttonUpdateScheduled = false
@@ -1169,14 +1176,25 @@ private final class WattFallbackStatusItem: NSObject {
         // hosts do not materialise its status item. The fallback is therefore
         // also the owner of the production sampling task; attaching polling
         // only to the hidden SwiftUI label leaves the visible widget at “—”.
-        samplingTask = Task { [powerStore] in
-            await powerStore.runSampling()
+        samplingTask = Task { [powerStore, preferences] in
+            await powerStore.runSampling(interval: { preferences.updateIntervalSeconds })
         }
 
-        contextMenuMonitor = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [weak self] event in
+        wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didWakeNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self, self.powerStore.observesSystemWake else { return }
+                self.powerStore.handleWake()
+                await self.powerStore.refresh()
+            }
+        }
+
+        contextMenuMonitor = NSEvent.addLocalMonitorForEvents(matching: [.rightMouseDown, .leftMouseDown]) { [weak self] event in
             guard let self, let button = self.item?.button,
                   event.window === button.window,
-                  button.frame.contains(event.locationInWindow) else { return event }
+                  button.frame.contains(event.locationInWindow),
+                  event.type == .rightMouseDown || event.modifierFlags.contains(.control) else { return event }
             let menu = StatusItemContextMenu.makeMenu(router: self.router,
                 preferences: self.preferences,
                 componentsAvailable: {
@@ -1185,6 +1203,11 @@ private final class WattFallbackStatusItem: NSObject {
                         && self.powerStore.currentReading.freshness == .fresh
                         && self.powerStore.currentReading.capabilities.components == .available
                 })
+            button.highlight(true)
+            defer {
+                StatusItemContextMenu.endPresentation(menu)
+                button.highlight(false)
+            }
             NSMenu.popUpContextMenu(menu, with: event, for: button)
             return nil
         }
@@ -1194,11 +1217,29 @@ private final class WattFallbackStatusItem: NSObject {
             case .statusPanel: self?.togglePanel()
             case .coachMark: self?.togglePanel()
             case .settings:
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-            case .onboarding, .softwareUpdate, .update:
-                // These routes are still owned by the SwiftUI scenes when they are
-                // available; the fallback keeps the primary status panel usable.
-                break
+                guard let self else { return }
+                if !NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil) {
+                    self.showFallbackWindow(title: "Watt? Settings", content: SettingsRootView()
+                        .environmentObject(self.router)
+                        .environmentObject(self.powerStore)
+                        .environmentObject(self.preferences))
+                }
+            case .onboarding:
+                guard let self else { return }
+                self.showFallbackWindow(title: "Watt? Setup", content: OnboardingFlowView()
+                    .environmentObject(self.router)
+                    .environmentObject(self.powerStore)
+                    .environmentObject(self.preferences))
+            case .softwareUpdate:
+                guard let self else { return }
+                self.showFallbackWindow(title: "Software Update", content: UpdateRootView(softwareUpdate: true)
+                    .environmentObject(self.router))
+            case .update:
+                guard let self else { return }
+                self.showFallbackWindow(title: "Watt? Update", content: UpdateRootView()
+                    .environmentObject(self.router)
+                    .environmentObject(self.powerStore)
+                    .environmentObject(self.preferences))
             }
         }
 
@@ -1220,6 +1261,8 @@ private final class WattFallbackStatusItem: NSObject {
         samplingTask?.cancel()
         samplingTask = nil
         observations.removeAll()
+        if let wakeObserver { NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver) }
+        wakeObserver = nil
         if let contextMenuMonitor { NSEvent.removeMonitor(contextMenuMonitor) }
         contextMenuMonitor = nil
         panel?.close()
@@ -1278,21 +1321,23 @@ private final class WattFallbackStatusItem: NSObject {
     }
 
     private func showFallbackWindow() {
-        guard fallbackWindow == nil else { return }
-        let content = NSHostingView(rootView:
-            MenuBarRootView()
-                .environmentObject(router)
-                .environmentObject(powerStore)
-                .environmentObject(preferences))
+        showFallbackWindow(title: "Watt?", content: MenuBarRootView()
+            .environmentObject(router)
+            .environmentObject(powerStore)
+            .environmentObject(preferences))
+    }
+
+    private func showFallbackWindow<Content: View>(title: String, content: Content) {
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 420, height: 560),
                               styleMask: [.titled, .closable, .miniaturizable],
                               backing: .buffered, defer: false)
-        window.title = "Watt?"
+        window.title = title
         window.isReleasedWhenClosed = false
-        window.contentView = content
+        window.contentView = NSHostingView(rootView: content)
         window.center()
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+        fallbackWindow?.close()
         fallbackWindow = window
     }
 }

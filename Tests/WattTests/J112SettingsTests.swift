@@ -39,6 +39,16 @@ final class J112SettingsTests: XCTestCase {
         XCTAssertTrue(preferences.checkForUpdatesAutomatically)
     }
 
+    func testUpdateIntervalDrivesLiveSamplingCadence() {
+        XCTAssertEqual(PreferencesStore.seconds(for: "Every second"), 1)
+        XCTAssertEqual(PreferencesStore.seconds(for: "Every 2 seconds"), 2)
+        XCTAssertEqual(PreferencesStore.seconds(for: "Every 5 seconds"), 5)
+        XCTAssertEqual(PreferencesStore.seconds(for: "legacy value"), 2)
+
+        let preferences = J112FixtureLaunch.makePreferences()
+        XCTAssertEqual(preferences.updateIntervalSeconds, 2)
+    }
+
     func testNativeRowsExposeExactLabelsValuesAndHelpText() throws {
         XCTAssertEqual(SettingsRootView.fullSettingsComponentSubtitle,
                        "In Components mode. Two fit; more crowd the menu bar.")

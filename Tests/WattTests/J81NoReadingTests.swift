@@ -187,6 +187,20 @@ final class J81NoReadingTests: XCTestCase {
         assertNoPower(store.statusReading)
     }
 
+    func testPeriodicRetryUsesProvidedSamplingInterval() async throws {
+        let telemetry = CountingTelemetry()
+        let store = PowerReadingStore(currentReading: .unavailable, telemetry: telemetry)
+        let task = Task { await store.runSampling(interval: { 0.25 }) }
+        defer { task.cancel() }
+        for _ in 0..<30 {
+            if telemetry.calls >= 2 { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertGreaterThanOrEqual(telemetry.calls, 2)
+        task.cancel()
+        await task.value
+    }
+
     func testRetryCallbackAndNativeFooterActionsPreserveRouterAndPreferences() async throws {
         let preferences = J81FixtureLaunch.makePreferences()
         let original = preferences.onboarding
@@ -368,10 +382,17 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertTrue(root.contains("isRetrying: powerStore.isRefreshing"))
         let app = try source("App/WattApp.swift")
         for token in ["MenuBarExtra(isInserted:", ".menuBarExtraStyle(.window)", "ScenePresentationBridge(",
-                      "await powerStore.runSampling()", "NSWorkspace.didWakeNotification", "powerStore.handleWake()",
-                      "private var samplingTask: Task<Void, Never>?", "samplingTask = Task { [powerStore] in",
+                      "await powerStore.runSampling(interval:", "NSWorkspace.didWakeNotification", "powerStore.handleWake()",
+                      "private var samplingTask: Task<Void, Never>?", "samplingTask = Task { [powerStore, preferences] in",
                       "samplingTask?.cancel()",
                       "await J81FixtureLaunch.prepare(router: router)", "view.observeJ81StatusFixture(router: router)"] {
+            XCTAssertTrue(app.contains(token), token)
+        }
+        for token in ["private var wakeObserver: NSObjectProtocol?",
+                      "notificationCenter.addObserver(", "removeObserver(wakeObserver)",
+                      "matching: [.rightMouseDown, .leftMouseDown]",
+                      "event.modifierFlags.contains(.control)",
+                      "StatusItemContextMenu.endPresentation(menu)"] {
             XCTAssertTrue(app.contains(token), token)
         }
         let fixture = try source("App/J81FixtureLaunch.swift")

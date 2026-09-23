@@ -109,11 +109,13 @@ final class PowerReadingStore: ObservableObject {
     }
 
     /// The status item's task owns cancellation; frozen fixture clocks never poll the host.
-    func runSampling() async {
+    func runSampling(interval: @escaping @MainActor () -> TimeInterval = { PowerReadingStore.retryInterval }) async {
         guard observesSystemWake else { return }
         while !Task.isCancelled {
             await refresh()
-            do { try await Task.sleep(nanoseconds: UInt64(Self.retryInterval * 1_000_000_000)) }
+            let seconds = interval()
+            let delay = seconds.isFinite && seconds > 0 ? seconds : Self.retryInterval
+            do { try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000)) }
             catch { return }
         }
     }

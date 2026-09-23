@@ -111,3 +111,26 @@ The later live native status-item → popover capture is retained in
 [`live-native-panel-2026-09-24/`](live-native-panel-2026-09-24/). It records the
 full-battery `0.0 W` delta alongside independently sampled charger/system rows
 and confirms the visible menu-bar path is not a frozen fixture.
+
+## 2026-09-24 sampling-path correction
+
+The production sampler now reevaluates the persisted Settings update interval
+on every cycle (`Every second`, `Every 2 seconds`, or `Every 5 seconds`) for
+both the SwiftUI scene path and the native AppKit fallback status item. The
+fallback also owns the wake observer and immediately invalidates/refreshes the
+reading after sleep, while preserving Control-click and right-click context
+menus and all router destinations.
+
+The parser now keeps valid `SystemPowerIn` and `SystemLoad` values as
+`.chargerInput`/`.systemDraw` samples when the public battery state is
+temporarily unknown or absent. This avoids hiding real charger/system watts
+behind the battery-delta no-reading state; it does not invent a battery delta.
+
+Verification on this host: focused telemetry/sampler/settings coverage **72
+tests, 5 intentional skips, 0 failures**; full SwiftPM suite **713 tests, 5
+skipped, 0 failures**; universal Release app build succeeded; opt-in physical
+host probe passed with full battery `0.0 W`, charger input `11.231 W`, and
+system draw `11.231 W`; the installed Desktop Release app's AX status item
+reported a live `27.5 W` sample and its native popover displayed charger/system
+rows at `11.2 W` with battery delta `0.0 W`. The fresh panel capture and exact
+window metadata are retained in `live-sampling-interval-2026-09-24/`.
