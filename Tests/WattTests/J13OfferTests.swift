@@ -38,6 +38,43 @@ final class J13OfferTests: XCTestCase {
         for token in ["RoundedRectangle", ".background(", ".overlay(", ".position(", ".offset("] {
             XCTAssertFalse(source.contains(token), token)
         }
+        let lines = source
+            .replacingOccurrences(of: #"(?s)/\*.*?\*/|//[^\n]*"#, with: "",
+                                  options: .regularExpression)
+            .components(separatedBy: .newlines)
+            .map { $0.filter { !$0.isWhitespace } }
+        let formStart = try XCTUnwrap(lines.firstIndex(of: "Form{"))
+        let actionsStart = try XCTUnwrap(lines.indices.first {
+            $0 > formStart && lines[$0] == "HStack{"
+        })
+        let form = lines[formStart..<actionsStart].joined()
+        XCTAssertGreaterThan(WattSpacing.md, 0)
+        XCTAssertTrue(form.contains(".formStyle(.grouped)"))
+        XCTAssertTrue(form.contains(".padding(.horizontal,WattSpacing.md)"))
+        XCTAssertFalse(form.contains(".frame("), "Form and rows retain intrinsic native sizing")
+        let layout = lines.joined()
+        for forbidden in [".padding(-", ",-", ".frame(height:", ".frame(minHeight:",
+                          ".frame(maxHeight:", ".frame(idealHeight:", ".listRowInsets(",
+                          ".contentMargins("] {
+            XCTAssertFalse(layout.contains(forbidden), forbidden)
+        }
+        let insets = lines.indices.filter { lines[$0] == ".padding(.horizontal,32)" }
+        XCTAssertEqual(insets.count, 2, "Only the header and actions receive a 32pt inset")
+        XCTAssertEqual(insets.filter { $0 < formStart }.count, 1,
+                       "Header inset must not constrain the sibling Form")
+        XCTAssertEqual(insets.filter { $0 > actionsStart }.count, 1,
+                       "Inset the action row, not the whole surface")
+        var depth = 0
+        let depths = lines.map { line in
+            let current = depth
+            depth += line.filter { $0 == "{" }.count - line.filter { $0 == "}" }.count
+            return current
+        }
+        XCTAssertEqual(depths[formStart], depths[actionsStart])
+        for inset in insets {
+            XCTAssertEqual(depths[inset], depths[formStart],
+                           "32pt insets belong to Form siblings, not the shared outer container")
+        }
         let icon = NSImage(contentsOf: root.appendingPathComponent(
             "Resources/Assets.xcassets/WattAppIcon.imageset/watt-app-icon.png"))
         XCTAssertEqual(icon?.size, NSSize(width: 256, height: 256))
