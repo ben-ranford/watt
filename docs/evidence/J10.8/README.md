@@ -1,5 +1,7 @@
 # G072 / J10.8 — Helper changed
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `8a6254fe239bb704ee3e90643f14552745cd5f93e229ce1fc7558f4067c60207`).
+
 Exact Figma MCP file `9DKDgUfEqidZdZQEVlQgLS`, frame `34:6183` (1000×720), alert `34:6340` (260×246 at 370,230). Retrieved design context before implementation; raw text MCP responses are saved in context.json, metadata.json, variable_defs.json and screenshot.json. reference.png is the fresh MCP screenshot; context.png is the supplied context URL. reference.sha256 verifies both. Reference inspected visually.
 
 Implementation: App/HelperUpdatePresentation.swift uses an informational NSAlert, exact copy, Update Helper/Return and Later/Escape. macOS owns icon, semantic fonts, materials, accent, geometry and buttons; design coordinates and liquid-glass variables are evidence, not custom rendering instructions. Existing AppKit status-item bridge remains unchanged. App/WattApp.swift supplies DEBUG-only J10.8/base fixture values through existing stores/preferences. No real helper install, approval or network effects in the fixture.
@@ -19,3 +21,5 @@ Reproduce: `bash docs/evidence/J10.8/verify.sh`. Focused tests include J10, Nati
 - Status-item/compositor capture and AX-driven action verification remain unproven. Metrics are **null**, visualPass is false; no fake score, permission requests or replacement UI screenshots.
 
 Changed implementation/tests: App/HelperUpdatePresentation.swift, App/WattApp.swift, Tests/Fixtures/{StoryFixtures,FixtureLaunchSelection}.swift, Tests/WattTests/{J108HelperUpdateTests,J33HelperUpdateTests,F05FixtureTests}.swift, Watt.xcodeproj/project.pbxproj; DESIGN.md and SCREEN-BACKLOG.md document the contract. Existing unrelated dirty work was preserved. No commit created.
+
+Fresh live AX evidence confirms the native status item plus helper-update alert semantics; real helper mutation, OS approval and visual comparison remain explicitly unclaimed.
