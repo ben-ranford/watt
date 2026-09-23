@@ -1,5 +1,7 @@
 # J9.1 — Settings → Remove… (confirm)
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `92852f996cfa3c25886d6bf1bc29bed9a5bca4c16d419ef264796be882003e80`).
+
 G062, exact Figma `9DKDgUfEqidZdZQEVlQgLS / 32:5397`, 1000×720.
 Fresh MCP context, metadata/hierarchy, screenshot response and downloaded bytes
 are retained here. Both fresh screenshot sources hash to
@@ -68,3 +70,5 @@ capture. A Settings-only screenshot is not marked comparable to the full alert
 reference. Visual acceptance and live Remove…/Cancel/Remove/keyboard traversal
 remain blocked on an accessible native GUI session; this story is not claimed
 visually accepted. Domain/navigation semantics are covered by tests.
+
+Fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`; the native status item registered, but no accepted fixture-owned Settings/alert window was available, so visual and live alert acceptance remain open.
