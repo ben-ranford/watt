@@ -2,6 +2,8 @@
 
 Implemented on existing worktree, branch `bug/G074-j122-confirm-uninstall`. No commit or new worktree.
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `1466b6e3c198db2ab44c628c4a899604f8f600e9e489e74c52c82723ae3d383c`).
+
 ## Implementation
 - SettingsRootView reuses native SwiftUI alert, destructive Uninstall / Cancel roles and exact MCP message; OS owns keyboard/Escape, materials and chrome.
 - AppRouter adds one-shot presentation/generation-scoped consent. Opening/canceling performs no cleanup; stale/duplicate/closed requests fail closed. In-flight removal prevents concurrent requests across reopening; fresh consent permits retry after failure.
@@ -23,3 +25,5 @@ Exact Figma MCP context, metadata, screenshot response and variable definitions 
 ## Visual limitations
 Capture attempted twice against the real fixture process; final capture **exit 1**. Screen capture is preauthorized, but AX trust is unavailable and no fixture-owned on-screen compositor windows were listed. No native screenshot, actual alert presentation or Return/Escape interaction is claimed. The fixture produced no native Settings identity record before timeout. No TCC permissions were requested or altered. Capture process was terminated and reaped (see capture/process-cleanup.log).
 Visual pass is false; score and pixel_diff are **null**. No synthetic renderer or fake score was used. Runtime interaction and pixel parity require a trusted, visible GUI session. See verification.json and visual-review.json.
+
+Fresh retrieval is recorded; the host still produced no PID-owned Settings/alert window, so live keyboard/button and visual comparison remain open.
