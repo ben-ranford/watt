@@ -315,25 +315,29 @@ struct OfferComponentReadingsView: View {
 
     var body: some View {
         VStack(spacing: WattSpacing.md) {
-            Image("WattAppIcon")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 64, height: 64)
-                .accessibilityHidden(true)
-            Text(Self.title)
-                .font(WattTypography.title)
-                .accessibilityAddTraits(.isHeader)
-            Text(Self.message)
-                .font(WattTypography.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
+            VStack(spacing: WattSpacing.md) {
+                Image("WattAppIcon")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 64, height: 64)
+                    .accessibilityHidden(true)
+                Text(Self.title)
+                    .font(WattTypography.title)
+                    .accessibilityAddTraits(.isHeader)
+                Text(Self.message)
+                    .font(WattTypography.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.horizontal, 32)
             Form {
                 ForEach(Self.facts, id: \.label) { fact in
                     LabeledContent(fact.label, value: fact.value)
                 }
             }
             .formStyle(.grouped)
+            .padding(.horizontal, WattSpacing.md)
             .accessibilityIdentifier("onboarding.helper.facts")
             HStack {
                 Spacer()
@@ -349,8 +353,8 @@ struct OfferComponentReadingsView: View {
                 .keyboardShortcut(.defaultAction)
                 .accessibilityIdentifier("onboarding.helper.turnOn")
             }
+            .padding(.horizontal, 32)
         }
-        .padding(.horizontal, 32)
         .padding(.vertical, 24)
         .frame(width: WattSpacing.onboardingWidth)
     }
