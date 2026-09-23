@@ -9,6 +9,8 @@ bar only. Desktop Template 35:5600 is offset -512; Finder/File/Edit/View/Menu
 Item/Window/Help exist in metadata/context outside the left crop. No Watt-owned
 pixels, window, status item or Dock should be fabricated.
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `dbb12c0ff5fdb072f77626740af6954b710d6f046cf2feb622ae660e7f506a84`).
+
 ## Implementation and boundary
 AppRouter consumes exact J12.2 confirmation; configureUninstall binds a scoped
 P05 adapter and requires all four ownership categories. P05 verifies inventory,
@@ -69,3 +71,5 @@ Pre-existing dirty worktree content was retained.
 - Controlled launch: exit 0; no Watt windows in compositor inventory.
 - Capture: exit 1; AX untrusted and Terminal frontmost. No native screenshot
   captured, no valid pixel comparison; visual score and pixel_diff are null.
+
+Fresh controlled no-Watt launch exited cleanly; the normal Desktop app was deliberately left running, and no real removal or visual pass was claimed.

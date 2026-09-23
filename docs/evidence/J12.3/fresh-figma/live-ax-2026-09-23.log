@@ -1,0 +1,31 @@
+binary=/tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+launch=--watt-fixture J12.3/base
+launcher_pid=89001
+fixture_still_running_after_2s=false
+--- axprobe after controlled no-Watt launch ---
+true
+--- Watt process/window scan ---
+78064 /Users/benranford/Desktop/Watt.app/Contents/MacOS/Watt
+88989 /bin/zsh -lc set -e
+mkdir -p docs/evidence/J12.3/fresh-figma
+curl -L --fail --silent --show-error 'https://www.figma.com/api/mcp/asset/92546f34-e0cf-45f6-8ffd-c0c06acdbf34.png' -o docs/evidence/J12.3/fresh-figma/reference-2026-09-23.png
+shasum -a 256 docs/evidence/J12.3/fresh-figma/reference-2026-09-23.png
+bin=/tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+log=docs/evidence/J12.3/fresh-figma/live-ax-2026-09-23.log
+: > "$log"
+printf 'binary=%s\nlaunch=--watt-fixture J12.3/base\n' "$bin" >> "$log"
+"$bin" --watt-fixture J12.3/base >> "$log" 2>&1 &
+pid=$!
+printf 'launcher_pid=%s\n' "$pid" >> "$log"
+sleep 2
+if kill -0 "$pid" 2>/dev/null; then echo 'fixture_still_running_after_2s=true' >> "$log"; kill "$pid" 2>/dev/null || true; else echo 'fixture_still_running_after_2s=false' >> "$log"; fi
+sleep 1
+wait "$pid" 2>/dev/null || true
+printf '%s\n' '--- axprobe after controlled no-Watt launch ---' >> "$log"
+/tmp/axprobe >> "$log" 2>&1 || true
+printf '%s\n' '--- Watt process/window scan ---' >> "$log"
+pgrep -alf '[W]att.app/Contents/MacOS/Watt' >> "$log" || true
+/tmp/cgwindows 2>&1 | grep -E 'owner=Watt|owner=Watt\?' | head -20 >> "$log" || true
+cat "$log"
+git diff --check; git status --short
+owner=Watt? name=Watt? number=20358 layer=0 alpha=1 bounds={
