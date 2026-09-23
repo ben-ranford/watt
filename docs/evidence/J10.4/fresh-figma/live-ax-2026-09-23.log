@@ -1,0 +1,18 @@
+binary=/tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+launch=--watt-fixture J10.4/base
+launcher_pid=85572
+sandbox_extension_issue_file_to_process failed for /tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app: 1 (Operation not permitted)
+--- axprobe ---
+true
+--- native downloading semantics ---
+actual_pid=85572
+  role=AXWindow subrole=AXStandardWindow title=Software Update desc= value= enabled=
+      role=AXStaticText subrole= title= desc= value=Downloading Watt? 1.1… enabled=true
+      role=AXProgressIndicator subrole= title= desc=Download progress value= enabled=true
+      role=AXStaticText subrole= title= desc= value=2.1 MB of 4.2 MB enabled=true
+      role=AXButton subrole= title= desc=Cancel value= enabled=true
+    role=AXStaticText subrole= title= desc= value=Software Update enabled=true
+        role=AXMenuItem subrole= title=Software Update desc= value= enabled=true
+        role=AXMenuItem subrole= title=Software Update desc= value= enabled=true
+--- cleanup ---
+fixture_process=absent

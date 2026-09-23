@@ -2,6 +2,8 @@
 
 Implemented in the existing worktree on `bug/G068-j104-downloading`; no commit created. Cumulative edits were preserved.
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `48b910f6cfa48094064523821945a3dab44d6bfdc4526a620073c27d02739769`).
+
 ## Source and native styling
 Fresh MCP evidence is in `figma-context.json`, `figma-metadata.json`, `figma-screenshot.json`, and `figma-variables.json`. Exact source: file `9DKDgUfEqidZdZQEVlQgLS`, frame `34:5339`, window `34:5493`, content `34:5512`, determinate progress `34:5598`. `reference.png` is downloaded from the exact MCP URL recorded in `figma-screenshot.json` and both summary JSON files; `reference.sha256` verifies its bytes.
 
@@ -27,3 +29,5 @@ Download admission persists receipt ownership before asynchronous service work. 
 `capture.sh` launches only DEBUG `J10.4/base`, records PID-owned windows using `capture-window.swift`, captures `capture/native-window.png`, and terminates/reaps the exact fixture PID (84205 in the saved capture). Screen Recording was preauthorized and capture succeeded; Accessibility was not trusted. AX comparison remains blocked by TCC. The screenshot was qualitatively reviewed, but **visual acceptance is not claimed**: `score` and `pixel_diff` are null in both summary JSON files. Native window bounds are 420×178 points versus the reference's 420×177; native OS chrome and semantic text/control metrics are intentional. No numerical comparison was performed.
 
 Release build-for-testing retains the same compatible-module blocker documented for J10.3. Full-suite skipped checks are explicitly recorded in `full-tests.log`; they are not counted as passes. See `visual-review.json` for observations and limitations.
+
+Fresh live AX evidence confirms the native determinate progress, byte text and Cancel semantics; the visual comparison gate remains open.
