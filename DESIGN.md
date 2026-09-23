@@ -2471,3 +2471,17 @@ The captured native panel is materially aligned with the Figma hierarchy and cop
 no calibrated pixel score is claimed because the reference is a full desktop
 composition and AppKit owns material/rasterization. Production first-open
 interaction and AX/VoiceOver remain explicit blockers. Evidence: `docs/evidence/J1.8/`.
+
+### P01 / live menu-bar host evidence — 2026-09-24
+
+The current host reports real AppleSmartBattery telemetry (`BatteryPower=0 mW`,
+`SystemPowerIn=9896 mW`, `SystemLoad=9896 mW`, 100% fully charged). Delta is
+therefore correctly `0.0 W`; Charger mode reads the separate live input (`9.896 W`).
+
+A standalone public AppKit probe reproduces the remaining host limitation:
+`NSStatusItem.isVisible == true`, but its native `NSStatusBarWindow` has height
+zero and no status-item compositor or AX element is exposed. Watt now schedules
+fallback status-item creation after `applicationDidFinishLaunching`, restores the
+native accessory activation policy, and keeps the native Watt? panel visible as
+the fallback. No custom menu-bar chrome is added. Evidence:
+`docs/evidence/P01/menu-bar-host-2026-09-24.md`.

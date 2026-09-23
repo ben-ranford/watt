@@ -230,9 +230,12 @@ struct WattApp: App {
         // the user-facing app usable with the public AppKit status-item API while
         // retaining MenuBarExtra for all fixture launches.
         if !Self.isHarnessLaunch {
-            applicationDelegate.installFallbackStatusItem(router: appRouter,
-                                                          powerStore: appPowerStore,
-                                                          preferences: appPreferences)
+            // App.init can run before NSApplication has finished registering its
+            // status-bar scene. The delegate installs the public NSStatusItem
+            // from applicationDidFinishLaunching instead.
+            applicationDelegate.scheduleFallbackStatusItem(router: appRouter,
+                                                            powerStore: appPowerStore,
+                                                            preferences: appPreferences)
         }
     }
 
@@ -1040,6 +1043,16 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     var onTerminate: (() -> Void)?
     private(set) var isTerminating = false
     private var fallbackStatusItem: WattFallbackStatusItem?
+    private var pendingFallbackInstall: (() -> Void)?
+
+    @MainActor
+    func scheduleFallbackStatusItem(router: AppRouter, powerStore: PowerReadingStore,
+                                    preferences: PreferencesStore) {
+        pendingFallbackInstall = { [weak self] in
+            self?.installFallbackStatusItem(router: router, powerStore: powerStore,
+                                            preferences: preferences)
+        }
+    }
 
     @MainActor
     func installFallbackStatusItem(router: AppRouter, powerStore: PowerReadingStore,
@@ -1068,6 +1081,15 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     #endif
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        let install = pendingFallbackInstall
+        pendingFallbackInstall = nil
+        // On some hosts NSStatusBar has a zero-height window during the
+        // applicationDidFinishLaunching callback. Defer one run-loop turn so
+        // the system menu bar has finished materialising before creating the
+        // public status item.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            install?()
+        }
         #if DEBUG
         capture.applicationDidFinishLaunching(notification)
         #endif
@@ -1106,7 +1128,13 @@ private final class WattFallbackStatusItem: NSObject {
 
     func install() {
         guard item == nil else { return }
+        // SwiftUI Window scenes can promote an LSUIElement process to the
+        // regular activation policy during launch. Restore the native agent
+        // policy before creating the status item so AppKit assigns it a real
+        // menu-bar slot instead of a zero-height NSStatusBarWindow.
+        NSApp.setActivationPolicy(.accessory)
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem.isVisible = true
         item = statusItem
         guard let button = statusItem.button else { return }
         button.target = self

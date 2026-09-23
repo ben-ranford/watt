@@ -71,3 +71,21 @@ macOS 13 runtime execution was not performed. Existing compiler/AppIntents warni
 are not telemetry failures.
 
 Toolchain caveat: native test linking warns that the installed XCTest binaries were built for macOS 14 while the target is macOS 13. Tests pass on this host; this is not proof of macOS 13 test-runtime compatibility. Xcode also reports skipped AppIntents metadata extraction and host linkd diagnostics; these do not fail the build/test. `plutil -lint Watt.xcodeproj/project.pbxproj` passes.
+
+## 2026-09-24 live host follow-up
+
+The current host sample reported `BatteryPower=0 mW`, `SystemPowerIn=9896 mW`,
+`SystemLoad=9896 mW`, `CurrentCapacity=100`, `FullyCharged=Yes`. The merged
+Release app is therefore reading valid live telemetry: Delta is `0.0 W`, while
+Charger mode is `9.896 W`.
+
+The host does not assign a visible compositor slot to public AppKit status items:
+a standalone `NSStatusItem` probe and Watt both reported a visible native
+`NSStatusBarWindow` with height `0`. No fake menu bar or custom status-item chrome
+was added. Watt now installs after `applicationDidFinishLaunching`, explicitly
+restores the native accessory policy, and leaves the native Watt? panel visible
+as a fallback. See `menu-bar-host-2026-09-24.md`.
+
+Fresh focused verification: package P01 **12 tests / 1 intentional skip / 0
+failures**, hosted P01 + NativeStyling **23 tests / 1 skip / 0 failures**,
+and Release build/analyze passed (`g036-release-build-analyze-2026-09-24.log`).
