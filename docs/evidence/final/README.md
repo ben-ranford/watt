@@ -1,7 +1,7 @@
 # Final cumulative verification — 2026-09-23 Australia/Sydney
 
 ## Verdict
-**Current follow-up: PARTIAL.** Current main is `343263a` as of 2026-09-23. The follow-up below supersedes only the old membership and Release test-module failures; it does not close final acceptance or production gates.
+**Current follow-up: PARTIAL.** Current main is `a7e8b35` as of 2026-09-23. The follow-up below supersedes only the old membership and Release test-module failures; it does not close final acceptance or production gates.
 
 ### Historical prior-pass verdict — `b1d4c11`
 **PARTIAL. Not ready for a final-completion/production commit.** A scoped WIP checkpoint is possible with the blockers below disclosed. No commit was made; no source, product, or test files were edited. Existing cumulative edits and branch `bug/G081-final-project-verification` were preserved.
@@ -36,6 +36,27 @@ AX/VoiceOver, TCC and compositor acceptance gates remain open. Evidence-audit
 integrity and portability/reproducibility blockers and production Gates A–E
 remain open. No new runtime visual/accessibility or final-completion sign-off
 is claimed. `verification.json` and all historical logs remain unchanged.
+
+## Latest Figma/native evidence refresh — `a7e8b35`
+
+The sequential end-of-plan evidence refresh is now merged to current `main` for
+J12.4, J12.5, J11.1, J11.2 and J11.3. Each record re-queried the exact Figma
+node through MCP, pinned the screenshot hash and hierarchy/tokens, launched the
+matching DEBUG fixture, recorded native AX evidence, and preserved the exact host
+limitation without claiming a visual pass.
+
+| Story | Current evidence | Remaining gate |
+|---|---|---|
+| J12.4 | Native AX alert exposes `A helper from your last install`, exact description, `Reconnect`, `Remove Helper`; PID-owned native alert capture retained | AppKit dark/native appearance differs from the light Figma component; production helper inventory/mutation remains unproven |
+| J12.5 | Native AX status item exposes `Watt?, charging, plus 42.1 watts, menu extra`; Settings scene did not surface in the observation interval | No live Settings visual/production reconnect proof |
+| J11.1 | Native AX status-item label and successful activation recorded | `.window` panel compositor/VoiceOver runtime not surfaced |
+| J11.2 | AX opens PID-owned Settings; exact native controls/strings recorded | Live window is 580×831 and `Off`/`Turn On…` versus Figma 580×870 and `On`/`Remove…` |
+| J11.3 | Native `AXSheet` exposes exact destructive title/message and `Cancel`/`Uninstall`; final action not pressed | AppKit horizontal buttons/no custom icon versus Figma stacked alert; keyboard/VoiceOver runtime unverified |
+
+Evidence is under each story's `fresh-figma/` directory. These are documentation
+and verification updates only; they do not close the project-wide D1–D7, TCC,
+compositor, or production Gates A–E blockers. The normal `/Users/benranford/Desktop/Watt.app`
+remains running separately from all fixtures.
 
 ## Historical prior-pass evidence — `b1d4c11`
 The following table and retained evidence describe the prior pass, not current
