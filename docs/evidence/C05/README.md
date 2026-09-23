@@ -1,5 +1,20 @@
 # G027 / C05 — native Settings, light
 
+## Fresh evidence — 2026-09-23
+
+- [Current Figma context](current-figma-context-2026-09-23.md)
+- [Debug build/analyze](debug-build-analyze.log)
+- [Focused package tests with Xcode](package-focused-xcode-2026-09-23.log)
+- [Focused native tests](native-focused-2026-09-23.log)
+- [Native capture](capture-run-2026-09-23.log)
+- [Capture repeatability](repeatability-2026-09-23.log)
+
+Figma MCP context was re-retrieved for frame `25:787` and its window/content
+and form nodes. The native capture was inspected against the supplied Figma
+reference: content and control semantics match the native contract, while the
+system Form is taller than the compact Figma reference. This is a documented
+visual-verification boundary, not a pixel-match approval.
+
 ## Changes
 - `Features/Settings/Views/SettingsRootView.swift`: full native Form/Section, Picker, Toggle, LabeledContent and bordered/destructive buttons, replacing the shell. All requested labels, subtitles and base values.
 - `Models/WattPreferences.swift`: persistent precision with migration default for older stored data.
@@ -27,13 +42,15 @@ xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release -destinat
 ```
 
 ## Verification
-- Focused C05: **6 passed**. Native styling: **6 passed**.
+- Fresh focused C05: **6 passed**. Fresh native styling: **11 passed**.
+- Aggregate for the focused native run: **17 tests, 0 failures**.
 - Full package: **256 tests, 1 skipped, 0 failures**.
 - Debug and Release: **BUILD SUCCEEDED; ANALYZE SUCCEEDED**.
 - Static: native-only source contract, shell syntax and `git diff --check` passed.
-- Two independent C05/base launches: byte-identical PNGs (`repeatability.json`).
+- Two fresh independent C05/base launches: byte-identical PNGs; both hashes are
+  `b8ae2041729cf4fbd19417498db002cc8605500ea5f59cf6320677f9c833ea96`.
 - Hosted XCTest: **blocked** by failure to load test bundle into Watt; run interrupted and stalled process stopped. Not a passing test.
 - Initial CommandLineTools invocation failed on missing SDK SwiftUI macro plugin. Explicit Xcode selection resolved compilation; no gallery code was changed.
 
 ## Remaining boundaries
-Controls persist desired preferences. This work does not claim OS login registration, notification authorization/delivery, automatic update scheduling or real helper/uninstall effects. Existing service adapters are not connected to app composition; removal reports unverified outcome rather than fabricated success. Helper status derives from reading capabilities plus the component preference, not a new monitor. Non-base C05 journeys remain unimplemented. No AX/VoiceOver audit or Figma pixel-match approval. No commit/checkpoint.
+Controls persist desired preferences. This work does not claim OS login registration, notification authorization/delivery, automatic update scheduling or real helper/uninstall effects. Existing service adapters are not connected to app composition; removal reports unverified outcome rather than fabricated success. Helper status derives from reading capabilities plus the component preference, not a new monitor. Non-base C05 journeys remain unimplemented. No AX/VoiceOver audit or Figma pixel-match approval. Native-system spacing remains the visual blocker; no custom compact metrics or painted chrome should be added to hide it.

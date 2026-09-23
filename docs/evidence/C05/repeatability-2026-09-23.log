@@ -1,0 +1,6 @@
+Fresh C05/base capture repeatability check
+first:  docs/evidence/C05/actual-content.png
+second: /tmp/c05-g027-repeat2/actual-content.png
+firstSHA256:  b8ae2041729cf4fbd19417498db002cc8605500ea5f59cf6320677f9c833ea96
+secondSHA256: b8ae2041729cf4fbd19417498db002cc8605500ea5f59cf6320677f9c833ea96
+byte_identical: true
