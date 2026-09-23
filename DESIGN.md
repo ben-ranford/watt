@@ -1226,6 +1226,22 @@ Comparable app-owned menu pixels and AX/live keyboard, hover, submenu and VoiceO
 acceptance remain separate gates. Missing compositor windows or AX trust keeps visual
 score/pixel diff null and status blocked; implemented registration is not story completion.
 
+### Native status-item host-placement boundary (2026-09-23)
+
+An independent minimal AppKit probe is pinned in
+`docs/evidence/host-status-item/`. It creates only
+`NSStatusBar.system.statusItem(withLength: .variableLength)`, sets a native title and
+Accessibility label, and uses no Watt code. On the current macOS 27.0 host with AX
+trust enabled, the probe registers a native `AXMenuBarItem` but reports the frame
+`x=-1, y=1157, width=65, height=24` on the `1800×1169` main display. Watt's J4.3,
+J5.1 and J5.2 fixtures reproduce the same `x=-1` edge placement; the normal fallback
+item reports `x=7`.
+
+This is host menu-bar/compositor evidence, not a missing Watt status item. Do not
+add fake menu-bar chrome, an overlay window, private APIs or bitmap replacement to
+force visibility. Native compositor pixels and live status-item hit-testing remain
+explicit acceptance gates until a host with correct placement is available.
+
 
 ## J6.1 — plugged in, charging (G050)
 
