@@ -2284,3 +2284,13 @@ the `MenuBarExtra` path so native visual evidence remains isolated. The fallback
 also opens the native panel in a normal `Watt?` window on launch, making the app
 discoverable when a menu-bar compositor hides third-party items; it does not paint
 custom menu-bar chrome or replace native controls.
+
+### C03 state correction — 2026-09-23
+
+The exact C03 Figma state renders `Check for Updates…` enabled. The DEBUG-only
+C03 fixture now injects the existing in-memory `FakeUpdateService` so AppKit
+renders that state without network, installation or OS effects. Production
+composition remains fail-closed with no updater until the trusted P04 service is
+configured. Focused package/hosted tests and the native capture prove the state;
+the existing C03 material/compositor/AX visual gates remain open. Evidence:
+`docs/evidence/C03/state-correction-2026-09-23/`.

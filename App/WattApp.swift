@@ -192,7 +192,17 @@ struct WattApp: App {
             return
         }
         #endif
+        #if DEBUG
+        // C03's Figma reference shows an enabled Check for Updates… row. Keep
+        // that deterministic fixture state without composing an updater into
+        // the real app, which remains fail-closed until a trusted P04 service
+        // is configured.
+        let appRouter = C03FixtureLaunch.requested
+            ? AppRouter(updateService: FakeUpdateService())
+            : AppRouter()
+        #else
         let appRouter = AppRouter()
+        #endif
         appRouter.onUninstalled = { NSApplication.shared.terminate(nil) }
         _router = StateObject(wrappedValue: appRouter)
         let appPowerStore = PowerReadingStore(currentReading: .unavailable,
@@ -961,7 +971,7 @@ final class NativeCaptureDelegate: NSObject, NSApplicationDelegate {
            let preferences = C03FixtureLaunch.preferences {
             NSApplication.shared.appearance = NSAppearance(named: .darkAqua)
             let anchor = StatusAnchorView(frame: NSRect(x: 0, y: 0, width: 100, height: 24))
-            let router = AppRouter()
+            let router = AppRouter(updateService: FakeUpdateService())
             anchor.makeMenu = { StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { true }) }
             anchor.install = { [weak anchor] in anchor?.openContextMenuFixture() }
             let window = NSWindow(contentRect: anchor.frame, styleMask: [.borderless], backing: .buffered, defer: false)

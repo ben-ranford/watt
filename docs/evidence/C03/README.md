@@ -130,6 +130,18 @@ telemetry test remains opt-in/skipped. The actual SwiftUI status-button repaint 
 physical pointer/VoiceOver/TCC-dependent compositor capture are not verified by
 these model/target-action tests. No checkpoint was made.
 
+## State correction — 2026-09-23
+
+The exact Figma reference has an enabled `Check for Updates…` row. The DEBUG-only
+C03 fixture now injects the existing in-memory `FakeUpdateService`, while normal
+production composition remains fail-closed without a trusted P04 updater. Focused
+package/hosted C03 tests pass 9/9, Debug build/analyze succeeds, and the native
+capture confirms the enabled row with the existing parent/submenu state. This
+corrects one reference-state mismatch but does not close visual acceptance; the
+OS-owned material, font/inset differences, compositor placement and AX/physical
+interaction gates remain open. See `state-correction-2026-09-23/`.
+
+
 ## Historical focused correction pass — 2026-09-21 (superseded below)
 
 **83/100 self-assessed visual score**, compared with the user-provided prior 79/100.

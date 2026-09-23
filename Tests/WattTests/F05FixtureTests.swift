@@ -426,6 +426,16 @@ final class C03ContextMenuTests: XCTestCase {
         }
     }
 
+    func testC03ReferenceFixtureEnablesUpdateActionWithInjectedService() throws {
+        let menu = StatusItemContextMenu.makeMenu(
+            router: AppRouter(updateService: FakeUpdateService()),
+            preferences: preferences(),
+            componentsAvailable: { true })
+
+        let updates = try XCTUnwrap(menu.items.first { $0.title == "Check for Updates…" })
+        XCTAssertTrue(updates.isEnabled)
+    }
+
     func testC03NativeShortcutDispatchPreservesTargetsAndModifiers() throws {
         let router = AppRouter()
         var destinations: [AppDestination] = []
