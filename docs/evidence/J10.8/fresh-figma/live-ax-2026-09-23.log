@@ -1,0 +1,17 @@
+binary=/tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+launch=--watt-fixture J10.8/base
+launcher_pid=87342
+sandbox_extension_issue_file_to_process failed for /tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app: 1 (Operation not permitted)
+--- axprobe ---
+true
+--- native helper-update alert semantics ---
+actual_pid=87342
+  role=AXWindow subrole=AXDialog title= desc=alert value= enabled=
+    role=AXStaticText subrole= title= desc= value=The helper changed enabled=true
+    role=AXStaticText subrole= title= desc= value=Watt? 1.1 comes with a new helper. macOS asks you to approve it once more. enabled=true
+    role=AXButton subrole= title=Update Helper desc= value= enabled=true
+    role=AXButton subrole= title=Later desc= value= enabled=true
+    role=AXMenuBarItem subrole= title=Watt desc= value= enabled=true
+    role=AXMenuBarItem subrole=AXMenuExtra title=Watt?, charging, plus 42.1 watts, menu extra. desc= value= enabled=true
+--- cleanup ---
+fixture_process=absent
