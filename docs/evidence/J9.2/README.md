@@ -1,5 +1,7 @@
 # G063 / J9.2 — Helper removed
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `9959442e28b7db0732fd6ce189114f7ddb3486e79342328244bd23ce4b9bb904`).
+
 Reference: Figma file `9DKDgUfEqidZdZQEVlQgLS`, exact node `32:5844`.
 Fresh MCP design context, metadata and screenshot response are retained alongside
 the retrieved PNG and user-supplied PNG. Both PNGs have identical SHA-256 hashes
@@ -55,3 +57,5 @@ Capture: AXTrusted=false, screen capture preauthorized=true, no fixture PID-owne
 compositor windows. Native visual comparison and live interaction are unverified.
 No pixel diff, similarity score or visual pass is fabricated. See `verification.json`
 for final native runner status and `capture/window.json` for direct evidence.
+
+Fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`; helper-removal Settings visuals remain bounded by the host compositor/AX limitation, so visual acceptance is not claimed.
