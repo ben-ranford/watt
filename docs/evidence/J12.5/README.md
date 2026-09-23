@@ -55,3 +55,10 @@ bundle: build-for-testing is attempted honestly and currently fails on incompati
 Watt test-module resolution. Debug test-build and executed Swift tests provide test
 coverage; no Release tests are claimed run. Existing compiler concurrency warnings
 are retained in logs. No commit was made.
+
+## Fresh Figma and native evidence — 2026-09-23
+- Figma MCP re-queried for exact frame `35:5926` with design context, metadata, variables and screenshot; screenshot pinned at `fresh-figma/reference-2026-09-23.png` with SHA-256 `a6e798c302ecbc16871147bd5a8b755b430589a51284242efbcb48c79e94fced`.
+- Exact hierarchy, copy, native component boundary and the visible `Helper`/connected `Component Readings` discrepancy are recorded in `fresh-figma/context-2026-09-23.md`.
+- `J12.5/base` was launched from the current Debug binary. Fresh AX evidence confirms the native charging status item and `+42.1 W`; no PID-owned Settings window became visible during the observation interval.
+- No visual-pass or pixel-parity claim is made because the Settings window could not be captured from this host/compositor boundary. The attempt and limitation are retained under `fresh-figma/live-capture-2026-09-23/`.
+- The fixture was reaped; the normal Desktop app remained running. No production reconnect or helper mutation was performed.
