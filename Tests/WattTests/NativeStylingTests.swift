@@ -15,7 +15,7 @@ final class NativeStylingTests: XCTestCase {
         }
         for (view, nextView, style) in [
             ("OfferComponentReadingsView", "WaitingForApprovalView", "grouped"),
-            ("AllSetView", "ComponentPreviewView", "columns"),
+            ("AllSetView", "ComponentPreviewView", "grouped"),
             ("ComponentPreviewView", "CoachMarkView", "columns")
         ] {
             let start = try XCTUnwrap(flow.range(of: "struct \(view): View"))

@@ -4,12 +4,23 @@
   "windowNode": "28:2353",
   "reviewType": "independent Visual Ralph review supplied in the task",
   "reference": "figma-frame.png",
-  "referenceWindowBounds": [260, 206, 480, 328],
-  "actual": "native-window.png",
-  "actualPixels": [960, 656],
-  "actualPoints": [480, 328],
+  "referenceWindowBounds": [
+    260,
+    206,
+    480,
+    328
+  ],
+  "actual": "native-window.png (fresh grouped Form capture)",
+  "actualPixels": [
+    960,
+    656
+  ],
+  "actualPoints": [
+    480,
+    328
+  ],
   "scale": 2,
-  "comparison": "Independent visual inspection at equivalent 480x328-point geometry. Score reflects visual judgment, not a calibrated pixel-diff score. Secondary diff unavailable because Pillow was not installed; no pixel diff claimed.",
+  "comparison": "Fresh 2026-09-24 manual comparison at equivalent 480x328-point geometry. The native grouped Form correction restores the rounded login-row treatment visible in the Figma reference. No calibrated pixel diff is claimed.",
   "matches": [
     "Exact That’s it title and menu-bar guidance, including punctuation and two-line wrapping",
     "Centered app-icon placeholder, heading, guidance, single grouped login row and bottom-right Done",
@@ -64,5 +75,18 @@
     ],
     "evidenceLimit": "Debugger logs inspected by this documentation update; local /tmp evidence is non-durable and supersedes the earlier bundled hosted failure logs, which remain unchanged"
   },
-  "verificationScope": "Documentation-only persistence of the supplied verdict and debugger fix/results; existing debugger logs and source fix inspected; no new review, capture, build, test run or accessibility audit. Existing reproduction commands were not rerun. Product code and capture metadata remain unchanged."
+  "verificationScope": "Fresh native Debug build/analyze, focused package/native tests, and PID-scoped compositor capture were run on 2026-09-24. Visual comparison is manual and app-owned; AX/TCC/live interaction and OS login-item effects remain unverified.",
+  "correction": {
+    "previousNativeStyle": ".formStyle(.columns)",
+    "previousObservedGeometry": [
+      480,
+      293
+    ],
+    "currentNativeStyle": ".formStyle(.grouped)",
+    "currentObservedGeometry": [
+      480,
+      328
+    ],
+    "reason": "The exact Figma frame is 480x328 points and uses a rounded native-looking FormLogin row."
+  }
 }
