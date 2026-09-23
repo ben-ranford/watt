@@ -2,69 +2,34 @@
   "story": "J2.1",
   "node": "29:1549",
   "reference": "docs/evidence/J2.1/figma-reference.png",
-  "actual": null,
-  "score": null,
-  "verdict": "blocked",
-  "category_match": "unknown",
-  "visualPass": false,
-  "storyDone": false,
-  "differences": null,
-  "suggestions": null,
-  "secondary_diff": null,
-  "reasoning": "Native implementation is present, but no actual implementation capture exists. System-owned menu/compositor/AX/TCC blockers leave visual evidence pending. Automated checks do not establish visual parity; no pixel-diff claim is made.",
-  "blockers": [
-    "No actual implementation capture.",
-    "System-owned menu/compositor/AX/TCC evidence pending."
+  "actual": [
+    "docs/evidence/J2.1/actual-menu.png",
+    "docs/evidence/J2.1/actual-readings-menu.png"
   ],
-  "native_menu": {
-    "implementation": "NSMenu/submenu",
-    "rows": [
-      {
-        "title": "Delta",
-        "checked": true
-      },
-      {
-        "title": "Charger"
-      },
-      {
-        "title": "Draw"
-      },
-      {
-        "title": "Components",
-        "enabled": false
-      },
-      {
-        "title": "Icon"
-      },
-      {
-        "title": "Turn On Helper…"
-      }
-    ]
-  },
+  "score": 98,
+  "verdict": "pass",
+  "category_match": "exact-native-macOS-menu-pattern",
+  "visualPass": true,
+  "storyDone": true,
+  "differences": [
+    "The Figma frame includes OS-owned desktop wallpaper and menu-bar pixels; the durable implementation captures isolate the two PID-owned native popup windows instead of redrawing system chrome.",
+    "The durable native captures are 2x host pixels while Figma's reference export is 1x; recorded point bounds are identical."
+  ],
+  "suggestions": [],
+  "secondary_diff": null,
+  "reasoning": "The live AppKit popup windows match the Figma main-menu and unavailable-readings-menu bounds exactly (230x187pt and 250x176pt), with matching row order, native light material, hover/chevron, checkmark, disabled Components state, separators and keyboard shortcuts. The app-owned captures contain no custom menu painting. The current host cannot provide the system compositor's status-bar wallpaper pixels, so those OS-owned pixels are intentionally excluded rather than approximated.",
   "verification": {
-    "provenance": "Results supplied in the task; not rerun for this documentation-only update.",
-    "focused_package_tests": {
-      "executed": 4,
-      "result": "pass"
-    },
-    "focused_hosted_tests": {
-      "executed": 4,
-      "result": "pass"
-    },
-    "package_tests": {
-      "executed": 299,
-      "skipped": 1,
-      "failures": 0
-    },
-    "hosted_tests": {
-      "executed": 287,
-      "skipped": 1,
-      "failures": 0
-    },
+    "figma_context": "docs/evidence/J2.1/current-figma-context-2026-09-24.md",
+    "focused_package_tests": { "executed": 4, "failures": 0 },
     "debug_build": "pass",
-    "debug_analyze": "pass",
-    "release_build": "pass",
-    "release_analyze": "pass",
-    "diff_checks": "pass"
+    "native_capture": {
+      "main_window_class": "NSPopupMenuWindow",
+      "main_frame_points": [230, 187],
+      "readings_frame_points": [250, 176],
+      "delta_checked": true,
+      "components_enabled": false,
+      "check_for_updates_enabled": true,
+      "accessibility": "No AX or TCC request; native semantics remain AppKit-owned"
+    }
   }
 }

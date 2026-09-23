@@ -198,6 +198,16 @@ struct WattApp: App {
                                             router: appRouter)
                 }
             }
+            if J21FixtureLaunch.requested {
+                // J2.1 is a native menu interaction. Use an app-owned anchor
+                // for deterministic capture rather than waiting for
+                // MenuBarExtra's system compositor slot, which is unavailable
+                // on some verification hosts. The menu itself remains the
+                // production NSMenu/submenu implementation.
+                DispatchQueue.main.async {
+                    J21FixtureLaunch.launch(router: appRouter, preferences: fixturePreferences)
+                }
+            }
             if J112FixtureLaunch.requested {
                 // The MenuBarExtra label is not guaranteed to materialise its
                 // embedded bridge before Settings is opened. Prepare the
@@ -1863,6 +1873,7 @@ final class StatusAnchorView: NSView {
                             "parentHighlighted": self?.fixtureMenu?.highlightedItem === self?.fixtureMenu?.items.first,
                             "submenuHighlighted": self?.fixtureMenu?.items.first?.submenu?.highlightedItem?.title ?? "none",
                             "deltaChecked": self?.fixtureMenu?.items.first?.submenu?.items.first?.state == .on,
+                            "checkForUpdatesEnabled": self?.fixtureMenu?.item(withTitle: "Check for Updates…")?.isEnabled ?? false,
                             "os": ProcessInfo.processInfo.operatingSystemVersionString,
                             "accessibility": "No AX, global event injection or TCC request",
                             "visualPass": false,
@@ -2629,6 +2640,8 @@ struct J18PanelCaptureView: NSViewRepresentable {
 #if DEBUG
 @MainActor
 enum J21FixtureLaunch {
+    private static var captureWindow: NSWindow?
+
     static var requested: Bool {
         #if SWIFT_PACKAGE
         false
@@ -2638,6 +2651,38 @@ enum J21FixtureLaunch {
         }
         return false
         #endif
+    }
+
+    static func launch(router _: AppRouter, preferences: PreferencesStore) {
+        guard requested, captureWindow == nil else { return }
+        NSApplication.shared.appearance = NSAppearance(named: .aqua)
+        // Keep the visual fixture's update row in the Figma idle state. The
+        // production composition remains fail-closed until an updater is
+        // configured; this isolated fixture supplies the deterministic native
+        // service used by the reference menu.
+        let fixtureRouter = AppRouter(updateService: FakeUpdateService())
+
+        let anchor = StatusAnchorView(frame: NSRect(x: 0, y: 0, width: 100, height: 24))
+        anchor.makeMenu = {
+            StatusItemContextMenu.makeMenu(router: fixtureRouter, preferences: preferences,
+                                           componentsAvailable: { false })
+        }
+        anchor.install = { [weak anchor] in anchor?.openContextMenuFixture() }
+
+        let window = NSWindow(contentRect: anchor.frame, styleMask: [.borderless],
+                              backing: .buffered, defer: false)
+        window.title = "J2.1 native menu capture anchor"
+        window.isOpaque = false
+        window.backgroundColor = .clear
+        window.hasShadow = false
+        window.contentView = anchor
+        if let screen = NSScreen.main {
+            window.setFrameOrigin(NSPoint(x: screen.visibleFrame.maxX - 120,
+                                          y: screen.visibleFrame.maxY - 30))
+        }
+        captureWindow = window
+        window.orderFrontRegardless()
+        anchor.openContextMenuFixture()
     }
 }
 #endif
