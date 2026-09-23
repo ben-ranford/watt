@@ -1,6 +1,7 @@
 # G047 / J5.1 — welcome closed, running with defaults
 
-Implementation present; native visual/AX acceptance is a separate gate. No commit.
+Implementation present; native visual/AX acceptance is a separate gate. The live AX
+probe below is committed as evidence; it does not close the story.
 
 ## Exact reference and native implementation
 
@@ -76,7 +77,8 @@ Pointer/keyboard/VoiceOver interaction is not proven by unit tests.
 - `Watt.xcodeproj/project.pbxproj`, `DESIGN.md`, `SCREEN-BACKLOG.md`
 - `docs/evidence/J5.1/`: reference, reproduction scripts, fresh logs/exits, verification and visual review.
 
-Pre-existing worktree changes were retained. No commit or OMX goal-state mutation.
+Pre-existing worktree changes were retained. This evidence update does not mutate
+the J5.1 goal status.
 
 ## Final fresh verification
 
@@ -93,3 +95,18 @@ Pre-existing worktree changes were retained. No commit or OMX goal-state mutatio
 
 The package still reports pre-existing unhandled files from the worktree's build directory;
 this does not fail compilation. No independent lint tool is installed/configured for this slice.
+
+## Fresh live native AX probe (2026-09-23 UTC)
+
+The rebuilt `J5.1/base` fixture was launched as PID `60801` with shell Accessibility
+trust returning `true`. The fixture registered a native `AXMenuExtra` titled
+`Watt?, charging, plus 42.1 watts, menu extra.` at `x=-1, y=1157` with size
+`96.5×24`. An `AXPress` was accepted by the API (`press=0`), but the fixture's AX
+tree still contained only the status item; no coach-mark window or popover appeared.
+The item is therefore edge-clipped by the host menu-bar compositor rather than
+providing a usable live visual interaction. The exact transcript is retained in
+`live-ax-2026-09-23.log`.
+
+This strengthens native registration evidence only. It does **not** close the
+visual-comparison, keyboard, VoiceOver, or navigation acceptance gates, so J5.1
+remains incomplete.
