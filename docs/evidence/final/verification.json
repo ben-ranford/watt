@@ -325,38 +325,13 @@
     "strictAuditExitCode": 1,
     "problems": [
       {
-        "kind": "invalid JSON",
-        "path": "docs/evidence/J11.2/figma-screenshot-response.json",
-        "error": "Extra data: line 2 column 1 (char 178)"
-      },
-      {
-        "kind": "evidence digest",
-        "manifest": "docs/evidence/C03/metadata.sha256",
-        "path": "README.md",
-        "status": "mismatch",
-        "resolved": "docs/evidence/C03/README.md"
-      },
-      {
-        "kind": "evidence digest",
-        "manifest": "docs/evidence/J8.2/reference.sha256",
-        "path": "reference-export-from-story-manifest.png",
-        "status": "missing"
-      },
-      {
-        "kind": "evidence digest",
-        "manifest": "docs/evidence/J8.2/reference.sha256",
-        "path": "mcp-retrieved-screenshot.png",
-        "status": "missing"
-      },
-      {
-        "kind": "evidence digest",
-        "manifest": "docs/evidence/J8.3/reference.sha256",
-        "path": "reference-export-from-story-manifest.png",
-        "status": "missing"
+        "kind": "missing portable F00 reference manifest",
+        "path": ".omx/plans/f00-reference-evidence/manifest.json",
+        "detail": "Portable story README/PNG checks and all retained evidence digest entries now pass; the ignored F00 export manifest is absent from the current handoff."
       }
     ],
-    "historicalNotes": 58,
-    "detail": "resolved-findings.json",
+    "historicalNotes": 60,
+    "detail": "evidence-audit-detail.json",
     "all69CurrentD1D7AcceptanceVerified": false
   },
   "permissions": {
@@ -387,7 +362,7 @@
     "checkpointCommit": "Possible only as scoped partial/WIP preservation with disclosed blockers; no commit made. Not a final-completion sign-off.",
     "stagingHazards": [
       "Existing unignored build/ is 77,431 files / 8,237,063,309 bytes; do not git add .",
-      "F00 plan/export references are ignored under .omx and do not accompany a Git-only handoff."
+      "The approved F00 manifest/export directory remains ignored runtime evidence and must be restored or ported before final sign-off."
     ]
   },
   "scopePreservation": {

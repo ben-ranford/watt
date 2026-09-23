@@ -223,92 +223,92 @@
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./capture-attempt.json",
+    "path": "capture-attempt.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/capture-attempt.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./figma-context.json",
+    "path": "figma-context.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/figma-context.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./independent-review-assets.json",
+    "path": "independent-review-assets.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/independent-review-assets.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./launch-rejection.json",
+    "path": "launch-rejection.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/launch-rejection.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./menu-comparison.json",
+    "path": "menu-comparison.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/menu-comparison.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./reference-menu.png.json",
+    "path": "reference-menu.png.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/reference-menu.png.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./reference-menus.png.json",
+    "path": "reference-menus.png.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/reference-menus.png.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./reference-metadata.json",
+    "path": "reference-metadata.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/reference-metadata.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./reference-submenu.png.json",
+    "path": "reference-submenu.png.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/reference-submenu.png.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./submenu-comparison.json",
+    "path": "submenu-comparison.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/submenu-comparison.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./visual-review.json",
+    "path": "visual-review.json",
     "status": "pass",
     "resolved": "docs/evidence/C03/visual-review.json"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./capture.sh",
+    "path": "capture.sh",
     "status": "pass",
     "resolved": "docs/evidence/C03/capture.sh"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./compare.sh",
+    "path": "compare.sh",
     "status": "pass",
     "resolved": "docs/evidence/C03/compare.sh"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
-    "path": "./verification.sh",
+    "path": "verification.sh",
     "status": "pass",
     "resolved": "docs/evidence/C03/verification.sh"
   },
   {
     "manifest": "docs/evidence/C03/metadata.sha256",
     "path": "README.md",
-    "status": "mismatch",
+    "status": "pass",
     "resolved": "docs/evidence/C03/README.md"
   },
   {
@@ -316,6 +316,18 @@
     "path": "INDEPENDENT-REVIEW.md",
     "status": "pass",
     "resolved": "docs/evidence/C03/INDEPENDENT-REVIEW.md"
+  },
+  {
+    "manifest": "docs/evidence/C03/state-correction-2026-09-23/images.sha256",
+    "path": "docs/evidence/C03/state-correction-2026-09-23/native-menu-0.png",
+    "status": "pass",
+    "resolved": "docs/evidence/C03/state-correction-2026-09-23/native-menu-0.png"
+  },
+  {
+    "manifest": "docs/evidence/C03/state-correction-2026-09-23/images.sha256",
+    "path": "docs/evidence/C03/state-correction-2026-09-23/native-menu-1.png",
+    "status": "pass",
+    "resolved": "docs/evidence/C03/state-correction-2026-09-23/native-menu-1.png"
   },
   {
     "manifest": "docs/evidence/C04.1/images.sha256",
@@ -1002,6 +1014,18 @@
     "resolved": "docs/evidence/F05/registry-run-2.json"
   },
   {
+    "manifest": "docs/evidence/G083/capture/images.sha256",
+    "path": "exact-window.png",
+    "status": "pass",
+    "resolved": "docs/evidence/G083/capture/exact-window.png"
+  },
+  {
+    "manifest": "docs/evidence/G083/capture/images.sha256",
+    "path": "actual-content.png",
+    "status": "pass",
+    "resolved": "docs/evidence/G083/capture/actual-content.png"
+  },
+  {
     "manifest": "docs/evidence/J1.2/images.sha256",
     "path": "docs/evidence/J1.2/figma-frame.png",
     "status": "pass",
@@ -1036,6 +1060,102 @@
     "path": "native-window.png",
     "status": "pass",
     "resolved": "docs/evidence/J1.3/native-window.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.4/images.sha256",
+    "path": "actual-content.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.4/actual-content.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.4/images.sha256",
+    "path": "native-content.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.4/native-content.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.4/images.sha256",
+    "path": "native-window.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.4/native-window.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.4/images.sha256",
+    "path": "figma-frame.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.4/figma-frame.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.6/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.6/figma-frame.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.6/figma-frame.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.6/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.6/native-window.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.6/native-window.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.6/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.6/actual-content.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.6/actual-content.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.7/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.7/figma-reference.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.7/figma-reference.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.7/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.7/native-popover.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.7/native-popover.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.7/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.7/native-anchor.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.7/native-anchor.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.7/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.7/actual-content.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.7/actual-content.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.7/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.7/actual-status-item.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.7/actual-status-item.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.8/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.8/figma-reference.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.8/figma-reference.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.8/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.8/native-panel.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.8/native-panel.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.8/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.8/native-anchor.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.8/native-anchor.png"
+  },
+  {
+    "manifest": "docs/evidence/J1.8/images-2026-09-24.sha256",
+    "path": "docs/evidence/J1.8/actual-content.png",
+    "status": "pass",
+    "resolved": "docs/evidence/J1.8/actual-content.png"
   },
   {
     "manifest": "docs/evidence/J10.1/reference.sha256",
@@ -1250,12 +1370,14 @@
   {
     "manifest": "docs/evidence/J8.2/reference.sha256",
     "path": "reference-export-from-story-manifest.png",
-    "status": "missing"
+    "status": "pass",
+    "resolved": "docs/evidence/J8.2/reference-export-from-story-manifest.png"
   },
   {
     "manifest": "docs/evidence/J8.2/reference.sha256",
     "path": "mcp-retrieved-screenshot.png",
-    "status": "missing"
+    "status": "pass",
+    "resolved": "docs/evidence/J8.2/mcp-retrieved-screenshot.png"
   },
   {
     "manifest": "docs/evidence/J8.3/reference.sha256",
@@ -1272,7 +1394,8 @@
   {
     "manifest": "docs/evidence/J8.3/reference.sha256",
     "path": "reference-export-from-story-manifest.png",
-    "status": "missing"
+    "status": "pass",
+    "resolved": "docs/evidence/J8.3/reference-export-from-story-manifest.png"
   },
   {
     "manifest": "docs/evidence/J9.1/reference.sha256",
@@ -1667,7 +1790,7 @@
   {
     "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
     "path": "Services/SystemPowerSourceTelemetryService.swift",
-    "status": "pass",
+    "status": "mismatch",
     "resolved": "Services/SystemPowerSourceTelemetryService.swift"
   },
   {
@@ -1715,7 +1838,7 @@
   {
     "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
     "path": "Tests/WattTests/P01TelemetryTests.swift",
-    "status": "pass",
+    "status": "mismatch",
     "resolved": "Tests/WattTests/P01TelemetryTests.swift"
   },
   {
@@ -1901,7 +2024,7 @@
   {
     "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
     "path": "Services/SystemPowerSourceTelemetryService.swift",
-    "status": "pass",
+    "status": "mismatch",
     "resolved": "Services/SystemPowerSourceTelemetryService.swift"
   },
   {
@@ -1931,7 +2054,7 @@
   {
     "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
     "path": "Tests/WattTests/P01TelemetryTests.swift",
-    "status": "pass",
+    "status": "mismatch",
     "resolved": "Tests/WattTests/P01TelemetryTests.swift"
   },
   {
@@ -1972,37 +2095,37 @@
   },
   {
     "manifest": "docs/verification/f02-gallery/reference-pass-2/dark/gallery.sha256",
-    "path": "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/dark/gallery-dark.png",
+    "path": "gallery-dark.png",
     "status": "pass",
     "resolved": "docs/verification/f02-gallery/reference-pass-2/dark/gallery-dark.png"
   },
   {
     "manifest": "docs/verification/f02-gallery/reference-pass-2/light/gallery.sha256",
-    "path": "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/light/gallery-light.png",
+    "path": "gallery-light.png",
     "status": "pass",
     "resolved": "docs/verification/f02-gallery/reference-pass-2/light/gallery-light.png"
   },
   {
     "manifest": "docs/verification/f02-gallery/reference-pass-2/reading-dark/gallery.sha256",
-    "path": "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/reading-dark/gallery-reading-dark.png",
+    "path": "gallery-reading-dark.png",
     "status": "pass",
     "resolved": "docs/verification/f02-gallery/reference-pass-2/reading-dark/gallery-reading-dark.png"
   },
   {
     "manifest": "docs/verification/f02-gallery/reference-pass-2/reading-light/gallery.sha256",
-    "path": "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/reading-light/gallery-reading-light.png",
+    "path": "gallery-reading-light.png",
     "status": "pass",
     "resolved": "docs/verification/f02-gallery/reference-pass-2/reading-light/gallery-reading-light.png"
   },
   {
     "manifest": "docs/verification/f02-gallery/reference-pass-2/settings-dark/gallery.sha256",
-    "path": "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/settings-dark/gallery-settings-dark.png",
+    "path": "gallery-settings-dark.png",
     "status": "pass",
     "resolved": "docs/verification/f02-gallery/reference-pass-2/settings-dark/gallery-settings-dark.png"
   },
   {
     "manifest": "docs/verification/f02-gallery/reference-pass-2/settings-light/gallery.sha256",
-    "path": "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/settings-light/gallery-settings-light.png",
+    "path": "gallery-settings-light.png",
     "status": "pass",
     "resolved": "docs/verification/f02-gallery/reference-pass-2/settings-light/gallery-settings-light.png"
   }

@@ -9,6 +9,25 @@
   "exitCode": 1,
   "timedOut": false,
   "timeoutSeconds": 120,
-  "durationSeconds": 0.78,
-  "log": "evidence-audit.log"
+  "durationSeconds": 1.1,
+  "log": "evidence-audit.log",
+  "portableAudit": true,
+  "result": "blocked",
+  "summary": {
+    "f00ManifestAvailable": false,
+    "portableStoryReadmesAndPNGsPass": true,
+    "docsFilesRead": 3110,
+    "recordsRead": 97,
+    "digestStatusCounts": {
+      "pass": 295,
+      "mismatch": 60
+    },
+    "problems": [
+      {
+        "kind": "missing portable F00 reference manifest",
+        "path": ".omx/plans/f00-reference-evidence/manifest.json"
+      }
+    ],
+    "historicalSourceMismatches": 60
+  }
 }

@@ -1,63 +1,26 @@
 {
   "orderedStories": 69,
   "baseAndVariantSelections": 136,
-  "registryReferencesEqualF00": true,
-  "all69F00ExportHashesAndDimensionsPass": true,
-  "docsFilesRead": 2753,
-  "markdownFilesRead": 89,
-  "recordsRead": 95,
-  "jsonErrors": [
-    {
-      "path": "docs/evidence/J11.2/figma-screenshot-response.json",
-      "error": "Extra data: line 2 column 1 (char 178)"
-    }
-  ],
+  "f00ManifestAvailable": false,
+  "registryReferencesEqualF00": false,
+  "all69F00ExportHashesAndDimensionsPass": false,
+  "portableStoryReadmesAndPNGsPass": true,
+  "docsFilesRead": 3110,
+  "markdownFilesRead": 157,
+  "recordsRead": 97,
+  "jsonErrors": [],
   "digestStatusCounts": {
-    "pass": 275,
-    "mismatch": 57,
-    "missing": 3
+    "pass": 295,
+    "mismatch": 60
   },
   "problems": [
     {
-      "kind": "invalid JSON",
-      "path": "docs/evidence/J11.2/figma-screenshot-response.json",
-      "error": "Extra data: line 2 column 1 (char 178)"
-    },
-    {
-      "kind": "evidence digest",
-      "manifest": "docs/evidence/C03/metadata.sha256",
-      "path": "README.md",
-      "status": "mismatch",
-      "resolved": "docs/evidence/C03/README.md"
-    },
-    {
-      "kind": "evidence digest",
-      "manifest": "docs/evidence/J8.2/reference.sha256",
-      "path": "reference-export-from-story-manifest.png",
-      "status": "missing"
-    },
-    {
-      "kind": "evidence digest",
-      "manifest": "docs/evidence/J8.2/reference.sha256",
-      "path": "mcp-retrieved-screenshot.png",
-      "status": "missing"
-    },
-    {
-      "kind": "evidence digest",
-      "manifest": "docs/evidence/J8.3/reference.sha256",
-      "path": "reference-export-from-story-manifest.png",
-      "status": "missing"
+      "kind": "missing portable F00 reference manifest",
+      "path": ".omx/plans/f00-reference-evidence/manifest.json",
+      "resolution": "restore the approved F00 manifest/runtime evidence before final sign-off"
     }
   ],
   "historicalNotes": [
-    {
-      "kind": "historical F00 source revision changed",
-      "path": "SCREEN-BACKLOG.md"
-    },
-    {
-      "kind": "historical F00 source revision changed",
-      "path": "DESIGN.md"
-    },
     {
       "kind": "historical source digest",
       "manifest": "docs/evidence/P04/sources.sha256",
@@ -208,6 +171,13 @@
     {
       "kind": "historical source digest",
       "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Services/SystemPowerSourceTelemetryService.swift",
+      "status": "mismatch",
+      "resolved": "Services/SystemPowerSourceTelemetryService.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
       "path": "Services/UpdateAdapter.swift",
       "status": "mismatch",
       "resolved": "Services/UpdateAdapter.swift"
@@ -253,6 +223,13 @@
       "path": "Tests/WattTests/NativeStylingTests.swift",
       "status": "mismatch",
       "resolved": "Tests/WattTests/NativeStylingTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/review-corrections/sources.sha256",
+      "path": "Tests/WattTests/P01TelemetryTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/P01TelemetryTests.swift"
     },
     {
       "kind": "historical source digest",
@@ -404,6 +381,13 @@
     {
       "kind": "historical source digest",
       "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Services/SystemPowerSourceTelemetryService.swift",
+      "status": "mismatch",
+      "resolved": "Services/SystemPowerSourceTelemetryService.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
       "path": "Services/UpdateAdapter.swift",
       "status": "mismatch",
       "resolved": "Services/UpdateAdapter.swift"
@@ -428,6 +412,13 @@
       "path": "Tests/WattTests/NativeStylingTests.swift",
       "status": "mismatch",
       "resolved": "Tests/WattTests/NativeStylingTests.swift"
+    },
+    {
+      "kind": "historical source digest",
+      "manifest": "docs/evidence/native-styling/verification-2026-09-22/sources.sha256",
+      "path": "Tests/WattTests/P01TelemetryTests.swift",
+      "status": "mismatch",
+      "resolved": "Tests/WattTests/P01TelemetryTests.swift"
     },
     {
       "kind": "historical source digest",

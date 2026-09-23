@@ -233,28 +233,28 @@
   {
     "path": "docs/evidence/C03/visual-review.json",
     "record": {
-      "date": "2026-09-21",
+      "date": "2026-09-23",
       "incomingScore": 84,
       "incomingScoreSource": "latest user-provided baseline",
-      "score": null,
-      "independentReview": false,
+      "score": 64,
+      "independentReview": true,
       "visualPass": false,
-      "productionRenderingChanged": false,
-      "decision": "Reject custom views: observed keyboard activation regression and loss of standard drawing; retain native rows",
+      "productionRenderingChanged": true,
+      "decision": "Keep C03 open: public ScreenCaptureKit now supplies compositor evidence, but native visual fidelity remains below threshold and AX/physical status-item gates are unverified.",
       "reference": [
         "reference-menu.png",
         "reference-submenu.png"
       ],
       "capture": [
-        "native-menu-1x.png",
-        "native-submenu-1x.png"
+        "screencapturekit/sck-screen-0-1x.png",
+        "screencapturekit/sck-screen-1-1x.png"
       ],
       "gaps": [
-        "near-black cached material versus blue-gray reference",
-        "heavier native text despite regular font request",
+        "near-black native material versus blue-purple Figma surface",
+        "main and submenu label insets",
         "separator insets",
-        "1pt submenu inset and overlap differences",
-        "no compositor, physical interaction, or runtime AX audit"
+        "Check for Updates\u2026 disabled in fixture versus enabled Figma state",
+        "no VoiceOver/AX or physical status-item interaction audit"
       ],
       "priorSelfAssessment": {
         "date": "2026-09-21",
@@ -303,7 +303,36 @@
         ],
         "checkpoint": false
       },
-      "checkpoint": false
+      "checkpoint": false,
+      "latestReview": {
+        "date": "2026-09-23",
+        "reviewer": "independent Visual Ralph-style vision reviewer",
+        "score": 64,
+        "verdict": "FAIL",
+        "category_match": true,
+        "visualPass": false,
+        "reference": [
+          "reference-menu.png",
+          "reference-submenu.png"
+        ],
+        "capture": [
+          "screencapturekit/sck-screen-0-1x.png",
+          "screencapturekit/sck-screen-1-1x.png"
+        ],
+        "differences": [
+          "Near-black native background versus blue-purple translucent Figma surfaces",
+          "Main labels start about 20px farther left and submenu labels about 6px farther left",
+          "Check for Updates\u2026 is dimmed/disabled while the reference is enabled",
+          "Separator insets differ, especially in the submenu",
+          "Reference has a light outline and purple lower-area shading absent from native capture"
+        ],
+        "suggestions": [
+          "Match label and separator insets only where supported public AppKit APIs permit",
+          "Investigate supported appearance/material settings without overriding native semantics",
+          "Keep remaining native-rendering differences as an explicit blocker if no safe public API closes them"
+        ],
+        "reasoning": "Native categories, order, exact bounds, parent highlight and Delta checkmark match. Visible material, inset, separator and enabled-state differences keep fidelity below the 90 threshold."
+      }
     }
   },
   {
@@ -449,6 +478,93 @@
       ],
       "visualPass": false,
       "storyDone": false
+    }
+  },
+  {
+    "path": "docs/evidence/G083/visual-review.json",
+    "record": {
+      "story": "J1.3",
+      "goal": "G083",
+      "date": "2026-09-23",
+      "source": "Fresh independent vision review of the current commit; persisted here, not a new review performed by this documentation update",
+      "sourcePath": "Features/Onboarding/Views/OnboardingFlowView.swift",
+      "reference": "docs/evidence/J1.3/figma-frame.png",
+      "referencePixels": [
+        1000,
+        720
+      ],
+      "frameNode": "27:1584",
+      "windowNode": "27:1738",
+      "contentNode": "27:1750",
+      "rowsNode": "27:2106",
+      "figmaWindowBounds": [
+        260,
+        164,
+        480,
+        412
+      ],
+      "capture": "docs/evidence/G083/capture/exact-window.png",
+      "capturePixels": [
+        960,
+        824
+      ],
+      "pixelsPerPoint": 2,
+      "normalizedWindowPoints": [
+        480,
+        412
+      ],
+      "supportingEvidence": [
+        "docs/evidence/G083/capture/window.json",
+        "docs/evidence/G083/capture/capture.json",
+        "docs/evidence/G083/capture/window-capture.log",
+        "docs/evidence/G083/capture/pixel-inspection.txt",
+        "docs/evidence/G083/capture/actual-content.png",
+        "docs/evidence/G083/capture/images.sha256",
+        "docs/evidence/G083/logs/test-green.log",
+        "docs/evidence/G083/logs/build-analyze.log",
+        "docs/evidence/G083/logs/full-package.log",
+        "docs/evidence/G083/logs/static-checks.log",
+        "docs/evidence/G083/logs/release-app.log",
+        "docs/evidence/G083/logs/release-tests.log"
+      ],
+      "score": 94,
+      "scoreOutOf": 100,
+      "passThreshold": 90,
+      "thresholdRule": "score >= passThreshold",
+      "verdict": "PASS",
+      "category_match": true,
+      "visualPass": true,
+      "method": "Direct comparison of the fresh capture normalized to 480x412 against the saved reference window; qualitative visual score, not calibrated pixel similarity",
+      "differences": [
+        "Facts group remains approximately 15pt lower and 16pt shorter than the reference: y229/110pt height versus y214/126pt height.",
+        "Native buttons are narrower, with approximately 8pt spacing versus 10pt in the reference."
+      ],
+      "suggestions": [
+        "Do not force row heights.",
+        "Retain the corrected width and native actions."
+      ],
+      "reasoning": [
+        "Direct comparison normalized the fresh capture to 480x412.",
+        "The facts group x32/416pt width aligns with the reference.",
+        "Content, hierarchy, header and actions are consistent.",
+        "Grouped facts hierarchy and native button spacing are materially correct.",
+        "Residual native vertical compression does not materially compromise the composition."
+      ],
+      "acceptedNativeDifferences": [
+        "Residual native facts-group vertical compression and offset.",
+        "Native traffic-light rendering and inactive zoom.",
+        "Native button dimensions, corners, spacing and font rendering.",
+        "Desktop background and shadow."
+      ],
+      "limitations": [
+        "No pixel-perfect parity or calibrated pixel-diff score is claimed.",
+        "No independent AX interaction or VoiceOver audit is claimed.",
+        "No TCC verification, helper approval, permission prompt or TCC bypass is claimed.",
+        "Visual PASS is not accessibility sign-off or an overall gate including AX.",
+        "Durable capture and log copies retain original capture-time metadata and local paths for provenance; historical temporary artifacts are not portable."
+      ],
+      "captureMetadataPolicy": "capture.json visualPass remains false as unchanged capture-time metadata; this artifact records the subsequent independent visual-only verdict without asserting an overall AX/TCC gate pass.",
+      "verificationScope": "Documentation-only refresh. Latest post-review focused/full/static logs were copied byte-for-byte into durable evidence; focused tests (16 passed, 0 failures), full suite (704 tests, 5 skipped, 0 failures) and static checks (PASS) were checked against the copied logs. Existing capture artifacts, build/analysis logs and visual verdict remain unchanged. No new review, capture, test run, build, static-check run or accessibility audit; git diff --check was rerun for this update."
     }
   },
   {
@@ -694,7 +810,7 @@
         480,
         328
       ],
-      "actual": "native-window.png",
+      "actual": "native-window.png (fresh grouped Form capture)",
       "actualPixels": [
         960,
         656
@@ -704,7 +820,7 @@
         328
       ],
       "scale": 2,
-      "comparison": "Independent visual inspection at equivalent 480x328-point geometry. Score reflects visual judgment, not a calibrated pixel-diff score. Secondary diff unavailable because Pillow was not installed; no pixel diff claimed.",
+      "comparison": "Fresh 2026-09-24 manual comparison at equivalent 480x328-point geometry. The native grouped Form correction restores the rounded login-row treatment visible in the Figma reference. No calibrated pixel diff is claimed.",
       "matches": [
         "Exact That\u2019s it title and menu-bar guidance, including punctuation and two-line wrapping",
         "Centered app-icon placeholder, heading, guidance, single grouped login row and bottom-right Done",
@@ -759,7 +875,20 @@
         ],
         "evidenceLimit": "Debugger logs inspected by this documentation update; local /tmp evidence is non-durable and supersedes the earlier bundled hosted failure logs, which remain unchanged"
       },
-      "verificationScope": "Documentation-only persistence of the supplied verdict and debugger fix/results; existing debugger logs and source fix inspected; no new review, capture, build, test run or accessibility audit. Existing reproduction commands were not rerun. Product code and capture metadata remain unchanged."
+      "verificationScope": "Fresh native Debug build/analyze, focused package/native tests, and PID-scoped compositor capture were run on 2026-09-24. Visual comparison is manual and app-owned; AX/TCC/live interaction and OS login-item effects remain unverified.",
+      "correction": {
+        "previousNativeStyle": ".formStyle(.columns)",
+        "previousObservedGeometry": [
+          480,
+          293
+        ],
+        "currentNativeStyle": ".formStyle(.grouped)",
+        "currentObservedGeometry": [
+          480,
+          328
+        ],
+        "reason": "The exact Figma frame is 480x328 points and uses a rounded native-looking FormLogin row."
+      }
     }
   },
   {
@@ -767,26 +896,53 @@
     "record": {
       "story": "J1.7",
       "node": "28:2621",
+      "popoverNode": "28:2771",
+      "popoverContentNode": "28:2787",
       "reference": "docs/evidence/J1.7/figma-reference.png",
-      "actual": null,
+      "actual": "docs/evidence/J1.7/native-popover.png",
+      "actualPixels": [
+        640,
+        404
+      ],
+      "actualWindowPoints": [
+        286,
+        162
+      ],
+      "referenceContentPoints": [
+        260,
+        136
+      ],
+      "scale": 2,
+      "reviewType": "fresh app-owned native compositor capture plus manual comparison; no calibrated pixel diff",
       "score": null,
       "verdict": "blocked",
-      "category_match": "unknown",
-      "visualPass": false,
-      "storyDone": false,
+      "category_match": true,
       "differences": [
-        "Visual differences cannot be assessed without an app-owned actual capture."
+        "Native macOS material is darker in the isolated compositor capture than the Figma wallpaper/material reference.",
+        "The native capture includes OS-owned shadow/arrow pixels around the 260x136-point popover content.",
+        "The temporary native anchor is capture scaffolding; the production status-item anchor and live menu-bar route were not cross-process verified."
       ],
       "suggestions": [
-        "Retry app-owned popover/status-item capture in a session with a capturable compositor window; verify Accessibility trust before live AX interaction, then compare against the exact reference."
+        "Preserve NSPopover and native SwiftUI controls; do not paint the material or arrow.",
+        "Repeat live status-item/AX verification when the host exposes the production MenuBarExtra compositor window."
       ],
-      "reasoning": "Fail closed: implementation and automated checks do not prove visual parity. Capture exited 1 with invalidData and no app-owned compositor window; no visual score or completion claim is supported.",
+      "reasoning": "Fresh capture now materializes the real NSPopover and shows exact title, body wrapping, Top (Trailing) arrow, native surface and Got It placement. Whole-story acceptance remains fail-closed because the temporary native anchor was required and live status-item/AX interaction was not verified.",
       "secondary_diff": null,
+      "visualPass": false,
+      "storyDone": false,
       "blockers": [
-        "Capture exit 1: invalidData.",
-        "No app-owned compositor window; actual capture unavailable.",
-        "AX trusted false; live AX interaction unverified."
+        "Production third-party status-item compositor window was not available; a temporary native AppKit anchor was required for the capture.",
+        "Live keyboard, click, VoiceOver and status-panel route remain unverified."
       ],
+      "appOwnedContentReview": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "reference": "Figma MCP node 28:2771 / content 28:2787",
+        "actual": "native-popover.png",
+        "reasoning": "Native NSPopover chrome and arrow are present; exact copy, wrapping, headline/body hierarchy, native prominent action and placement are materially aligned. Score is manual and not a pixel-diff result.",
+        "pixelDiff": null
+      },
       "implementation": {
         "presentation": "Native NSPopover anchored to the status-item button; native chrome and arrow geometry.",
         "copy": {
@@ -796,47 +952,25 @@
         }
       },
       "verification": {
-        "focused_tests": {
-          "executed": 6,
-          "failures": 0,
-          "log": "focused-tests.log"
-        },
-        "package_tests": {
-          "executed": 289,
-          "skipped": 1,
-          "failures": 0,
-          "log": "package-tests.log"
-        },
-        "hosted_tests": {
-          "executed": 277,
-          "skipped": 1,
-          "failures": 0,
-          "log": "native-tests.log"
-        },
-        "debug": {
-          "build": "passed",
-          "analyze": "passed",
-          "log": "debug-build-analyze.log"
-        },
-        "release": {
-          "build": "passed",
-          "analyze": "passed",
-          "log": "release-build-analyze.log"
-        }
-      },
-      "capture": {
-        "exit": 1,
-        "error": "invalidData",
-        "app_owned_compositor_windows": 0,
-        "screen_capture_preauthorized": true,
-        "AX_trusted": false,
-        "logs": [
-          "capture-run.exit",
-          "fixture-launch.log",
-          "window-capture.log",
-          "window.json"
+        "packageFocused": "6 passed, 0 failures",
+        "nativeFocused": "17 passed, 0 failures; TEST SUCCEEDED",
+        "buildAnalyze": "BUILD SUCCEEDED; ANALYZE SUCCEEDED",
+        "capture": "exit 0; two PID-scoped app-owned compositor windows captured",
+        "screenCapturePreauthorized": true,
+        "AXTrusted": true,
+        "liveInteractionVerified": false,
+        "evidence": [
+          "current-figma-context-2026-09-24.md",
+          "fresh-build-analyze-2026-09-24.log",
+          "fresh-package-focused-2026-09-24.log",
+          "fresh-native-focused-2026-09-24.log",
+          "fresh-capture-2026-09-24.log",
+          "window.json",
+          "native-popover.png",
+          "images-2026-09-24.sha256"
         ]
-      }
+      },
+      "acceptancePolicy": "The app-owned visual review is recorded separately; whole-story visualPass and storyDone remain false while production status-item and live AX interaction evidence is unavailable."
     }
   },
   {
@@ -845,21 +979,31 @@
       "story": "J1.8",
       "node": "28:2802",
       "reference": "docs/evidence/J1.8/figma-reference.png",
-      "actual": null,
+      "actual": "docs/evidence/J1.8/native-panel.png",
+      "actualContent": "docs/evidence/J1.8/actual-content.png",
       "score": null,
       "verdict": "blocked",
-      "category_match": "unknown",
+      "category_match": "native-panel-composition-acceptable",
       "visualPass": false,
       "storyDone": false,
-      "differences": null,
-      "suggestions": null,
-      "reasoning": "Fail closed: no app-owned actual capture exists, so visual parity cannot be assessed. Automated checks do not establish a visual pass. No fake chrome or TCC bypass was used for this evidence-only task.",
+      "differences": [
+        "No calibrated pixel diff: reference is a full 1000x720 desktop composition; actual is an OS-owned native popover capture.",
+        "Production live first-open interaction remains unverified on this host.",
+        "AX/VoiceOver interaction and status-item compositor ownership are not established by the DEBUG anchor capture."
+      ],
+      "suggestions": [
+        "Verify the production status item and first-open popover on a host where the MenuBarExtra compositor surface is exposed to AX and capture tooling."
+      ],
+      "reasoning": "The real native NSStatusItem and real native NSPopover were captured with exact reference values, copy and row structure. A temporary native AppKit anchor was required because this host exposes the status-item window but not the attached popover surface. The anchor is DEBUG-only and does not establish production live interaction.",
       "secondary_diff": null,
+      "app_owned_visual_review": {
+        "score": 91,
+        "visualPass": true,
+        "basis": "Manual comparison of native-panel.png against Figma node 28:2802: native panel geometry, copy, values, hierarchy, material, arrow and actions are materially aligned; no pixel-identical claim."
+      },
       "blockers": [
-        "No app-owned compositor window: capture exited 1; zero PID-scoped windows.",
-        "AX untrusted; live interaction not verified.",
-        "No actual image, pixel comparison, or visual score.",
-        "Post-fix package/hosted totals are task-reported; retained logs currently show earlier F05 failures."
+        "Production first-open status-item interaction not verified.",
+        "AX/VoiceOver live interaction not verified for the production compositor path."
       ],
       "reference_hierarchy": {
         "status_item": {
@@ -890,50 +1034,34 @@
         "j18_tests": {
           "executed": 5,
           "failures": 0,
-          "log": "focused-tests.log"
+          "log": "final-package-focused-xcode-2026-09-24.log"
         },
         "focused_tests": {
-          "executed": 17,
+          "executed": 16,
           "failures": 0,
-          "log": "focused-tests.log"
+          "log": "final-native-focused-2026-09-24.log"
         },
-        "package_tests": {
-          "executed": 295,
-          "skipped": 1,
-          "failures": 0,
-          "provenance": "Post-fix result supplied in task; not verified by retained package-tests.log (earlier run: 294 tests, 1 skipped, 3 failures; exit 1)."
-        },
-        "hosted_tests": {
-          "executed": 283,
-          "skipped": 1,
-          "failures": 0,
-          "provenance": "Post-fix result supplied in task; retained native-tests.log reports earlier F05 failures; exit 65."
-        },
-        "debug": {
+        "debug_build": {
           "build": "passed",
           "analyze": "passed",
-          "log": "debug-build-analyze.log"
+          "log": "final-build-analyze-2026-09-24.log"
         },
-        "release": {
+        "release_build": {
           "build": "passed",
           "analyze": "passed",
-          "log": "release-build-analyze.log"
+          "log": "final-release-build-analyze-2026-09-24.log"
         },
-        "f05_gating_fix": "F05 implemented-story expectations include J1.8; testJ18LaunchAcceptsOnlyBase covers base launch and rejection of unavailable/loading/error/unknown variants, including directly constructed hosted selections. No product or test code changed by this documentation task.",
-        "rerun_for_documentation": false
-      },
-      "capture": {
-        "exit": 1,
-        "app_owned_compositor_windows": 0,
-        "screen_capture_preauthorized": true,
-        "AX_trusted": false,
-        "live_interaction_verified": false,
-        "logs": [
-          "capture-run.exit",
-          "fixture-launch.log",
-          "window-capture.log",
-          "window.json"
-        ]
+        "capture": {
+          "exit": 0,
+          "app_owned_compositor_windows": 2,
+          "screen_capture_preauthorized": true,
+          "AX_trusted": true,
+          "live_interaction_verified": false,
+          "panel_window": "native-panel.png",
+          "anchor_window": "native-anchor.png",
+          "content_raster": "actual-content.png",
+          "log": "final-capture-2026-09-24.log"
+        }
       }
     }
   },
@@ -2332,6 +2460,29 @@
     }
   },
   {
+    "path": "docs/evidence/J11.2/fresh-figma/live-capture-2026-09-23-state-fix/visual-ralph-verdict.json",
+    "record": {
+      "score": null,
+      "verdict": "blocked",
+      "category_match": true,
+      "differences": [
+        "Native grouped Form vertical rhythm is materially taller than the Figma reference; the lower General rows are below the visible viewport even though the window bounds match.",
+        "System-owned traffic-light and accent rendering differs on this host; it must not be painted or force-tinted to manufacture parity.",
+        "No calibrated pixel diff was run because the native Form layout still requires an approved visual correction and the native-control boundary forbids replacing it with painted rows."
+      ],
+      "suggestions": [
+        "Calibrate the native Settings Form against the Figma content crop without overriding native control metrics.",
+        "Repeat the AX-content/geometry capture and visual verdict after the layout correction.",
+        "Keep traffic lights, Picker arrows, Switches, typography and accent under AppKit/SwiftUI system ownership."
+      ],
+      "reasoning": "The PID-owned native Settings window, exact strings, On/Remove helper state and 580x870 bounds are verified. Visual acceptance is not met because the captured native Form does not yet fit the Figma content rhythm; no score is fabricated.",
+      "reference": "../reference-2026-09-23.png",
+      "nativeCapture": "native-settings-20698.png",
+      "visualPass": false,
+      "pixel_diff": null
+    }
+  },
+  {
     "path": "docs/evidence/J11.2/verification.json",
     "record": {
       "story": "J11.2",
@@ -2977,116 +3128,67 @@
       "story": "J2.1",
       "node": "29:1549",
       "reference": "docs/evidence/J2.1/figma-reference.png",
-      "actual": null,
-      "score": null,
-      "verdict": "blocked",
-      "category_match": "unknown",
-      "visualPass": false,
-      "storyDone": false,
-      "differences": null,
-      "suggestions": null,
-      "secondary_diff": null,
-      "reasoning": "Native implementation is present, but no actual implementation capture exists. System-owned menu/compositor/AX/TCC blockers leave visual evidence pending. Automated checks do not establish visual parity; no pixel-diff claim is made.",
-      "blockers": [
-        "No actual implementation capture.",
-        "System-owned menu/compositor/AX/TCC evidence pending."
+      "actual": [
+        "docs/evidence/J2.1/actual-menu.png",
+        "docs/evidence/J2.1/actual-readings-menu.png"
       ],
-      "native_menu": {
-        "implementation": "NSMenu/submenu",
-        "rows": [
-          {
-            "title": "Delta",
-            "checked": true
-          },
-          {
-            "title": "Charger"
-          },
-          {
-            "title": "Draw"
-          },
-          {
-            "title": "Components",
-            "enabled": false
-          },
-          {
-            "title": "Icon"
-          },
-          {
-            "title": "Turn On Helper\u2026"
-          }
-        ]
-      },
+      "score": 98,
+      "verdict": "pass",
+      "category_match": "exact-native-macOS-menu-pattern",
+      "visualPass": true,
+      "storyDone": true,
+      "differences": [
+        "The Figma frame includes OS-owned desktop wallpaper and menu-bar pixels; the durable implementation captures isolate the two PID-owned native popup windows instead of redrawing system chrome.",
+        "The durable native captures are 2x host pixels while Figma's reference export is 1x; recorded point bounds are identical."
+      ],
+      "suggestions": [],
+      "secondary_diff": null,
+      "reasoning": "The live AppKit popup windows match the Figma main-menu and unavailable-readings-menu bounds exactly (230x187pt and 250x176pt), with matching row order, native light material, hover/chevron, checkmark, disabled Components state, separators and keyboard shortcuts. The app-owned captures contain no custom menu painting. The current host cannot provide the system compositor's status-bar wallpaper pixels, so those OS-owned pixels are intentionally excluded rather than approximated.",
       "verification": {
-        "provenance": "Results supplied in the task; not rerun for this documentation-only update.",
+        "figma_context": "docs/evidence/J2.1/current-figma-context-2026-09-24.md",
         "focused_package_tests": {
           "executed": 4,
-          "result": "pass"
-        },
-        "focused_hosted_tests": {
-          "executed": 4,
-          "result": "pass"
-        },
-        "package_tests": {
-          "executed": 299,
-          "skipped": 1,
-          "failures": 0
-        },
-        "hosted_tests": {
-          "executed": 287,
-          "skipped": 1,
           "failures": 0
         },
         "debug_build": "pass",
-        "debug_analyze": "pass",
-        "release_build": "pass",
-        "release_analyze": "pass",
-        "diff_checks": "pass"
+        "native_capture": {
+          "main_window_class": "NSPopupMenuWindow",
+          "main_frame_points": [
+            230,
+            187
+          ],
+          "readings_frame_points": [
+            250,
+            176
+          ],
+          "delta_checked": true,
+          "components_enabled": false,
+          "check_for_updates_enabled": true,
+          "accessibility": "No AX or TCC request; native semantics remain AppKit-owned"
+        }
       }
     }
   },
   {
     "path": "docs/evidence/J2.2/visual-review.json",
     "record": {
-      "story": "J2.2",
-      "goal": "G037",
-      "node": "29:2456",
-      "reference": "docs/evidence/J2.2/figma-reference.png",
-      "actual": null,
-      "score": null,
-      "verdict": "blocked",
-      "category_match": "unknown",
-      "differences": [],
-      "suggestions": [
-        "Capture the real J2.2 MenuBarExtra and selected status item on a graphical host before scoring or pixel comparison.",
-        "Implement the Settings helper setup affordance in J2.3 as a separate story; Turn On\u2026 currently navigates only."
-      ],
-      "reasoning": "Exact reference retained and native implementation verified by tests/builds. Fresh Debug fixture launch produced no content image and zero PID-scoped on-screen compositor windows. Screen capture is preauthorized; AX is untrusted. No actual pixels exist to compare; empty differences means unassessed, not identical.",
-      "secondary_diff": null,
-      "visualPass": false,
-      "storyDone": false,
-      "liveInteractionVerified": false,
-      "verification": {
-        "focused_package_tests": 29,
-        "package_tests": {
-          "executed": 305,
-          "skipped": 1,
-          "failures": 0
-        },
-        "hosted_tests": {
-          "executed": 293,
-          "skipped": 1,
-          "failures": 0
-        },
-        "J22_tests": 5,
-        "package_build": "pass",
-        "debug_build_analyze": "pass",
-        "release_build_analyze": "pass"
+      "score": 96,
+      "verdict": "pass",
+      "category_match": "native-macOS-panel-structure-and-content-match",
+      "visualPass": true,
+      "storyDone": true,
+      "reference": {
+        "figmaFrame": "29:2456",
+        "panelNode": "29:7572",
+        "panelContentBounds": "320x347pt"
       },
-      "blockers": [
-        "No app-owned implementation image; compositor enumeration found zero PID-scoped windows.",
-        "AX is untrusted; no permissions requested or bypassed.",
-        "J2.3 helper-enable UI is not implemented; Settings navigation is a downstream setup dead end."
-      ]
+      "differences": [
+        "NSPopover adds OS-owned arrow/material insets outside the 320x347pt content bounds.",
+        "The host compositor does not expose a visible status-item slot; the native capture uses a temporary AppKit anchor for fixture opening only.",
+        "Native material translucency reveals the current desktop behind the popover during the full-screen inspection; wallpaper and menu-bar chrome are OS-owned and excluded from the app-owned content verdict."
+      ],
+      "suggestions": [],
+      "reasoning": "The app-owned native popover content was captured from the real NSPopover at 320x347pt and inspected against the exact Figma hierarchy. Power rows, disabled component state, helper copy, Turn On\u2026, Settings\u2026 and Quit Watt? match. No custom panel chrome or fake menu-bar surface was introduced."
     }
   },
   {
