@@ -2399,3 +2399,27 @@ Semibold 13/16. The final-source native capture was rebuilt and refreshed; the
 expected desktop no-battery state is present while the compositor/pixel gate
 remains open. Evidence:
 `docs/evidence/C04.6/current-figma-context-2026-09-23.md`.
+
+### G033 / J1.6 — All set native Form correction (2026-09-24)
+
+Exact Figma MCP reinspection for file 9DKDgUfEqidZdZQEVlQgLS confirms frame
+28:2199, Light desktop template 28:2200, onboarding window 28:2353, content
+slot 28:2365, and FormLogin row 28:2532. The active titleless window is
+480×328 points. It contains the centered app icon, semantic title/body copy,
+one Open at login row with the switch on, and a native-prominent Done action.
+
+AllSetView remains native SwiftUI. Its login control is a Form Section with a
+switch Toggle and .formStyle(.grouped). A fresh .columns capture was 480×293
+points and rendered a compact unrounded row, while .grouped produced the exact
+480×328 native window geometry and rounded row treatment. The correction changes
+only the native Form style; no custom spacing, row background, corner, shadow,
+material, window chrome, or control drawing is permitted.
+
+Fresh package verification passed 6/6 J16 tests. Fresh hosted verification
+passed 17/17 J16 plus NativeStyling tests. Debug build and analyze succeeded,
+and the PID-scoped native capture is 960×656 pixels (480×328 points). Visual
+comparison accepts the native grouped composition as materially aligned with
+the Figma frame; no pixel-identical claim is made. AX trust, VoiceOver/live
+interaction, actual login-item registration, and helper effects remain explicit
+OS-owned blockers.
+Evidence: docs/evidence/J1.6/.

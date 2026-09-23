@@ -467,7 +467,7 @@ struct AllSetView: View {
                         .accessibilityIdentifier("onboarding.allSet.openAtLogin")
                 }
             }
-            .formStyle(.columns)
+            .formStyle(.grouped)
             HStack {
                 if preferences.persistenceFailure != nil {
                     Text("Couldn’t save your preferences. Try again.")
