@@ -1,5 +1,19 @@
 # G031 — J1.4 Waiting for approval
 
+## Fresh evidence — 2026-09-23
+
+- [Current Figma context](current-figma-context-2026-09-23.md)
+- [Fresh Debug build/analyze](fresh-build-analyze-2026-09-23.log)
+- [Fresh package tests](fresh-package-focused-2026-09-23.log)
+- [Fresh native tests](fresh-native-focused-2026-09-23.log)
+- [Fresh capture](fresh-capture-2026-09-23.log)
+
+The exact parent frame was re-retrieved through Figma MCP. The implementation
+uses the native waiting window and excludes the system-owned notification. The
+fresh compositor capture is authoritative for visual inspection; the direct
+`NSView.cacheDisplay` PNG is retained as a host-specific transparent/black
+capture artifact rather than used to claim fidelity.
+
 - Frame `28:1206`; window `28:1521` (480×224 at 260,258); content
   `28:1535`; spinner `28:1537`; system notification `28:1584`.
 - `WaitingForApprovalView` is selected by the existing `.approval` checkpoint.
@@ -19,7 +33,8 @@
   It is system-owned and excluded, not recreated. No prompt or permission bypass.
 - Focused tests cover exact copy, native controls, fixture gating, action dispatch,
   stale-action guards, unchanged approval state and native window construction.
-  Cumulative edits preserved; no MCP used. No visual parity or live AX audit claimed.
+  Exact Figma MCP context and native styling are recorded in the fresh evidence
+  files. No live AX audit or whole-frame visual approval is claimed.
 
 ## Verification — correction, 2026-09-22
 - `focused-tests.log` / `focused-tests.exit`: 2 J14 tests, 0 failures. Tests cover
@@ -29,6 +44,10 @@
 - `capture-run.log` / `capture-run.exit`, `window-capture.log`: capture succeeded.
   `actual-content.png` is 480×224; `native-window.png` is 960×448 at 2×.
   `capture.json` records the exact rendered copy and 480×224 content bounds.
+- `native-content.png` is a crop of the app-owned native compositor window below
+  the 32-point titlebar, used for content comparison without recreating chrome.
+- The direct `actual-content.png` cache-display artifact is transparent/black on
+  this host; it is not used as visual acceptance evidence.
 - Native window capture visually inspected: title, complete two-line body,
   indeterminate spinner, Cancel and Open System Settings are visible, unclipped.
   Native control/font/chrome differences remain; no pixel-identical parity claim.
@@ -37,8 +56,8 @@
 - The system-owned notification remains unavailable under safe app-owned
   capture/TCC; it is excluded, not fabricated.
 - Per the narrowed request, full tests, Release, analyze and broad static checks
-  were not rerun. Existing `tests.log`, `build-analyze.log` and `static-checks.log`
-  are historical evidence from before this correction, not current verification.
+  were not rerun. Fresh focused package/native tests and Debug build/analyze are
+  recorded above; existing full-suite and Release logs remain historical evidence.
 
 ```sh
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
@@ -54,8 +73,8 @@ bash docs/evidence/J1.4/capture.sh
   self-approval. The structured result is in `visual-review.json`.
 - Exact window geometry: `native-window.png` is 960×448 pixels at 2×,
   normalized to **480×224 points**, matching reference window `28:1521`
-  at (260,258) in `figma-frame.png`. `actual-content.png` is 480×224 pixels;
-  the native-window capture is the evidence for window chrome.
+  at (260,258) in `figma-frame.png`. `native-content.png` is the app-owned
+  content crop; the native-window capture is the evidence for window chrome.
 - Residual native button, traffic-light, spinner and surface differences remain.
   PASS is a visual-only result, not pixel-identical parity or a calibrated
   pixel-diff score.
@@ -70,7 +89,7 @@ bash docs/evidence/J1.4/capture.sh
   later independent visual-only verdict; this section and `visual-review.json`
   record that result without closing the separate AX/TCC gaps.
 
-This documentation-only update does not rerun the reproduction commands above,
-builds, tests or captures, and performs no new accessibility audit. Image
-dimensions were checked and `git diff --check` was run. Source and tests were
-not edited.
+Fresh verification reran the focused package/native tests, Debug build/analyze
+and the native capture. The system Notification Center card remains excluded by
+the safe app-owned capture boundary; no permission prompt, TCC bypass, live
+approval, AX/VoiceOver audit or whole-frame visual approval is claimed.

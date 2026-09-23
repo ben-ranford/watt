@@ -1,0 +1,9 @@
+capture_rc=0
+fixture=J1.4/base
+window_capture=Captured native app-owned J1.4 window
+window_points=480x224
+native_window_pixels=960x448
+native_content_pixels=960x384
+actual_content_cache_display=transparent_or_black_host_artifact_not_used_for_visual_acceptance
+system_notification=excluded_system_owned_surface
+native_content_sha256=361c6c7039ce2e086ef49e98dbc4dc9c3a2dd73e9ef9c0123e29a44b73928a14
