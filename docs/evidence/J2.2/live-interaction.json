@@ -1,0 +1,12 @@
+{
+  "story": "J2.2",
+  "frameNode": "29:2456",
+  "interaction": "System Events clicked the live Watt AXMenuBarItem; the real native NSPopover opened.",
+  "statusItem": "NSStatusBarItem",
+  "popoverWindowNumber": 22526,
+  "capture": "screencapture of the app-owned NSPopover window",
+  "visualReference": "docs/evidence/J2.2/visual-review.json",
+  "tcc": "System Events UI elements enabled=true; no permission request or bypass",
+  "host": "macOS 27.0",
+  "timestamp": "2026-09-24T02:35:00+10:00"
+}

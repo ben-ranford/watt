@@ -1,0 +1,3 @@
+status item title=7.1 W
+description=Watt?, fully charged, 7.1 watts, menu extra.
+help=Click for details. VO-Shift-M for options.
