@@ -1,5 +1,7 @@
 # G057 / J7.3 — Settings — choose components (max 2)
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `d6ffb39f4c390876077c0fb584f1bd7692308be6068bc92004004813a5329a07`).
+
 Implementation and automated verification are complete on
 `bug/G057-j73-settings-choose-components`. **Visual acceptance is blocked.**
 All prior cumulative changes remain; no commit was created.
@@ -116,3 +118,5 @@ pixel diff null. Native keyboard interaction, dismissal, popup placement and Voi
 remain unverified on a live graphical desktop; GUI WattUITests were not run without AX
 trust. The installed visual-ralph instructions were inspected, but runtime is unavailable
 in this non-tmux session. No OMX or Codex goal state was created or mutated.
+
+Fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`; native settings/popup evidence remains subject to the host AX/compositor boundary, so visual acceptance is not claimed.
