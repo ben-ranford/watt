@@ -845,7 +845,7 @@ physical interaction and real component telemetry proof remain open. No
 custom chrome, bitmap UI, source/test behavior change or story-completion
 claim is made.
 
-### Native icon-only status item — G022/C04.8, 2026-09-22
+### Native icon-only status item — G022/C04.8, 2026-09-23
 
 Exact Figma frame `24:1353`, desktop `24:1354`, anchor `24:1471`, status
 component `24:1469`: dark native `battery.100percent.bolt`, no text, SF Pro
@@ -855,14 +855,18 @@ in-memory preferences and `.iconOnly`. A DEBUG-only label switch preserves
 ordinary/unavailable icon-only behavior outside this available fixture.
 Accessibility retains `Watt? power reading` / `Icon only`.
 
-[Fresh C04.8 evidence](docs/evidence/C04.8/README.md): focused package/hosted
-29 tests each passed; full package/hosted 237 each, one skipped, zero failures;
-Debug/Release build and analysis, release isolation and static checks passed.
-The reused app-owned native capture uses x260/y5, 41×24 in a direct 560×44
-bitmap, without resampling. Strict unmasked frame/item comparison fails
-(24,640/24,640 and 984/984 changed pixels); visual acceptance remains open.
-Synthetic-backdrop capture is not live compositor, interaction or AX proof.
-No custom chrome, bitmap UI or TCC changes. C04.9–12 remain unavailable.
+[Current Figma context and fresh evidence](docs/evidence/C04.8/README.md): exact
+node `24:1353` was re-inspected. A final-source Debug build and analysis
+succeeded; the focused native suite reran **29 tests with zero failures**. The
+fresh native capture again uses a real `NSStatusBarButton` at x260/y5, 41×24 in
+a direct 560×44 bitmap, without resampling, and renders only the native
+`battery.100percent.bolt` symbol. Retained full package/hosted suites execute
+237 each, one skipped, zero failures.
+Strict unmasked frame/item comparisons remain diagnostic-only
+(24,640/24,640 and 984/984 changed pixels); `storyDone: false` and visual
+acceptance remain open. Synthetic-backdrop capture is not live compositor,
+interaction or AX proof. No custom chrome, bitmap UI or TCC changes.
+C04.9–12 remain unavailable.
 
 ### Native unavailable status item — G023/C04.9, 2026-09-22
 

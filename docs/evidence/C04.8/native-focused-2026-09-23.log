@@ -1,0 +1,863 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination platform=macOS -derivedDataPath .build/c048-native test "-only-testing:WattTests/C041StatusItemTests" "-only-testing:WattTests/C042StatusItemTests" "-only-testing:WattTests/C043StatusItemTests" "-only-testing:WattTests/C044StatusItemTests" "-only-testing:WattTests/C045StatusItemTests" "-only-testing:WattTests/C046StatusItemTests" "-only-testing:WattTests/C047StatusItemTests" "-only-testing:WattTests/C048StatusItemTests"
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'WattUITests' in project 'Watt'
+        ➜ Explicit dependency on target 'Watt' in project 'Watt'
+    Target 'WattTests' in project 'Watt'
+        ➜ Explicit dependency on target 'Watt' in project 'Watt'
+    Target 'Watt' in project 'Watt' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: cf32807ff1d332491cc7a5791d487f54
+Build description path: /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/XCBuildData/cf32807ff1d332491cc7a5791d487f54.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /tmp/watt-g022-c048/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+    cd /tmp/watt-g022-c048/Watt.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /tmp/watt-g022-c048/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/empty-WattTests.plist (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/empty-WattTests.plist
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.hmap (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.hmap (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyStaticMetadataFileList (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/empty-WattUITests.plist (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/empty-WattUITests.plist
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyMetadataFileList (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-non-framework-target-headers.hmap (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/ProductTypeInfoPlistAdditions.plist (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/ProductTypeInfoPlistAdditions.plist
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.LinkFileList (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.LinkFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftConstValuesFileList (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/Entitlements.plist (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/Entitlements.plist
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyStaticMetadataFileList (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyMetadataFileList (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-non-framework-target-headers.hmap (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftConstValuesFileList (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.LinkFileList (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.LinkFileList
+
+WriteAuxiliaryFile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    write-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json
+
+MkDir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /bin/mkdir -p /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest
+
+MkDir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /bin/mkdir -p /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents
+
+MkDir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /bin/mkdir -p /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS
+
+MkDir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /bin/mkdir -p /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents
+
+MkDir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /bin/mkdir -p /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest
+
+MkDir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /bin/mkdir -p /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS
+
+MkDir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /bin/mkdir -p /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns
+
+ProcessProductPackaging "" /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+    Entitlements:
+    
+    {
+    "com.apple.security.get-task-allow" = 1;
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent
+
+ProcessProductPackagingDER /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /usr/bin/derq query -f xml -i /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent -o /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der --raw
+
+ProcessInfoPlistFile /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/Info.plist /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-infoPlistUtility /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/Info.plist
+
+ProcessProductPackaging "" /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+    Entitlements:
+    
+    {
+    "com.apple.application-identifier" = "dev.watt.verification.WattUITests.xctrunner";
+    "com.apple.security.app-sandbox" = 1;
+    "com.apple.security.get-task-allow" = 1;
+    "com.apple.security.network.client" = 1;
+    "com.apple.security.temporary-exception.files.absolute-path.read-only" =     (
+        "/"
+    );
+    "com.apple.security.temporary-exception.mach-lookup.global-name" =     (
+        "com.apple.testmanagerd",
+        "com.apple.dt.testmanagerd.runner",
+        "com.apple.coresymbolicationd",
+        "com.apple.coredevice.version",
+        "com.apple.coredevice.service",
+        "com.apple.remoted"
+    );
+    "com.apple.security.temporary-exception.mach-lookup.local-name" =     (
+        "com.apple.axserver"
+    );
+    "com.apple.security.temporary-exception.sbpl" =     (
+        "(allow hid-control)",
+        "(allow signal)"
+    );
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent
+
+ProcessInfoPlistFile /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Info.plist /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/empty-WattTests.plist (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-infoPlistUtility /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/empty-WattTests.plist -producttype com.apple.product-type.bundle.unit-test -expandbuildsettings -platform macosx -o /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Info.plist
+
+SwiftDriver WattTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattTests -Onone @/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g022-c048/.build/c048-native/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g022-c048/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g022-c048/.build/c048-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/include -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h -working-directory /tmp/watt-g022-c048 -experimental-emit-module-separately -disable-cmo
+
+ProcessProductPackagingDER /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent.der (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /usr/bin/derq query -f xml -i /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent -o /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent.der --raw
+
+SwiftDriver WattUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattUITests -Onone @/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g022-c048/.build/c048-native/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g022-c048/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g022-c048/.build/c048-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/include -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h -working-directory /tmp/watt-g022-c048 -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCUIAutomation-CUQMCPYSAW1ONRMT9CNFT0LY4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCTest-BH2YXN9WI5SM36R9J3ZAFWQUN.pcm
+
+SwiftExplicitDependencyCompileModuleFromInterface arm64 /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCUIAutomation-38ZINVP3SPPGT.swiftmodule
+
+SwiftExplicitDependencyCompileModuleFromInterface arm64 /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCTest-TM6NWTSISDUE.swiftmodule
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ WattUITests (in target 'WattUITests' from project 'Watt')
+
+SwiftCompile normal arm64 (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ WattTests (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+
+SwiftCompile normal arm64 Compiling\ F05StoryRenderTests.swift /tmp/watt-g022-c048/Tests/WattUITests/F05StoryRenderTests.swift (in target 'WattUITests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattUITests/F05StoryRenderTests.swift (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile F05StoryRenderTests.swift
+
+SwiftCompile normal arm64 Compiling\ NativeHostTests.swift /tmp/watt-g022-c048/Tests/WattUITests/NativeHostTests.swift (in target 'WattUITests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattUITests/NativeHostTests.swift (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile NativeHostTests.swift
+
+SwiftCompile normal arm64 Compiling\ P05RemovalTests.swift,\ P04UpdaterTests.swift,\ P01TelemetryTests.swift,\ F05FixtureTests.swift,\ AppRouterTests.swift /tmp/watt-g022-c048/Tests/WattTests/P05RemovalTests.swift /tmp/watt-g022-c048/Tests/WattTests/P04UpdaterTests.swift /tmp/watt-g022-c048/Tests/WattTests/P01TelemetryTests.swift /tmp/watt-g022-c048/Tests/WattTests/F05FixtureTests.swift /tmp/watt-g022-c048/Tests/WattTests/AppRouterTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/P05RemovalTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile P05RemovalTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/P04UpdaterTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile P04UpdaterTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/P01TelemetryTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile P01TelemetryTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/F05FixtureTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile F05FixtureTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/AppRouterTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile AppRouterTests.swift
+
+SwiftCompile normal arm64 Compiling\ J71ShowInMenuBarTests.swift,\ J65OnBatteryTests.swift,\ J64InsufficientChargerTests.swift,\ J63FullOnAdapterTests.swift,\ J62ChargingHoldTests.swift,\ J61ChargingPanelTests.swift /tmp/watt-g022-c048/Tests/WattTests/J71ShowInMenuBarTests.swift /tmp/watt-g022-c048/Tests/WattTests/J65OnBatteryTests.swift /tmp/watt-g022-c048/Tests/WattTests/J64InsufficientChargerTests.swift /tmp/watt-g022-c048/Tests/WattTests/J63FullOnAdapterTests.swift /tmp/watt-g022-c048/Tests/WattTests/J62ChargingHoldTests.swift /tmp/watt-g022-c048/Tests/WattTests/J61ChargingPanelTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J71ShowInMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J71ShowInMenuBarTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J65OnBatteryTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J65OnBatteryTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J64InsufficientChargerTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J64InsufficientChargerTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J63FullOnAdapterTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J63FullOnAdapterTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J62ChargingHoldTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J62ChargingHoldTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J61ChargingPanelTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J61ChargingPanelTests.swift
+
+SwiftCompile normal arm64 Compiling\ J53FinishSetupTests.swift,\ J52FinishSetupTests.swift,\ J51WelcomeClosedTests.swift,\ J43PanelSystemDrawTests.swift,\ J42ReadingBatteryUnavailableTests.swift,\ J41WelcomeDesktopTests.swift /tmp/watt-g022-c048/Tests/WattTests/J53FinishSetupTests.swift /tmp/watt-g022-c048/Tests/WattTests/J52FinishSetupTests.swift /tmp/watt-g022-c048/Tests/WattTests/J51WelcomeClosedTests.swift /tmp/watt-g022-c048/Tests/WattTests/J43PanelSystemDrawTests.swift /tmp/watt-g022-c048/Tests/WattTests/J42ReadingBatteryUnavailableTests.swift /tmp/watt-g022-c048/Tests/WattTests/J41WelcomeDesktopTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J53FinishSetupTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J53FinishSetupTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J52FinishSetupTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J52FinishSetupTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J51WelcomeClosedTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J51WelcomeClosedTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J43PanelSystemDrawTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J43PanelSystemDrawTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J42ReadingBatteryUnavailableTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J42ReadingBatteryUnavailableTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J41WelcomeDesktopTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J41WelcomeDesktopTests.swift
+
+SwiftCompile normal arm64 Compiling\ J21ComponentsUnavailableTests.swift,\ J18LivePanelTests.swift,\ J17CoachMarkTests.swift,\ J16AllSetTests.swift,\ NativeStylingTests.swift /tmp/watt-g022-c048/Tests/WattTests/J21ComponentsUnavailableTests.swift /tmp/watt-g022-c048/Tests/WattTests/J18LivePanelTests.swift /tmp/watt-g022-c048/Tests/WattTests/J17CoachMarkTests.swift /tmp/watt-g022-c048/Tests/WattTests/J16AllSetTests.swift /tmp/watt-g022-c048/Tests/WattTests/NativeStylingTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J21ComponentsUnavailableTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J21ComponentsUnavailableTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J18LivePanelTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J18LivePanelTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J17CoachMarkTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J17CoachMarkTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J16AllSetTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J16AllSetTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/NativeStylingTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile NativeStylingTests.swift
+
+SwiftCompile normal arm64 Compiling\ J32HelperSwitchedOffTests.swift,\ J33HelperUpdateTests.swift,\ J31ApprovalNotGivenTests.swift,\ J25SettingsConnectedTests.swift,\ J24SettingsApprovalTests.swift,\ J23SettingsTurnOnTests.swift /tmp/watt-g022-c048/Tests/WattTests/J32HelperSwitchedOffTests.swift /tmp/watt-g022-c048/Tests/WattTests/J33HelperUpdateTests.swift /tmp/watt-g022-c048/Tests/WattTests/J31ApprovalNotGivenTests.swift /tmp/watt-g022-c048/Tests/WattTests/J25SettingsConnectedTests.swift /tmp/watt-g022-c048/Tests/WattTests/J24SettingsApprovalTests.swift /tmp/watt-g022-c048/Tests/WattTests/J23SettingsTurnOnTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J32HelperSwitchedOffTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J32HelperSwitchedOffTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J33HelperUpdateTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J33HelperUpdateTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J31ApprovalNotGivenTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J31ApprovalNotGivenTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J25SettingsConnectedTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J25SettingsConnectedTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J24SettingsApprovalTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J24SettingsApprovalTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J23SettingsTurnOnTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J23SettingsTurnOnTests.swift
+
+SwiftCompile normal arm64 Compiling\ StatusPanelVoiceOverSummaryTests.swift,\ UpdateOfferInstallTests.swift,\ J13OfferTests.swift,\ J14ApprovalTests.swift,\ J15PreviewTests.swift,\ J108HelperUpdateTests.swift /tmp/watt-g022-c048/Tests/WattTests/StatusPanelVoiceOverSummaryTests.swift /tmp/watt-g022-c048/Tests/WattTests/UpdateOfferInstallTests.swift /tmp/watt-g022-c048/Tests/WattTests/J13OfferTests.swift /tmp/watt-g022-c048/Tests/WattTests/J14ApprovalTests.swift /tmp/watt-g022-c048/Tests/WattTests/J15PreviewTests.swift /tmp/watt-g022-c048/Tests/WattTests/J108HelperUpdateTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/StatusPanelVoiceOverSummaryTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile StatusPanelVoiceOverSummaryTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/UpdateOfferInstallTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile UpdateOfferInstallTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J13OfferTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J13OfferTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J14ApprovalTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J14ApprovalTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J15PreviewTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J15PreviewTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J108HelperUpdateTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J108HelperUpdateTests.swift
+
+SwiftCompile normal arm64 Compiling\ J113DestructiveKeyboardTests.swift,\ J92HelperRemovedTests.swift,\ J93AfterQuitTests.swift,\ J101CheckForUpdatesTests.swift,\ J102CheckingTests.swift,\ J103AvailableTests.swift /tmp/watt-g022-c048/Tests/WattTests/J113DestructiveKeyboardTests.swift /tmp/watt-g022-c048/Tests/WattTests/J92HelperRemovedTests.swift /tmp/watt-g022-c048/Tests/WattTests/J93AfterQuitTests.swift /tmp/watt-g022-c048/Tests/WattTests/J101CheckForUpdatesTests.swift /tmp/watt-g022-c048/Tests/WattTests/J102CheckingTests.swift /tmp/watt-g022-c048/Tests/WattTests/J103AvailableTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J113DestructiveKeyboardTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J113DestructiveKeyboardTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J92HelperRemovedTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J92HelperRemovedTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J93AfterQuitTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J93AfterQuitTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J101CheckForUpdatesTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J101CheckForUpdatesTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J102CheckingTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J102CheckingTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J103AvailableTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J103AvailableTests.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for WattUITests (in target 'WattUITests' from project 'Watt')
+
+SwiftDriver\ Compilation\ Requirements WattUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattUITests -Onone @/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g022-c048/.build/c048-native/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g022-c048/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g022-c048/.build/c048-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/include -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h -working-directory /tmp/watt-g022-c048 -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling NativeHostTests.swift (in target 'WattUITests' from project 'Watt')
+
+SwiftCompile normal arm64 Compiling\ J107CouldntCheckTests.swift,\ J106UpToDateTests.swift,\ J105ReadyTests.swift,\ J83OpeningSettingsTests.swift,\ J91RemoveHelperTests.swift,\ J121SettingsUninstallTests.swift /tmp/watt-g022-c048/Tests/WattTests/J107CouldntCheckTests.swift /tmp/watt-g022-c048/Tests/WattTests/J106UpToDateTests.swift /tmp/watt-g022-c048/Tests/WattTests/J105ReadyTests.swift /tmp/watt-g022-c048/Tests/WattTests/J83OpeningSettingsTests.swift /tmp/watt-g022-c048/Tests/WattTests/J91RemoveHelperTests.swift /tmp/watt-g022-c048/Tests/WattTests/J121SettingsUninstallTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J107CouldntCheckTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J107CouldntCheckTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J106UpToDateTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J106UpToDateTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J105ReadyTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J105ReadyTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J83OpeningSettingsTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J83OpeningSettingsTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J91RemoveHelperTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J91RemoveHelperTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J121SettingsUninstallTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J121SettingsUninstallTests.swift
+
+SwiftMergeGeneratedHeaders /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/WattUITests-Swift.h /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-swiftHeaderTool -arch arm64 /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h -o /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/WattUITests-Swift.h
+
+SwiftDriverJobDiscovery normal arm64 Compiling F05StoryRenderTests.swift (in target 'WattUITests' from project 'Watt')
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.swiftmodule /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.swiftmodule
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.swiftdoc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftdoc (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftdoc /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.swiftdoc
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.abi.json /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.abi.json (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.abi.json /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftsourceinfo (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftsourceinfo /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+SwiftDriver\ Compilation WattUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattUITests -Onone @/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g022-c048/.build/c048-native/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g022-c048/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g022-c048/.build/c048-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-generated-files.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-own-target-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests-project-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/include -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests-Swift.h -working-directory /tmp/watt-g022-c048 -experimental-emit-module-separately -disable-cmo
+
+SwiftCompile normal arm64 Compiling\ J122ConfirmUninstallTests.swift,\ J123UninstalledTests.swift,\ J124LeftoverHelperTests.swift,\ J125ReconnectedTests.swift,\ J111VoiceOverOrderTests.swift,\ J112SettingsTests.swift /tmp/watt-g022-c048/Tests/WattTests/J122ConfirmUninstallTests.swift /tmp/watt-g022-c048/Tests/WattTests/J123UninstalledTests.swift /tmp/watt-g022-c048/Tests/WattTests/J124LeftoverHelperTests.swift /tmp/watt-g022-c048/Tests/WattTests/J125ReconnectedTests.swift /tmp/watt-g022-c048/Tests/WattTests/J111VoiceOverOrderTests.swift /tmp/watt-g022-c048/Tests/WattTests/J112SettingsTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J122ConfirmUninstallTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J122ConfirmUninstallTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J123UninstalledTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J123UninstalledTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J124LeftoverHelperTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J124LeftoverHelperTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J125ReconnectedTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J125ReconnectedTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J111VoiceOverOrderTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J111VoiceOverOrderTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J112SettingsTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J112SettingsTests.swift
+
+SwiftCompile normal arm64 Compiling\ J104DownloadingTests.swift,\ J82ReadingsResumeTests.swift,\ J81NoReadingTests.swift,\ J74CrowdedMenuBarTests.swift,\ J73ChooseComponentsTests.swift,\ J72PerComponentMenuBarTests.swift /tmp/watt-g022-c048/Tests/WattTests/J104DownloadingTests.swift /tmp/watt-g022-c048/Tests/WattTests/J82ReadingsResumeTests.swift /tmp/watt-g022-c048/Tests/WattTests/J81NoReadingTests.swift /tmp/watt-g022-c048/Tests/WattTests/J74CrowdedMenuBarTests.swift /tmp/watt-g022-c048/Tests/WattTests/J73ChooseComponentsTests.swift /tmp/watt-g022-c048/Tests/WattTests/J72PerComponentMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J104DownloadingTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J104DownloadingTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J82ReadingsResumeTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J82ReadingsResumeTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J81NoReadingTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J81NoReadingTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J74CrowdedMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J74CrowdedMenuBarTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J73ChooseComponentsTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J73ChooseComponentsTests.swift
+
+SwiftCompile normal arm64 /tmp/watt-g022-c048/Tests/WattTests/J72PerComponentMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-SwiftPerFileCompile J72PerComponentMenuBarTests.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for WattTests (in target 'WattTests' from project 'Watt')
+
+SwiftDriver\ Compilation\ Requirements WattTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattTests -Onone @/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g022-c048/.build/c048-native/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g022-c048/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g022-c048/.build/c048-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/include -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h -working-directory /tmp/watt-g022-c048 -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling J21ComponentsUnavailableTests.swift, J18LivePanelTests.swift, J17CoachMarkTests.swift, J16AllSetTests.swift, NativeStylingTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftMergeGeneratedHeaders /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/WattTests-Swift.h /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-swiftHeaderTool -arch arm64 /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h -o /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/WattTests-Swift.h
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftmodule /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftmodule
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftdoc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftdoc (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftdoc /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.swiftdoc
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.abi.json /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.abi.json (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.abi.json /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattTests.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattTests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftsourceinfo (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftsourceinfo /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattTests.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling StatusPanelVoiceOverSummaryTests.swift, UpdateOfferInstallTests.swift, J13OfferTests.swift, J14ApprovalTests.swift, J15PreviewTests.swift, J108HelperUpdateTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J107CouldntCheckTests.swift, J106UpToDateTests.swift, J105ReadyTests.swift, J83OpeningSettingsTests.swift, J91RemoveHelperTests.swift, J121SettingsUninstallTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J53FinishSetupTests.swift, J52FinishSetupTests.swift, J51WelcomeClosedTests.swift, J43PanelSystemDrawTests.swift, J42ReadingBatteryUnavailableTests.swift, J41WelcomeDesktopTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J113DestructiveKeyboardTests.swift, J92HelperRemovedTests.swift, J93AfterQuitTests.swift, J101CheckForUpdatesTests.swift, J102CheckingTests.swift, J103AvailableTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J32HelperSwitchedOffTests.swift, J33HelperUpdateTests.swift, J31ApprovalNotGivenTests.swift, J25SettingsConnectedTests.swift, J24SettingsApprovalTests.swift, J23SettingsTurnOnTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J122ConfirmUninstallTests.swift, J123UninstalledTests.swift, J124LeftoverHelperTests.swift, J125ReconnectedTests.swift, J111VoiceOverOrderTests.swift, J112SettingsTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J71ShowInMenuBarTests.swift, J65OnBatteryTests.swift, J64InsufficientChargerTests.swift, J63FullOnAdapterTests.swift, J62ChargingHoldTests.swift, J61ChargingPanelTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J104DownloadingTests.swift, J82ReadingsResumeTests.swift, J81NoReadingTests.swift, J74CrowdedMenuBarTests.swift, J73ChooseComponentsTests.swift, J72PerComponentMenuBarTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling P05RemovalTests.swift, P04UpdaterTests.swift, P01TelemetryTests.swift, F05FixtureTests.swift, AppRouterTests.swift (in target 'WattTests' from project 'Watt')
+
+SwiftDriver\ Compilation WattTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name WattTests -Onone @/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g022-c048/.build/c048-native/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g022-c048/.build/c048-native/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g022-c048/.build/c048-native/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g022-c048/.build/c048-native/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-generated-files.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-own-target-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests-project-headers.hmap -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/include -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests-Swift.h -working-directory /tmp/watt-g022-c048 -experimental-emit-module-separately -disable-cmo
+
+Ld /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests normal (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -filelist /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path/../Frameworks -Xlinker -rpath -Xlinker @executable_path/../Frameworks -bundle_loader /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt -Xlinker -object_path_lto -Xlinker /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.swiftmodule -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib -Xlinker -no_adhoc_codesign -o /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests
+/tmp/watt-g022-c048/Watt.xcodeproj: WattTests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0
+/tmp/watt-g022-c048/Watt.xcodeproj: WattTests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0
+
+CopySwiftLibs /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests --scan-folder /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Frameworks --scan-folder /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/PlugIns --scan-folder /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Library/SystemExtensions --scan-folder /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name WattTests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk --xcode-version 27A266a --platform-family macOS --deployment-target 13.0 --bundle-identifier dev.watt.verification.WattTests --output /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest/Contents/MacOS/WattTests --dependency-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests_dependency_info.dat --stringsdata-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftFileList --metadata-file-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyMetadataFileList --static-metadata-file-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/WattTests.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattTests.build/Objects-normal/arm64/WattTests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-09-23 23:21:39.161 appintentsmetadataprocessor[31468:9359057] Starting appintentsmetadataprocessor export
+2026-09-23 23:21:39.162 appintentsmetadataprocessor[31468:9359057] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CodeSign /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest
+
+RegisterExecutionPolicyException /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-RegisterExecutionPolicyException /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest
+
+Touch /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest (in target 'WattTests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /usr/bin/touch -c /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/PlugIns/WattTests.xctest
+
+CodeSign /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
+/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib: replacing existing signature
+
+CodeSign /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: replacing existing signature
+
+CodeSign /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent --timestamp\=none --generate-entitlement-der /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app
+/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app: replacing existing signature
+
+Validate /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-validationUtility /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+RegisterWithLaunchServices /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-lsregisterurl --record-path /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/XCBuildData/registered-launchservices.txt -- /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/Watt.app
+
+ProcessInfoPlistFile /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Info.plist /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/empty-WattUITests.plist (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-infoPlistUtility /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/empty-WattUITests.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -platform macosx -additionalcontentfile /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/ProductTypeInfoPlistAdditions.plist -o /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Info.plist
+
+Ld /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS/WattUITests normal (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F/tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug -iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -filelist /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path/../Frameworks -Xlinker -rpath -Xlinker @executable_path/../Frameworks -Xlinker -object_path_lto -Xlinker /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.swiftmodule -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport -Xlinker -no_adhoc_codesign -o /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS/WattUITests
+/tmp/watt-g022-c048/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0
+/tmp/watt-g022-c048/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0
+/tmp/watt-g022-c048/Watt.xcodeproj: WattUITests: ld: warning: building for macOS-13.0, but linking with dylib '@rpath/XCUIAutomation.framework/Versions/A/XCUIAutomation' which was built for newer version 14.0
+
+CopySwiftLibs /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS/WattUITests --scan-folder /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Frameworks --scan-folder /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/PlugIns --scan-folder /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Library/SystemExtensions --scan-folder /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name WattUITests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk --xcode-version 27A266a --platform-family macOS --deployment-target 13.0 --bundle-identifier dev.watt.verification.WattUITests --output /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/MacOS/WattUITests --dependency-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests_dependency_info.dat --stringsdata-file /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftFileList --metadata-file-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyMetadataFileList --static-metadata-file-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/Objects-normal/arm64/WattUITests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-09-23 23:21:39.496 appintentsmetadataprocessor[31477:9359128] Starting appintentsmetadataprocessor export
+2026-09-23 23:21:39.498 appintentsmetadataprocessor[31477:9359128] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CopyPlistFile /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/Info.plist /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/Info.plist (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copyPlist --validate --convert xml1 --macro-expansion WRAPPEDPRODUCTNAME WattUITests-Runner --macro-expansion WRAPPEDPRODUCTBUNDLEIDENTIFIER dev.watt.verification.WattUITests.xctrunner --macro-expansion TESTPRODUCTNAME WattUITests --macro-expansion TESTPRODUCTBUNDLEIDENTIFIER dev.watt.verification.WattUITests --copy-value UIDeviceFamily /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest/Contents/Info.plist --outdir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents -- /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/Info.plist
+
+Copy /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PkgInfo /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/PkgInfo (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/PkgInfo /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents
+
+MkDir /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /bin/mkdir -p /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app
+
+CopyAndPreserveArchs /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/MacOS/WattUITests-Runner (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Contents/MacOS/XCTRunner -output /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/MacOS/WattUITests-Runner -extract arm64
+
+CodeSign /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent --timestamp\=none --generate-entitlement-der /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest
+
+CodeSign /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/Watt.build/Debug/WattUITests.build/WattUITests.xctest.xcent --timestamp\=none --generate-entitlement-der /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app
+/tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app: replacing existing signature
+
+RegisterExecutionPolicyException /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    builtin-RegisterExecutionPolicyException /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest
+
+Touch /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest (in target 'WattUITests' from project 'Watt')
+    cd /tmp/watt-g022-c048
+    /usr/bin/touch -c /tmp/watt-g022-c048/.build/c048-native/Build/Products/Debug/WattUITests-Runner.app/Contents/PlugIns/WattUITests.xctest
+
+PruneExplicitPrecompiledModules /tmp/watt-g022-c048/.build/c048-native/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/watt-g022-c048/.build/c048-native/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+2026-09-23 23:21:40.386352+1000 Watt[31482:9359257] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-23 23:21:40.386595+1000 Watt[31482:9359257] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-23 23:21:40.389113+1000 Watt[31482:9359333] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-23 23:21:40.389142+1000 Watt[31482:9359333] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-23 23:21:40.391837+1000 Watt[31482:9359257] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-23 23:21:40.391867+1000 Watt[31482:9359257] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-23 23:21:40.394357+1000 Watt[31482:9359257] [Connection] Will NOT re-try to establish the connection
+2026-09-23 23:21:40.394429+1000 Watt[31482:9359333] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-23 23:21:40.394446+1000 Watt[31482:9359333] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-23 23:21:40.701191+1000 Watt[31482:9359225] [Common] Unable to obtain a task name port right for pid 613: (os/kern) failure (0x5)
+Test Suite 'Selected tests' started at 2026-09-23 23:21:40.821.
+Test Suite 'WattTests.xctest' started at 2026-09-23 23:21:40.821.
+Test Suite 'C041StatusItemTests' started at 2026-09-23 23:21:40.821.
+Test Case '-[WattTests.C041StatusItemTests testCaptureBitmapUsesExactReferenceScale]' started.
+Test Case '-[WattTests.C041StatusItemTests testCaptureBitmapUsesExactReferenceScale]' passed (0.001 seconds).
+Test Case '-[WattTests.C041StatusItemTests testChargingRenderContractUsesExistingStoreAndLabel]' started.
+Test Case '-[WattTests.C041StatusItemTests testChargingRenderContractUsesExistingStoreAndLabel]' passed (0.002 seconds).
+Test Case '-[WattTests.C041StatusItemTests testDisplayPreferencesRemainLiveAndIsolated]' started.
+Test Case '-[WattTests.C041StatusItemTests testDisplayPreferencesRemainLiveAndIsolated]' passed (0.001 seconds).
+Test Case '-[WattTests.C041StatusItemTests testExactSelectorAndSiblingIsolation]' started.
+Test Case '-[WattTests.C041StatusItemTests testExactSelectorAndSiblingIsolation]' passed (0.002 seconds).
+Test Case '-[WattTests.C041StatusItemTests testReferenceGeometryIncludesEntireStatusItem]' started.
+Test Case '-[WattTests.C041StatusItemTests testReferenceGeometryIncludesEntireStatusItem]' passed (0.001 seconds).
+Test Suite 'C041StatusItemTests' passed at 2026-09-23 23:21:40.830.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.007 (0.008) seconds
+Test Suite 'C042StatusItemTests' started at 2026-09-23 23:21:40.830.
+Test Case '-[WattTests.C042StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C042StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.000 seconds).
+Test Case '-[WattTests.C042StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C042StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Case '-[WattTests.C042StatusItemTests testOnBatteryContractAndPinnedClock]' started.
+Test Case '-[WattTests.C042StatusItemTests testOnBatteryContractAndPinnedClock]' passed (0.001 seconds).
+Test Case '-[WattTests.C042StatusItemTests testPreferencesStayLiveAndOtherModesUnchanged]' started.
+Test Case '-[WattTests.C042StatusItemTests testPreferencesStayLiveAndOtherModesUnchanged]' passed (0.001 seconds).
+Test Suite 'C042StatusItemTests' passed at 2026-09-23 23:21:40.842.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.003 (0.012) seconds
+Test Suite 'C043StatusItemTests' started at 2026-09-23 23:21:40.842.
+Test Case '-[WattTests.C043StatusItemTests testChargedOnAdapterContractAndPinnedClock]' started.
+Test Case '-[WattTests.C043StatusItemTests testChargedOnAdapterContractAndPinnedClock]' passed (0.001 seconds).
+Test Case '-[WattTests.C043StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C043StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C043StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C043StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Case '-[WattTests.C043StatusItemTests testPreferencesStayLiveAndOtherModesUnchanged]' started.
+Test Case '-[WattTests.C043StatusItemTests testPreferencesStayLiveAndOtherModesUnchanged]' passed (0.001 seconds).
+Test Suite 'C043StatusItemTests' passed at 2026-09-23 23:21:40.846.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'C044StatusItemTests' started at 2026-09-23 23:21:40.847.
+Test Case '-[WattTests.C044StatusItemTests testChargerInputContractAndPinnedClock]' started.
+Test Case '-[WattTests.C044StatusItemTests testChargerInputContractAndPinnedClock]' passed (0.001 seconds).
+Test Case '-[WattTests.C044StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C044StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C044StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C044StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Suite 'C044StatusItemTests' passed at 2026-09-23 23:21:40.850.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'C045StatusItemTests' started at 2026-09-23 23:21:40.850.
+Test Case '-[WattTests.C045StatusItemTests testChargerInputContractAndPinnedClock]' started.
+Test Case '-[WattTests.C045StatusItemTests testChargerInputContractAndPinnedClock]' passed (0.001 seconds).
+Test Case '-[WattTests.C045StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C045StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C045StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C045StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Case '-[WattTests.C045StatusItemTests testExplicitFallbackDoesNotChangeLegacyContractOrReuseCharger]' started.
+Test Case '-[WattTests.C045StatusItemTests testExplicitFallbackDoesNotChangeLegacyContractOrReuseCharger]' passed (0.002 seconds).
+Test Suite 'C045StatusItemTests' passed at 2026-09-23 23:21:40.856.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.005 (0.006) seconds
+Test Suite 'C046StatusItemTests' started at 2026-09-23 23:21:40.856.
+Test Case '-[WattTests.C046StatusItemTests testDeterministicDesktopDrawAndNativeLabel]' started.
+Test Case '-[WattTests.C046StatusItemTests testDeterministicDesktopDrawAndNativeLabel]' passed (0.001 seconds).
+Test Case '-[WattTests.C046StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C046StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C046StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C046StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Suite 'C046StatusItemTests' passed at 2026-09-23 23:21:40.859.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'C047StatusItemTests' started at 2026-09-23 23:21:40.860.
+Test Case '-[WattTests.C047StatusItemTests testDeterministicComponentsAndPreservedLegacyFormatting]' started.
+Test Case '-[WattTests.C047StatusItemTests testDeterministicComponentsAndPreservedLegacyFormatting]' passed (0.001 seconds).
+Test Case '-[WattTests.C047StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C047StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C047StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C047StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Suite 'C047StatusItemTests' passed at 2026-09-23 23:21:40.864.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'C048StatusItemTests' started at 2026-09-23 23:21:40.864.
+Test Case '-[WattTests.C048StatusItemTests testDeterministicIconOnlyUsesSharedProductionSymbol]' started.
+Test Case '-[WattTests.C048StatusItemTests testDeterministicIconOnlyUsesSharedProductionSymbol]' passed (0.001 seconds).
+Test Case '-[WattTests.C048StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' started.
+Test Case '-[WattTests.C048StatusItemTests testExactReferenceGeometryAndReusedOneXBitmap]' passed (0.001 seconds).
+Test Case '-[WattTests.C048StatusItemTests testExactSelectorsAndCaptureIsolation]' started.
+Test Case '-[WattTests.C048StatusItemTests testExactSelectorsAndCaptureIsolation]' passed (0.001 seconds).
+Test Suite 'C048StatusItemTests' passed at 2026-09-23 23:21:40.867.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-23 23:21:40.867.
+	 Executed 29 tests, with 0 failures (0 unexpected) in 0.029 (0.046) seconds
+Test Suite 'Selected tests' passed at 2026-09-23 23:21:40.868.
+	 Executed 29 tests, with 0 failures (0 unexpected) in 0.029 (0.047) seconds
+2026-09-23 23:21:41.205 xcodebuild[31401:9358494] [MT] IDETestOperationsObserverDebug: 1.658 elapsed -- Testing started completed.
+2026-09-23 23:21:41.205 xcodebuild[31401:9358494] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-23 23:21:41.205 xcodebuild[31401:9358494] [MT] IDETestOperationsObserverDebug: 1.658 sec, +1.658 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/watt-g022-c048/.build/c048-native/Logs/Test/Test-Watt-2026.09.23_23-21-32-+1000.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started

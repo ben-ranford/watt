@@ -1,6 +1,17 @@
 # G022 / C04.8 — Icon-only status item
 
-Implemented and verified 2026-09-22 in the shared worktree. No commit/checkpoint.
+Fresh evidence, 2026-09-23: exact Figma node `24:1353` was re-inspected and
+the final-source DEBUG app was rebuilt, focused-tested and captured again. See
+[current Figma context](current-figma-context-2026-09-23.md),
+[build/analyze log](debug-build-analyze-2026-09-23.log), [native focused test
+log](native-focused-2026-09-23.log), [capture log](capture-run-2026-09-23.log)
+and [comparison log](compare-run-2026-09-23.log). The fresh capture is a real
+`NSStatusBarButton` at the expected 41×24 geometry with no text. Strict
+comparisons remain diagnostics with `storyDone: false`; no live compositor or
+AX proof is claimed.
+
+Initial native fixture implementation and verification were recorded on
+2026-09-22; this refresh is now persisted on the implementation branch.
 **Native fixture implemented; visual acceptance remains open.**
 
 ## Exact contract
@@ -23,7 +34,7 @@ available battery/charger capabilities. Without it, ordinary icon-only behavior
 is unchanged; unavailable and noncharging readings retain `bolt.fill` even
 with the switch. The switch and launch selector are absent from Release.
 
-## Fresh verification
+## Retained verification
 
 | Check | Result | Log |
 | --- | --- | --- |
