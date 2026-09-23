@@ -1,5 +1,9 @@
 # G055 / J7.1 — Right-click → Show in Menu Bar
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `cbb1d098466ed5c3b58b0ac8748bcd75a928550d38a9c4b2309c8d48e3fe5cd9`).
+
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `cbb1d098466ed5c3b58b0ac8748bcd75a928550d38a9c4b2309c8d48e3fe5cd9`).
+
 Implemented and automated checks passed. **Visual acceptance is blocked**: the actual
 native app launch had no PID-owned compositor windows and AX trust was unavailable.
 No screenshot, numeric visual score or pixel diff is claimed. The app PID was
@@ -89,6 +93,8 @@ results; [capture/process-cleanup.log](capture/process-cleanup.log) proves clean
 Initial compiler/test-assumption failures are retained separately; final runs passed.
 `diff-check.py` checks source whitespace, not pixels. Pixel comparison requires a fresh
 comparable native capture and remains explicitly null.
+
+A fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`: shell trust was `true`; the real fixture registered `Watt?, charging, plus 42.1 watts, menu extra.` at frame `x=-1, y=1157, width=96.5, height=24`. The host-owned menu-bar tree was present, but no accepted fixture-owned context-menu window was available; the fixture was terminated and reaped.
 
 The installed visual-ralph skill was inspected. Its runtime is unavailable in this
 non-tmux native session; the existing repository capture/verification process was used.
