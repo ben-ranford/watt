@@ -1,5 +1,15 @@
 # G025 / C04.11 — light menu bar, charging
 
+Fresh evidence, 2026-09-23: exact Figma node `24:1711` was re-inspected and
+the final-source DEBUG app was rebuilt, focused-tested and captured again. See
+[current Figma context](current-figma-context-2026-09-23.md),
+[build/analyze log](debug-build-analyze-2026-09-23.log), [native focused test
+log](native-focused-2026-09-23.log), [capture log](capture-run-2026-09-23.log)
+and [comparison log](compare-run-2026-09-23.log). The fresh capture records a
+real Aqua `NSStatusBarButton`, selected=false, at the expected 96×24 geometry.
+Strict comparisons remain diagnostics with `storyDone: false`; no desktop
+compositor visual pass is claimed.
+
 ## Changes
 - `App/WattApp.swift`: DEBUG-only exact C04.11/base selector; fixed C04.1 charging sample, fresh in-memory preferences, unchanged production MenuBarStatusLabel. Public Aqua appearance and SwiftUI light environment. Unselected real NSStatusBarButton; no panel.
 - Capture uses a native NSVisualEffectView menu material, not custom foreground/background paint. Existing dark captures and all other stories retain their behavior.
@@ -30,4 +40,10 @@ Figma MCP design context confirms frame **24:1711**, component **24:1957**, anch
 - `debug-build-analyze.log`, `release-build-analyze.log`: build/analyze succeeded.
 - `release-isolation.log`: fixture/capture symbols absent from Release.
 - `static-checks.log`: whitespace, shell syntax and ShellCheck.
-An initial test with Command Line Tools failed in unrelated gallery code; rerunning with the Xcode toolchain passed. No full UI-automation wait, commit or checkpoint.
+An initial test with Command Line Tools failed in unrelated gallery code;
+rerunning with the Xcode toolchain passed. No full UI-automation wait is
+claimed.
+
+The fresh native focused rerun executed 3 tests with zero failures; the fresh
+Debug build and analysis both succeeded. The retained full-suite results above
+remain the only full-suite claim.

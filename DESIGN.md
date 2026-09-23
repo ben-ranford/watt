@@ -906,7 +906,7 @@ bitmap. Synthetic backdrop cannot prove desktop/compositor or selected-pill
 visual parity; strict image diagnostics remain non-passing and visual
 acceptance stays open. The app does not paint a replacement capsule.
 
-### G025 / C04.11 — light menu bar charging
+### G025 / C04.11 — light menu bar charging, 2026-09-23
 
 Exact Figma frame `24:1711`, component `24:1957`, anchor `24:1959`:
 560×44 frame, right-aligned 96×24 item at (205,5), SF Pro Semibold 13/16,
@@ -917,11 +917,13 @@ Bounded capture uses a real NSStatusBarButton and native NSVisualEffectView menu
 material, with no custom paint, pill, bitmap UI, private API or TCC change.
 Other selectors retain their behavior; C04.12 remains unavailable.
 
-[Evidence and validation](docs/evidence/C04.11/README.md) retain the exact Figma
-export/geometry, direct 1x native capture, crops/diffs, focused/full tests and
-Debug/Release build/analyze logs. Native app-owned subtree evidence is not desktop
-compositor parity; visual acceptance remains open and comparisons do not claim
-story completion. No commit/checkpoint.
+[Current evidence and validation](docs/evidence/C04.11/README.md) re-inspect
+the exact Figma export/geometry, rebuild Debug and rerun the focused native
+suite (**3/3 passed**). The fresh native Aqua capture remains a direct 1×
+560×44 bitmap with x205/y5/96×24 item geometry. Native app-owned subtree
+evidence is not desktop compositor parity; strict comparisons remain
+diagnostic-only, visual acceptance stays open, and no custom light colors or
+chrome were added.
 
 ### G026 / C04.12 — light menu bar, on battery
 
