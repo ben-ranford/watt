@@ -36,3 +36,20 @@ desc="Watt?, fully charged, 0.0 watts, menu extra."
 This confirms the visible fallback status item is reading the live store rather
 than retaining the previous `—`/no-reading state. No Apple ID, helper approval,
 VM login or external credentials were used.
+
+## Reinstallation verification — 2026-09-23 23:00 AEST
+
+The current Release build was rebuilt from commit `325ca3a`, installed over the
+Desktop copy, and relaunched as PID `24384`. A fresh host probe reported:
+
+```text
+AC Power; InternalBattery-0 100%; charged
+PowerTelemetryData: BatteryPower=0 mW, SystemPowerIn=10617 mW, SystemLoad=10617 mW
+AXMenuBarItem title="0.0 W"
+AX description="Watt?, fully charged, 0.0 watts, menu extra."
+```
+
+The menu-bar item is therefore present and live. `0.0 W` is the battery charge
+rate for a full battery, not a failed read; the separately available charger
+input is `10.617 W` at this sample. Selecting the native **Charger** display
+mode is the intended way to show that input instead of the battery delta.

@@ -2294,3 +2294,20 @@ composition remains fail-closed with no updater until the trusted P04 service is
 configured. Focused package/hosted tests and the native capture prove the state;
 the existing C03 material/compositor/AX visual gates remain open. Evidence:
 `docs/evidence/C03/state-correction-2026-09-23/`.
+
+### Live telemetry and C04.2 reinspection — 2026-09-23
+
+The current Release app was rebuilt and installed at `/Users/benranford/Desktop/Watt.app`.
+The public AppKit fallback status item is present in the live accessibility tree and
+updates from the same `PowerReadingStore` as the panel. On the verification host,
+AppleSmartBattery reports `BatteryPower=0 mW`, `SystemPowerIn=10617 mW` and
+`SystemLoad=10617 mW` while the battery is 100% charged. The status item therefore
+correctly announces `0.0 W` for Delta; Charger mode is the native path for the
+separate live charger-input value. This is hardware evidence, not a simulated
+reading. See `docs/evidence/P01/charge-rate-live-2026-09-23.md`.
+
+The exact Figma MCP reinspection for C04.2 confirms frame `24:639`, status item
+`24:755`, anchor `24:757`, native `battery.100percent`, typographic minus and SF Pro
+Semibold 13/16. The existing native implementation and focused verification remain
+green; visual acceptance is still explicitly open. See
+`docs/evidence/C04.2/current-figma-context-2026-09-23.md`.
