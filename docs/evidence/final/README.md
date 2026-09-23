@@ -1,7 +1,7 @@
 # Final cumulative verification — 2026-09-23 Australia/Sydney
 
 ## Verdict
-**Current follow-up: PARTIAL.** Current main is `a7e8b35` as of 2026-09-23. The follow-up below supersedes only the old membership and Release test-module failures; it does not close final acceptance or production gates.
+**Current follow-up: PARTIAL.** Current main is `fd9fb69` as of 2026-09-23. The follow-up below supersedes only the old membership and Release test-module failures; it does not close final acceptance or production gates.
 
 ### Historical prior-pass verdict — `b1d4c11`
 **PARTIAL. Not ready for a final-completion/production commit.** A scoped WIP checkpoint is possible with the blockers below disclosed. No commit was made; no source, product, or test files were edited. Existing cumulative edits and branch `bug/G081-final-project-verification` were preserved.
@@ -9,13 +9,14 @@
 ## Current follow-up
 
 The [current-followup/](current-followup/) folder preserves the supplied logs
-byte-for-byte for main `343263a` on 2026-09-23. See the
+byte-for-byte for the earlier main `343263a` on 2026-09-23. See the
 [current follow-up index](current-followup/current-followup.json) for commands,
 provenance and limitations, and [git-revision.txt](current-followup/git-revision.txt)
-for the full HEAD and documentation worktree branch. This documentation update
-did not rerun package tests or Xcode builds. The SwiftPM logs do not record their
-original argv; the index labels equivalent commands rather than claiming exact
-invocation provenance.
+for the full recorded HEAD and documentation worktree branch. The SwiftPM logs
+do not record their original argv; the index labels equivalent commands rather
+than claiming exact invocation provenance. The latest native Settings correction
+and fresh verification are documented below and under
+`docs/evidence/J11.2/fresh-figma/live-capture-2026-09-23-state-fix/`.
 
 | Check | Result | Evidence |
 |---|---|---|
@@ -50,13 +51,32 @@ limitation without claiming a visual pass.
 | J12.4 | Native AX alert exposes `A helper from your last install`, exact description, `Reconnect`, `Remove Helper`; PID-owned native alert capture retained | AppKit dark/native appearance differs from the light Figma component; production helper inventory/mutation remains unproven |
 | J12.5 | Native AX status item exposes `Watt?, charging, plus 42.1 watts, menu extra`; Settings scene did not surface in the observation interval | No live Settings visual/production reconnect proof |
 | J11.1 | Native AX status-item label and successful activation recorded | `.window` panel compositor/VoiceOver runtime not surfaced |
-| J11.2 | AX opens PID-owned Settings; exact native controls/strings recorded | Live window is 580×831 and `Off`/`Turn On…` versus Figma 580×870 and `On`/`Remove…` |
+| J11.2 | Fresh AX activated PID-owned Settings; exact native controls/strings, `Status` `On`, `Helper` `Remove…`, and privacy copy recorded; strict native capture is 580×870 | Visual Ralph remains blocked: grouped native Form vertical rhythm still differs materially; keyboard/VoiceOver/production helper proof remains open |
 | J11.3 | Native `AXSheet` exposes exact destructive title/message and `Cancel`/`Uninstall`; final action not pressed | AppKit horizontal buttons/no custom icon versus Figma stacked alert; keyboard/VoiceOver runtime unverified |
 
 Evidence is under each story's `fresh-figma/` directory. These are documentation
 and verification updates only; they do not close the project-wide D1–D7, TCC,
 compositor, or production Gates A–E blockers. The normal `/Users/benranford/Desktop/Watt.app`
 remains running separately from all fixtures.
+
+## Latest J11.2 correction — `fd9fb69`
+
+The J11.2 record now reflects the exact Figma frame `36:5186` and its native
+window node `36:5188`. The fixture prepares helper state during app composition,
+before the native menu-bar bridge materializes, eliminating the startup race
+that previously produced the stale disconnected state. The Settings content
+height token is `838` points, yielding the Figma window geometry of `580×870`
+while preserving native macOS Settings/Form control ownership. The connected
+state retains the Figma privacy subtitle and exposes `Status` `On` and
+`Helper` `Remove…` through AX.
+
+Fresh evidence is retained at
+[`docs/evidence/J11.2/fresh-figma/live-capture-2026-09-23-state-fix/`](../J11.2/fresh-figma/live-capture-2026-09-23-state-fix/): focused J11.2 tests
+pass `6/6`; the full Swift suite passes `704 executed, 5 skipped, 0 failures`;
+Debug and Release app build/analyze checks pass. This does not claim visual
+acceptance: the native grouped Form's vertical rhythm still differs from the
+reference, and live keyboard/VoiceOver plus production helper evidence remain
+open. No custom-painted replacement or forced tint was introduced.
 
 ## Historical prior-pass evidence — `b1d4c11`
 The following table and retained evidence describe the prior pass, not current
