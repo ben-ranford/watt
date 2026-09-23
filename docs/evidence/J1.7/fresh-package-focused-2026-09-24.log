@@ -1,0 +1,21 @@
+Test Suite 'Selected tests' started at 2026-09-24 00:24:24.192.
+Test Suite 'WattTests.xctest' started at 2026-09-24 00:24:24.193.
+Test Suite 'J17CoachMarkTests' started at 2026-09-24 00:24:24.193.
+Test Case '-[WattTests.J17CoachMarkTests testDoneThenGotItPersistsAndRoutesExactlyOnce]' started.
+Test Case '-[WattTests.J17CoachMarkTests testDoneThenGotItPersistsAndRoutesExactlyOnce]' passed (0.003 seconds).
+Test Case '-[WattTests.J17CoachMarkTests testExactCopyAndFixture]' started.
+Test Case '-[WattTests.J17CoachMarkTests testExactCopyAndFixture]' passed (0.001 seconds).
+Test Case '-[WattTests.J17CoachMarkTests testExistingPersistedCoachMarkDecodes]' started.
+Test Case '-[WattTests.J17CoachMarkTests testExistingPersistedCoachMarkDecodes]' passed (0.000 seconds).
+Test Case '-[WattTests.J17CoachMarkTests testFailedPersistenceRetainsCoachMarkAndAllowsRetry]' started.
+Test Case '-[WattTests.J17CoachMarkTests testFailedPersistenceRetainsCoachMarkAndAllowsRetry]' passed (0.000 seconds).
+Test Case '-[WattTests.J17CoachMarkTests testNativePopoverContractAndDismissalDoesNotAcknowledge]' started.
+Test Case '-[WattTests.J17CoachMarkTests testNativePopoverContractAndDismissalDoesNotAcknowledge]' passed (0.073 seconds).
+Test Case '-[WattTests.J17CoachMarkTests testWrongCheckpointOrIncompleteSetupDoesNotRoute]' started.
+Test Case '-[WattTests.J17CoachMarkTests testWrongCheckpointOrIncompleteSetupDoesNotRoute]' passed (0.000 seconds).
+Test Suite 'J17CoachMarkTests' passed at 2026-09-24 00:24:24.271.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.078 (0.078) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-24 00:24:24.271.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.078 (0.078) seconds
+Test Suite 'Selected tests' passed at 2026-09-24 00:24:24.271.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.078 (0.079) seconds

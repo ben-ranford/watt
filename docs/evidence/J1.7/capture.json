@@ -1,0 +1,11 @@
+{
+  "actualStatusButton" : true,
+  "capture" : "cacheDisplay of real DEBUG NSStatusItem button and production NSPopover content; no relocation; not live MenuBarExtra interaction",
+  "contentFallback" : "temporary native AppKit anchor; actual NSPopover chrome",
+  "fixture" : "J1.7\/base",
+  "frameNode" : "28:2621",
+  "liveInteractionVerified" : false,
+  "popoverShown" : true,
+  "storage" : "InMemoryStorage; completed coachMark; fixed preview telemetry",
+  "visualPass" : false
+}
