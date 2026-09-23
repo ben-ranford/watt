@@ -1,26 +1,53 @@
 {
   "story": "J1.7",
   "node": "28:2621",
+  "popoverNode": "28:2771",
+  "popoverContentNode": "28:2787",
   "reference": "docs/evidence/J1.7/figma-reference.png",
-  "actual": null,
+  "actual": "docs/evidence/J1.7/native-popover.png",
+  "actualPixels": [
+    640,
+    404
+  ],
+  "actualWindowPoints": [
+    286,
+    162
+  ],
+  "referenceContentPoints": [
+    260,
+    136
+  ],
+  "scale": 2,
+  "reviewType": "fresh app-owned native compositor capture plus manual comparison; no calibrated pixel diff",
   "score": null,
   "verdict": "blocked",
-  "category_match": "unknown",
-  "visualPass": false,
-  "storyDone": false,
+  "category_match": true,
   "differences": [
-    "Visual differences cannot be assessed without an app-owned actual capture."
+    "Native macOS material is darker in the isolated compositor capture than the Figma wallpaper/material reference.",
+    "The native capture includes OS-owned shadow/arrow pixels around the 260x136-point popover content.",
+    "The temporary native anchor is capture scaffolding; the production status-item anchor and live menu-bar route were not cross-process verified."
   ],
   "suggestions": [
-    "Retry app-owned popover/status-item capture in a session with a capturable compositor window; verify Accessibility trust before live AX interaction, then compare against the exact reference."
+    "Preserve NSPopover and native SwiftUI controls; do not paint the material or arrow.",
+    "Repeat live status-item/AX verification when the host exposes the production MenuBarExtra compositor window."
   ],
-  "reasoning": "Fail closed: implementation and automated checks do not prove visual parity. Capture exited 1 with invalidData and no app-owned compositor window; no visual score or completion claim is supported.",
+  "reasoning": "Fresh capture now materializes the real NSPopover and shows exact title, body wrapping, Top (Trailing) arrow, native surface and Got It placement. Whole-story acceptance remains fail-closed because the temporary native anchor was required and live status-item/AX interaction was not verified.",
   "secondary_diff": null,
+  "visualPass": false,
+  "storyDone": false,
   "blockers": [
-    "Capture exit 1: invalidData.",
-    "No app-owned compositor window; actual capture unavailable.",
-    "AX trusted false; live AX interaction unverified."
+    "Production third-party status-item compositor window was not available; a temporary native AppKit anchor was required for the capture.",
+    "Live keyboard, click, VoiceOver and status-panel route remain unverified."
   ],
+  "appOwnedContentReview": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "reference": "Figma MCP node 28:2771 / content 28:2787",
+    "actual": "native-popover.png",
+    "reasoning": "Native NSPopover chrome and arrow are present; exact copy, wrapping, headline/body hierarchy, native prominent action and placement are materially aligned. Score is manual and not a pixel-diff result.",
+    "pixelDiff": null
+  },
   "implementation": {
     "presentation": "Native NSPopover anchored to the status-item button; native chrome and arrow geometry.",
     "copy": {
@@ -30,45 +57,23 @@
     }
   },
   "verification": {
-    "focused_tests": {
-      "executed": 6,
-      "failures": 0,
-      "log": "focused-tests.log"
-    },
-    "package_tests": {
-      "executed": 289,
-      "skipped": 1,
-      "failures": 0,
-      "log": "package-tests.log"
-    },
-    "hosted_tests": {
-      "executed": 277,
-      "skipped": 1,
-      "failures": 0,
-      "log": "native-tests.log"
-    },
-    "debug": {
-      "build": "passed",
-      "analyze": "passed",
-      "log": "debug-build-analyze.log"
-    },
-    "release": {
-      "build": "passed",
-      "analyze": "passed",
-      "log": "release-build-analyze.log"
-    }
-  },
-  "capture": {
-    "exit": 1,
-    "error": "invalidData",
-    "app_owned_compositor_windows": 0,
-    "screen_capture_preauthorized": true,
-    "AX_trusted": false,
-    "logs": [
-      "capture-run.exit",
-      "fixture-launch.log",
-      "window-capture.log",
-      "window.json"
+    "packageFocused": "6 passed, 0 failures",
+    "nativeFocused": "17 passed, 0 failures; TEST SUCCEEDED",
+    "buildAnalyze": "BUILD SUCCEEDED; ANALYZE SUCCEEDED",
+    "capture": "exit 0; two PID-scoped app-owned compositor windows captured",
+    "screenCapturePreauthorized": true,
+    "AXTrusted": true,
+    "liveInteractionVerified": false,
+    "evidence": [
+      "current-figma-context-2026-09-24.md",
+      "fresh-build-analyze-2026-09-24.log",
+      "fresh-package-focused-2026-09-24.log",
+      "fresh-native-focused-2026-09-24.log",
+      "fresh-capture-2026-09-24.log",
+      "window.json",
+      "native-popover.png",
+      "images-2026-09-24.sha256"
     ]
-  }
+  },
+  "acceptancePolicy": "The app-owned visual review is recorded separately; whole-story visualPass and storyDone remain false while production status-item and live AX interaction evidence is unavailable."
 }

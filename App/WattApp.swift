@@ -2417,7 +2417,39 @@ enum J17FixtureLaunch {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             do {
                 try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-                for (name, view) in [("actual-content", popover.contentViewController?.view), ("actual-status-item", button as NSView?)] {
+                let contentView = popover.contentViewController?.view
+                var fallbackWindow: NSWindow?
+                if !popover.isShown {
+                    // A host may expose no compositor window for a status item.
+                    // Anchor the real NSPopover to a temporary native AppKit
+                    // view only for capture. This keeps the popover chrome and
+                    // arrow OS-owned; the temporary anchor is not product UI.
+                    let host = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 320, height: 40),
+                                       styleMask: .borderless, backing: .buffered, defer: false)
+                    host.isOpaque = false
+                    host.backgroundColor = .clear
+                    host.appearance = NSAppearance(named: .aqua)
+                    let anchor = NSView(frame: NSRect(x: 296, y: 8, width: 24, height: 24))
+                    host.contentView = anchor
+                    if let screen = NSScreen.main?.visibleFrame {
+                        host.setFrameOrigin(NSPoint(x: screen.maxX - host.frame.width - 32,
+                                                     y: screen.maxY - host.frame.height - 32))
+                    }
+                    host.orderFront(nil)
+                    NSApp.activate(ignoringOtherApps: true)
+                    popover.show(relativeTo: anchor.bounds, of: anchor, preferredEdge: .minY)
+                    fallbackWindow = host
+                }
+                // A menu-bar-only fixture may not receive a compositor window on
+                // a host that cannot materialise third-party status items. Keep
+                // the app-owned content capture useful without fabricating the
+                // popover chrome: size the real hosting view to NSPopover's
+                // native content size before asking AppKit to rasterize it.
+                if let contentView, contentView.bounds.size == .zero {
+                    contentView.setFrameSize(popover.contentSize)
+                    contentView.layoutSubtreeIfNeeded()
+                }
+                for (name, view) in [("actual-content", contentView), ("actual-status-item", button as NSView?)] {
                     guard let view else { throw ServiceFailure.invalidData }
                     view.layoutSubtreeIfNeeded()
                     guard let bitmap = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { throw ServiceFailure.invalidData }
@@ -2428,6 +2460,7 @@ enum J17FixtureLaunch {
                 let metadata: [String: Any] = ["fixture": "J1.7/base", "frameNode": "28:2621",
                     "popoverShown": popover.isShown, "actualStatusButton": true,
                     "capture": "cacheDisplay of real DEBUG NSStatusItem button and production NSPopover content; no relocation; not live MenuBarExtra interaction",
+                    "contentFallback": fallbackWindow != nil ? "temporary native AppKit anchor; actual NSPopover chrome" : "none",
                     "storage": "InMemoryStorage; completed coachMark; fixed preview telemetry",
                     "visualPass": false, "liveInteractionVerified": false]
                 try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])

@@ -2423,3 +2423,30 @@ the Figma frame; no pixel-identical claim is made. AX trust, VoiceOver/live
 interaction, actual login-item registration, and helper effects remain explicit
 OS-owned blockers.
 Evidence: docs/evidence/J1.6/.
+
+### G034 / J1.7 — First-run coach mark native popover (2026-09-24)
+
+Exact Figma MCP reinspection for file 9DKDgUfEqidZdZQEVlQgLS confirms frame
+28:2621, Desktop Template 28:2622, right-aligned status anchor 28:2770,
+Watt? status item 28:2768, Coach Mark (Popover) 28:2771, and content slot
+28:2787. The nested reference is a Light Top (Trailing) native popover with
+260×136 point content, SF Pro bold 13/16 headline, SF Pro regular 11/14 body,
+the exact “Watt? lives here” / “Click for the detail. Right-click to change the
+number.” copy, and native bordered-prominent Got It.
+
+CoachMarkView remains SwiftUI semantic content presented by the production
+AppKit NSPopover anchored to the existing NSStatusItem. AppKit owns the
+material, rounded surface, shadow, arrow, focus and button metrics. No custom
+popover background, arrow, status-item chrome, private font, or absolute
+production positioning is allowed.
+
+The DEBUG-only J1.7 capture now uses a temporary native AppKit anchor when the
+host cannot materialise a third-party status-item compositor window. This
+causes the real NSPopover—not a painted substitute—to materialise and be
+captured; the anchor is not product UI. Fresh capture evidence contains two
+app-owned windows and the native popover surface. Focused package tests pass
+6/6; native J17 plus NativeStyling tests pass 17/17; Debug build/analyze
+succeeds. App-owned visual composition is manually acceptable with no
+pixel-diff claim. Production status-item activation, live AX/VoiceOver and
+cross-process interaction remain explicit acceptance blockers.
+Evidence: docs/evidence/J1.7/.
