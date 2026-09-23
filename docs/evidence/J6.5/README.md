@@ -1,6 +1,7 @@
 # G054 / J6.5 — Unplugged — on battery
 
 Exact Figma file `9DKDgUfEqidZdZQEVlQgLS`, node `31:5571`.
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `2fc0d5e53483f6377d473195b64643f6b4316da85ea9c78e83af1a7c21ce1c47`).
 The exact user-specified PNG is retained as `reference.png` (1000 × 720), with SHA256
 `2fc0d5e53483f6377d473195b64643f6b4316da85ea9c78e83af1a7c21ce1c47`.
 `reference.json` records the source URL, copy, approximate panel bounds and provenance;
