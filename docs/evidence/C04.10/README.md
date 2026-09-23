@@ -1,5 +1,15 @@
 # G024 / C04.10 — panel open (selected)
 
+Fresh evidence, 2026-09-23: exact Figma node `24:1591` was re-inspected and
+the final-source DEBUG app was rebuilt, focused-tested and captured again. See
+[current Figma context](current-figma-context-2026-09-23.md),
+[build/analyze log](debug-build-analyze-2026-09-23.log), [native focused test
+log](native-focused-2026-09-23.log), [capture log](capture-run-2026-09-23.log)
+and [comparison log](compare-run-2026-09-23.log). The fresh capture again
+proved the native popover/highlight lifecycle and exact 96×24 geometry. Strict
+comparisons remain diagnostics with `storyDone: false`; no compositor visual
+pass is claimed.
+
 ## Implementation
 - `App/WattApp.swift`: exact DEBUG C04.10/base selector, existing fixed C04.1 charging sample and in-memory preferences, existing router opens native MenuBarExtra. Production chrome unchanged.
 - Bounded capture only: real NSStatusItem and NSPopover, public native highlight follows actual popover visibility; reapply after button tracking clears its pressed highlight. No custom capsule/background, bitmap UI, private API or TCC changes. Existing synthetic dark capture host is diagnostic only.
@@ -14,6 +24,10 @@
 - `debug-build-analyze.log`, `release-build-analyze.log`: build and analyze succeeded.
 - `static-checks.log`: diff whitespace, bash syntax and ShellCheck passed.
 - `release-isolation.log`: C04.10 fixture/capture symbols absent.
+
+The fresh focused native run executed 3 tests with zero failures; the fresh
+Debug build and analysis both succeeded. The retained full-suite warning above
+is unchanged and is not presented as a pass.
 
 ## Capture and geometry
 Run `bash docs/evidence/C04.10/capture.sh` after Debug build in `.build/c0410-native`; then `bash docs/evidence/C04.10/compare.sh`.

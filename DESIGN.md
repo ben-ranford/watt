@@ -888,7 +888,7 @@ failures. Strict frame/item pixel comparisons remain diagnostic-only
 placement and VoiceOver remain open. C04.10–12 remain unimplemented. No
 custom chrome, bitmap UI, TCC or production behavior changes.
 
-### G024 / C04.10 — selected status item while panel is open
+### G024 / C04.10 — selected status item while panel is open, 2026-09-23
 Figma frame `24:1591`, component `24:1707`, anchor `24:1710`: dark,
 charging battery and `+42.1 W`, shared SF Pro Semibold 13/16 token.
 DEBUG `C04.10/base` reuses C04.1 fixed charging data and in-memory preferences.
@@ -897,9 +897,14 @@ selection/dismissal remains system-owned. The opt-in bounded NSStatusItem captur
 uses public NSPopover lifecycle and NSStatusBarButton.highlight, not custom chrome.
 Selection is reapplied after native click tracking ends and cleared on dismissal.
 Geometry is 560×44 with item x205/y5/96×24, right edge 301.
-Evidence: `docs/evidence/C04.10/`. Relocated-button capture proves public lifecycle
-semantics only; synthetic backdrop cannot prove desktop/compositor or selected-pill
-visual parity. Strict image diagnostics remain non-passing; visual acceptance open.
+Current [evidence](docs/evidence/C04.10/README.md) re-inspected exact Figma
+node `24:1591`, rebuilt Debug and reran the focused native suite (**3/3
+passed**). The fresh relocated-button capture again proves public lifecycle
+semantics: native popover shown, router presented, selected while open, then
+closed/dismissed/unselected. Geometry is x205/y5/96×24 in a direct 560×44
+bitmap. Synthetic backdrop cannot prove desktop/compositor or selected-pill
+visual parity; strict image diagnostics remain non-passing and visual
+acceptance stays open. The app does not paint a replacement capsule.
 
 ### G025 / C04.11 — light menu bar charging
 
