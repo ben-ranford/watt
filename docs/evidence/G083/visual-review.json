@@ -1,0 +1,84 @@
+{
+  "story": "J1.3",
+  "goal": "G083",
+  "date": "2026-09-23",
+  "source": "Fresh independent vision review of the current commit; persisted here, not a new review performed by this documentation update",
+  "sourcePath": "Features/Onboarding/Views/OnboardingFlowView.swift",
+  "reference": "docs/evidence/J1.3/figma-frame.png",
+  "referencePixels": [
+    1000,
+    720
+  ],
+  "frameNode": "27:1584",
+  "windowNode": "27:1738",
+  "contentNode": "27:1750",
+  "rowsNode": "27:2106",
+  "figmaWindowBounds": [
+    260,
+    164,
+    480,
+    412
+  ],
+  "capture": "docs/evidence/G083/capture/exact-window.png",
+  "capturePixels": [
+    960,
+    824
+  ],
+  "pixelsPerPoint": 2,
+  "normalizedWindowPoints": [
+    480,
+    412
+  ],
+  "supportingEvidence": [
+    "docs/evidence/G083/capture/window.json",
+    "docs/evidence/G083/capture/capture.json",
+    "docs/evidence/G083/capture/window-capture.log",
+    "docs/evidence/G083/capture/pixel-inspection.txt",
+    "docs/evidence/G083/capture/actual-content.png",
+    "docs/evidence/G083/capture/images.sha256",
+    "docs/evidence/G083/logs/test-green.log",
+    "docs/evidence/G083/logs/build-analyze.log",
+    "docs/evidence/G083/logs/full-package.log",
+    "docs/evidence/G083/logs/static-checks.log",
+    "docs/evidence/G083/logs/release-app.log",
+    "docs/evidence/G083/logs/release-tests.log"
+  ],
+  "score": 94,
+  "scoreOutOf": 100,
+  "passThreshold": 90,
+  "thresholdRule": "score >= passThreshold",
+  "verdict": "PASS",
+  "category_match": true,
+  "visualPass": true,
+  "method": "Direct comparison of the fresh capture normalized to 480x412 against the saved reference window; qualitative visual score, not calibrated pixel similarity",
+  "differences": [
+    "Facts group remains approximately 15pt lower and 16pt shorter than the reference: y229/110pt height versus y214/126pt height.",
+    "Native buttons are narrower, with approximately 8pt spacing versus 10pt in the reference."
+  ],
+  "suggestions": [
+    "Do not force row heights.",
+    "Retain the corrected width and native actions."
+  ],
+  "reasoning": [
+    "Direct comparison normalized the fresh capture to 480x412.",
+    "The facts group x32/416pt width aligns with the reference.",
+    "Content, hierarchy, header and actions are consistent.",
+    "Grouped facts hierarchy and native button spacing are materially correct.",
+    "Residual native vertical compression does not materially compromise the composition."
+  ],
+  "acceptedNativeDifferences": [
+    "Residual native facts-group vertical compression and offset.",
+    "Native traffic-light rendering and inactive zoom.",
+    "Native button dimensions, corners, spacing and font rendering.",
+    "Desktop background and shadow."
+  ],
+  "limitations": [
+    "No pixel-perfect parity or calibrated pixel-diff score is claimed.",
+    "No independent AX interaction or VoiceOver audit is claimed.",
+    "No TCC verification, helper approval, permission prompt or TCC bypass is claimed.",
+    "Visual PASS is not accessibility sign-off or an overall gate including AX.",
+    "Durable capture and log copies retain original capture-time metadata and local paths for provenance; historical temporary artifacts are not portable."
+  ],
+  "captureMetadataPolicy": "capture.json visualPass remains false as unchanged capture-time metadata; this artifact records the subsequent independent visual-only verdict without asserting an overall AX/TCC gate pass.",
+  "verificationScope": "Documentation-only refresh. Latest post-review focused/full/static logs were copied byte-for-byte into durable evidence; focused tests (16 passed, 0 failures), full suite (704 tests, 5 skipped, 0 failures) and static checks (PASS) were checked against the copied logs. Existing capture artifacts, build/analysis logs and visual verdict remain unchanged. No new review, capture, test run, build, static-check run or accessibility audit; git diff --check was rerun for this update."
+}

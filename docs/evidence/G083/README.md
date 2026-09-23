@@ -25,6 +25,13 @@ surface, separators and intrinsic row metrics; no custom-painted rows,
 negative margins or forced row/form heights are introduced. Other onboarding
 preview/login Forms retain their native columns style.
 
+The latest width correction gives the header and action row independent
+**32-point horizontal insets**. The grouped `Form` is their sibling, with a
+positive horizontal `WattSpacing.md` inset (**12 points**), rather than nested
+inside their 32-point inset. Combined with the native Form inset, the visible
+facts group starts at **x32** and spans **416 points**, matching the reference.
+No negative compensation or forced row heights are used.
+
 The earlier removal of extra horizontal `WattSpacing.xs` label padding remains:
 
 - **Not Now**: native `.bordered` button, `onboarding.helper.notNow`.
@@ -36,26 +43,68 @@ accessibility identifiers remain unchanged.
 
 ## Verification — 2026-09-23
 
-Fresh verification logs below use the local directory
-`/tmp/watt-g083-final-verification-1790123494/` unless an absolute path is given.
+The latest post-review verification logs are preserved in [logs/](logs/),
+relative to this README. Focused tests, the full suite and static checks came
+from `/tmp/watt-g083-layout-postreview-1790124916/`. Existing Debug
+build/analysis logs came from `.build/j13-verification/`; Release logs came
+from `/tmp/watt-g083-layout-verification-1790124426/`.
 
 | Check | Result | Evidence |
 |---|---|---|
-| J13OfferTests | **5 passed, 0 failures** | `package.log`; `/tmp/g083-j13-xcode-tests.log` |
-| NativeStylingTests | **11 passed, 0 failures** | `package.log`; `/tmp/g083-native-tests.log` |
-| Full Swift package suite | **704 tests, 5 skipped, 0 failures** | `/tmp/g083-full-tests.log` |
-| Fresh Debug test build | **TEST BUILD SUCCEEDED**, exit 0 | `debug-tests.log`, `debug-tests.exit` |
-| Fresh Release app build and analysis | **BUILD SUCCEEDED**, **ANALYZE SUCCEEDED**, exit 0 | `release-app.log`, `release-app.exit` |
-| Fresh Release test build | **TEST BUILD SUCCEEDED**, exit 0 | `release-tests.log`, `release-tests.exit` |
+| Post-review focused J13OfferTests + NativeStylingTests | **16 passed, 0 failures** | [test-green.log](logs/test-green.log) |
+| Latest Debug app build and analysis | **BUILD SUCCEEDED**, **ANALYZE SUCCEEDED** | [build-analyze.log](logs/build-analyze.log) |
+| J13OfferTests | **5 passed, 0 failures** | [test-green.log](logs/test-green.log) |
+| NativeStylingTests | **11 passed, 0 failures** | [test-green.log](logs/test-green.log) |
+| Post-review full Swift package suite | **704 tests, 5 skipped, 0 failures** | [full-package.log](logs/full-package.log) |
+| Post-review static checks | **PASS** | [static-checks.log](logs/static-checks.log) |
+| Fresh Release app build and analysis | **BUILD SUCCEEDED**, **ANALYZE SUCCEEDED** | [release-app.log](logs/release-app.log) |
+| Fresh Release test build | **TEST BUILD SUCCEEDED** | [release-tests.log](logs/release-tests.log) |
 | Diff whitespace | **git diff --check passed** | Rerun for this documentation update |
 
-Test builds are compilation checks, not additional test executions. These
-results were checked against existing logs; this documentation-only update
-did not rerun tests or builds.
+Test builds are compilation checks, not additional test executions. This
+update checked and copied the three latest post-review focused, full-suite
+and static-check logs without changing their contents. Existing build and
+analysis logs remain unchanged. This documentation-only update did not rerun
+tests, builds or static checks; diff whitespace was checked separately.
 
-## Native capture and manual inspection
+## Latest native capture and independent visual review
 
-The corrected capture is in `/tmp/g083-j13-grouped-1790123119/`:
+- Fresh capture: [exact-window.png](capture/exact-window.png), **960×824 pixels
+  at 2x**, representing a **480×412-point** window.
+- Content capture: [actual-content.png](capture/actual-content.png), **480×412
+  pixels**; this cached content capture does not assess the native titlebar.
+- Capture evidence: [window.json](capture/window.json),
+  [capture.json](capture/capture.json),
+  [window-capture.log](capture/window-capture.log) and
+  [pixel-inspection.txt](capture/pixel-inspection.txt).
+- PNG checksums: [images.sha256](capture/images.sha256), with filenames relative
+  to `capture/`.
+- Saved reference: `docs/evidence/J1.3/figma-frame.png`, using the **480×412**
+  window crop above. The fresh capture was normalized to **480×412** for the
+  direct comparison.
+- Fresh independent verdict: **94/100 — PASS**, threshold **90**,
+  `category_match: true`; persisted in [visual-review.json](visual-review.json)
+  from a fresh independent vision review of the current commit, not a new
+  review performed by this documentation update.
+
+The **x32 / 416-point** facts width aligns. Content, hierarchy, header and
+native actions are consistent; grouped facts hierarchy and native button
+spacing are materially correct. The facts group remains approximately
+**15 points lower and 16 points shorter** than the reference (**y229 / 110-point
+height** versus **y214 / 126-point height**). Native buttons are narrower, with
+approximately **8-point spacing** versus **10 points** in the reference.
+This residual native vertical compression does not materially compromise the
+composition. Retain the corrected width and native actions; do not force row
+heights.
+
+Accepted differences include native traffic-light rendering and inactive zoom,
+native button dimensions, corners and font rendering, and desktop background
+and shadow. The review accepts these native metrics rather than claiming
+pixel-perfect parity.
+
+## Historical native capture and manual inspection
+
+The earlier grouped capture is in `/tmp/g083-j13-grouped-1790123119/`:
 
 - `actual-content.png`: **480×412 pixels**, with `capture.json` metadata.
 - `native-window.png`: **960×824 pixels at 2x**, representing a **480×412-point**
@@ -68,8 +117,11 @@ structural and dimensional confirmation, not pixel-identical parity. The
 native window image supplies the visible window chrome; the cached content
 capture does not assess the native titlebar.
 
-These `/tmp` artifacts are local and temporary. This documentation update does
-not copy or replace saved reference evidence or create a new capture.
+The historical `/tmp` artifacts remain local and temporary. The latest
+width-corrected capture and verified logs are now preserved in `capture/` and
+`logs/`. Their contents retain original capture-time metadata and local paths
+for provenance. This update does not replace saved reference evidence or
+create a new capture.
 
 ## Visual and accessibility limits
 
@@ -78,11 +130,14 @@ OS-owned, not app-rendered acceptance targets. Native typography, control
 spacing, grouped Form insets, row metrics and window chrome can vary with
 macOS; matching the window dimensions does not establish pixel equality.
 
-**No pixel-diff score, strict same-scale visual parity, or independent
-accessibility pass is claimed.** Capture metadata retains `visualPass: false`;
-manual inspection does not convert it into an automated comparison or an
-overall visual/AX gate pass. Earlier `.columns` geometry/scale comparison
-failures are historical, not comparison results for this grouped capture.
+**No calibrated pixel-diff score, pixel-perfect parity, independent AX audit
+or TCC verification is claimed.** The **94 PASS** is the verdict from a fresh independent
+vision review of the current commit: visual-only, not an automated similarity score or an overall visual/AX
+gate pass. Capture metadata retains `visualPass: false` as unchanged
+capture-time metadata; the later verdict is recorded separately in
+`visual-review.json`. Earlier `.columns` geometry/scale comparison failures
+and the earlier grouped manual inspection remain historical, not the verdict
+for the fresh width-corrected capture.
 
 The fixture uses isolated in-memory state and no live services. No live
 AX/VoiceOver audit, helper approval or TCC verification is claimed. No
