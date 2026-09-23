@@ -88,7 +88,7 @@ final class NativeStylingTests: XCTestCase {
             "DesignSystem/Components/WattActionButton.swift": [".buttonStyle(.bordered)", ".buttonStyle(.borderedProminent)", "role: .destructive"],
             "DesignSystem/Components/WattFormRow.swift": ["LabeledContent"],
             "DesignSystem/Verification/WattComponentGallery.swift": ["Form {", "Section", ".formStyle(.grouped)", "role: .cancel", "role: .destructive"],
-            "DesignSystem/Components/ReadingPicker.swift": [".pickerStyle(.radioGroup)", ".disabled(unavailableModes.contains(mode))"],
+            "DesignSystem/Components/ReadingPicker.swift": [".pickerStyle(.radioGroup)", ".disabled(unavailableModes.contains(mode))", "NSViewRepresentable", "setButtonType(.radio)", "button.isEnabled = !unavailableModes.contains(option.mode)"],
             "Features/MenuBar/Views/StatusPanelView.swift": ["Form {", "Section", ".formStyle(.grouped)", "LabeledContent"],
             "Features/Onboarding/Views/OnboardingFlowView.swift": [".keyboardShortcut(.cancelAction)", "LabeledContent"]
         ]
