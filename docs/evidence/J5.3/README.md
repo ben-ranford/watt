@@ -1,9 +1,10 @@
 # G049 / J5.3 — native right-click Finish Setup…
 
 Exact source: [Figma node 30:4788](https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-4788).
-The user-supplied `reference.png` was inspected locally and pinned by SHA-256 in
-`reference.json`. No new Figma retrieval or replacement reference was used.
-The 1000 × 720 light reference shows Finish Setup… highlighted in a native menu.
+The original `reference.png` remains pinned by SHA-256 in `reference.json`; a fresh
+Figma context, variable snapshot and 1000 × 720 screenshot were retrieved on
+2026-09-23 and are retained under `fresh-figma/`. The light reference shows Finish
+Setup… highlighted in a native menu.
 
 ## Native implementation
 
