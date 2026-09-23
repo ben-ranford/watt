@@ -868,7 +868,7 @@ acceptance remain open. Synthetic-backdrop capture is not live compositor,
 interaction or AX proof. No custom chrome, bitmap UI or TCC changes.
 C04.9–12 remain unavailable.
 
-### Native unavailable status item — G023/C04.9, 2026-09-22
+### Native unavailable status item — G023/C04.9, 2026-09-23
 
 Frame `24:1472`, component `24:1588`, right-aligned anchor `24:1590`:
 native `bolt.fill` followed by `− − W`, shared SF Pro Semibold body typography
@@ -877,10 +877,16 @@ native `bolt.fill` followed by `− − W`, shared SF Pro Semibold body typograp
 DEBUG `C04.9/base` uses `.unavailable`, a fixed clock, isolated memory storage,
 and the existing native status-button capture harness. No-reading Delta mode
 uses the new placeholder; other modes and available readings are unchanged.
-[Evidence](docs/evidence/C04.9/README.md) records passing focused/full tests,
-Debug/Release build and analysis, and static checks. Strict frame/item pixel
-comparisons fail; visual acceptance, live placement and VoiceOver remain open.
-C04.10–12 remain unimplemented. No commit/checkpoint or TCC changes.
+[Current Figma context and fresh evidence](docs/evidence/C04.9/README.md): exact
+node `24:1472` was re-inspected. A final-source Debug build and analysis
+succeeded; the focused native C049 suite reran **3 tests with zero failures**.
+The fresh native capture again uses a real `NSStatusBarButton` at x230/y5,
+71×24 in a direct 560×44 bitmap and renders native `bolt.fill` + `− − W`.
+Retained full package/hosted suites execute 240 each, one skipped, zero
+failures. Strict frame/item pixel comparisons remain diagnostic-only
+(24,640/24,640 and 1,704/1,704 changed pixels); visual acceptance, live
+placement and VoiceOver remain open. C04.10–12 remain unimplemented. No
+custom chrome, bitmap UI, TCC or production behavior changes.
 
 ### G024 / C04.10 — selected status item while panel is open
 Figma frame `24:1591`, component `24:1707`, anchor `24:1710`: dark,

@@ -1,6 +1,17 @@
 # G023 / C04.9 — No reading yet / sensor unavailable
 
-Implemented 2026-09-22; no commit/checkpoint. **Visual acceptance remains open.**
+Fresh evidence, 2026-09-23: exact Figma node `24:1472` was re-inspected and
+the final-source DEBUG app was rebuilt, focused-tested and captured again. See
+[current Figma context](current-figma-context-2026-09-23.md),
+[build/analyze log](debug-build-analyze-2026-09-23.log), [native focused test
+log](native-focused-2026-09-23.log), [capture log](capture-run-2026-09-23.log)
+and [comparison log](compare-run-2026-09-23.log). The fresh native capture is
+a real `NSStatusBarButton` at the expected 71×24 geometry and renders the
+unavailable `bolt.fill` + `− − W` state. Strict comparisons remain diagnostics
+with `storyDone: false`; no live compositor or AX proof is claimed.
+
+Initial implementation was recorded 2026-09-22; this evidence refresh is now
+persisted on the implementation branch. **Visual acceptance remains open.**
 
 ## Contract and implementation
 
@@ -20,7 +31,7 @@ expectations were updated to this intentional contract. Existing stories remain
 registered; C04.10–12 still fail closed. Release excludes fixture selectors.
 No StatusItemContextMenu edits, bitmap UI, private APIs or TCC changes.
 
-## Fresh verification
+## Retained verification
 
 | Check | Result | Evidence |
 | --- | --- | --- |

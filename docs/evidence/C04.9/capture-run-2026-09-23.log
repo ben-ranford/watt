@@ -1,0 +1,32 @@
+{
+  "actualButtonClass" : "NSStatusBarButton",
+  "anchor" : "24:1590",
+  "appearance" : "NSAppearanceNameDarkAqua",
+  "bitmap1xPixels" : [
+    560,
+    44
+  ],
+  "bitmap1xPoints" : [
+    560,
+    44
+  ],
+  "bitmapPixels" : [
+    1120,
+    88
+  ],
+  "buttonFrame" : "{{230, 15}, {71, 24}}",
+  "captureAPI" : "NSView.cacheDisplay (screen-scale diagnostic); NSView.displayIgnoringOpacity(_:in:) (direct 1x)",
+  "component" : "24:1588",
+  "customBackdrop" : true,
+  "fixture" : "C04.9\/base",
+  "harnessPoints" : [
+    560,
+    44
+  ],
+  "limitations" : "Relocated actual native button; synthetic dark backdrop; no compositor\/desktop pixels; not a visual pass.",
+  "nativeItemHost" : "DEBUG NSStatusItem; MenuBarExtra suppressed",
+  "node" : "24:1472",
+  "originalButtonFrame" : "{{0, 0}, {71, 22}}",
+  "resampled" : false,
+  "selected" : false
+}
