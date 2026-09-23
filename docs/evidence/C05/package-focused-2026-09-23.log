@@ -1,0 +1,1247 @@
+Building for debugging...
+[Pre-planning 1 / 124]
+[Planning deferred tasks]
+[40 / 76]
+[43 / 79] WattFixtures
+[52 / 135]
+[55 / 217] Watt-product
+[61 / 219]
+[66 / 219]
+[68 / 219]
+[73 / 219]
+[76 / 219]
+[79 / 219]
+[85 / 219]
+[88 / 219]
+[90 / 219]
+[91 / 219]
+[104 / 219]
+[106 / 219]
+[107 / 219]
+[111 / 219]
+[112 / 219]
+[113 / 219]
+[120 / 219]
+[122 / 219]
+[127 / 219]
+[128 / 219]
+[129 / 219]
+[132 / 219]
+[134 / 219]
+[146 / 219]
+[152 / 219] WattFixtures
+[156 / 219]
+[160 / 219]
+[165 / 219]
+[165 / 219] WattFixtures
+/private/tmp/watt-g027-c05/Package.swift: WattFixtures: ld: warning: search path '/Library/Developer/CommandLineTools/Developer/Library/Frameworks' not found
+[167 / 219]
+[168 / 219]
+[169 / 219]
+[180 / 219] Watt-product
+error: SwiftCompile normal arm64 failed with a nonzero exit code. Command line:     cd /private/tmp
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:77:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 75 |     let version: String
+ 76 |     @Environment(\.dismiss) private var dismiss
+ 77 |     @State private var automaticUpdates: Bool
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 78 |
+ 79 |     init(router: AppRouter, store: UpdateStore, version: String) {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:85:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 83 |         _automaticUpdates = State(initialValue: store.installFutureUpdatesAutomatically)
+ 84 |     }
+ 85 |     @State private var choiceFailed = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 86 |
+ 87 |     var body: some View {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:77:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 75 |     let version: String
+ 76 |     @Environment(\.dismiss) private var dismiss
+ 77 |     @State private var automaticUpdates: Bool
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 78 |
+ 79 |     init(router: AppRouter, store: UpdateStore, version: String) {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:85:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 83 |         _automaticUpdates = State(initialValue: store.installFutureUpdatesAutomatically)
+ 84 |     }
+ 85 |     @State private var choiceFailed = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 86 |
+ 87 |     var body: some View {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:164:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+162 |     let receipt: OperationReceipt
+163 |     @Environment(\.dismiss) private var dismiss
+164 |     @State private var presentation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+165 |     @State private var generation: UUID?
+166 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:165:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+163 |     @Environment(\.dismiss) private var dismiss
+164 |     @State private var presentation: UUID?
+165 |     @State private var generation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+166 |
+167 |     var body: some View {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:164:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+162 |     let receipt: OperationReceipt
+163 |     @Environment(\.dismiss) private var dismiss
+164 |     @State private var presentation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+165 |     @State private var generation: UUID?
+166 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:165:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+163 |     @Environment(\.dismiss) private var dismiss
+164 |     @State private var presentation: UUID?
+165 |     @State private var generation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+166 |
+167 |     var body: some View {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:211:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+209 |     let version: String
+210 |     @Environment(\.dismiss) private var dismiss
+211 |     @State private var cancelling = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+212 |     var body: some View {
+213 |         VStack(alignment: .leading, spacing: 18) {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:211:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+209 |     let version: String
+210 |     @Environment(\.dismiss) private var dismiss
+211 |     @State private var cancelling = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+212 |     var body: some View {
+213 |         VStack(alignment: .leading, spacing: 18) {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:8:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  6 | struct WattComponentGallery: View {
+  7 |     var colorScheme: ColorScheme = .light
+  8 |     @State private var reading: WattDisplayMode = .delta
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:9:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  7 |     var colorScheme: ColorScheme = .light
+  8 |     @State private var reading: WattDisplayMode = .delta
+  9 |     @State private var updateInterval = "Every 2 seconds"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:10:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  8 |     @State private var reading: WattDisplayMode = .delta
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:11:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:12:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 13 |     @State private var showsConfirmation = false
+ 14 |     @State private var confirmationResult = "No action taken"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:13:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 14 |     @State private var confirmationResult = "No action taken"
+ 15 |     @FocusState private var fieldFocused: Bool
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:14:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+ 14 |     @State private var confirmationResult = "No action taken"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 15 |     @FocusState private var fieldFocused: Bool
+ 16 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:8:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  6 | struct WattComponentGallery: View {
+  7 |     var colorScheme: ColorScheme = .light
+  8 |     @State private var reading: WattDisplayMode = .delta
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:9:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  7 |     var colorScheme: ColorScheme = .light
+  8 |     @State private var reading: WattDisplayMode = .delta
+  9 |     @State private var updateInterval = "Every 2 seconds"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:10:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  8 |     @State private var reading: WattDisplayMode = .delta
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:11:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:12:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 13 |     @State private var showsConfirmation = false
+ 14 |     @State private var confirmationResult = "No action taken"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:13:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 14 |     @State private var confirmationResult = "No action taken"
+ 15 |     @FocusState private var fieldFocused: Bool
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:14:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+ 14 |     @State private var confirmationResult = "No action taken"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 15 |     @FocusState private var fieldFocused: Bool
+ 16 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:150:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+148 |     let kind: Kind
+149 |     let colorScheme: ColorScheme
+150 |     @State private var reading: WattDisplayMode = .delta
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:151:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+149 |     let colorScheme: ColorScheme
+150 |     @State private var reading: WattDisplayMode = .delta
+151 |     @State private var showSymbol = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:152:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+150 |     @State private var reading: WattDisplayMode = .delta
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:153:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:154:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:155:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+156 |     @State private var confirmsRemoval = false
+157 |     @State private var removed = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:156:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+157 |     @State private var removed = false
+158 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:157:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+157 |     @State private var removed = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+158 |
+159 |     static let readingOptions: [ReadingPicker.Option] = [
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:150:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+148 |     let kind: Kind
+149 |     let colorScheme: ColorScheme
+150 |     @State private var reading: WattDisplayMode = .delta
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:151:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+149 |     let colorScheme: ColorScheme
+150 |     @State private var reading: WattDisplayMode = .delta
+151 |     @State private var showSymbol = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:152:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+150 |     @State private var reading: WattDisplayMode = .delta
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:153:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:154:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:155:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+156 |     @State private var confirmsRemoval = false
+157 |     @State private var removed = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:156:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+157 |     @State private var removed = false
+158 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:157:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+157 |     @State private var removed = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+158 |
+159 |     static let readingOptions: [ReadingPicker.Option] = [
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/MenuBar/Views/MenuBarRootView.swift:8:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 6 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 7 |     @EnvironmentObject private var preferences: PreferencesStore
+ 8 |     @State private var setupPresentationID: UUID?
+   |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 9 |
+10 |     private var chargerDescription: String? {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/MenuBar/Views/MenuBarRootView.swift:8:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 6 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 7 |     @EnvironmentObject private var preferences: PreferencesStore
+ 8 |     @State private var setupPresentationID: UUID?
+   |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 9 |
+10 |     private var chargerDescription: String? {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:27:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 25 |     @EnvironmentObject private var router: AppRouter
+ 26 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:28:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 26 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+ 28 |     @State private var removalMessage: String?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 29 |     @State private var removing = false
+ 30 |     @State private var uninstallPresentation: UUID?
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:29:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 30 |     @State private var uninstallPresentation: UUID?
+ 31 |     @FocusState private var focusedControl: FocusedControl?
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:30:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+ 30 |     @State private var uninstallPresentation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 31 |     @FocusState private var focusedControl: FocusedControl?
+ 32 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:27:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 25 |     @EnvironmentObject private var router: AppRouter
+ 26 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:28:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 26 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+ 28 |     @State private var removalMessage: String?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 29 |     @State private var removing = false
+ 30 |     @State private var uninstallPresentation: UUID?
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:29:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 30 |     @State private var uninstallPresentation: UUID?
+ 31 |     @FocusState private var focusedControl: FocusedControl?
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:30:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+ 30 |     @State private var uninstallPresentation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 31 |     @FocusState private var focusedControl: FocusedControl?
+ 32 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+Failed frontend command:
+/Library/Developer/CommandLineTools/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types /private/tmp/watt-g027-c05/App/AppDestination.swift /private/tmp/watt-g027-c05/App/AppRouter.swift /private/tmp/watt-g027-c05/App/HelperUpdatePresentation.swift /private/tmp/watt-g027-c05/App/J111FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J112FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J113FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J121FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J122FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J123FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J124FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J125FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J73FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J74FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J81FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J82FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J83FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J91FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J92FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J93FixtureLaunch.swift /private/tmp/watt-g027-c05/App/LeftoverHelperPresentation.swift /private/tmp/watt-g027-c05/App/RootSceneView.swift /private/tmp/watt-g027-c05/App/WattApp.swift /private/tmp/watt-g027-c05/DesignSystem/Components/ComponentSelectionMenu.swift /private/tmp/watt-g027-c05/DesignSystem/Components/ReadingPicker.swift /private/tmp/watt-g027-c05/DesignSystem/Components/WattActionButton.swift /private/tmp/watt-g027-c05/DesignSystem/Components/WattFormRow.swift /private/tmp/watt-g027-c05/DesignSystem/Components/WattWindowScaffold.swift /private/tmp/watt-g027-c05/DesignSystem/Theme/WattColors.swift /private/tmp/watt-g027-c05/DesignSystem/Theme/WattSpacing.swift /private/tmp/watt-g027-c05/DesignSystem/Theme/WattTypography.swift /private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift /private/tmp/watt-g027-c05/Features/MenuBar/Components/MenuBarStatusLabel.swift /private/tmp/watt-g027-c05/Features/MenuBar/Views/MenuBarRootView.swift /private/tmp/watt-g027-c05/Features/MenuBar/Views/StatusItemContextMenu.swift /private/tmp/watt-g027-c05/Features/MenuBar/Views/StatusPanelView.swift /private/tmp/watt-g027-c05/Features/Onboarding/Views/OnboardingFlowView.swift /private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift /private/tmp/watt-g027-c05/Models/PowerReading.swift /private/tmp/watt-g027-c05/Models/WattPreferences.swift /private/tmp/watt-g027-c05/Services/PowerReadingStore.swift /private/tmp/watt-g027-c05/Services/ScopedRemovalAdapter.swift /private/tmp/watt-g027-c05/Services/SystemPowerSourceTelemetryService.swift /private/tmp/watt-g027-c05/Services/UpdateAdapter.swift -target arm64-apple-macos13.0 -disable-cross-import-overlay-search -swift-module-cross-import UserNotifications /Library/Developer/CommandLineTools/SDKs/MacOSX27.0.sdk/System/Library/Frameworks/UserNotifications.framework/Modules/UserNotifications.swiftcrossimport/AppIntents.swiftoverlay -load-resolved-plugin /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/libObservationMacros.dylib\#\#ObservationMacros -load-resolved-plugin /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#\#SwiftMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/Objects-normal/arm64/Watt-dependencies-2.json -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Library/Developer/CommandLineTools/SDKs/MacOSX27.0.sdk -I /private/tmp/watt-g027-c05/.build/c05-package/out/Products/Debug -Isystem /Library/Developer/CommandLineTools/Developer/usr/lib -F /private/tmp/watt-g027-c05/.build/c05-package/out/Products/Debug -F /Library/Developer/CommandLineTools/Library/Developer/Frameworks -F /Library/Developer/CommandLineTools/Developer/Library/Frameworks -module-cache-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/SwiftExplicitPrecompiledModules -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D Xcode -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /private/tmp/watt-g027-c05/.build/c05-package/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /private/tmp -enable-anonymous-context-mangled-names -file-compilation-dir /private/tmp -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /private/tmp/watt-g027-c05/.build/c05-package/out/SDKStatCaches.noindex/macosx27.0-26A425-1aa54e4a50e311dbd51de5aafe7eca3dffd68ff603bdaacc80b00cb8898de72d.sdkstatcache -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -I/private/tmp/watt-g027-c05/.build/c05-package/out/Products/Debug/include -Xcc -I/private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/DerivedSources-normal/arm64 -Xcc -I/private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/DerivedSources/arm64 -Xcc -I/private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name Watt -package-name watt_g027_c05 -const-gather-protocols-file /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/Objects-normal/arm64/Watt_const_extract_protocols.json -disable-clang-spi -clang-target arm64-apple-macos27.0 -target-sdk-version 27.0 -target-sdk-name macosx27.0 -in-process-plugin-server-path /Library/Developer/CommandLineTools/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -emit-module-doc-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/Objects-normal/arm64/Watt.swiftdoc -emit-module-source-info-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/Objects-normal/arm64/Watt.swiftsourceinfo -serialize-diagnostics-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/Objects-normal/arm64/Watt-primary-emit-module.dia -emit-dependencies-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/Objects-normal/arm64/Watt-primary-emit-module.d -parse-as-library -o /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/Objects-normal/arm64/Watt.swiftmodule -emit-abi-descriptor-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-p.build/Objects-normal/arm64/Watt.abi.json
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:77:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 75 |     let version: String
+ 76 |     @Environment(\.dismiss) private var dismiss
+ 77 |     @State private var automaticUpdates: Bool
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 78 |
+ 79 |     init(router: AppRouter, store: UpdateStore, version: String) {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:85:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 83 |         _automaticUpdates = State(initialValue: store.installFutureUpdatesAutomatically)
+ 84 |     }
+ 85 |     @State private var choiceFailed = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 86 |
+ 87 |     var body: some View {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:77:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 75 |     let version: String
+ 76 |     @Environment(\.dismiss) private var dismiss
+ 77 |     @State private var automaticUpdates: Bool
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 78 |
+ 79 |     init(router: AppRouter, store: UpdateStore, version: String) {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:85:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 83 |         _automaticUpdates = State(initialValue: store.installFutureUpdatesAutomatically)
+ 84 |     }
+ 85 |     @State private var choiceFailed = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 86 |
+ 87 |     var body: some View {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:164:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+162 |     let receipt: OperationReceipt
+163 |     @Environment(\.dismiss) private var dismiss
+164 |     @State private var presentation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+165 |     @State private var generation: UUID?
+166 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:165:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+163 |     @Environment(\.dismiss) private var dismiss
+164 |     @State private var presentation: UUID?
+165 |     @State private var generation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+166 |
+167 |     var body: some View {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:164:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+162 |     let receipt: OperationReceipt
+163 |     @Environment(\.dismiss) private var dismiss
+164 |     @State private var presentation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+165 |     @State private var generation: UUID?
+166 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:165:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+163 |     @Environment(\.dismiss) private var dismiss
+164 |     @State private var presentation: UUID?
+165 |     @State private var generation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+166 |
+167 |     var body: some View {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:211:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+209 |     let version: String
+210 |     @Environment(\.dismiss) private var dismiss
+211 |     @State private var cancelling = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+212 |     var body: some View {
+213 |         VStack(alignment: .leading, spacing: 18) {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/App/RootSceneView.swift:211:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+209 |     let version: String
+210 |     @Environment(\.dismiss) private var dismiss
+211 |     @State private var cancelling = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+212 |     var body: some View {
+213 |         VStack(alignment: .leading, spacing: 18) {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:8:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  6 | struct WattComponentGallery: View {
+  7 |     var colorScheme: ColorScheme = .light
+  8 |     @State private var reading: WattDisplayMode = .delta
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:9:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  7 |     var colorScheme: ColorScheme = .light
+  8 |     @State private var reading: WattDisplayMode = .delta
+  9 |     @State private var updateInterval = "Every 2 seconds"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:10:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  8 |     @State private var reading: WattDisplayMode = .delta
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:11:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:12:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 13 |     @State private var showsConfirmation = false
+ 14 |     @State private var confirmationResult = "No action taken"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:13:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 14 |     @State private var confirmationResult = "No action taken"
+ 15 |     @FocusState private var fieldFocused: Bool
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:14:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+ 14 |     @State private var confirmationResult = "No action taken"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 15 |     @FocusState private var fieldFocused: Bool
+ 16 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:8:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  6 | struct WattComponentGallery: View {
+  7 |     var colorScheme: ColorScheme = .light
+  8 |     @State private var reading: WattDisplayMode = .delta
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:9:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  7 |     var colorScheme: ColorScheme = .light
+  8 |     @State private var reading: WattDisplayMode = .delta
+  9 |     @State private var updateInterval = "Every 2 seconds"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:10:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  8 |     @State private var reading: WattDisplayMode = .delta
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:11:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+  9 |     @State private var updateInterval = "Every 2 seconds"
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:12:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 10 |     @State private var showSymbol = true
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 13 |     @State private var showsConfirmation = false
+ 14 |     @State private var confirmationResult = "No action taken"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:13:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 11 |     @State private var enabled = true
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 14 |     @State private var confirmationResult = "No action taken"
+ 15 |     @FocusState private var fieldFocused: Bool
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:14:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 12 |     @State private var focusText = "Keyboard focus"
+ 13 |     @State private var showsConfirmation = false
+ 14 |     @State private var confirmationResult = "No action taken"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 15 |     @FocusState private var fieldFocused: Bool
+ 16 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:150:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+148 |     let kind: Kind
+149 |     let colorScheme: ColorScheme
+150 |     @State private var reading: WattDisplayMode = .delta
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:151:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+149 |     let colorScheme: ColorScheme
+150 |     @State private var reading: WattDisplayMode = .delta
+151 |     @State private var showSymbol = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:152:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+150 |     @State private var reading: WattDisplayMode = .delta
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:153:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:154:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:155:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+156 |     @State private var confirmsRemoval = false
+157 |     @State private var removed = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:156:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+157 |     @State private var removed = false
+158 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:157:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+157 |     @State private var removed = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+158 |
+159 |     static let readingOptions: [ReadingPicker.Option] = [
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:150:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+148 |     let kind: Kind
+149 |     let colorScheme: ColorScheme
+150 |     @State private var reading: WattDisplayMode = .delta
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:151:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+149 |     let colorScheme: ColorScheme
+150 |     @State private var reading: WattDisplayMode = .delta
+151 |     @State private var showSymbol = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:152:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+150 |     @State private var reading: WattDisplayMode = .delta
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:153:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+151 |     @State private var showSymbol = true
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:154:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+152 |     @State private var smoothing = true
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:155:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+153 |     @State private var precision = "42.1 W"
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+156 |     @State private var confirmsRemoval = false
+157 |     @State private var removed = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:156:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+154 |     @State private var components = "CPU, GPU"
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+157 |     @State private var removed = false
+158 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift:157:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+155 |     @State private var update = "Every 2 seconds"
+156 |     @State private var confirmsRemoval = false
+157 |     @State private var removed = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+158 |
+159 |     static let readingOptions: [ReadingPicker.Option] = [
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/MenuBar/Views/MenuBarRootView.swift:8:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 6 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 7 |     @EnvironmentObject private var preferences: PreferencesStore
+ 8 |     @State private var setupPresentationID: UUID?
+   |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 9 |
+10 |     private var chargerDescription: String? {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/MenuBar/Views/MenuBarRootView.swift:8:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 6 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 7 |     @EnvironmentObject private var preferences: PreferencesStore
+ 8 |     @State private var setupPresentationID: UUID?
+   |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 9 |
+10 |     private var chargerDescription: String? {
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:27:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 25 |     @EnvironmentObject private var router: AppRouter
+ 26 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:28:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 26 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+ 28 |     @State private var removalMessage: String?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 29 |     @State private var removing = false
+ 30 |     @State private var uninstallPresentation: UUID?
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:29:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 30 |     @State private var uninstallPresentation: UUID?
+ 31 |     @FocusState private var focusedControl: FocusedControl?
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:30:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+ 30 |     @State private var uninstallPresentation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 31 |     @FocusState private var focusedControl: FocusedControl?
+ 32 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:27:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 25 |     @EnvironmentObject private var router: AppRouter
+ 26 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:28:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 26 |     @EnvironmentObject private var powerStore: PowerReadingStore
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+ 28 |     @State private var removalMessage: String?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 29 |     @State private var removing = false
+ 30 |     @State private var uninstallPresentation: UUID?
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:29:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 27 |     @State private var removal: AppRouter.SettingsRemoval?
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 30 |     @State private var uninstallPresentation: UUID?
+ 31 |     @FocusState private var focusedControl: FocusedControl?
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+
+/private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift:30:24: error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 28 |     @State private var removalMessage: String?
+ 29 |     @State private var removing = false
+ 30 |     @State private var uninstallPresentation: UUID?
+    |                        `- error: external macro implementation type 'SwiftUIMacros.StateMacro' could not be found for macro 'State()'; plugin for module 'SwiftUIMacros' not found
+ 31 |     @FocusState private var focusedControl: FocusedControl?
+ 32 |
+
+SwiftUI.State:1:145: note: 'State()' declared here
+1 | @attached(accessor, names: named(init), named(get), named(set)) @attached(peer, names: prefixed(`_`), prefixed(__), prefixed(`$`)) public macro State() = #externalMacro(module: "SwiftUIMacros", type: "StateMacro")
+  |                                                                                                                                                 `- note: 'State()' declared here
+Failed frontend command:
+/Library/Developer/CommandLineTools/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types /private/tmp/watt-g027-c05/App/AppDestination.swift /private/tmp/watt-g027-c05/App/AppRouter.swift /private/tmp/watt-g027-c05/App/HelperUpdatePresentation.swift /private/tmp/watt-g027-c05/App/J111FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J112FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J113FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J121FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J122FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J123FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J124FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J125FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J73FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J74FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J81FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J82FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J83FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J91FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J92FixtureLaunch.swift /private/tmp/watt-g027-c05/App/J93FixtureLaunch.swift /private/tmp/watt-g027-c05/App/LeftoverHelperPresentation.swift /private/tmp/watt-g027-c05/App/RootSceneView.swift /private/tmp/watt-g027-c05/App/WattApp.swift /private/tmp/watt-g027-c05/DesignSystem/Components/ComponentSelectionMenu.swift /private/tmp/watt-g027-c05/DesignSystem/Components/ReadingPicker.swift /private/tmp/watt-g027-c05/DesignSystem/Components/WattActionButton.swift /private/tmp/watt-g027-c05/DesignSystem/Components/WattFormRow.swift /private/tmp/watt-g027-c05/DesignSystem/Components/WattWindowScaffold.swift /private/tmp/watt-g027-c05/DesignSystem/Theme/WattColors.swift /private/tmp/watt-g027-c05/DesignSystem/Theme/WattSpacing.swift /private/tmp/watt-g027-c05/DesignSystem/Theme/WattTypography.swift /private/tmp/watt-g027-c05/DesignSystem/Verification/WattComponentGallery.swift /private/tmp/watt-g027-c05/Features/MenuBar/Components/MenuBarStatusLabel.swift /private/tmp/watt-g027-c05/Features/MenuBar/Views/MenuBarRootView.swift /private/tmp/watt-g027-c05/Features/MenuBar/Views/StatusItemContextMenu.swift /private/tmp/watt-g027-c05/Features/MenuBar/Views/StatusPanelView.swift /private/tmp/watt-g027-c05/Features/Onboarding/Views/OnboardingFlowView.swift /private/tmp/watt-g027-c05/Features/Settings/Views/SettingsRootView.swift /private/tmp/watt-g027-c05/Models/PowerReading.swift /private/tmp/watt-g027-c05/Models/WattPreferences.swift /private/tmp/watt-g027-c05/Services/PowerReadingStore.swift /private/tmp/watt-g027-c05/Services/ScopedRemovalAdapter.swift /private/tmp/watt-g027-c05/Services/SystemPowerSourceTelemetryService.swift /private/tmp/watt-g027-c05/Services/UpdateAdapter.swift -target arm64-apple-macos13.0 -disable-cross-import-overlay-search -swift-module-cross-import UserNotifications /Library/Developer/CommandLineTools/SDKs/MacOSX27.0.sdk/System/Library/Frameworks/UserNotifications.framework/Modules/UserNotifications.swiftcrossimport/AppIntents.swiftoverlay -load-resolved-plugin /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/libObservationMacros.dylib\#\#ObservationMacros -load-resolved-plugin /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#\#SwiftMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt-dependencies-1.json -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Library/Developer/CommandLineTools/SDKs/MacOSX27.0.sdk -I /private/tmp/watt-g027-c05/.build/c05-package/out/Products/Debug -Isystem /Library/Developer/CommandLineTools/Developer/usr/lib -F /private/tmp/watt-g027-c05/.build/c05-package/out/Products/Debug -F /Library/Developer/CommandLineTools/Library/Developer/Frameworks -F /Library/Developer/CommandLineTools/Developer/Library/Frameworks -module-cache-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/SwiftExplicitPrecompiledModules -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D Xcode -entry-point-function-name Watt_main -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /private/tmp/watt-g027-c05/.build/c05-package/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /private/tmp -enable-anonymous-context-mangled-names -file-compilation-dir /private/tmp -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /private/tmp/watt-g027-c05/.build/c05-package/out/SDKStatCaches.noindex/macosx27.0-26A425-1aa54e4a50e311dbd51de5aafe7eca3dffd68ff603bdaacc80b00cb8898de72d.sdkstatcache -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -I/private/tmp/watt-g027-c05/.build/c05-package/out/Products/Debug/include -Xcc -I/private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/DerivedSources-normal/arm64 -Xcc -I/private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/DerivedSources/arm64 -Xcc -I/private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name Watt -package-name watt_g027_c05 -const-gather-protocols-file /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt-6F08516E4-testable_const_extract_protocols.json -disable-clang-spi -clang-target arm64-apple-macos27.0 -target-sdk-version 27.0 -target-sdk-name macosx27.0 -in-process-plugin-server-path /Library/Developer/CommandLineTools/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -emit-module-doc-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt.swiftdoc -emit-module-source-info-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt.swiftsourceinfo -emit-objc-header-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt-Swift.h -serialize-diagnostics-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt-6F08516E4-testable-primary-emit-module.dia -emit-dependencies-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt-6F08516E4-testable-primary-emit-module.d -parse-as-library -o /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt.swiftmodule -emit-abi-descriptor-path /private/tmp/watt-g027-c05/.build/c05-package/out/Intermediates.noindex/Watt.build/Debug/Watt-6F08516E4-testable-t.build/Objects-normal/arm64/Watt.abi.json
+error: Build failed
+error: fatalError

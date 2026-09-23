@@ -944,7 +944,7 @@ with x204/y5/97×24 geometry. It does not reproduce desktop/compositor pixels;
 diagnostic comparisons are not visual acceptance and do not mark the story
 visually done. No custom light colors or glyph paint was added.
 
-## G027 / C05 — native light Settings implementation
+## G027 / C05 — native light Settings implementation (evidence refreshed 2026-09-23)
 
 Exact reference: frame **25:787**, window **25:1102**, content **25:1129**,
 row slots **25:1501 / 25:1751 / 25:1994 / 25:2243 / 25:2492**. The visible
@@ -963,8 +963,14 @@ login/notification/update preferences are not claims of OS service activation.
 DEBUG C05/base uses fresh in-memory preferences, fixed preview telemetry and Aqua.
 Non-base variants are rejected. Reference content is 580×839; native grouped
 spacing requires a taller 580×1000 capture to expose every row without custom
-metrics. Runtime supports a shorter scrolling viewport. Pixel parity is not
-claimed. See `docs/evidence/C05/README.md` for exact metadata, capture hashes,
+metrics. Runtime supports a shorter scrolling viewport. A second independent
+capture was byte-identical (`b8ae2041729cf4fbd19417498db002cc8605500ea5f59cf6320677f9c833ea96`).
+Pixel parity is not claimed: native Form metrics and titlebar/compositor
+ownership differ from the Figma raster. The retrieved Figma hierarchy names the
+third section Component Readings while the supplied screenshot labels it Helper;
+that discrepancy is preserved in the evidence rather than silently changing
+copy. See `docs/evidence/C05/README.md` and
+`docs/evidence/C05/current-figma-context-2026-09-23.md` for exact metadata,
 verification and the hosted XCTest bundle-load blocker.
 
 ### G028 / J1.1 — Welcome

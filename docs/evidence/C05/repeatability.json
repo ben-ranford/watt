@@ -2,8 +2,8 @@
   "fixture": "C05/base",
   "method": "two independent process launches; fresh memory stores; PNG byte comparison",
   "identical": true,
-  "firstSHA256": "f005a6d80631dbde6ee49f4a5ccf3922b49200d7b34f52b3eaec79c909ccc74d",
-  "secondSHA256": "f005a6d80631dbde6ee49f4a5ccf3922b49200d7b34f52b3eaec79c909ccc74d",
+  "firstSHA256": "b8ae2041729cf4fbd19417498db002cc8605500ea5f59cf6320677f9c833ea96",
+  "secondSHA256": "b8ae2041729cf4fbd19417498db002cc8605500ea5f59cf6320677f9c833ea96",
   "width": 580,
   "height": 1000,
   "pixelParityWithFigma": false
