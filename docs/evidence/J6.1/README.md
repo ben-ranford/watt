@@ -1,8 +1,9 @@
 # G050 / J6.1 — dark charging panel
 
 Exact source: [Figma node 31:2745](https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-2745).
-The supplied `reference.png` was inspected locally and pinned by SHA-256 in
-`reference.json`; no new Figma retrieval or replacement image was used. The reference
+The supplied `reference.png` remains pinned by SHA-256 in `reference.json`; fresh
+Figma context, variables and a replacement screenshot were retrieved on 2026-09-23
+under `fresh-figma/`. The reference
 shows a selected +42.1 W status item and a dark native panel, 320 × 265
 points. Desktop wallpaper, menu bar neighbors and clock belong to the system.
 
@@ -82,7 +83,20 @@ keyboard, dismissal and VoiceOver acceptance remain unverified. No visual or D1�
 completion is claimed.
 
 `verification.json` records counts, exits, the resolved initial registry/backlog wording
-failure, review and verification limits. No local OMX plan or active Codex goal exists
-in this worktree/session; G050 was found in progress in the main repository read-only.
-No OMX runtime state was changed or checkpointed. Cumulative changes and the exact
-reference image are preserved; no commit was made.
+failure, review and verification limits. This evidence slice does not mutate the
+OMX goal state or claim completion. No OMX runtime state was changed or checkpointed.
+Cumulative changes and the exact
+reference image are preserved; the fresh evidence below is committed without changing
+the J6.1 goal status.
+
+## Fresh live native AX probe (2026-09-23 UTC)
+
+The rebuilt `J6.1/base` fixture was launched as PID `64469` with shell Accessibility
+trust returning `true`. Its native `AXMenuExtra` reported the expected charging label
+(`Watt?, charging, plus 42.1 watts, menu extra.`) but was placed at `x=-1, y=1157`
+with size `96.5×24`. The fixture's AX tree exposed the status item and the app menu,
+but no fixture-owned AXWindow/panel appeared after the native
+`router.showStatusPanel()` path. The host therefore still clips the status item before
+the selected panel can be interacted with. The exact transcript is retained in
+`live-ax-2026-09-23.log`; this strengthens native registration evidence only and does
+not close visual, selected-item, keyboard, dismissal or VoiceOver gates.
