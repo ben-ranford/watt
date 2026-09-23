@@ -2393,6 +2393,17 @@ sample. The Desktop app was left in Charger mode so the real input remains
 visible; Delta remains the battery charge/discharge rate and is correctly zero
 when full.
 
+On 2026-09-24 the release app was rebuilt after fixing the AppKit fallback's
+`objectWillChange` timing: status-item updates are now deferred and coalesced so
+the button reads the completed `PowerReadingStore` snapshot, not the preceding
+sample. A physical-host probe and the installed app both reported a full AC
+source with `BatteryPower=0 mW`, `SystemPowerIn=7891 mW`, and `SystemLoad=7891
+mW`; the native status item announced `7.9 W` in Charger mode while the panel
+correctly showed `Battery 0.0 W` and `Charger input 7.9 W`. Bartender 7 can hide
+third-party status items independently of Watt; its active profile was cleared
+of Watt's item identifier during host verification, without changing any other
+item entries.
+
 The exact Figma MCP reinspection for C04.2 confirms frame `24:639`, status item
 `24:755`, anchor `24:757`, native `battery.100percent`, typographic minus and SF Pro
 Semibold 13/16. The existing native implementation and focused verification remain

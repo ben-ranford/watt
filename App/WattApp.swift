@@ -1139,6 +1139,7 @@ private final class WattFallbackStatusItem: NSObject {
     private var contextMenuMonitor: Any?
     private var observations = Set<AnyCancellable>()
     private var samplingTask: Task<Void, Never>?
+    private var buttonUpdateScheduled = false
 
     init(router: AppRouter, powerStore: PowerReadingStore, preferences: PreferencesStore) {
         self.router = router
@@ -1203,11 +1204,11 @@ private final class WattFallbackStatusItem: NSObject {
 
         powerStore.objectWillChange
             .receive(on: RunLoop.main)
-            .sink { [weak self] _ in self?.updateButton() }
+            .sink { [weak self] _ in self?.scheduleButtonUpdate() }
             .store(in: &observations)
         preferences.objectWillChange
             .receive(on: RunLoop.main)
-            .sink { [weak self] _ in self?.updateButton() }
+            .sink { [weak self] _ in self?.scheduleButtonUpdate() }
             .store(in: &observations)
 
         // Give a double-click/open launch a visible native surface even on hosts
@@ -1261,6 +1262,19 @@ private final class WattFallbackStatusItem: NSObject {
         MenuBarStatusAccessibility.apply(to: button, label: label)
         button.sizeToFit()
         item?.length = max(42, button.intrinsicContentSize.width + 12)
+    }
+
+    /// `ObservableObject.objectWillChange` is emitted before an `@Published`
+    /// value is assigned. Defer and coalesce the AppKit update so the native
+    /// status item reads the completed snapshot rather than the previous one.
+    private func scheduleButtonUpdate() {
+        guard !buttonUpdateScheduled else { return }
+        buttonUpdateScheduled = true
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.buttonUpdateScheduled = false
+            self.updateButton()
+        }
     }
 
     private func showFallbackWindow() {
