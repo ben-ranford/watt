@@ -52,3 +52,10 @@ No permission prompt, geometry override, pixel score or visual-pass claim was fa
 - Release test-build attempt: exit 65, existing module built without `-enable-testing`.
 - Native capture and static/diff/project/checksum/Release-isolation checks: exit 0.
 - Final run logs supersede earlier failed attempts. No commit or new worktree created.
+
+## Fresh Figma and native evidence — 2026-09-23
+- Figma MCP re-queried for exact frame `35:5746` with design context, metadata, variables and screenshot; screenshot pinned at `fresh-figma/reference-2026-09-23.png` with SHA-256 `78a2df9be1045781e5d8dde16d879b10bc42fbf608f6aaacb6dbacfda0d029d2`.
+- Exact hierarchy, text, tokens and native boundary are recorded in `fresh-figma/context-2026-09-23.md`.
+- `J12.4/base` was launched from the current Debug binary. Fresh AX evidence confirms the exact native dialog, title, description and enabled `Reconnect` / `Remove Helper` buttons.
+- Fresh PID-owned capture is under `fresh-figma/live-capture-2026-09-23/`. It confirms the native dark NSAlert rendering, but no visual-pass or pixel-parity claim is made because native AppKit appearance and the light Figma reference differ (260 × 252 capture versus 260 × 246 Figma bounds).
+- The fixture was reaped; the normal Desktop app remained running. No production helper was reconnected or removed.

@@ -1,0 +1,35 @@
+{
+  "AXTrusted" : true,
+  "AXWindowsResult" : 0,
+  "captureExit" : 0,
+  "fixture" : "J12.4\/base",
+  "node" : "35:5746",
+  "pixel_diff" : null,
+  "processIdentifier" : 90016,
+  "reason" : "PID-owned image captured; numerical comparison not performed.",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "timestampUTC" : "2026-09-23T11:11:10Z",
+  "visualPass" : false,
+  "windowNode" : "35:5900",
+  "windows" : [
+    {
+      "kCGWindowAlpha" : 1,
+      "kCGWindowBounds" : {
+        "Height" : 252,
+        "Width" : 260,
+        "X" : 770,
+        "Y" : 242
+      },
+      "kCGWindowIsOnscreen" : true,
+      "kCGWindowLayer" : 8,
+      "kCGWindowMemoryUsage" : 2432,
+      "kCGWindowName" : "",
+      "kCGWindowNumber" : 20504,
+      "kCGWindowOwnerName" : "Watt?",
+      "kCGWindowOwnerPID" : 90016,
+      "kCGWindowSharingState" : 1,
+      "kCGWindowStoreType" : 1
+    }
+  ]
+}
