@@ -1,0 +1,8 @@
+G083 current static checks — 2026-09-23
+
+PASS: bash -n scripts/*.sh
+PASS: no production-source diff in Features/Onboarding/Views/OnboardingFlowView.swift
+      versus main; native button/form correction remains the verified source.
+PASS: targeted native source checks found no negative horizontal padding,
+      custom drawing or forced row geometry in the affected onboarding view.
+PASS: git diff --check

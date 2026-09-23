@@ -1,0 +1,756 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination platform=macOS -derivedDataPath /tmp/watt-g083-current-derived build analyze
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'Watt' in project 'Watt' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 149d91d1b6beddc1ef2149318e259d78
+Build description path: /tmp/watt-g083-current-derived/Build/Intermediates.noindex/XCBuildData/149d91d1b6beddc1ef2149318e259d78.xcbuilddata
+CreateBuildDirectory /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/ModuleCache.noindex
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/ModuleCache.noindex
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/CompilationCache.noindex
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/CompilationCache.noindex
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /tmp/watt-g083-current-derived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /tmp/watt-g083-current-derived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/Build/Products
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/Build/Products
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/Build/Intermediates.noindex
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/Build/Intermediates.noindex
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/Build/Products/Debug
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/Build/Products/Debug
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/Build/Intermediates.noindex/PrecompiledHeaders
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/Build/Intermediates.noindex/PrecompiledHeaders
+
+CreateBuildDirectory /tmp/watt-g083-current-derived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    builtin-create-build-directory /tmp/watt-g083-current-derived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.hmap
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Entitlements.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    write-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Entitlements.plist
+
+MkDir /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Resources (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /bin/mkdir -p /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Resources
+
+MkDir /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /bin/mkdir -p /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS
+
+MkDir /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /bin/mkdir -p /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents
+
+MkDir /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /bin/mkdir -p /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app
+
+ProcessProductPackaging "" /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    
+    Entitlements:
+    
+    {
+    "com.apple.security.get-task-allow" = 1;
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent
+
+ProcessProductPackagingDER /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /usr/bin/derq query -f xml -i /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent -o /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der --raw
+
+Ld /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/watt-g083-current-derived/Build/Products/Debug -F/tmp/watt-g083-current-derived/Build/Products/Debug -install_name @rpath/Watt.debug.dylib -rdynamic -Xlinker -dependency_info -Xlinker /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat -Xlinker -no_adhoc_codesign -o /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+
+GenerateAssetSymbols /Users/benranford/Projects/watt-g083-native-button-metric/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/benranford/Projects/watt-g083-native-button-metric/Resources/Assets.xcassets --compile /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Resources --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies --output-partial-info-plist /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 13.0 --platform macosx --bundle-identifier dev.watt.verification --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/* com.apple.actool.compilation-results */
+/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.h
+/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift
+
+
+MkDir /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /bin/mkdir -p /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned
+
+MkDir /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /bin/mkdir -p /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned
+
+CompileAssetCatalogVariant thinned /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Resources /Users/benranford/Projects/watt-g083-native-button-metric/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/benranford/Projects/watt-g083-native-button-metric/Resources/Assets.xcassets --compile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned --output-partial-info-plist /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 13.0 --platform macosx
+/* com.apple.actool.compilation-results */
+/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned
+/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned/Assets.car
+
+
+LinkAssetCatalog /Users/benranford/Projects/watt-g083-native-button-metric/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-linkAssetCatalog --thinned /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned --thinned-dependencies /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned --unthinned /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned --unthinned-dependencies /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_unthinned --output /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Resources --plist-output /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist
+note: Emplaced /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Resources/Assets.car (in target 'Watt' from project 'Watt')
+
+ProcessInfoPlistFile /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Info.plist /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-infoPlistUtility /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Info.plist
+
+SwiftDriver Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g083-current-derived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g083-current-derived/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g083-current-derived/Build/Products/Debug -F /tmp/watt-g083-current-derived/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g083-current-derived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g083-current-derived/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g083-current-derived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Products/Debug/include -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-g083-native-button-metric -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_stddef-EJQA2WE0TJZT2QJFOQU8O8LC1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/ptrauth-C81YSPQ3QEMLM6Y5X12T8UDYD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_float-3WPHPHN01Z7PWEFEM5NQNW8FT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-1I6NT0GIYXC6QQLFQKEQKGK3I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_stdarg-AJFSBOOR33Q9LQAWAM8EJMKU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/DeveloperToolsSupport-AATYDMT6JQOQFC6F6NIWGU6IR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_stdbool-1DIG2WWZ2X0G1YBAZ6DZR5DE9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_AvailabilityInternal-EMW68C41MOTHAHUHH0RBHSFFI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/SwiftShims-7E256EYBNSJABMA06FGV55NSH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/ptrcheck-DSORQZJAGF1FUIGQG645NQZC6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_DarwinFoundation1-B3Y5H65D8NRJTM0JKDCK5DNHJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_DarwinFoundation2-EXD6KPIJR9NVFJUIIG3PD9UM6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_limits-5TES9RWHC7IAFWNQY9ZDSZHLW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/sys_types-C6948GYOEKI4J942HSXKDY9I8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/string_h-DEWG940OE5OGER4VVMQG5220U.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_tgmath-4CRV8L3LCQKZHCR5Q0WN75YWY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_stdint-CGNMQJA6CT8G0GMNVHEBC1DOC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_intrinsics-8O67Q22KFIXTGWR2KK16RIB3H.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_stdatomic-DVQ2BPJDMDIK2FXUXL8FRB4ZP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/libDER-AA0MG0L0ROTY214H3ZLUF7K8O.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_DarwinFoundation3-39HI4TVITBZKPH5XR5TOQ5VE7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/_Builtin_inttypes-B3582CWDCAXEUGVH89L7ARPYP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/Darwin-7O6T6Y3PPO4WRRBL3R95HWPRH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/simd-BO98MH6TP1XFZF7JQUVVYN747.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/launch-4GIAADZQ0YOX6BLYI5IRGLPNX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/MachO-7T9EP79CM7NYTIWOJBTGVKVZ3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CUPS-6S9IDOZUH72VXVAH9RW9U5I08.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/libkern-F38IZMD7T81W929SUISVBQOV7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/Spatial-66QTU101N2CWU77R7ACD76I11.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/ObjectiveC-1ZMPODCGCDW5H8DC60VYGCLIA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/os_object-AHE9GNDRLNQPPS2VMKF9VNUCZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/os_workgroup-6B2S3B17ARWB1ED20KYVT3KUL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/Dispatch-59OM4D4B870QJSGTCIZEDCRRH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/XPC-1EJS7CP95MASWLQM4REYORMDC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreFoundation-E1WZLGFO4J0KNIB7VC6NO9MH1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/os-2KL9W94KZU3QQ6501NVDUOKPW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreAudioTypes-D8OQ2ISQKPF6T3OUR412UDHNM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/IOKit-4X4IZHNR8SPW4RFVI4L259K9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CFNetwork-DB28QZNI11RQL34K44BA35WUU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/ColorSync-EWNN9CDOCXHANSHIMMHUD7PJL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/Security-8K6NHS3S2O460UZKJFLYQDXTE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreGraphics-BNCDL60BWV3HQKW5310UKSN0X.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/DiskArbitration-AU0YJE6D8S971PGMMYF38ZCGM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreServices-GYL1GJUYN8Q1BND4PH5YLYJX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/ImageIO-D1BRNMDWLLAP8LMPR9NBA1JRV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreText-6RNCIJ1PD9J8G7LHF42DUUOR1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/Foundation-6BECMKU9RLODPTO1VVJKTX5LE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/Accessibility-B3UBGPM2IQQTAH1M91DYV167H.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/UserNotifications-2EFIKJZ0W7GDM79IRX0G0AE6J.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-6OVYAK966KZ3XXD2I6VT4K2GJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/DataDetection-4GZLFV9CNJQXG0560FKDUPLO3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreTransferable-A7BLAO9QW6BG6TFIRNWZKDBSD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreAudio-5KJHCWBQGFNIZORRRGOPMV66T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/ApplicationServices-E71JYEGDHD4VO0R613C50POTV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/IOSurface-6G8W4CI9D0W93N1R16JDOIRVF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/ServiceManagement-2KUYYRIRL24KPH5FVWDMTEUOP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreData-3BZPXKKW4QVCKKB3RB71897LI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/LocalAuthentication-167QHUMT9Z21OVQS45P0C9MV0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/OSLog-A42D6UEYTFAD27ZPGOZUIJ1T4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/Symbols-81FL3E0EUMRNTB0R81RJCSCLV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/OpenGL-64VJ0P42KOJO7A9R9O49ZCTQ7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/Metal-BEF3XWLWHH6N7XSI06IWLHYWO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreVideo-87U3MBQXAHJZSF65YOLU49CO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreImage-9FVBQNGH5NB2HNZCAXKTZL0EU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/CoreMedia-E5NWJ165ZC1XYFLKN6R8F3LQV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/QuartzCore-DLUEW2JTO4EICYPZ24NI0FGAX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/SwiftUICore-CFBGEEQWTO8ZUIBMTQPCLYEKF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/AppKit-6ZI4XG5ATE5KDBDLCNB4YONVH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules/SwiftUI-CMJWMJQT4WIFL51U5DODLGL5P.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Watt (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    
+
+SwiftCompile normal arm64 Compiling\ LeftoverHelperPresentation.swift,\ J92FixtureLaunch.swift,\ J93FixtureLaunch.swift,\ J82FixtureLaunch.swift,\ J81FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/LeftoverHelperPresentation.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J92FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J93FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J82FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J81FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/LeftoverHelperPresentation.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile LeftoverHelperPresentation.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J92FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J92FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J93FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J93FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J82FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J82FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J81FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J81FixtureLaunch.swift
+
+SwiftCompile normal arm64 Compiling\ HelperUpdatePresentation.swift,\ SystemPowerSourceTelemetryService.swift,\ StoryFixtures.swift,\ StoryFixtureData.swift,\ FixtureLaunchSelection.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/HelperUpdatePresentation.swift /Users/benranford/Projects/watt-g083-native-button-metric/Services/SystemPowerSourceTelemetryService.swift /Users/benranford/Projects/watt-g083-native-button-metric/Tests/Fixtures/StoryFixtures.swift /Users/benranford/Projects/watt-g083-native-button-metric/Tests/Fixtures/StoryFixtureData.swift /Users/benranford/Projects/watt-g083-native-button-metric/Tests/Fixtures/FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/HelperUpdatePresentation.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile HelperUpdatePresentation.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Services/SystemPowerSourceTelemetryService.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile SystemPowerSourceTelemetryService.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Tests/Fixtures/StoryFixtures.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile StoryFixtures.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Tests/Fixtures/StoryFixtureData.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile StoryFixtureData.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Tests/Fixtures/FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile FixtureLaunchSelection.swift
+
+SwiftCompile normal arm64 Compiling\ WattComponentGallery.swift,\ ReadingPicker.swift,\ AppDestination.swift,\ AppRouter.swift,\ RootSceneView.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Verification/WattComponentGallery.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/ReadingPicker.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/AppDestination.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/AppRouter.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Verification/WattComponentGallery.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattComponentGallery.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/ReadingPicker.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile ReadingPicker.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/AppDestination.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile AppDestination.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/AppRouter.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile AppRouter.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile RootSceneView.swift
+
+SwiftCompile normal arm64 Compiling\ StatusItemContextMenu.swift,\ StatusPanelView.swift,\ OnboardingFlowView.swift,\ SettingsRootView.swift /Users/benranford/Projects/watt-g083-native-button-metric/Features/MenuBar/Views/StatusItemContextMenu.swift /Users/benranford/Projects/watt-g083-native-button-metric/Features/MenuBar/Views/StatusPanelView.swift /Users/benranford/Projects/watt-g083-native-button-metric/Features/Onboarding/Views/OnboardingFlowView.swift /Users/benranford/Projects/watt-g083-native-button-metric/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Features/MenuBar/Views/StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile StatusItemContextMenu.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Features/MenuBar/Views/StatusPanelView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile StatusPanelView.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Features/Onboarding/Views/OnboardingFlowView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile OnboardingFlowView.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile SettingsRootView.swift
+
+/Users/benranford/Projects/watt-g083-native-button-metric/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+187 | 
+188 |     static let title = "Pick one number for the menu bar"
+189 |     static let message = "Change it any time. Right-click Watt? or open Settings."
+    |                `- note: static property declared here
+190 | 
+191 |     enum Variant: Equatable {
+    :
+198 | 
+199 |         var message: String {
+200 |             self == .noBattery ? "No battery here, so it’s Draw or Components." : ChooseMenuReadingView.message
+    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+201 |         }
+202 |     }
+SwiftCompile normal arm64 Compiling\ J83FixtureLaunch.swift,\ J91FixtureLaunch.swift,\ J121FixtureLaunch.swift,\ J122FixtureLaunch.swift,\ J123FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J83FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J91FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J121FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J122FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J123FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J83FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J83FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J91FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J91FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J121FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J121FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J122FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J122FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J123FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J123FixtureLaunch.swift
+
+SwiftCompile normal arm64 Compiling\ WattApp.swift,\ WattActionButton.swift,\ WattFormRow.swift,\ WattWindowScaffold.swift,\ WattColors.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/WattApp.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/WattActionButton.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/WattFormRow.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/WattWindowScaffold.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Theme/WattColors.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/WattApp.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattApp.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/WattActionButton.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattActionButton.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/WattFormRow.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattFormRow.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattWindowScaffold.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Theme/WattColors.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattColors.swift
+
+SwiftCompile normal arm64 Compiling\ WattSpacing.swift,\ WattTypography.swift,\ MenuBarStatusLabel.swift,\ MenuBarRootView.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Theme/WattSpacing.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Theme/WattTypography.swift /Users/benranford/Projects/watt-g083-native-button-metric/Features/MenuBar/Components/MenuBarStatusLabel.swift /Users/benranford/Projects/watt-g083-native-button-metric/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Theme/WattSpacing.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattSpacing.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Theme/WattTypography.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattTypography.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Features/MenuBar/Components/MenuBarStatusLabel.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile MenuBarStatusLabel.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile MenuBarRootView.swift
+
+SwiftCompile normal arm64 Compiling\ PowerReading.swift,\ WattPreferences.swift,\ PowerReadingStore.swift,\ GeneratedAssetSymbols.swift /Users/benranford/Projects/watt-g083-native-button-metric/Models/PowerReading.swift /Users/benranford/Projects/watt-g083-native-button-metric/Models/WattPreferences.swift /Users/benranford/Projects/watt-g083-native-button-metric/Services/PowerReadingStore.swift /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Models/PowerReading.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile PowerReading.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Models/WattPreferences.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile WattPreferences.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Services/PowerReadingStore.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile PowerReadingStore.swift
+
+SwiftCompile normal arm64 /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
+
+SwiftCompile normal arm64 Compiling\ J124FixtureLaunch.swift,\ J125FixtureLaunch.swift,\ J111FixtureLaunch.swift,\ J112FixtureLaunch.swift,\ J113FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J124FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J125FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J111FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J112FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J113FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J124FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J124FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J125FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J125FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J111FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J111FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J112FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J112FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J113FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J113FixtureLaunch.swift
+
+SwiftCompile normal arm64 Compiling\ J74FixtureLaunch.swift,\ J73FixtureLaunch.swift,\ ComponentSelectionMenu.swift,\ ScopedRemovalAdapter.swift,\ UpdateAdapter.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J74FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/App/J73FixtureLaunch.swift /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/ComponentSelectionMenu.swift /Users/benranford/Projects/watt-g083-native-button-metric/Services/ScopedRemovalAdapter.swift /Users/benranford/Projects/watt-g083-native-button-metric/Services/UpdateAdapter.swift (in target 'Watt' from project 'Watt')
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J74FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J74FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/App/J73FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile J73FixtureLaunch.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/DesignSystem/Components/ComponentSelectionMenu.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile ComponentSelectionMenu.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Services/ScopedRemovalAdapter.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile ScopedRemovalAdapter.swift
+
+SwiftCompile normal arm64 /Users/benranford/Projects/watt-g083-native-button-metric/Services/UpdateAdapter.swift (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-SwiftPerFileCompile UpdateAdapter.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for Watt (in target 'Watt' from project 'Watt')
+
+SwiftDriver\ Compilation\ Requirements Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g083-current-derived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g083-current-derived/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g083-current-derived/Build/Products/Debug -F /tmp/watt-g083-current-derived/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g083-current-derived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g083-current-derived/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g083-current-derived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Products/Debug/include -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-g083-native-button-metric -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling J124FixtureLaunch.swift, J125FixtureLaunch.swift, J111FixtureLaunch.swift, J112FixtureLaunch.swift, J113FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftMergeGeneratedHeaders /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Watt-Swift.h /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-swiftHeaderTool -arch arm64 /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -o /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Watt-Swift.h
+
+Copy /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule
+
+Copy /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc
+
+SwiftDriverJobDiscovery normal arm64 Compiling J83FixtureLaunch.swift, J91FixtureLaunch.swift, J121FixtureLaunch.swift, J122FixtureLaunch.swift, J123FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+Copy /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json
+
+Copy /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling LeftoverHelperPresentation.swift, J92FixtureLaunch.swift, J93FixtureLaunch.swift, J82FixtureLaunch.swift, J81FixtureLaunch.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattSpacing.swift, WattTypography.swift, MenuBarStatusLabel.swift, MenuBarRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling HelperUpdatePresentation.swift, SystemPowerSourceTelemetryService.swift, StoryFixtures.swift, StoryFixtureData.swift, FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PowerReading.swift, WattPreferences.swift, PowerReadingStore.swift, GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattComponentGallery.swift, ReadingPicker.swift, AppDestination.swift, AppRouter.swift, RootSceneView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WattApp.swift, WattActionButton.swift, WattFormRow.swift, WattWindowScaffold.swift, WattColors.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling J74FixtureLaunch.swift, J73FixtureLaunch.swift, ComponentSelectionMenu.swift, ScopedRemovalAdapter.swift, UpdateAdapter.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriverJobDiscovery normal arm64 Compiling StatusItemContextMenu.swift, StatusPanelView.swift, OnboardingFlowView.swift, SettingsRootView.swift (in target 'Watt' from project 'Watt')
+
+SwiftDriver\ Compilation Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g083-current-derived/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g083-current-derived/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g083-current-derived/Build/Products/Debug -F /tmp/watt-g083-current-derived/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g083-current-derived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g083-current-derived/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g083-current-derived/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g083-current-derived/Build/Products/Debug/include -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-g083-native-button-metric -experimental-emit-module-separately -disable-cmo
+
+Ld /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/watt-g083-current-derived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/tmp/watt-g083-current-derived/Build/Products/Debug -F/tmp/watt-g083-current-derived/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/tmp/watt-g083-current-derived/Build/Products/Debug -filelist /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList -install_name @rpath/Watt.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/../Frameworks -Xlinker -object_path_lto -Xlinker /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
+
+ConstructStubExecutorLinkFileList /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    construct-stub-executor-link-file-list /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'Watt' from project 'Watt')
+
+Ld /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt normal (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/watt-g083-current-derived/Build/Products/Debug -F/tmp/watt-g083-current-derived/Build/Products/Debug -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/../Frameworks -rdynamic -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib -Xlinker -no_adhoc_codesign -o /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+
+CopySwiftLibs /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib --scan-folder /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Frameworks --scan-folder /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/PlugIns --scan-folder /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Library/SystemExtensions --scan-folder /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+ExtractAppIntentsMetadata (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name Watt --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk --xcode-version 27A266a --platform-family macOS --deployment-target 13.0 --bundle-identifier dev.watt.verification --output /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt --dependency-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat --stringsdata-file /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList --metadata-file-list /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList --static-metadata-file-list /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-09-23 16:49:47.734 appintentsmetadataprocessor[11581:8593358] Starting appintentsmetadataprocessor export
+2026-09-23 16:49:47.737 appintentsmetadataprocessor[11581:8593358] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CodeSign /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
+
+CodeSign /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+
+CodeSign /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent --timestamp\=none --generate-entitlement-der /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app
+
+RegisterExecutionPolicyException /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-RegisterExecutionPolicyException /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app
+
+Validate /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-validationUtility /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+Touch /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    /usr/bin/touch -c /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app
+
+RegisterWithLaunchServices /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-lsregisterurl --record-path /tmp/watt-g083-current-derived/Build/Intermediates.noindex/XCBuildData/registered-launchservices.txt -- /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app
+
+PruneExplicitPrecompiledModules /tmp/watt-g083-current-derived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/watt-g083-current-derived/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'Watt' in project 'Watt' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 85f0adcefc05224ffd708291052704b9
+Build description path: /tmp/watt-g083-current-derived/Build/Intermediates.noindex/XCBuildData/85f0adcefc05224ffd708291052704b9.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /tmp/watt-g083-current-derived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+    cd /Users/benranford/Projects/watt-g083-native-button-metric/Watt.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /tmp/watt-g083-current-derived/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+
+ProcessInfoPlistFile /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Info.plist /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /Users/benranford/Projects/watt-g083-native-button-metric
+    builtin-infoPlistUtility /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /tmp/watt-g083-current-derived/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /tmp/watt-g083-current-derived/Build/Products/Debug/Watt.app/Contents/Info.plist
+
+PruneExplicitPrecompiledModules /tmp/watt-g083-current-derived/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/watt-g083-current-derived/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/watt-g083-current-derived/SDKExplicitPrecompiledModules
+
+** ANALYZE SUCCEEDED **
+

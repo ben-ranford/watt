@@ -9,7 +9,8 @@
   content node `27:1750`, rows node `27:2106`.
 - [J1.3 evidence](../J1.3/README.md) retains the saved reference, earlier
   captures, metadata, hashes and historical review. Those historical results
-  are not a new verdict for G083. No live Figma MCP retrieval is claimed.
+  are not a new verdict for G083. The current Figma MCP reinspection is
+  recorded in [figma-mcp-reinspection-2026-09-23.md](figma-mcp-reinspection-2026-09-23.md).
 
 ## Production correction
 
@@ -51,6 +52,12 @@ from `/tmp/watt-g083-layout-verification-1790124426/`.
 
 | Check | Result | Evidence |
 |---|---|---|
+| Exact Figma MCP reinspection | **PASS** — node `27:1584`, hierarchy, variants and typography recorded | [figma-mcp-reinspection-2026-09-23.md](figma-mcp-reinspection-2026-09-23.md) |
+| Current Debug app build and analysis | **BUILD SUCCEEDED**, **ANALYZE SUCCEEDED** | [current-build-analyze.log](logs/current-build-analyze.log) |
+| Current focused Xcode J13OfferTests + NativeStylingTests | **16 passed, 0 failures** | [current-xcode-focused.log](logs/current-xcode-focused.log) |
+| Current F05 launch-gate regression | **22 passed, 0 failures** | [current-f05.log](logs/current-f05.log) |
+| Current full Xcode WattTests suite | **704 tests, 5 skipped, 0 failures** | [current-xcode-full.log](logs/current-xcode-full.log) |
+| Current static checks and whitespace | **PASS** | [current-static-checks.log](logs/current-static-checks.log) |
 | Post-review focused J13OfferTests + NativeStylingTests | **16 passed, 0 failures** | [test-green.log](logs/test-green.log) |
 | Latest Debug app build and analysis | **BUILD SUCCEEDED**, **ANALYZE SUCCEEDED** | [build-analyze.log](logs/build-analyze.log) |
 | J13OfferTests | **5 passed, 0 failures** | [test-green.log](logs/test-green.log) |
@@ -61,11 +68,15 @@ from `/tmp/watt-g083-layout-verification-1790124426/`.
 | Fresh Release test build | **TEST BUILD SUCCEEDED** | [release-tests.log](logs/release-tests.log) |
 | Diff whitespace | **git diff --check passed** | Rerun for this documentation update |
 
-Test builds are compilation checks, not additional test executions. This
-update checked and copied the three latest post-review focused, full-suite
-and static-check logs without changing their contents. Existing build and
-analysis logs remain unchanged. This documentation-only update did not rerun
-tests, builds or static checks; diff whitespace was checked separately.
+Test builds are compilation checks, not additional test executions. The current
+verification uses the full Xcode toolchain because the standalone Command Line
+Tools SwiftPM path cannot load the system `SwiftUIMacros` plugin on this host.
+The current production onboarding source and focused native-styling tests are
+unchanged from `main`; the only source change in this refresh is the F05 test
+allowlist correction that makes the existing J10.4/J10.5/J12.3/J12.4
+non-base launch-gate contract explicit. The committed capture therefore still
+represents the current production view. Existing visual verdict artifacts were
+not silently replaced.
 
 ## Latest native capture and independent visual review
 
@@ -141,4 +152,4 @@ for the fresh width-corrected capture.
 
 The fixture uses isolated in-memory state and no live services. No live
 AX/VoiceOver audit, helper approval or TCC verification is claimed. No
-permission prompt or TCC bypass was attempted for this documentation update.
+permission prompt or TCC bypass was attempted for this evidence refresh.

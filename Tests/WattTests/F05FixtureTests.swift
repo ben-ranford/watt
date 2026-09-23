@@ -183,7 +183,7 @@ final class F05FixtureTests: XCTestCase {
             for variant in story.variants {
                 let id = story.id + "/" + variant
                 #if !SWIFT_PACKAGE
-                if story.status == "implemented" && (!["C05", "J1.4", "J1.8", "J2.1", "J2.2", "J2.3", "J2.4", "J2.5", "J3.1", "J3.2", "J3.3", "J4.1", "J4.2", "J4.3", "J5.1", "J5.2", "J5.3", "J6.1", "J6.2", "J6.3", "J6.5", "J7.1", "J7.2", "J7.3", "J7.4", "J8.1", "J8.2"].contains(story.id) || variant == "base") {
+                if story.status == "implemented" && (!["C05", "J1.4", "J1.8", "J2.1", "J2.2", "J2.3", "J2.4", "J2.5", "J3.1", "J3.2", "J3.3", "J4.1", "J4.2", "J4.3", "J5.1", "J5.2", "J5.3", "J6.1", "J6.2", "J6.3", "J6.5", "J7.1", "J7.2", "J7.3", "J7.4", "J8.1", "J8.2", "J10.4", "J10.5", "J12.3", "J12.4"].contains(story.id) || variant == "base") {
                     XCTAssertNil(WattFixtureLaunchGate.rejection(arguments: ["Watt", "--watt-fixture", id]))
                     continue
                 }
