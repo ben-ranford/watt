@@ -88,4 +88,19 @@ and visual-review.json.
 Compiler diagnostics retain the pre-existing actor-isolation warning in
 OnboardingFlowView.swift:200, AppIntents metadata notices, and package unhandled-file
 warnings from the worktree build directory. No separate lint tool is configured; compiler
-checks and Xcode analyze passed. Pre-existing changes are preserved; no commit.
+checks and Xcode analyze passed. Pre-existing changes are preserved; the live AX
+evidence below is committed without changing the J5.2 goal status.
+
+## Fresh live native AX probe (2026-09-23 UTC)
+
+The rebuilt `J5.2/base` fixture was launched as PID `61408` with shell Accessibility
+trust returning `true`. It registered a native `AXMenuExtra` titled
+`Watt?, charging, plus 42.1 watts, menu extra.` at `x=-1, y=1157` with size
+`96.5×24`. An `AXPress` was accepted by the API (`press=0`), but the fixture's AX
+tree remained only the status item and no panel AX surface appeared. The exact
+transcript is retained in `live-ax-2026-09-23.log`.
+
+This confirms native status-item registration but not the Finish setup prompt's
+rendered panel, row visibility, navigation, keyboard, VoiceOver, or visual
+comparison. J5.2 remains incomplete because the host menu-bar compositor clips the
+status item at the display edge.
