@@ -1058,11 +1058,14 @@ onboardingWidth and xs rather than duplicated 580/480/4 literals in production l
 No bespoke material, corner, shadow, button or status chrome is painted.
 
 J2.2/base uses in-memory preferences, completed onboarding, fixed charging telemetry,
-and component readings disabled. The actual MenuBarExtra capture hook is shared with
-J1.8; it does not render a replacement window. Tests/builds pass, but capture found
-zero app-owned compositor windows (screen recording preauthorized; AX untrusted).
-Visual score remains null/blocked; no pixel diff or story-done claim.
-Evidence and reproduction: `docs/evidence/J2.2/README.md`.
+and component readings disabled. The DEBUG fixture opens the same production
+`C0410PanelSelection` `NSPopover` from a temporary native AppKit anchor because the
+current macOS 27 host does not provide a visible third-party status-bar compositor
+slot; no replacement window or painted menu bar is shipped. The real 320×347-point
+popover content was captured and inspected against the exact Figma hierarchy. Focused
+J2.2 tests and the Xcode Debug build pass; visual review is 96/100 and pass.
+Evidence and reproduction: `docs/evidence/J2.2/README.md` and
+`docs/evidence/J2.2/visual-review.json`.
 
 
 ### G038 / J2.3 — Settings helper turn-on excerpt

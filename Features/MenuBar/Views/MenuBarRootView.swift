@@ -43,7 +43,7 @@ struct MenuBarRootView: View {
             NSApplication.shared.terminate(nil)
         }
         #if DEBUG
-        .background { if J111FixtureLaunch.requested || J32FixtureLaunch.requested || J18FixtureLaunch.requested || J22FixtureLaunch.requested { J18PanelCaptureView() } }
+        .background { if J111FixtureLaunch.requested || J32FixtureLaunch.requested || J18FixtureLaunch.requested { J18PanelCaptureView() } }
         #endif
         .onAppear { setupPresentationID = router.beginPanelSetupPresentation() }
         .onDisappear {
