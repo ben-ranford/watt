@@ -53,3 +53,19 @@ The menu-bar item is therefore present and live. `0.0 W` is the battery charge
 rate for a full battery, not a failed read; the separately available charger
 input is `10.617 W` at this sample. Selecting the native **Charger** display
 mode is the intended way to show that input instead of the battery delta.
+
+## Live Charger-mode proof — 2026-09-23 23:08 AEST
+
+For an end-to-end check, the installed app's persisted native display preference
+was set to **Charger**, then the app was restarted. The live, non-fixture Desktop
+process reported this through the accessibility tree:
+
+```text
+AXMenuBarItem title="10.7 W"
+AX description="Watt?, fully charged, 10.7 watts, menu extra."
+```
+
+The same hardware sample reported `SystemPowerIn=10701 mW`, `BatteryPower=0 mW`,
+and `SystemLoad=10701 mW`. The widget is therefore reading the real charger
+input, while Delta correctly remains zero because the battery is already full.
+The Desktop app was left running in Charger mode so the live value is visible.

@@ -2306,6 +2306,13 @@ correctly announces `0.0 W` for Delta; Charger mode is the native path for the
 separate live charger-input value. This is hardware evidence, not a simulated
 reading. See `docs/evidence/P01/charge-rate-live-2026-09-23.md`.
 
+The end-to-end proof was repeated in the installed app with the native display
+preference set to **Charger**: the live status item announced `10.7 W` and
+`Watt?, fully charged, 10.7 watts, menu extra.` for a `SystemPowerIn=10701 mW`
+sample. The Desktop app was left in Charger mode so the real input remains
+visible; Delta remains the battery charge/discharge rate and is correctly zero
+when full.
+
 The exact Figma MCP reinspection for C04.2 confirms frame `24:639`, status item
 `24:755`, anchor `24:757`, native `battery.100percent`, typographic minus and SF Pro
 Semibold 13/16. The existing native implementation and focused verification remain
