@@ -3,6 +3,8 @@
 Implemented in existing worktree on `bug/G073-j121-settings-uninstall`; no commit.
 Pre-existing unrelated work is preserved.
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `3aa5df3e8f58bfda6211edea2f33ffe7b89f5bc23cce5e556db416f1deda31cb`).
+
 ## Source and behavior
 - `Features/Settings/Views/SettingsRootView.swift`: shared native General section,
   two preference Toggles, LabeledContent, destructive Uninstall… Button and Version.
@@ -54,3 +56,5 @@ item pixels and appearance/accessibility parity remain unverified.
 `visual-review.json` and `verification.json` retain **score: null** and
 **pixel_diff: null**, **visualPass: false**. Source/unit/build proof does not imply
 pixel-level fidelity or live AX acceptance. See `capture/window.json` and logs.
+
+Fresh retrieval is recorded; the host still produced no PID-owned Settings window, so row/action accessibility and visual comparison remain open.
