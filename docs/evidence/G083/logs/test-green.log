@@ -1,0 +1,47 @@
+Building for debugging...
+[1 / 4]
+Build complete! (0.29 sec.)
+Test Suite 'Selected tests' started at 2026-09-23 10:55:17.453.
+Test Suite 'WattTests.xctest' started at 2026-09-23 10:55:17.454.
+Test Suite 'J13OfferTests' started at 2026-09-23 10:55:17.454.
+Test Case '-[WattTests.J13OfferTests testActionsPersistIntentNotApprovalOrCompletion]' started.
+Test Case '-[WattTests.J13OfferTests testActionsPersistIntentNotApprovalOrCompletion]' passed (0.001 seconds).
+Test Case '-[WattTests.J13OfferTests testClosingNativeWindowPreservesOfferForReopen]' started.
+Test Case '-[WattTests.J13OfferTests testClosingNativeWindowPreservesOfferForReopen]' passed (0.134 seconds).
+Test Case '-[WattTests.J13OfferTests testExactFactsAndFixture]' started.
+Test Case '-[WattTests.J13OfferTests testExactFactsAndFixture]' passed (0.001 seconds).
+Test Case '-[WattTests.J13OfferTests testOfferUsesProvidedAssetAndNativeControls]' started.
+Test Case '-[WattTests.J13OfferTests testOfferUsesProvidedAssetAndNativeControls]' passed (0.008 seconds).
+Test Case '-[WattTests.J13OfferTests testStaleActionsDoNotChangeOtherRoutes]' started.
+Test Case '-[WattTests.J13OfferTests testStaleActionsDoNotChangeOtherRoutes]' passed (0.000 seconds).
+Test Suite 'J13OfferTests' passed at 2026-09-23 10:55:17.600.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.145 (0.146) seconds
+Test Suite 'NativeStylingTests' started at 2026-09-23 10:55:17.600.
+Test Case '-[WattTests.NativeStylingTests testButtonsPreserveLayoutWithNativeAccessibilityAppearances]' started.
+Test Case '-[WattTests.NativeStylingTests testButtonsPreserveLayoutWithNativeAccessibilityAppearances]' passed (0.029 seconds).
+Test Case '-[WattTests.NativeStylingTests testComponentPopupPreservesSystemChromeAndIntrinsicMetrics]' started.
+Test Case '-[WattTests.NativeStylingTests testComponentPopupPreservesSystemChromeAndIntrinsicMetrics]' passed (0.002 seconds).
+Test Case '-[WattTests.NativeStylingTests testContextMenuUsesNativeColumnsWithoutSpacerImages]' started.
+Test Case '-[WattTests.NativeStylingTests testContextMenuUsesNativeColumnsWithoutSpacerImages]' passed (0.002 seconds).
+Test Case '-[WattTests.NativeStylingTests testFocusSpecimenUsesOneNativeFieldLabel]' started.
+Test Case '-[WattTests.NativeStylingTests testFocusSpecimenUsesOneNativeFieldLabel]' passed (0.001 seconds).
+Test Case '-[WattTests.NativeStylingTests testOnboardingHelperActionsUseNativeHorizontalSpacing]' started.
+Test Case '-[WattTests.NativeStylingTests testOnboardingHelperActionsUseNativeHorizontalSpacing]' passed (0.001 seconds).
+Test Case '-[WattTests.NativeStylingTests testOnboardingUsesIntrinsicNativeControlsAndSemanticType]' started.
+Test Case '-[WattTests.NativeStylingTests testOnboardingUsesIntrinsicNativeControlsAndSemanticType]' passed (0.002 seconds).
+Test Case '-[WattTests.NativeStylingTests testProductionAppearanceAndMetricsAreNative]' started.
+Test Case '-[WattTests.NativeStylingTests testProductionAppearanceAndMetricsAreNative]' passed (0.007 seconds).
+Test Case '-[WattTests.NativeStylingTests testSettingsNotesUseSectionFootersWithoutExtraChromeOrSpacing]' started.
+Test Case '-[WattTests.NativeStylingTests testSettingsNotesUseSectionFootersWithoutExtraChromeOrSpacing]' passed (0.009 seconds).
+Test Case '-[WattTests.NativeStylingTests testSharedControlsDoNotPaintSystemChrome]' started.
+Test Case '-[WattTests.NativeStylingTests testSharedControlsDoNotPaintSystemChrome]' passed (0.011 seconds).
+Test Case '-[WattTests.NativeStylingTests testSoftwareUpdateUsesNativeAppearanceAndIntrinsicControls]' started.
+Test Case '-[WattTests.NativeStylingTests testSoftwareUpdateUsesNativeAppearanceAndIntrinsicControls]' passed (0.004 seconds).
+Test Case '-[WattTests.NativeStylingTests testWindowScaffoldRetainsContentInNativeAppearances]' started.
+Test Case '-[WattTests.NativeStylingTests testWindowScaffoldRetainsContentInNativeAppearances]' passed (0.005 seconds).
+Test Suite 'NativeStylingTests' passed at 2026-09-23 10:55:17.673.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.073 (0.073) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-23 10:55:17.673.
+	 Executed 16 tests, with 0 failures (0 unexpected) in 0.217 (0.219) seconds
+Test Suite 'Selected tests' passed at 2026-09-23 10:55:17.673.
+	 Executed 16 tests, with 0 failures (0 unexpected) in 0.217 (0.220) seconds
