@@ -925,7 +925,7 @@ evidence is not desktop compositor parity; strict comparisons remain
 diagnostic-only, visual acceptance stays open, and no custom light colors or
 chrome were added.
 
-### G026 / C04.12 — light menu bar, on battery
+### G026 / C04.12 — light menu bar, on battery, 2026-09-23
 
 Exact Figma frame `24:1960`, component `24:2076`, anchor `24:2078`:
 unselected native status item, battery outline and typographic `−18.4 W`,
@@ -937,10 +937,12 @@ Public Aqua `NSAppearance` and light SwiftUI environment reuse C04.11's native
 menu-material capture path, with no custom colors, paint, selection chrome,
 bitmap UI, private API, or TCC changes. Release excludes fixture routing.
 
-[Evidence and reproduction](docs/evidence/C04.12/README.md) retain the exact
-reference, native capture, geometry, hashes, comparisons and verification logs.
-The app-owned capture does not reproduce desktop/compositor pixels; diagnostic
-comparisons are not visual acceptance and do not mark the story visually done.
+[Current evidence and reproduction](docs/evidence/C04.12/README.md) re-inspect
+the exact reference, rebuild Debug and rerun the focused native suite (**3/3
+passed**). The fresh app-owned Aqua capture remains a direct 1× 560×44 bitmap
+with x204/y5/97×24 geometry. It does not reproduce desktop/compositor pixels;
+diagnostic comparisons are not visual acceptance and do not mark the story
+visually done. No custom light colors or glyph paint was added.
 
 ## G027 / C05 — native light Settings implementation
 

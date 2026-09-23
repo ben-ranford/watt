@@ -1,5 +1,15 @@
 # G026 / C04.12 — light menu bar, on battery
 
+Fresh evidence, 2026-09-23: exact Figma node `24:1960` was re-inspected and
+the final-source DEBUG app was rebuilt, focused-tested and captured again. See
+[current Figma context](current-figma-context-2026-09-23.md),
+[build/analyze log](debug-build-analyze-2026-09-23.log), [native focused test
+log](native-focused-2026-09-23.log), [capture log](capture-run-2026-09-23.log)
+and [comparison log](compare-run-2026-09-23.log). The fresh capture records a
+real Aqua `NSStatusBarButton`, selected=false, at the expected 97×24 geometry.
+Strict comparisons remain diagnostics with `storyDone: false`; no desktop
+compositor visual pass is claimed.
+
 ## Implementation
 - `App/WattApp.swift`: isolated DEBUG `C04.12/base` selector, C04.2 fixed reading/clock and item geometry, fresh in-memory preferences, public Aqua appearance/light SwiftUI environment, unselected native status item.
 - `Tests/Fixtures/StoryFixtures.swift`: registers C04.12 while preserving prior stories.
@@ -34,7 +44,7 @@ overlays and `images.sha256` preserve comparison evidence.
 **No pixel-parity claim:** the public native material/subtree capture is not the
 macOS desktop/menu-bar compositor. Comparisons retain pass=false/storyDone=false.
 No wallpaper/system-item recreation, custom colors/chrome, bitmap UI, private
-API, TCC changes or bypass. No commit/checkpoint; no full UI suite.
+API, TCC changes or bypass. No full UI suite is claimed.
 
 ## Verification
 See the adjacent focused/full package, focused hosted, Debug/Release build/analyze,
@@ -59,3 +69,7 @@ Final results:
 The capture's initial inherited C04.11 metadata was corrected in source;
 Debug was rebuilt and capture/compare regenerated. Final `capture.json` reports
 `24:1960` / `24:2076` / `24:2078`, with `customBackdrop=false`.
+
+The fresh native focused rerun executed 3 tests with zero failures; the fresh
+Debug build and analysis both succeeded. The retained package/full results
+above remain unchanged.
