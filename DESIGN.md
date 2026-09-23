@@ -1242,6 +1242,12 @@ add fake menu-bar chrome, an overlay window, private APIs or bitmap replacement 
 force visibility. Native compositor pixels and live status-item hit-testing remain
 explicit acceptance gates until a host with correct placement is available.
 
+The requested local UTM alternative was also checked: `/Applications/UTM.app` contains
+`macOS.utm`, but the VM currently boots to a black guest display and `utmctl exec`
+returns backend error `-2700`; no guest login or Apple ID was attempted. The VM is not
+accepted as a visual verification host until it exposes a usable macOS desktop. See
+`docs/evidence/host-status-item/utm-host-2026-09-23.log`.
+
 
 ## J6.1 — plugged in, charging (G050)
 

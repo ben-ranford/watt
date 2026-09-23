@@ -34,3 +34,16 @@ No custom window, fake menu bar, private API or bitmap replacement should be add
 to hide this host limitation. Comparable compositor pixels and live status-item
 hit-testing remain open acceptance gates until a host with correct native placement
 is available.
+
+## UTM alternative host probe — 2026-09-23
+
+UTM and a local `macOS.utm` VM are installed. Starting the VM produced a black guest
+display after more than 20 seconds; `utmctl ip-address` returned `192.168.64.2`, but
+`utmctl exec` failed with OSStatus `-2700` because the Apple backend does not expose
+guest-agent execution for this VM. No guest login or Apple ID was attempted, and the
+VM was stopped afterward. The exact transcript is pinned in
+`utm-host-2026-09-23.log`.
+
+The VM therefore cannot currently serve as a visual or interaction verification host.
+This is an environment limitation, not evidence to relax native/compositor acceptance
+or to substitute a fabricated desktop capture.

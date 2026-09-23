@@ -1,0 +1,14 @@
+UTM native verification-host probe — 2026-09-23 UTC
+UTM: /Applications/UTM.app, utmctl available
+VM: macOS.utm, UUID D4D6CCBE-9086-4E13-850C-F8B7CFC511A1
+Initial utmctl list: stopped
+Action: utmctl start UUID (local VM only; no Apple ID or guest login attempted)
+Result: started; utmctl ip-address returned 192.168.64.2
+Display: UTM guest window remained black after >20 seconds; host screenshot captured
+the UTM window chrome but no guest macOS desktop or login surface.
+Guest execution: utmctl exec UUID --cmd /usr/bin/sw_vers
+Result: OSStatus error -2700, Operation not supported by the backend.
+Interpretation: this VM currently provides neither a usable visual guest desktop nor
+guest-agent execution for verification. No app was copied into the VM and no Apple ID,
+guest credentials, TCC prompt or guest mutation was attempted.
+Cleanup: utmctl stop UUID; final utmctl list: stopped
