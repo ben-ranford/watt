@@ -1,6 +1,7 @@
 # G052 / J6.3 — on adapter, fully charged
 
 Exact source: [Figma node 31:4355](https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-4355).
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `13696607c0ea717fd3476b8355bcdbbd1cd77c8d2f7530648ac359632bd9d813`).
 The exact user-specified PNG was downloaded and inspected locally. Its SHA-256 is
 `13696607c0ea717fd3476b8355bcdbbd1cd77c8d2f7530648ac359632bd9d813`, retained in
 `reference.json`. The image is 1000 × 720 pixels; the dark native panel is approximately
@@ -117,3 +118,5 @@ remain unverified. No commit was made; cumulative worktree changes were preserve
 - `DESIGN.md`
 - `SCREEN-BACKLOG.md`
 - `docs/evidence/J6.3/`
+
+Fresh native AX probe: see `fresh-figma/live-ax-2026-09-23.log`; no accepted fixture-owned panel window was observed, so visual/live gates remain open.
