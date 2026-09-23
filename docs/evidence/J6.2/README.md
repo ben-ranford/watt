@@ -1,6 +1,7 @@
 # G051 / J6.2 — on adapter, charging on hold
 
 Exact source: [Figma node 31:3754](https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-3754).
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `3d61ebe2a14f409192352f4d3e52edd26cd07d0d5da6437496a438961ce87ce9`).
 The exact user-specified PNG was downloaded before implementation, inspected locally,
 and pinned by SHA-256 in `reference.json`. The image is 1000 × 720 pixels; the dark
 native panel is approximately 320 × 279 points at x660/y38. Desktop wallpaper,
@@ -94,7 +95,16 @@ terminated and reaped. See `capture/window.json`, `capture.exit` and capture log
 No screenshot exists for comparison; visual score/pixel diff are **null**, visualPass is
 false, and story visual acceptance remains **blocked**. No permissions were modified.
 Selected status-item pixels and live keyboard/navigation, dismissal and VoiceOver remain
-unverified. No commit was made; prior cumulative changes remain in the worktree.
+unverified.
+
+A fresh native AX probe on 2026-09-23 is retained at
+`fresh-figma/live-ax-2026-09-23.log`: shell trust was `true`; the real fixture
+registered `Watt?, charging paused, 0.0 watts, menu extra.` at native frame
+`x=-1, y=1157, width=82.5, height=24` on the 1800 × 1169 display. The existing
+normal app window was the only Watt-owned compositor window observed; no fixture-owned
+panel window was accepted. The fixture was terminated and reaped.
+
+No commit was made before this refresh; prior cumulative changes remain in the worktree.
 
 ## Files changed for this story
 
