@@ -2332,3 +2332,10 @@ The exact C04.4 Figma MCP reinspection confirms frame `24:877`, status item
 from battery Delta; on the current full host that field is available even though
 the battery charge rate is `0.0 W`. Evidence:
 `docs/evidence/C04.4/current-figma-context-2026-09-23.md`.
+
+The exact C04.5 Figma MCP reinspection confirms frame `24:996`, status item
+`24:1112`, anchor `24:1114`, native `battery.100percent`, unsigned `18.4 W`,
+and SF Pro Semibold 13/16. The final-source native capture was rebuilt after the
+`.chargerInput` scoping fix; it shows the expected fallback content and keeps
+the compositor/pixel gate explicitly open. Evidence:
+`docs/evidence/C04.5/current-figma-context-2026-09-23.md`.

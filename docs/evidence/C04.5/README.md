@@ -66,3 +66,18 @@ Hashes are in `images.sha256`. Backdrop/system neighbors and rasterization
 are not the Figma compositor. Capture is not live system-chrome parity,
 AX/VoiceOver, physical interaction or real telemetry proof. Those gates remain
 open; no visual pass or completed-story claim is made.
+
+## Fresh final-source capture — 2026-09-23
+
+Figma MCP was re-queried for frame `24:996`; the exact hierarchy and native
+contract are recorded in `current-figma-context-2026-09-23.md`.
+
+The final-source Debug binary was rebuilt and `capture.sh` was rerun after the
+`.chargerInput` scoping correction. `capture.json` now records the final
+`C04.5/base` fixture, `NSStatusBarButton`, Dark Aqua appearance, reference
+node/component/anchor IDs, 560×44 direct 1× pixels, and 88×24 button geometry.
+The captured item visibly contains the native battery glyph and `18.4 W`.
+
+`compare.sh` returned diagnostic exit 2 for both frame and item comparisons,
+as expected for the synthetic backdrop/native-rasterization boundary. This
+refreshes the implementation evidence but does not grant visual acceptance.
