@@ -23,13 +23,15 @@ final class J21ComponentsUnavailableTests: XCTestCase {
     func testNativeRowsDisabledStateAndShortcuts() throws {
         let prefs = PreferencesStore(storage: InMemoryStorage())
         prefs.onboarding.completed = true
-        let menu = StatusItemContextMenu.makeMenu(router: AppRouter(), preferences: prefs)
+        let router = AppRouter(updateService: FakeUpdateService())
+        let menu = StatusItemContextMenu.makeMenu(router: router, preferences: prefs)
         XCTAssertEqual(menu.items.map { $0.isSeparatorItem ? "|" : $0.title },
             ["Show in Menu Bar", "|", "Open Watt?", "Settings…", "|", "About Watt?",
              "Check for Updates…", "|", "Quit Watt?"])
         let sub = try XCTUnwrap(menu.item(withTitle: "Show in Menu Bar")?.submenu)
         sub.update()
         XCTAssertFalse(sub.autoenablesItems)
+        XCTAssertEqual(sub.minimumWidth, StatusItemContextMenu.unavailableReadingsMenuWidth)
         XCTAssertEqual(sub.items.map { $0.isSeparatorItem ? "|" : $0.title },
                        ["Delta", "Charger", "Draw", "Components", "|", "Icon", "|", "Turn On Helper…"])
         XCTAssertFalse(sub.items[3].isEnabled)
@@ -39,6 +41,7 @@ final class J21ComponentsUnavailableTests: XCTestCase {
         XCTAssertEqual(menu.items[8].keyEquivalent, "q")
         XCTAssertEqual(menu.items[3].keyEquivalentModifierMask, .command)
         XCTAssertEqual(menu.items[8].keyEquivalentModifierMask, .command)
+        XCTAssertTrue(menu.items[6].isEnabled)
         XCTAssertEqual(MenuBarStatusLabel(reading: .sampleCharging, preferences: prefs).text, "+42.1 W")
     }
 

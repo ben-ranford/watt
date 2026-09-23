@@ -1,9 +1,10 @@
 Command line invocation:
-    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination platform=macOS -derivedDataPath /tmp/watt-g036-debug build analyze
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -derivedDataPath /tmp/watt-g036-j21-final-debug build analyze
 
 --- xcodebuild: WARNING: Using the first of multiple matching destinations:
 { platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
 { platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
+{ platform:macOS, name:Any Mac }
 ComputePackagePrebuildTargetDependencyGraph
 
 Prepare packages
@@ -23,547 +24,119 @@ GatherProvisioningInputs
 
 CreateBuildDescription
 
-ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -x c -c /dev/null
-
-ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
-
-ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
-
-ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
-
-Build description signature: dda5347d75c23cc5971c7a83db15be95
-Build description path: /tmp/watt-g036-debug/Build/Intermediates.noindex/XCBuildData/dda5347d75c23cc5971c7a83db15be95.xcbuilddata
-CreateBuildDirectory /tmp/watt-g036-debug/ModuleCache.noindex
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/ModuleCache.noindex
-
-CreateBuildDirectory /tmp/watt-g036-debug/CompilationCache.noindex
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/CompilationCache.noindex
-
-CreateBuildDirectory /tmp/watt-g036-debug/SDKExplicitPrecompiledModules
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/SDKExplicitPrecompiledModules
-
-ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
-
-CreateBuildDirectory /tmp/watt-g036-debug/Build/Products
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/Build/Products
-
-CreateBuildDirectory /tmp/watt-g036-debug/Build/Intermediates.noindex
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/Build/Intermediates.noindex
-
-CreateBuildDirectory /tmp/watt-g036-debug/Build/Products/Debug
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/Build/Products/Debug
-
-CreateBuildDirectory /tmp/watt-g036-debug/Build/Intermediates.noindex/ExplicitPrecompiledModules
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/Build/Intermediates.noindex/ExplicitPrecompiledModules
-
-CreateBuildDirectory /tmp/watt-g036-debug/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
-
-CreateBuildDirectory /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt-3388dfb1da452438ab62e72106977df3-VFS/all-product-headers.yaml
-
-CreateBuildDirectory /tmp/watt-g036-debug/Build/Intermediates.noindex/PrecompiledHeaders
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    builtin-create-build-directory /tmp/watt-g036-debug/Build/Intermediates.noindex/PrecompiledHeaders
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.hmap (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.hmap
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-non-framework-target-headers.hmap
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json
-
-WriteAuxiliaryFile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Entitlements.plist (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    write-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Entitlements.plist
-
-MkDir /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Resources (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /bin/mkdir -p /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Resources
-
-MkDir /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/MacOS (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /bin/mkdir -p /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/MacOS
-
-MkDir /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /bin/mkdir -p /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents
-
-MkDir /tmp/watt-g036-debug/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /bin/mkdir -p /tmp/watt-g036-debug/Build/Products/Debug/Watt.app
-
-ProcessProductPackaging "" /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    
-    Entitlements:
-    
-    {
-    "com.apple.security.get-task-allow" = 1;
-}
-    
-    builtin-productPackagingUtility -entitlements -format xml -o /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent
-
-ProcessProductPackagingDER /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /usr/bin/derq query -f xml -i /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent -o /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent.der --raw
-
-Ld /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib normal (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/watt-g036-debug/Build/Products/Debug -F/tmp/watt-g036-debug/Build/Products/Debug -install_name @rpath/Watt.debug.dylib -rdynamic -Xlinker -dependency_info -Xlinker /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat -Xlinker -no_adhoc_codesign -o /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
-
-MkDir /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /bin/mkdir -p /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned
-
-MkDir /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /bin/mkdir -p /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned
-
-GenerateAssetSymbols /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets --compile /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Resources --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies --output-partial-info-plist /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 13.0 --platform macosx --bundle-identifier dev.watt.verification --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
-/* com.apple.actool.compilation-results */
-/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols-Index.plist
-/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.h
-/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift
-
-
-CompileAssetCatalogVariant thinned /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Resources /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets --compile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned --output-partial-info-plist /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 13.0 --platform macosx
-/* com.apple.actool.compilation-results */
-/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned
-/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned/Assets.car
-
-
-LinkAssetCatalog /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Resources/Assets.xcassets (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-linkAssetCatalog --thinned /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/thinned --thinned-dependencies /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_thinned --unthinned /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_output/unthinned --unthinned-dependencies /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist_unthinned --output /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Resources --plist-output /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist
-note: Emplaced /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Resources/Assets.car (in target 'Watt' from project 'Watt')
-
-ProcessInfoPlistFile /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Info.plist /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-infoPlistUtility /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Info.plist
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /tmp/watt-g036-j21-final-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+    cd /tmp/watt-g036-j21/Watt.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /tmp/watt-g036-j21-final-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
 
 SwiftDriver Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g036-debug/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g036-debug/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g036-debug/Build/Products/Debug -F /tmp/watt-g036-debug/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g036-debug/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g036-debug/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g036-debug/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Products/Debug/include -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation -experimental-emit-module-separately -disable-cmo
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-5B4JZ63UR6OSGK3C0XPK1UBGG.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/SwiftShims-3N0IELWIFX92HCGBPXACKJ50.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_stdbool-B8MP7VCO096XAYXUY8BKEBOS3.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_stddef-66UY8RNANQ4D4VNKSU1G41S79.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_AvailabilityInternal-6HPIGJ9V33LR26Z2N62T6OVP5.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_stdarg-BDCFWE61AMXLDLI42UB8COCL2.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/DeveloperToolsSupport-CIKOD5PVMOIDP1ML4H8LO3RI5.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_float-6HKWYR10Z6EG7AV0155A7OTTO.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/ptrcheck-B9T5FA1I2DPJLGEAFFHCNGL4M.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/ptrauth-6HL9E6XZUJ9ZL9V67XIS8AMEO.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_DarwinFoundation1-DFM9X3P1VYJ0PNJCTDYTZ2DEA.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_limits-DTOZGHUL5HLZIOZ5LFIMX56IA.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_DarwinFoundation2-3VDQYKORLGZ9XPDZNQX393H5R.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_tgmath-A7JLK6NSH8BX5Y29WBKG1X19Y.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/string_h-B62XR2IQWU1BHPQBP8G3J7Y74.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_stdint-4T56B8CZCXJU8UZGLJF8S4DCZ.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/sys_types-B7NDBHYIZG7PN3BIS4VAZ0EY8.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_stdatomic-9OR58YS4JE07SCDU7IE58WWKB.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_DarwinFoundation3-7LIFPV7SH91WJNJPREZ4CH0XH.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/libDER-84EYJI2CANZ31AVFM6469OT5U.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_intrinsics-9029GMWR1R98IN96CPMTO2Q13.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/_Builtin_inttypes-2CMGN4C9P88YNV57IAGNY4BIF.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/Darwin-DUA7L8WKFYMX6CMV0EXNC268Y.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/simd-1UR6HPYNCYL85LXIYMTQXYHAT.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/MachO-4N1LJUYNORKF27D60UKCDJ2FW.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/libkern-125W06L7ZQZW9RZYQZCASODRF.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/launch-76EAK9H48TJE5TCKFMV63WWZA.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CUPS-3O5RXA0S1O73DZMFK8JE968RO.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/Spatial-CFNHH0IFAJ11QCWCL0BXFR6CA.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/ObjectiveC-4J4IKOCOWAI5DOCVGDUWUK9QY.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/os_object-XIQ3XWRPS6RU2HDSZVFAUOPD.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/os_workgroup-3XAHZZP69573YCIH1SMS4URL9.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/Dispatch-2FNGL3XVKHEWDC52QOCJZPFEY.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/XPC-3OSQNTWDIWPJAOYQYEQ2WGJJU.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreFoundation-CZS5LK0SYC2OZYWIYNP5BZW5F.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/os-1X78BLAD3NIKS8ZMQBC6NQI7C.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreAudioTypes-BW77H0D09S9KU2V17A9CWCKRY.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/IOKit-CNT0NFIFTHYYUJKOG7J544LXN.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/ColorSync-CF9TKM77B0K8EI5H5HT5ZANVC.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/Security-9GZPUHO5H6A63MOA62AF45CJD.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CFNetwork-AW7LZY06K3L7YZKET3CUM5O3E.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreGraphics-522TKEPFR53JRVLB1D5WNC2PH.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/DiskArbitration-1V5TT2BKBWL6Z8Y8XSRDMFQXF.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreServices-3FF2YSNGIWVYIF99F8AE8JVZ.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/ImageIO-EN6J7SYWP3Q8BA6KY6XRR4IWI.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreText-7S0YBFAB8ZE6OQPGOSFRM1R3B.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/Foundation-8DNAXS1E567LM1XD0SYNPIX39.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/OSLog-2SD7JKVLZUFQ7CWY9QGV8AQFH.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreTransferable-DYOO516Q6U9GCGOY7XJ0UKRVQ.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/DataDetection-BE72O18G4KENGUMTMLJ1PNWCV.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/UserNotifications-DJYVW4QES5D820DDYGIK35SXZ.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/Symbols-A0YNOF9XDUV9L0GHI7T88ICWQ.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-ADES9E6ZI0CD0E0T8955OJZ05.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreData-41RNKFX8DOZ8Z3H96EB7LL3H0.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/ApplicationServices-DTQG1KOG3FAIXAJ9MWQU1VEAA.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/ServiceManagement-65H5QWSS16NV7JY51MH3NKYAJ.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreAudio-92B9ZNZE7RCZL5ZK5WYJF9HLV.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/IOSurface-77WKW8SNH8HZWRFQ6ZHAQJ58C.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/LocalAuthentication-51707BODXOWJI96XNCAFQGLNO.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/Accessibility-7A4Z44XVBPEKGQM05ZF92BC0D.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/OpenGL-8C5I8PUCA164XZ61D1ZCXDEIR.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/Metal-4PINMG8FGOB2X4MKZ83CZX4GH.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreVideo-17WAJ42B8OYVXRUE0YM6WJV5Y.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreMedia-EDAYR773PXW8GH4VS9SR85ES3.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/CoreImage-CA1ITCJ60Z411YD8TPYABX11T.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/QuartzCore-41EHSGU4F55NKOFSNDLKXDR4X.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/SwiftUICore-49YYX1ANZCZU15HYJ66HRMUMA.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/AppKit-EOTCW2FD8P2UQV9PBRLYXIKC3.pcm
-
-SwiftExplicitDependencyGeneratePcm arm64 /tmp/watt-g036-debug/SDKExplicitPrecompiledModules/SwiftUI-BOWS0ZT2DDK23JK4RNUYG3FR2.pcm
+    cd /tmp/watt-g036-j21
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g036-j21-final-debug/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g036-j21-final-debug/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g036-j21-final-debug/Build/Products/Debug -F /tmp/watt-g036-j21-final-debug/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g036-j21-final-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g036-j21-final-debug/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g036-j21-final-debug/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g036-j21-final-debug/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Products/Debug/include -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /tmp/watt-g036-j21 -experimental-emit-module-separately -disable-cmo
 
 SwiftEmitModule normal arm64 Emitting\ module\ for\ Watt (in target 'Watt' from project 'Watt')
 
 SwiftCompile normal arm64 (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    
+    cd /tmp/watt-g036-j21
 
-SwiftCompile normal arm64 Compiling\ PowerReadingStore.swift,\ GeneratedAssetSymbols.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/PowerReadingStore.swift /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
 
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/PowerReadingStore.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile PowerReadingStore.swift
+SwiftCompile normal arm64 Compiling\ WattApp.swift /tmp/watt-g036-j21/App/WattApp.swift (in target 'Watt' from project 'Watt')
 
-SwiftCompile normal arm64 /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
-
-SwiftCompile normal arm64 Compiling\ StatusPanelView.swift,\ OnboardingFlowView.swift,\ SettingsRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusPanelView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusPanelView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile StatusPanelView.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile OnboardingFlowView.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile SettingsRootView.swift
-
-SwiftCompile normal arm64 Compiling\ MenuBarStatusLabel.swift,\ MenuBarRootView.swift,\ StatusItemContextMenu.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Components/MenuBarStatusLabel.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/MenuBarRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Components/MenuBarStatusLabel.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile MenuBarStatusLabel.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile MenuBarRootView.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile StatusItemContextMenu.swift
-
-SwiftCompile normal arm64 Compiling\ AppRouter.swift,\ RootSceneView.swift,\ WattApp.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
-/Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift:756:121: error: extra argument 'powerStore' in call
- 754 |     var body: some View {
- 755 |         if #available(macOS 14, *) {
- 756 |             ModernScenePresentationBridge(router: router, preferences: preferences, powerStore: powerStore, powerStore: powerStore,
-     |                                                                                                                         `- error: extra argument 'powerStore' in call
- 757 |                                           applicationDelegate: applicationDelegate)
- 758 |         } else {
-Failed frontend command:
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/ScopedRemovalAdapter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/UpdateAdapter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/SystemPowerSourceTelemetryService.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtures.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtureData.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/FixtureLaunchSelection.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Verification/WattComponentGallery.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/ReadingPicker.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppDestination.swift -primary-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift -primary-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift -primary-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattActionButton.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattFormRow.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattWindowScaffold.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattColors.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattSpacing.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattTypography.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Components/MenuBarStatusLabel.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/MenuBarRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusItemContextMenu.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusPanelView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Settings/Views/SettingsRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/PowerReading.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/WattPreferences.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/PowerReadingStore.swift /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift -supplementary-output-file-map /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/supplementaryOutputs-4 -target arm64-apple-macos13.0 -module-can-import-version AppKit 2775.10.103.1 2775.10.103 -module-can-import-version DeveloperToolsSupport 24.0.24 24.0.24 -module-can-import-version SwiftUI 8.0.84.1 8.0.84 -disable-cross-import-overlay-search -swift-module-cross-import UserNotifications /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/UserNotifications.framework/Modules/UserNotifications.swiftcrossimport/AppIntents.swiftoverlay -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependencies-1.json -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -I /tmp/watt-g036-debug/Build/Products/Debug -F /tmp/watt-g036-debug/Build/Products/Debug -module-cache-path /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 6 -Onone -D DEBUG -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /tmp/watt-g036-debug/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation -enable-anonymous-context-mangled-names -file-compilation-dir /Users/benranford/Projects/watt-worktrees/swiftui-implementation -Xcc -ivfsstatcache -Xcc /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Products/Debug/include -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -no-auto-bridging-header-chaining -module-name Watt -const-gather-protocols-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -disable-clang-spi -clang-target arm64-apple-macos27.0 -target-sdk-version 27.0 -target-sdk-name macosx27.0 -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/AppRouter.o -o /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/RootSceneView.o -o /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.o -debug-module-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -index-unit-output-path /Watt.build/Debug/Watt.build/Objects-normal/arm64/AppRouter.o -index-unit-output-path /Watt.build/Debug/Watt.build/Objects-normal/arm64/RootSceneView.o -index-unit-output-path /Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.o -index-store-path /tmp/watt-g036-debug/Index.noindex/DataStore -index-system-modules
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile AppRouter.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile RootSceneView.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
+SwiftCompile normal arm64 /tmp/watt-g036-j21/App/WattApp.swift (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
     builtin-SwiftPerFileCompile WattApp.swift
 
-SwiftCompile normal arm64 Compiling\ WattComponentGallery.swift,\ ReadingPicker.swift,\ AppDestination.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Verification/WattComponentGallery.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/ReadingPicker.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppDestination.swift (in target 'Watt' from project 'Watt')
+SwiftDriverJobDiscovery normal arm64 Compiling WattApp.swift (in target 'Watt' from project 'Watt')
 
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Verification/WattComponentGallery.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattComponentGallery.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/ReadingPicker.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile ReadingPicker.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppDestination.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile AppDestination.swift
-
-SwiftCompile normal arm64 Compiling\ StoryFixtures.swift,\ StoryFixtureData.swift,\ FixtureLaunchSelection.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtures.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtureData.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtures.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile StoryFixtures.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtureData.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile StoryFixtureData.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile FixtureLaunchSelection.swift
-
-SwiftCompile normal arm64 Compiling\ WattActionButton.swift,\ WattFormRow.swift,\ WattWindowScaffold.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattActionButton.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattFormRow.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattActionButton.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattActionButton.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattFormRow.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattFormRow.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattWindowScaffold.swift
-
-SwiftCompile normal arm64 Compiling\ ScopedRemovalAdapter.swift,\ UpdateAdapter.swift,\ SystemPowerSourceTelemetryService.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/ScopedRemovalAdapter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/UpdateAdapter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/SystemPowerSourceTelemetryService.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/ScopedRemovalAdapter.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile ScopedRemovalAdapter.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/UpdateAdapter.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile UpdateAdapter.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/SystemPowerSourceTelemetryService.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile SystemPowerSourceTelemetryService.swift
-
-SwiftCompile normal arm64 Compiling\ WattColors.swift,\ WattSpacing.swift,\ WattTypography.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattColors.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattSpacing.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattTypography.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattColors.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattColors.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattSpacing.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattSpacing.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattTypography.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattTypography.swift
-
-SwiftCompile normal arm64 Compiling\ PowerReading.swift,\ WattPreferences.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/PowerReading.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/WattPreferences.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/PowerReading.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile PowerReading.swift
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/WattPreferences.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattPreferences.swift
+SwiftDriver\ Compilation Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g036-j21-final-debug/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g036-j21-final-debug/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g036-j21-final-debug/Build/Products/Debug -F /tmp/watt-g036-j21-final-debug/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g036-j21-final-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g036-j21-final-debug/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g036-j21-final-debug/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g036-j21-final-debug/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Products/Debug/include -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /tmp/watt-g036-j21 -experimental-emit-module-separately -disable-cmo
 
 SwiftDriverJobDiscovery normal arm64 Emitting module for Watt (in target 'Watt' from project 'Watt')
 
 SwiftDriver\ Compilation\ Requirements Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g036-debug/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g036-debug/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g036-debug/Build/Products/Debug -F /tmp/watt-g036-debug/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g036-debug/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g036-debug/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g036-debug/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Products/Debug/include -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation -experimental-emit-module-separately -disable-cmo
+    cd /tmp/watt-g036-j21
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g036-j21-final-debug/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g036-j21-final-debug/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g036-j21-final-debug/Build/Products/Debug -F /tmp/watt-g036-j21-final-debug/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g036-j21-final-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g036-j21-final-debug/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g036-j21-final-debug/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g036-j21-final-debug/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Products/Debug/include -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /tmp/watt-g036-j21 -experimental-emit-module-separately -disable-cmo
 
-SwiftDriverJobDiscovery normal arm64 Compiling StoryFixtures.swift, StoryFixtureData.swift, FixtureLaunchSelection.swift (in target 'Watt' from project 'Watt')
+Copy /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule
 
-SwiftMergeGeneratedHeaders /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Watt-Swift.h /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-swiftHeaderTool -arch arm64 /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -o /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/Watt-Swift.h
+Copy /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
 
-Copy /tmp/watt-g036-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule /tmp/watt-g036-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftmodule
+Copy /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json
 
-Copy /tmp/watt-g036-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftdoc /tmp/watt-g036-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.swiftdoc
+Ld /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib normal (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -L/tmp/watt-g036-j21-final-debug/Build/Products/Debug -F/tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/EagerLinkingTBDs/Debug -F/tmp/watt-g036-j21-final-debug/Build/Products/Debug -filelist /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.LinkFileList -install_name @rpath/Watt.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/../Frameworks -Xlinker -object_path_lto -Xlinker /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_lto.o -rdynamic -Xlinker -dependency_info -Xlinker /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
 
-Copy /tmp/watt-g036-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.abi.json /tmp/watt-g036-debug/Build/Products/Debug/Watt.swiftmodule/arm64-apple-macos.abi.json
+ConstructStubExecutorLinkFileList /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    construct-stub-executor-link-file-list /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'Watt' from project 'Watt')
 
-Copy /tmp/watt-g036-debug/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftsourceinfo /tmp/watt-g036-debug/Build/Products/Debug/Watt.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+Ld /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt normal (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/watt-g036-j21-final-debug/Build/Products/Debug -F/tmp/watt-g036-j21-final-debug/Build/Products/Debug -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/../Frameworks -rdynamic -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-ExecutorLinkFileList-normal-arm64.txt /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib -Xlinker -no_adhoc_codesign -o /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
 
-SwiftDriverJobDiscovery normal arm64 Compiling ScopedRemovalAdapter.swift, UpdateAdapter.swift, SystemPowerSourceTelemetryService.swift (in target 'Watt' from project 'Watt')
+ExtractAppIntentsMetadata (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name Watt --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk --xcode-version 27A266a --platform-family macOS --deployment-target 13.0 --bundle-identifier dev.watt.verification --output /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Resources --target-triple arm64-apple-macos13.0 --binary-file /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt --dependency-file /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_dependency_info.dat --stringsdata-file /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList --metadata-file-list /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyMetadataFileList --static-metadata-file-list /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-09-24 01:24:17.649 appintentsmetadataprocessor[70917:9609482] Starting appintentsmetadataprocessor export
+2026-09-24 01:24:17.651 appintentsmetadataprocessor[70917:9609482] warning: Metadata extraction skipped, no AppIntents.framework dependency found
 
-SwiftDriverJobDiscovery normal arm64 Compiling PowerReading.swift, WattPreferences.swift (in target 'Watt' from project 'Watt')
+ProcessInfoPlistFile /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Info.plist /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-infoPlistUtility /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Info.plist
 
-SwiftDriverJobDiscovery normal arm64 Compiling StatusPanelView.swift, OnboardingFlowView.swift, SettingsRootView.swift (in target 'Watt' from project 'Watt')
+CopySwiftLibs /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib --scan-folder /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Frameworks --scan-folder /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/PlugIns --scan-folder /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Library/SystemExtensions --scan-folder /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Extensions --platform macosx --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
 
-SwiftDriverJobDiscovery normal arm64 Compiling MenuBarStatusLabel.swift, MenuBarRootView.swift, StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
+CodeSign /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
 
-SwiftDriverJobDiscovery normal arm64 Compiling WattActionButton.swift, WattFormRow.swift, WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
+    Signing Identity:     "Sign to Run Locally"
 
-SwiftDriverJobDiscovery normal arm64 Compiling WattComponentGallery.swift, ReadingPicker.swift, AppDestination.swift (in target 'Watt' from project 'Watt')
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt.debug.dylib
 
-PruneExplicitPrecompiledModules /tmp/watt-g036-debug/Build/Intermediates.noindex/ExplicitPrecompiledModules
+CodeSign /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
 
-PruneExplicitPrecompiledModules /tmp/watt-g036-debug/SDKExplicitPrecompiledModules
+    Signing Identity:     "Sign to Run Locally"
 
-PruneExplicitPrecompiledModules /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib
+/tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: replacing existing signature
 
-** BUILD FAILED **
+CodeSign /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
 
+    Signing Identity:     "Sign to Run Locally"
 
-The following build commands failed:
-	SwiftCompile normal arm64 Compiling\ AppRouter.swift,\ RootSceneView.swift,\ WattApp.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
-	SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
-	Building project Watt with scheme Watt and configuration Debug
-(3 failures)
+    /usr/bin/codesign --force --sign - --entitlements /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt.app.xcent --timestamp\=none --generate-entitlement-der /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app
+
+Validate /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-validationUtility /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+RegisterWithLaunchServices /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-lsregisterurl --record-path /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/XCBuildData/registered-launchservices.txt -- /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app
+
+PruneExplicitPrecompiledModules /tmp/watt-g036-j21-final-debug/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+
 --- xcodebuild: WARNING: Using the first of multiple matching destinations:
 { platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
 { platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
+{ platform:macOS, name:Any Mac }
 ComputePackagePrebuildTargetDependencyGraph
 
 Prepare packages
@@ -583,212 +156,18 @@ GatherProvisioningInputs
 
 CreateBuildDescription
 
-ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -x c -c /dev/null
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /tmp/watt-g036-j21-final-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+    cd /tmp/watt-g036-j21/Watt.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /tmp/watt-g036-j21-final-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
 
-ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+ProcessInfoPlistFile /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Info.plist /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
+    cd /tmp/watt-g036-j21
+    builtin-infoPlistUtility /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /tmp/watt-g036-j21-final-debug/Build/Products/Debug/Watt.app/Contents/Info.plist
 
-ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+PruneExplicitPrecompiledModules /tmp/watt-g036-j21-final-debug/SDKExplicitPrecompiledModules
 
-ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+PruneExplicitPrecompiledModules /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/ExplicitPrecompiledModules
 
-Build description signature: 66ec7305afd458f28e8927a83df1071c
-Build description path: /tmp/watt-g036-debug/Build/Intermediates.noindex/XCBuildData/66ec7305afd458f28e8927a83df1071c.xcbuilddata
-ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Watt.xcodeproj
-    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -o /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache
+PruneExplicitPrecompiledModules /tmp/watt-g036-j21-final-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
 
-ProcessInfoPlistFile /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Info.plist /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-infoPlistUtility /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/empty-Watt.plist -producttype com.apple.product-type.application -genpkginfo /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/assetcatalog_generated_info.plist -o /tmp/watt-g036-debug/Build/Products/Debug/Watt.app/Contents/Info.plist
-
-SwiftDriver Watt normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Watt -Onone @/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -target arm64-apple-macos13.0 -g -module-cache-path /tmp/watt-g036-debug/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/watt-g036-debug/Index.noindex/DataStore -swift-version 6 -I /tmp/watt-g036-debug/Build/Products/Debug -F /tmp/watt-g036-debug/Build/Products/Debug -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -output-file-map /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/watt-g036-debug/ModuleCache.noindex -sdk-module-cache-path /tmp/watt-g036-debug/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/watt-g036-debug/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Products/Debug/include -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-Swift.h -working-directory /Users/benranford/Projects/watt-worktrees/swiftui-implementation -experimental-emit-module-separately -disable-cmo
-
-SwiftCompile normal arm64 Compiling\ WattApp.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattApp.swift
-
-/Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift:756:121: error: extra argument 'powerStore' in call
- 754 |     var body: some View {
- 755 |         if #available(macOS 14, *) {
- 756 |             ModernScenePresentationBridge(router: router, preferences: preferences, powerStore: powerStore, powerStore: powerStore,
-     |                                                                                                                         `- error: extra argument 'powerStore' in call
- 757 |                                           applicationDelegate: applicationDelegate)
- 758 |         } else {
-Failed frontend command:
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/ScopedRemovalAdapter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/UpdateAdapter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/SystemPowerSourceTelemetryService.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtures.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/StoryFixtureData.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Tests/Fixtures/FixtureLaunchSelection.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Verification/WattComponentGallery.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/ReadingPicker.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppDestination.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift -primary-file /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattActionButton.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattFormRow.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattWindowScaffold.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattColors.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattSpacing.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattTypography.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Components/MenuBarStatusLabel.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/MenuBarRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusItemContextMenu.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusPanelView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Settings/Views/SettingsRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/PowerReading.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Models/WattPreferences.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/PowerReadingStore.swift /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift -emit-dependencies-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.d -emit-const-values-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.swiftconstvalues -emit-reference-dependencies-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.swiftdeps -serialize-diagnostics-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.dia -target arm64-apple-macos13.0 -module-can-import-version AppKit 2775.10.103.1 2775.10.103 -module-can-import-version DeveloperToolsSupport 24.0.24 24.0.24 -module-can-import-version SwiftUI 8.0.84.1 8.0.84 -disable-cross-import-overlay-search -swift-module-cross-import UserNotifications /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/UserNotifications.framework/Modules/UserNotifications.swiftcrossimport/AppIntents.swiftoverlay -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt-dependencies-2.json -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -I /tmp/watt-g036-debug/Build/Products/Debug -F /tmp/watt-g036-debug/Build/Products/Debug -module-cache-path /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 6 -Onone -D DEBUG -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /tmp/watt-g036-debug/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/benranford/Projects/watt-worktrees/swiftui-implementation -enable-anonymous-context-mangled-names -file-compilation-dir /Users/benranford/Projects/watt-worktrees/swiftui-implementation -Xcc -ivfsstatcache -Xcc /tmp/watt-g036-debug/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-generated-files.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-own-target-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Watt-project-headers.hmap -Xcc -I/tmp/watt-g036-debug/Build/Products/Debug/include -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources-normal/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/arm64 -Xcc -I/tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources -no-auto-bridging-header-chaining -module-name Watt -const-gather-protocols-file /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt_const_extract_protocols.json -disable-clang-spi -clang-target arm64-apple-macos27.0 -target-sdk-version 27.0 -target-sdk-name macosx27.0 -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.o -debug-module-path /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/Objects-normal/arm64/Watt.swiftmodule -index-unit-output-path /Watt.build/Debug/Watt.build/Objects-normal/arm64/WattApp.o -index-store-path /tmp/watt-g036-debug/Index.noindex/DataStore -index-system-modules
-SwiftEmitModule normal arm64 Emitting\ module\ for\ Watt (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    
-
-SwiftCompile normal arm64 Compiling\ WattColors.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattColors.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattColors.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattColors.swift
-
-SwiftCompile normal arm64 Compiling\ WattSpacing.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattSpacing.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattSpacing.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattSpacing.swift
-
-SwiftCompile normal arm64 Compiling\ AppRouter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/AppRouter.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile AppRouter.swift
-
-SwiftCompile normal arm64 Compiling\ WattTypography.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattTypography.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Theme/WattTypography.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattTypography.swift
-
-SwiftCompile normal arm64 Compiling\ RootSceneView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/RootSceneView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile RootSceneView.swift
-
-SwiftCompile normal arm64 Compiling\ GeneratedAssetSymbols.swift /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /tmp/watt-g036-debug/Build/Intermediates.noindex/Watt.build/Debug/Watt.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
-
-SwiftCompile normal arm64 Compiling\ PowerReadingStore.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/PowerReadingStore.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/PowerReadingStore.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile PowerReadingStore.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling WattTypography.swift (in target 'Watt' from project 'Watt')
-
-SwiftDriverJobDiscovery normal arm64 Compiling WattColors.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 Compiling\ WattWindowScaffold.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattWindowScaffold.swift
-
-SwiftCompile normal arm64 Compiling\ WattComponentGallery.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Verification/WattComponentGallery.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Verification/WattComponentGallery.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattComponentGallery.swift
-
-SwiftCompile normal arm64 Compiling\ MenuBarStatusLabel.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Components/MenuBarStatusLabel.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Components/MenuBarStatusLabel.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile MenuBarStatusLabel.swift
-
-SwiftCompile normal arm64 Compiling\ OnboardingFlowView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Onboarding/Views/OnboardingFlowView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile OnboardingFlowView.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling WattSpacing.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 Compiling\ WattFormRow.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattFormRow.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/WattFormRow.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile WattFormRow.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling RootSceneView.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 Compiling\ ReadingPicker.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/ReadingPicker.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/DesignSystem/Components/ReadingPicker.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile ReadingPicker.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling AppRouter.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 Compiling\ MenuBarRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/MenuBarRootView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile MenuBarRootView.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling GeneratedAssetSymbols.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 Compiling\ StatusItemContextMenu.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile StatusItemContextMenu.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling WattWindowScaffold.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 Compiling\ SettingsRootView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/Settings/Views/SettingsRootView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile SettingsRootView.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling WattFormRow.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 Compiling\ StatusPanelView.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusPanelView.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Features/MenuBar/Views/StatusPanelView.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile StatusPanelView.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling MenuBarRootView.swift (in target 'Watt' from project 'Watt')
-
-SwiftDriverJobDiscovery normal arm64 Compiling ReadingPicker.swift (in target 'Watt' from project 'Watt')
-
-SwiftDriverJobDiscovery normal arm64 Compiling StatusItemContextMenu.swift (in target 'Watt' from project 'Watt')
-
-SwiftDriverJobDiscovery normal arm64 Compiling MenuBarStatusLabel.swift (in target 'Watt' from project 'Watt')
-
-SwiftDriverJobDiscovery normal arm64 Compiling PowerReadingStore.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 Compiling\ ScopedRemovalAdapter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/ScopedRemovalAdapter.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/ScopedRemovalAdapter.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile ScopedRemovalAdapter.swift
-
-SwiftCompile normal arm64 Compiling\ SystemPowerSourceTelemetryService.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/SystemPowerSourceTelemetryService.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/SystemPowerSourceTelemetryService.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile SystemPowerSourceTelemetryService.swift
-
-SwiftCompile normal arm64 Compiling\ UpdateAdapter.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/UpdateAdapter.swift (in target 'Watt' from project 'Watt')
-
-SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/Services/UpdateAdapter.swift (in target 'Watt' from project 'Watt')
-    cd /Users/benranford/Projects/watt-worktrees/swiftui-implementation
-    builtin-SwiftPerFileCompile UpdateAdapter.swift
-
-SwiftDriverJobDiscovery normal arm64 Compiling StatusPanelView.swift (in target 'Watt' from project 'Watt')
-
-SwiftDriverJobDiscovery normal arm64 Compiling OnboardingFlowView.swift (in target 'Watt' from project 'Watt')
-
-SwiftDriverJobDiscovery normal arm64 Compiling SettingsRootView.swift (in target 'Watt' from project 'Watt')
-
-PruneExplicitPrecompiledModules /tmp/watt-g036-debug/SDKExplicitPrecompiledModules
-
-PruneExplicitPrecompiledModules /tmp/watt-g036-debug/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
-
-PruneExplicitPrecompiledModules /tmp/watt-g036-debug/Build/Intermediates.noindex/ExplicitPrecompiledModules
-
-** ANALYZE FAILED **
-
-
-The following build commands failed:
-	SwiftCompile normal arm64 /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
-	SwiftCompile normal arm64 Compiling\ WattApp.swift /Users/benranford/Projects/watt-worktrees/swiftui-implementation/App/WattApp.swift (in target 'Watt' from project 'Watt')
-	Analyzing project Watt with scheme Watt
-(3 failures)
+** ANALYZE SUCCEEDED **

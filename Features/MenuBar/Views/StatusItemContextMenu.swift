@@ -9,6 +9,7 @@ enum StatusItemContextMenu {
     // hit targets, keyboard navigation and accessibility semantics.
     static let referenceMenuWidth: CGFloat = 230
     static let referenceReadingsMenuWidth: CGFloat = 190
+    static let unavailableReadingsMenuWidth: CGFloat = 250
 
     static func makeMenu(
         router: AppRouter, preferences: PreferencesStore,
@@ -38,18 +39,28 @@ enum StatusItemContextMenu {
             menu.addItem(.separator())
         }
         let effectiveMode: WattDisplayMode = router.settingsHelperSetup.helperSwitchedOff ? .delta : preferences.displayMode
+        let componentsCanBeSelected = !router.settingsHelperSetup.helperSwitchedOff
+            && preferences.componentReadings && componentsAvailable()
         let readings = NSMenu()
-        readings.minimumWidth = referenceReadingsMenuWidth
+        // The unavailable J2.1 native component is the wider macOS menu
+        // variant in Figma (250pt); available readings use the compact menu
+        // variant (190pt). AppKit still owns all row metrics and material.
+        if componentsCanBeSelected {
+            readings.minimumWidth = referenceReadingsMenuWidth
+        } else {
+            readings.minimumWidth = unavailableReadingsMenuWidth
+        }
         readings.showsStateColumn = true
         readings.autoenablesItems = false
         for (title, mode) in [("Delta", WattDisplayMode.delta), ("Charger", .charger),
                               ("Draw", .draw), ("Components", .components), ("Icon", .iconOnly)] {
             if mode == .iconOnly { readings.addItem(.separator()) }
             add(title, to: readings) {
-                guard mode != .components || (!router.settingsHelperSetup.helperSwitchedOff && preferences.componentReadings && componentsAvailable()) else { return }
+                guard mode != .components || (!router.settingsHelperSetup.helperSwitchedOff
+                    && preferences.componentReadings && componentsAvailable()) else { return }
                 preferences.displayMode = mode
             }
-            readings.items.last?.isEnabled = mode != .components || (!router.settingsHelperSetup.helperSwitchedOff && preferences.componentReadings && componentsAvailable())
+            readings.items.last?.isEnabled = mode != .components || componentsCanBeSelected
             readings.items.last?.state = effectiveMode == mode ? .on : .off
         }
         if router.settingsHelperSetup.helperSwitchedOff || !preferences.componentReadings || !componentsAvailable() {

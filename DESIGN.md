@@ -1016,6 +1016,30 @@ the existing native titleless window (system appearance). Telemetry descriptions
 and unavailable values remain unknown rather than fabricated watts.
 
 
+### G036 / J2.1 — Components unavailable in the native menu
+
+Exact Figma frame `29:1549`; main menu `29:1861` is 230 × 187 points and the
+unavailable readings submenu `29:2197` is 250 × 176 points. The light Aqua
+reference has Delta checked, Components disabled, and Turn On Helper… below the
+Icon separator. It also shows Settings… with Command-comma, Quit Watt? with
+Command-Q, and an enabled Check for Updates… row.
+
+`StatusItemContextMenu` remains a real AppKit `NSMenu`/`NSMenuItem` factory.
+AppKit owns SF Pro rendering, material, state columns, disabled appearance,
+separators, chevrons, keyboard navigation and accessibility. The unavailable
+submenu uses the reference 250pt native variant; the available readings menu
+uses the compact 190pt variant. This is a native menu metric, not a custom row
+layout or painted chrome. Components is rechecked at action time, so a helper
+or capability loss while the menu is open fails closed without erasing the
+saved intent. Turn On Helper… routes to Settings.
+
+The DEBUG-only J2.1 fixture supplies an isolated fake update service solely to
+match the Figma idle menu state. It uses a transparent app-owned anchor to open
+the same production menu on hosts where MenuBarExtra’s compositor slot is not
+available; the anchor is not shipped product UI. Direct AppKit popup captures,
+point bounds and visual verdict are retained in `docs/evidence/J2.1/`.
+
+
 ### G037 / J2.2 — Panel, component readings off
 Exact Figma frame `29:2456`, panel `29:7572` at 320×347. Reuse StatusPanelView,
 its grouped native Form/LabeledContent and SF Pro semantic typography. The persisted
