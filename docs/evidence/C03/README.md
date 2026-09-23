@@ -258,6 +258,20 @@ separator insets, 1pt submenu inset/overlap, physical interaction, VoiceOver,
 actual status-button repaint/position and compositor capture. Bounded pass complete;
 C03 visual acceptance remains open.
 
+## Live Release secondary-click follow-up — 2026-09-24
+
+The installed Release app was also exercised through a real Quartz right-click
+at the AX-discovered native Watt status item. The resulting WindowServer menu
+was a native layer-101 `230×187pt` menu window with the expected C03 row order,
+shortcuts and native status-item entry. Capture and exact interaction metadata
+are retained in [`live-secondary-click-2026-09-24.md`](live-secondary-click-2026-09-24.md),
+[`live-secondary-click-2026-09-24.json`](live-secondary-click-2026-09-24.json)
+and [`live-secondary-click-2026-09-24.png`](live-secondary-click-2026-09-24.png).
+The production Check for Updates row is correctly fail-closed/disabled without
+a trusted P04 service; the enabled fixture state remains separate. This proves
+live native secondary-click/menu opening but does not close visual or TCC/AX
+acceptance.
+
 ## App-owned WindowServer capture probe — 2026-09-21
 
 The requested public `CGWindowListCreateImage` candidate failed SDK availability
