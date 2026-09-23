@@ -79,12 +79,15 @@ The current host sample reported `BatteryPower=0 mW`, `SystemPowerIn=9896 mW`,
 Release app is therefore reading valid live telemetry: Delta is `0.0 W`, while
 Charger mode is `9.896 W`.
 
-The host does not assign a visible compositor slot to public AppKit status items:
-a standalone `NSStatusItem` probe and Watt both reported a visible native
-`NSStatusBarWindow` with height `0`. No fake menu bar or custom status-item chrome
-was added. Watt now installs after `applicationDidFinishLaunching`, explicitly
-restores the native accessory policy, and leaves the native Watt? panel visible
-as a fallback. See `menu-bar-host-2026-09-24.md`.
+An earlier standalone-host probe in this evidence set reported a zero-height
+`NSStatusBarWindow`; that result is retained as historical host diagnostics and
+was not treated as permission to fake menu-bar chrome. The later installed
+Release run materialized the native Watt? status item and its native popover
+after `applicationDidFinishLaunching`; the direct status-item → panel evidence
+is retained in `live-native-panel-2026-09-24/`. Watt still explicitly restores
+the native accessory policy and uses only public AppKit status-item/popover APIs.
+See `menu-bar-host-2026-09-24.md` for the earlier probe and the live-panel
+directory for the current successful run.
 
 Fresh focused verification: package P01 **12 tests / 1 intentional skip / 0
 failures**, hosted P01 + NativeStyling **23 tests / 1 skip / 0 failures**,
