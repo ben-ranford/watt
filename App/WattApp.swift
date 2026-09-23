@@ -9,6 +9,10 @@ struct WattApp: App {
     @StateObject private var powerStore: PowerReadingStore
     @StateObject private var preferences: PreferencesStore
 
+    private static var isHarnessLaunch: Bool {
+        ProcessInfo.processInfo.arguments.dropFirst().contains { $0.hasPrefix("--watt-") }
+    }
+
     init() {
         #if DEBUG
         if let rejection = WattFixtureLaunchGate.rejection(arguments: ProcessInfo.processInfo.arguments) {
@@ -185,9 +189,20 @@ struct WattApp: App {
         let appRouter = AppRouter()
         appRouter.onUninstalled = { NSApplication.shared.terminate(nil) }
         _router = StateObject(wrappedValue: appRouter)
-        _powerStore = StateObject(wrappedValue: PowerReadingStore(currentReading: .unavailable,
-            telemetry: SystemPowerSourceTelemetryService()))
-        _preferences = StateObject(wrappedValue: PreferencesStore(storage: UserDefaultsStorage(defaults: .standard)))
+        let appPowerStore = PowerReadingStore(currentReading: .unavailable,
+            telemetry: SystemPowerSourceTelemetryService())
+        let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
+        _powerStore = StateObject(wrappedValue: appPowerStore)
+        _preferences = StateObject(wrappedValue: appPreferences)
+        // MenuBarExtra is the preferred SwiftUI path, but it is not materialising
+        // an item on some macOS hosts (including the local verification host). Keep
+        // the user-facing app usable with the public AppKit status-item API while
+        // retaining MenuBarExtra for all fixture launches.
+        if !Self.isHarnessLaunch {
+            applicationDelegate.installFallbackStatusItem(router: appRouter,
+                                                          powerStore: appPowerStore,
+                                                          preferences: appPreferences)
+        }
     }
 
     private var menuBarExtraInserted: Binding<Bool> {
@@ -196,7 +211,10 @@ struct WattApp: App {
         if J42FixtureLaunch.requested || J41FixtureLaunch.requested || J33FixtureLaunch.requested || J31FixtureLaunch.requested || J25FixtureLaunch.requested || J24FixtureLaunch.requested || J23FixtureLaunch.requested || J17FixtureLaunch.requested || J16FixtureLaunch.requested || J15FixtureLaunch.requested || J14FixtureLaunch.requested || J13FixtureLaunch.requested || J12FixtureLaunch.requested || J11FixtureLaunch.requested || C05FixtureLaunch.requested { return .constant(false) }
         if C041FixtureLaunch.captureRequested || C042FixtureLaunch.captureRequested || C043FixtureLaunch.captureRequested || C044FixtureLaunch.captureRequested || C045FixtureLaunch.captureRequested || C046FixtureLaunch.captureRequested || C047FixtureLaunch.captureRequested || C048FixtureLaunch.captureRequested || C049FixtureLaunch.captureRequested || C0410FixtureLaunch.captureRequested || C0411FixtureLaunch.captureRequested || C0412FixtureLaunch.captureRequested { return .constant(false) }
         #endif
-        return .constant(true)
+        // The normal launch uses the explicit AppKit status item fallback. SwiftUI
+        // MenuBarExtra remains the production fixture path and is still exercised
+        // by the visual/native evidence harnesses.
+        return .constant(Self.isHarnessLaunch)
     }
 
     private var statusLabel: MenuBarStatusLabel {
@@ -990,6 +1008,16 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     var onReopen: (() -> Void)?
     var onTerminate: (() -> Void)?
     private(set) var isTerminating = false
+    private var fallbackStatusItem: WattFallbackStatusItem?
+
+    @MainActor
+    func installFallbackStatusItem(router: AppRouter, powerStore: PowerReadingStore,
+                                   preferences: PreferencesStore) {
+        guard fallbackStatusItem == nil else { return }
+        fallbackStatusItem = WattFallbackStatusItem(router: router, powerStore: powerStore,
+                                                    preferences: preferences)
+        fallbackStatusItem?.install()
+    }
 
     func applicationWillTerminate(_ notification: Notification) {
         guard !isTerminating else { return }
@@ -998,6 +1026,8 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
         let cleanup = onTerminate
         onTerminate = nil
         cleanup?()
+        fallbackStatusItem?.uninstall()
+        fallbackStatusItem = nil
         // SwiftUI owns the MenuBarExtra/NSStatusItem. Process termination removes it;
         // do not remove a borrowed status item behind SwiftUI's back.
         NSApplication.shared.windows.forEach { $0.orderOut(nil) }
@@ -1019,6 +1049,147 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+}
+
+/// Public AppKit fallback for hosts where SwiftUI's MenuBarExtra scene does not
+/// register a visible status item. It deliberately uses the native status button
+/// and NSPopover; no custom menu-bar chrome or pixel drawing is introduced.
+@MainActor
+private final class WattFallbackStatusItem: NSObject {
+    private let router: AppRouter
+    private let powerStore: PowerReadingStore
+    private let preferences: PreferencesStore
+    private var item: NSStatusItem?
+    private var panel: NSPopover?
+    private var fallbackWindow: NSWindow?
+    private var contextMenuMonitor: Any?
+    private var observations = Set<AnyCancellable>()
+
+    init(router: AppRouter, powerStore: PowerReadingStore, preferences: PreferencesStore) {
+        self.router = router
+        self.powerStore = powerStore
+        self.preferences = preferences
+        super.init()
+    }
+
+    func install() {
+        guard item == nil else { return }
+        let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        item = statusItem
+        guard let button = statusItem.button else { return }
+        button.target = self
+        button.action = #selector(togglePanel)
+        button.sendAction(on: [.leftMouseUp])
+        button.font = NSFont.systemFont(ofSize: 13, weight: .semibold)
+        updateButton()
+
+        contextMenuMonitor = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [weak self] event in
+            guard let self, let button = self.item?.button,
+                  event.window === button.window,
+                  button.frame.contains(event.locationInWindow) else { return event }
+            let menu = StatusItemContextMenu.makeMenu(router: self.router,
+                preferences: self.preferences,
+                componentsAvailable: {
+                    !self.router.settingsHelperSetup.helperSwitchedOff
+                        && self.powerStore.currentReading.source != .unavailable
+                        && self.powerStore.currentReading.freshness == .fresh
+                        && self.powerStore.currentReading.capabilities.components == .available
+                })
+            NSMenu.popUpContextMenu(menu, with: event, for: button)
+            return nil
+        }
+
+        router.present = { [weak self] destination in
+            switch destination {
+            case .statusPanel: self?.togglePanel()
+            case .coachMark: self?.togglePanel()
+            case .settings:
+                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            case .onboarding, .softwareUpdate, .update:
+                // These routes are still owned by the SwiftUI scenes when they are
+                // available; the fallback keeps the primary status panel usable.
+                break
+            }
+        }
+
+        powerStore.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.updateButton() }
+            .store(in: &observations)
+        preferences.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.updateButton() }
+            .store(in: &observations)
+
+        // Give a double-click/open launch a visible native surface even on hosts
+        // whose menu-bar compositor hides third-party status items.
+        DispatchQueue.main.async { [weak self] in self?.showFallbackWindow() }
+    }
+
+    func uninstall() {
+        observations.removeAll()
+        if let contextMenuMonitor { NSEvent.removeMonitor(contextMenuMonitor) }
+        contextMenuMonitor = nil
+        panel?.close()
+        panel = nil
+        fallbackWindow?.close()
+        fallbackWindow = nil
+        if let item { NSStatusBar.system.removeStatusItem(item) }
+        item = nil
+    }
+
+    @objc private func togglePanel() {
+        guard let button = item?.button else { return }
+        if let panel, panel.isShown {
+            panel.performClose(nil)
+            router.statusPanelPresented = false
+            return
+        }
+        let popover = panel ?? NSPopover()
+        popover.behavior = .transient
+        popover.animates = false
+        popover.contentViewController = NSHostingController(rootView:
+            MenuBarRootView()
+                .environmentObject(router)
+                .environmentObject(powerStore)
+                .environmentObject(preferences))
+        panel = popover
+        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        router.statusPanelPresented = true
+    }
+
+    private func updateButton() {
+        guard let button = item?.button else { return }
+        let label = MenuBarStatusLabel(reading: powerStore.statusReading,
+                                       preferences: preferences,
+                                       helperSwitchedOff: router.settingsHelperSetup.helperSwitchedOff)
+        button.image = NSImage(systemSymbolName: label.symbolName, accessibilityDescription: nil)
+        button.imagePosition = label.showsSymbol ? (label.text == nil ? .imageOnly : .imageLeading) : .noImage
+        button.title = label.text ?? ""
+        button.toolTip = label.accessibilityAnnouncement
+        MenuBarStatusAccessibility.apply(to: button, label: label)
+        button.sizeToFit()
+        item?.length = max(42, button.intrinsicContentSize.width + 12)
+    }
+
+    private func showFallbackWindow() {
+        guard fallbackWindow == nil else { return }
+        let content = NSHostingView(rootView:
+            MenuBarRootView()
+                .environmentObject(router)
+                .environmentObject(powerStore)
+                .environmentObject(preferences))
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 420, height: 560),
+                              styleMask: [.titled, .closable, .miniaturizable],
+                              backing: .buffered, defer: false)
+        window.title = "Watt?"
+        window.isReleasedWhenClosed = false
+        window.contentView = content
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        fallbackWindow = window
+    }
 }
 
 private struct ScenePresentationBridge: View {

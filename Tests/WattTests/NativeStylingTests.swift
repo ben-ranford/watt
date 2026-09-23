@@ -136,11 +136,13 @@ final class NativeStylingTests: XCTestCase {
 
     func testContextMenuUsesNativeColumnsWithoutSpacerImages() throws {
         let menu = try source("Features/MenuBar/Views/StatusItemContextMenu.swift")
-        for forbidden in ["NSImage(", ".image =", "preferredImageVisibility", "spacerWidth", ".minimumWidth =", ".font =",
+        for forbidden in ["NSImage(", ".image =", "preferredImageVisibility", "spacerWidth", ".font =",
                           "RoundedRectangle", "Gradient", ".background", ".shadow", ".tint",
                           ".view =", "NSHostingView", ".highlightedItem ="] {
             XCTAssertFalse(menu.contains(forbidden), "Menu geometry must remain native: \(forbidden)")
         }
+        XCTAssertTrue(menu.contains("menu.minimumWidth = referenceMenuWidth"))
+        XCTAssertTrue(menu.contains("readings.minimumWidth = referenceReadingsMenuWidth"))
         for required in ["menu.showsStateColumn = true", "readings.showsStateColumn = true",
                          "readings.items.last?.state = effectiveMode == mode ? .on : .off"] {
             XCTAssertTrue(menu.contains(required), "Preserve native selection semantics: \(required)")

@@ -3,6 +3,13 @@ import AppKit
 /// Native secondary-click menu attached to the single SwiftUI status item.
 @MainActor
 enum StatusItemContextMenu {
+    // These are native NSMenu metrics, not custom row geometry. They are the
+    // dimensions of the corresponding macOS 27 Figma components (22:1345 and
+    // 22:1811); AppKit still owns the menu material, typography, separators,
+    // hit targets, keyboard navigation and accessibility semantics.
+    static let referenceMenuWidth: CGFloat = 230
+    static let referenceReadingsMenuWidth: CGFloat = 190
+
     static func makeMenu(
         router: AppRouter, preferences: PreferencesStore,
         componentsAvailable: @escaping () -> Bool = { false },
@@ -11,6 +18,7 @@ enum StatusItemContextMenu {
     ) -> NSMenu {
         let presentationID = router.beginMenuSetupPresentation()
         let menu = SetupContextMenu { router.endMenuSetupPresentation(presentationID) }
+        menu.minimumWidth = referenceMenuWidth
         menu.showsStateColumn = true
         func add(_ title: String, key: String = "", to menu: NSMenu, action: @escaping () -> Void) {
             let item = ActionMenuItem(title: title) {
@@ -31,6 +39,7 @@ enum StatusItemContextMenu {
         }
         let effectiveMode: WattDisplayMode = router.settingsHelperSetup.helperSwitchedOff ? .delta : preferences.displayMode
         let readings = NSMenu()
+        readings.minimumWidth = referenceReadingsMenuWidth
         readings.showsStateColumn = true
         readings.autoenablesItems = false
         for (title, mode) in [("Delta", WattDisplayMode.delta), ("Charger", .charger),

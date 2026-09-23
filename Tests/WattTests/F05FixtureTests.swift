@@ -404,9 +404,12 @@ final class C03ContextMenuTests: XCTestCase {
         let submenu = try XCTUnwrap(menu.items.first?.submenu)
         let nativeMenu = NSMenu()
         let nativeItem = NSMenuItem()
-        for surface in [menu, submenu] {
-            // AppKit owns geometry and typography; do not impose fixed widths or fonts.
-            XCTAssertEqual(surface.minimumWidth, nativeMenu.minimumWidth)
+        for (surface, expectedWidth) in [(menu, StatusItemContextMenu.referenceMenuWidth),
+                                          (submenu, StatusItemContextMenu.referenceReadingsMenuWidth)] {
+            // AppKit owns geometry and typography. The public minimumWidth
+            // property carries the exact Figma component bounds without
+            // replacing native rows or painting custom chrome.
+            XCTAssertEqual(surface.minimumWidth, expectedWidth)
             XCTAssertEqual(surface.font, nativeMenu.font)
             XCTAssertTrue(surface.showsStateColumn)
             XCTAssertTrue(surface.items.allSatisfy { $0.view == nil && $0.indentationLevel == 0 })

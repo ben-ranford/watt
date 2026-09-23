@@ -2251,3 +2251,13 @@ test-build gaps are recorded honestly in the evidence; no visual score is assign
 - A native capture is evidence only when TCC trust, compositor ownership and AX
   content all pass. If any gate fails, record null score/pixel diff and the exact
   blocker; never substitute a cached view, fake window or invented visual score.
+
+### Runtime host fallback
+
+The ordinary local launch keeps the same native `MenuBarStatusLabel` and panel
+content, but uses a public AppKit `NSStatusItem`/`NSPopover` fallback when the
+host does not materialise SwiftUI `MenuBarExtra`. Debug fixture launches retain
+the `MenuBarExtra` path so native visual evidence remains isolated. The fallback
+also opens the native panel in a normal `Watt?` window on launch, making the app
+discoverable when a menu-bar compositor hides third-party items; it does not paint
+custom menu-bar chrome or replace native controls.

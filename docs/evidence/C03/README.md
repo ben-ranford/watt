@@ -7,13 +7,12 @@ C03 modifies the existing NSMenu factory and single status-item adapter, not oth
 screens. Main menu order is Show in Menu Bar / separator / Open Watt? / Settings…
 (⌘,) / separator / About Watt? / Check for Updates… / separator / Quit Watt? (⌘Q).
 Submenu is Delta / Charger / Draw / Components / separator / Icon, with exactly
-one preference-driven checkmark. Main/submenu minimum widths remain the reference 230/190pt. Both request the
-public NSMenu 13pt regular system font and state column. Transparent native image
-slots (14pt main / 1pt submenu) bring titles to approximately x36 / x37.
-AppKit owns text, material, separators, shortcut columns and keyboard/hover states.
-The images draw no pixels and have no accessibility description; no menu row is
-replaced by an image or custom view. On macOS 27, preferredImageVisibility is
-explicitly visible so the system retains the spacing slot.
+one preference-driven checkmark. The current implementation sets the public
+`NSMenu.minimumWidth` property to the exact Figma component bounds (230/190pt),
+while AppKit still owns text, material, separators, shortcut columns and
+keyboard/hover states. No menu row is replaced by an image, custom view or
+painted chrome. The earlier transparent-image/font experiments are historical
+and superseded; they are retained below as rejected alternatives.
 
 Open, Settings and Updates call the existing router; About opens the standard panel;
 Quit terminates. Tests inject About/Quit handlers without OS side effects.
@@ -35,7 +34,9 @@ Frame-relative integral 1x crops, with no masks/resampling:
 - 22:1811 submenu: x375 y38 width190 height141.
 - Combined reference crop: x375 y38 width416 height187.
 Figma typography hint: SF Pro emphasized, 13pt/16pt. Native menu metrics are
-system-owned rather than reproducing material using literal RGBA fills.
+system-owned rather than reproducing material using literal RGBA fills. The
+only explicit geometry is the public minimum-width contract required by the two
+Figma component bounds.
 
 ## Capture method and limitations
 Run capture.sh from the worktree after native Debug build. A DEBUG-only app-owned
@@ -47,18 +48,16 @@ NSView.cacheDisplay; capture-attempt.json records actual window classes and geom
 No AX traversal, TCC prompt, Screen Recording access, global input injection, desktop
 screenshot or fake bitmap is used. No second NSStatusItem is allocated.
 
-Both real NSPopupMenuWindow surfaces were captured, at 2x:
-native-menu-0.png (460×374), native-menu-1.png (380×282).
-The cache is native drawing, not a WindowServer composite: translucent background,
-shadow and material may differ. Raw pixels are retained. Explicit sips 1x derivatives
-are compared separately against exact crops; overlays/diffs are diagnostic only.
+The legacy cache path captured both real NSPopupMenuWindow surfaces at 2x:
+native-menu-0.png (460×374), native-menu-1.png (380×282). The cache is native
+drawing, not a WindowServer composite. Raw pixels are retained, but it is not a
+visual acceptance capture.
 The submenu now opens left with idle checked Delta; the parent is highlighted.
 Metadata records parentHighlighted=true, submenuHighlighted=none, deltaChecked=true;
 capture.sh asserts this state and requires both native surfaces. Observed main frame
 is {{1564,843},{230,187}}, submenu {{1379,889},{190,141}}: top-aligned,
 5pt overlap versus the reference 4pt. This is OS edge-aware placement, not a
-production placement guarantee. Main titles now start around x36 in both; submenu titles start around x37 native
-versus x36 reference. No private inset API/custom row was introduced. The actual selected +42.1 W
+production placement guarantee. No private inset API/custom row was introduced. The actual selected +42.1 W
 status-button pixels and global placement are **not captured**; production selection
 highlight is code-wired, not visually verified. Initial direct status-anchor attempt
 yielded no capture, so the bounded anchor harness was used instead.
@@ -67,6 +66,37 @@ No VoiceOver/AX role audit, physical pointer test or external application shortc
 audit has been performed. Native NSMenu target/action tests are not these audits.
 Strict per-menu pixel comparison fails (~99.89% main / ~99.92% submenu changed pixels); see JSON rather
 than treating equal bounds or test success as fidelity proof.
+
+## Current public compositor capture — 2026-09-23
+
+The bounded `capture-screencapturekit.sh` follow-up uses Apple's public
+ScreenCaptureKit APIs. It matches only visible menu windows owned by the Watt
+fixture PID, captures each with `SCScreenshotManager`, and separately captures
+the same app-owned screen rectangles to include the live compositor surface. It
+does not request Screen Recording, capture the desktop outside those rectangles,
+use AX/global input, or change production rendering. The helper is external to
+the app target and is used only for DEBUG evidence.
+
+Fresh capture metadata is `screencapturekit/capture.json`. Both native windows
+are exact Figma bounds: 230×187pt and 190×141pt at 2x. The explicit 1x
+screen-region derivatives are `sck-screen-0-1x.png` and `sck-screen-1-1x.png`;
+the raw 2x captures are retained alongside them. This proves a supported
+compositor capture path and correct native bounds, but it does **not** turn the
+story into a visual pass: the live macOS 27 menu material is near-black rather
+than the Figma blue-gray surface, the font/insets/separator geometry differ,
+and the status-item/VoiceOver/physical interaction gates remain unverified.
+
+Reproduce with:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+  bash docs/evidence/C03/capture-screencapturekit.sh
+```
+
+This is the supported answer to the prior “no compositor capture” portion of
+the blocker. The remaining visual/AX gaps are platform-owned or TCC-dependent;
+custom menu rows, private AppKit view/window mutation and fabricated scores
+remain explicitly rejected.
 
 ## Reproduction / verification
 Run bash docs/evidence/C03/verification.sh, then bash docs/evidence/C03/compare.sh
