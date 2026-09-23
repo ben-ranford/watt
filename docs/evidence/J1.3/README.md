@@ -13,8 +13,8 @@
   “What it reads” / “Power sensors only”, “Network” / “Never”,
   “Remove it” / “Any time, in Settings”. Reuses native grouped Form and
   LabeledContent plus native bordered Not Now and
-  borderedProminent/default Turn On… buttons. Label padding uses the existing
-  xs token; no extra Back button or painted controls. Grouped Form margins are
+  borderedProminent/default Turn On… buttons. Native buttons use OS-owned
+  intrinsic spacing; no extra Back button or painted controls. Grouped Form margins are
   compensated with token-based padding, and row minimum heights use existing
   spacing tokens. The native compositor capture now places the facts panel
   approximately at x32, y214, width416, height126 points, versus the previous
