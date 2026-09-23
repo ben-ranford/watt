@@ -183,6 +183,12 @@ struct WattApp: App {
                 C03FixtureLaunch.preferences = fixturePreferences
             }
             _preferences = StateObject(wrappedValue: fixturePreferences)
+            if J112FixtureLaunch.requested {
+                // The MenuBarExtra label is not guaranteed to materialise its
+                // embedded bridge before Settings is opened. Prepare the
+                // isolated helper fixture at composition time instead.
+                Task { await J112FixtureLaunch.prepare(router: appRouter) }
+            }
             return
         }
         #endif
@@ -1343,7 +1349,6 @@ private struct StatusItemAdapter: NSViewRepresentable {
             }
             if J112FixtureLaunch.requested {
                 Task {
-                    await J112FixtureLaunch.prepare(router: router)
                     J112FixtureLaunch.observe(preferences: preferences)
                     router.launch(preferences: preferences)
                 }

@@ -1,0 +1,239 @@
+role=AXApplication subrole= title=Watt desc= value= enabled=
+  role=AXWindow subrole=AXStandardWindow title=Watt? Settings desc= value= enabled=
+    role=AXGroup subrole=AXHostingView title= desc= value= enabled=
+      role=AXScrollArea subrole= title= desc= value= enabled=
+        role=AXHeading subrole= title= desc=Menu Bar value= enabled=true
+        role=AXGroup subrole= title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Show enabled=true
+          role=AXPopUpButton subrole= title= desc= value=Delta enabled=true
+          role=AXStaticText subrole= title= desc= value=Show symbol enabled=true
+          role=AXCheckBox subrole=AXSwitch title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Precision enabled=true
+          role=AXPopUpButton subrole= title= desc= value=42.1 W enabled=true
+          role=AXStaticText subrole= title= desc= value=Components enabled=true
+          role=AXStaticText subrole= title= desc= value=In Components mode. Two fit; more crowd the menu bar. enabled=true
+          role=AXPopUpButton subrole= title= desc=Components value=CPU, GPU enabled=true
+        role=AXStaticText subrole= title= desc= value=Menu bar full? Choose Icon and Watt? stays put. enabled=true
+        role=AXHeading subrole= title= desc=Readings value= enabled=true
+        role=AXGroup subrole= title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Update enabled=true
+          role=AXStaticText subrole= title= desc= value=Faster uses a little more energy. enabled=true
+          role=AXPopUpButton subrole= title= desc=Update value=Every 2 seconds enabled=true
+          role=AXStaticText subrole= title= desc= value=Smooth readings enabled=true
+          role=AXStaticText subrole= title= desc= value=On — averages the last 5 seconds, so the number doesn’t jump. enabled=true
+          role=AXCheckBox subrole=AXSwitch title= desc= value= enabled=true
+        role=AXHeading subrole= title= desc=Component Readings value= enabled=true
+        role=AXGroup subrole= title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Status enabled=true
+          role=AXStaticText subrole= title= desc= value=Reading CPU, GPU, display and the rest. enabled=true
+          role=AXStaticText subrole= title= desc= value=On enabled=true
+          role=AXStaticText subrole= title= desc= value=Helper enabled=true
+          role=AXStaticText subrole= title= desc= value=Reads power sensors only. No network, nothing leaves this Mac. enabled=true
+          role=AXButton subrole= title= desc=Remove… value= enabled=true
+        role=AXHeading subrole= title= desc=Notifications value= enabled=true
+        role=AXGroup subrole= title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Charger can’t keep up enabled=true
+          role=AXStaticText subrole= title= desc= value=When your Mac draws more than the charger gives for 5 minutes. enabled=true
+          role=AXCheckBox subrole=AXSwitch title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Fully charged enabled=true
+          role=AXCheckBox subrole=AXSwitch title= desc= value= enabled=true
+        role=AXHeading subrole= title= desc=General value= enabled=true
+        role=AXGroup subrole= title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Open at login enabled=true
+          role=AXCheckBox subrole=AXSwitch title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Check for updates automatically enabled=true
+          role=AXCheckBox subrole=AXSwitch title= desc= value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Uninstall Watt? enabled=true
+          role=AXStaticText subrole= title= desc= value=Removes the helper and your settings, then moves Watt? to the Trash. enabled=true
+          role=AXButton subrole= title= desc=Uninstall… value= enabled=true
+          role=AXStaticText subrole= title= desc= value=Version enabled=true
+          role=AXStaticText subrole= title= desc= value=1.0 (1) enabled=true
+        role=AXScrollBar subrole= title= desc= value= enabled=true
+          role=AXValueIndicator subrole= title= desc= value= enabled=
+          role=AXButton subrole=AXIncrementArrow title= desc= value= enabled=
+          role=AXButton subrole=AXDecrementArrow title= desc= value= enabled=
+          role=AXButton subrole=AXIncrementPage title= desc= value= enabled=
+          role=AXButton subrole=AXDecrementPage title= desc= value= enabled=
+    role=AXButton subrole=AXCloseButton title= desc= value= enabled=true
+    role=AXButton subrole=AXZoomButton title= desc= value= enabled=false
+      role=AXGroup subrole= title= desc= value= enabled=
+    role=AXButton subrole=AXMinimizeButton title= desc= value= enabled=false
+    role=AXStaticText subrole= title= desc= value=Watt? Settings enabled=true
+  role=AXMenuBar subrole= title= desc= value= enabled=true
+    role=AXMenuBarItem subrole= title=Apple desc= value= enabled=true
+      role=AXMenu subrole= title= desc= value= enabled=true
+        role=AXMenuItem subrole= title=About This Mac desc= value= enabled=true
+        role=AXMenuItem subrole= title=System Information desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=System Settings… desc= value= enabled=true
+        role=AXMenuItem subrole= title=App Store desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Recent Items desc= value= enabled=true
+          role=AXMenu subrole= title= desc= value= enabled=true
+            role=AXMenuItem subrole= title=Applications desc= value= enabled=false
+            role=AXMenuItem subrole= title=Calendar desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “Calendar” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=LM Studio desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “LM Studio” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=Microsoft AutoUpdate desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “Microsoft AutoUpdate” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=News desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “News” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=Phone desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “Phone” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=Stocks desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “Stocks” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=System Settings desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “System Settings” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=TextEdit desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “TextEdit” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=UTM desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “UTM” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=WattNoAgent2 desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “WattNoAgent2” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title= desc= value= enabled=false
+            role=AXMenuItem subrole= title=Documents desc= value= enabled=false
+            role=AXMenuItem subrole= title=.gitignore desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “.gitignore” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=AGENTS.md desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “AGENTS.md” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=blog desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “blog” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=config.toml desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “config.toml” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=ggc desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “ggc” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=lopper-website desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “lopper-website” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=PRD.md desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “PRD.md” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=rise-api-test desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “rise-api-test” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=SCREEN-BACKLOG.md desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “SCREEN-BACKLOG.md” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title=website desc= value= enabled=true
+            role=AXMenuItem subrole= title=Show “website” in Finder desc= value= enabled=true
+            role=AXMenuItem subrole= title= desc= value= enabled=false
+            role=AXMenuItem subrole= title=Servers desc= value= enabled=false
+            role=AXMenuItem subrole= title=EXTERNAL_USB desc= value= enabled=true
+            role=AXMenuItem subrole= title=Macintosh HD desc= value= enabled=true
+            role=AXMenuItem subrole= title=Migration desc= value= enabled=true
+            role=AXMenuItem subrole= title=NAS desc= value= enabled=true
+            role=AXMenuItem subrole= title=vms desc= value= enabled=true
+            role=AXMenuItem subrole= title= desc= value= enabled=false
+            role=AXMenuItem subrole= title=Clear Menu desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Force Quit… desc= value= enabled=true
+        role=AXMenuItem subrole= title=Force Quit Watt desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Sleep desc= value= enabled=true
+        role=AXMenuItem subrole= title=Restart… desc= value= enabled=true
+        role=AXMenuItem subrole= title=Restart desc= value= enabled=true
+        role=AXMenuItem subrole= title=Shut Down… desc= value= enabled=true
+        role=AXMenuItem subrole= title=Shut Down desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Lock Screen desc= value= enabled=true
+        role=AXMenuItem subrole= title=Log Out Ben Ranford… desc= value= enabled=true
+        role=AXMenuItem subrole= title=Log Out Ben Ranford desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+    role=AXMenuBarItem subrole= title=Watt desc= value= enabled=true
+      role=AXMenu subrole= title= desc= value= enabled=true
+        role=AXMenuItem subrole= title=About Watt? desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Settings… desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Services desc= value= enabled=true
+          role=AXMenu subrole= title= desc= value= enabled=true
+            role=AXMenuItem subrole= title=Activity Monitor desc= value= enabled=true
+            role=AXMenuItem subrole= title=Allocations & Leaks desc= value= enabled=true
+            role=AXMenuItem subrole= title=File Activity desc= value= enabled=true
+            role=AXMenuItem subrole= title=System Trace desc= value= enabled=true
+            role=AXMenuItem subrole= title=Time Profile Active Application desc= value= enabled=true
+            role=AXMenuItem subrole= title=Time Profile App Under Mouse desc= value= enabled=true
+            role=AXMenuItem subrole= title=Time Profile Entire System desc= value= enabled=true
+            role=AXMenuItem subrole= title=Toggle Instruments Recording desc= value= enabled=true
+            role=AXMenuItem subrole= title=Ask Claude desc= value= enabled=true
+            role=AXMenuItem subrole= title=New Claude Code Session Here desc= value= enabled=true
+            role=AXMenuItem subrole= title=Send to Claude desc= value= enabled=true
+            role=AXMenuItem subrole= title=rotate images desc= value= enabled=true
+            role=AXMenuItem subrole= title=Services Settings… desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Hide Watt? desc= value= enabled=false
+        role=AXMenuItem subrole= title=Hide Others desc= value= enabled=true
+        role=AXMenuItem subrole= title=Show All desc= value= enabled=false
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Quit Watt? desc= value= enabled=true
+    role=AXMenuBarItem subrole= title=Edit desc= value= enabled=true
+      role=AXMenu subrole= title= desc= value= enabled=true
+        role=AXMenuItem subrole= title=Undo desc= value= enabled=false
+        role=AXMenuItem subrole= title=Redo desc= value= enabled=false
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Cut desc= value= enabled=false
+        role=AXMenuItem subrole= title=Copy desc= value= enabled=false
+        role=AXMenuItem subrole= title=Paste desc= value= enabled=false
+        role=AXMenuItem subrole= title=Delete desc= value= enabled=false
+        role=AXMenuItem subrole= title=Select All desc= value= enabled=false
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=AutoFill desc= value= enabled=true
+          role=AXMenu subrole= title= desc= value= enabled=true
+            role=AXMenuItem subrole= title=Contact… desc= value= enabled=false
+            role=AXMenuItem subrole= title=Passwords… desc= value= enabled=false
+            role=AXMenuItem subrole= title=Credit Card… desc= value= enabled=false
+        role=AXMenuItem subrole= title=Start Dictation… desc= value= enabled=true
+        role=AXMenuItem subrole= title=Emoji & Symbols desc= value= enabled=true
+    role=AXMenuBarItem subrole= title=View desc= value= enabled=true
+      role=AXMenu subrole= title= desc= value= enabled=true
+        role=AXMenuItem subrole= title=Enter Full Screen desc= value= enabled=false
+    role=AXMenuBarItem subrole= title=Window desc= value= enabled=true
+      role=AXMenu subrole= title= desc= value= enabled=true
+        role=AXMenuItem subrole= title=Close desc= value= enabled=false
+        role=AXMenuItem subrole= title=Close All desc= value= enabled=true
+        role=AXMenuItem subrole= title=Minimize desc= value= enabled=false
+        role=AXMenuItem subrole= title=Minimize All desc= value= enabled=false
+        role=AXMenuItem subrole= title=Zoom desc= value= enabled=false
+        role=AXMenuItem subrole= title=Zoom All desc= value= enabled=false
+        role=AXMenuItem subrole= title=Fill desc= value= enabled=false
+        role=AXMenuItem subrole= title=Center desc= value= enabled=false
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Move & Resize desc= value= enabled=true
+          role=AXMenu subrole= title= desc= value= enabled=true
+            role=AXMenuItem subrole= title=Halves desc= value= enabled=false
+            role=AXMenuItem subrole= title=Left desc= value= enabled=false
+            role=AXMenuItem subrole= title=Right desc= value= enabled=false
+            role=AXMenuItem subrole= title=Top desc= value= enabled=false
+            role=AXMenuItem subrole= title=Bottom desc= value= enabled=false
+            role=AXMenuItem subrole= title= desc= value= enabled=false
+            role=AXMenuItem subrole= title=Quarters desc= value= enabled=false
+            role=AXMenuItem subrole= title=Top Left desc= value= enabled=false
+            role=AXMenuItem subrole= title=Top Right desc= value= enabled=false
+            role=AXMenuItem subrole= title=Bottom Left desc= value= enabled=false
+            role=AXMenuItem subrole= title=Bottom Right desc= value= enabled=false
+            role=AXMenuItem subrole= title= desc= value= enabled=false
+            role=AXMenuItem subrole= title=Arrange desc= value= enabled=false
+            role=AXMenuItem subrole= title=Left & Right desc= value= enabled=false
+            role=AXMenuItem subrole= title=Left & Quarters desc= value= enabled=false
+            role=AXMenuItem subrole= title=Right & Left desc= value= enabled=false
+            role=AXMenuItem subrole= title=Right & Quarters desc= value= enabled=false
+            role=AXMenuItem subrole= title=Top & Bottom desc= value= enabled=false
+            role=AXMenuItem subrole= title=Top & Quarters desc= value= enabled=false
+            role=AXMenuItem subrole= title=Bottom & Top desc= value= enabled=false
+            role=AXMenuItem subrole= title=Bottom & Quarters desc= value= enabled=false
+            role=AXMenuItem subrole= title=Quarters desc= value= enabled=false
+            role=AXMenuItem subrole= title= desc= value= enabled=false
+            role=AXMenuItem subrole= title=Return to Previous Size desc= value= enabled=false
+        role=AXMenuItem subrole= title=Full Screen Tile desc= value= enabled=false
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title= desc= value= enabled=true
+        role=AXMenuItem subrole= title=Software Update desc= value= enabled=true
+        role=AXMenuItem subrole= title=Watt? Update desc= value= enabled=true
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Bring All to Front desc= value= enabled=true
+        role=AXMenuItem subrole= title=Arrange in Front desc= value= enabled=true
+        role=AXMenuItem subrole= title=Remove Window from Set desc= value= enabled=false
+        role=AXMenuItem subrole= title= desc= value= enabled=false
+        role=AXMenuItem subrole= title=Watt? Settings desc= value= enabled=true
+    role=AXMenuBarItem subrole= title=Help desc= value= enabled=true
+      role=AXMenu subrole= title= desc= value= enabled=true
+        role=AXMenuItem subrole= title=Watt? Help desc= value= enabled=true
+  role=AXMenuBar subrole= title= desc= value= enabled=true
+    role=AXMenuBarItem subrole=AXMenuExtra title=Watt?, power, No reading yet, menu extra. desc= value= enabled=true

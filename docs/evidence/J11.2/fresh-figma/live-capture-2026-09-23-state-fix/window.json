@@ -1,0 +1,110 @@
+{
+  "AXSettingsContent" : [
+    "Watt? Settings",
+    "Menu Bar",
+    "Show",
+    "Delta",
+    "Show symbol",
+    "Precision",
+    "42.1 W",
+    "Components",
+    "In Components mode. Two fit; more crowd the menu bar.",
+    "Components",
+    "CPU, GPU",
+    "Menu bar full? Choose Icon and Watt? stays put.",
+    "Readings",
+    "Update",
+    "Faster uses a little more energy.",
+    "Update",
+    "Every 2 seconds",
+    "Smooth readings",
+    "On — averages the last 5 seconds, so the number doesn’t jump.",
+    "Component Readings",
+    "Status",
+    "Reading CPU, GPU, display and the rest.",
+    "On",
+    "Helper",
+    "Reads power sensors only. No network, nothing leaves this Mac.",
+    "Remove…",
+    "Notifications",
+    "Charger can’t keep up",
+    "When your Mac draws more than the charger gives for 5 minutes.",
+    "Fully charged",
+    "General",
+    "Open at login",
+    "Check for updates automatically",
+    "Uninstall Watt?",
+    "Removes the helper and your settings, then moves Watt? to the Trash.",
+    "Uninstall…",
+    "Version",
+    "1.0 (1)",
+    "Watt? Settings"
+  ],
+  "AXSettingsFrame" : {
+    "height" : 870,
+    "width" : 580,
+    "x" : 610,
+    "y" : 155
+  },
+  "AXTrusted" : true,
+  "AXWindowCount" : 1,
+  "captureAPI" : "screencapture -l; AX-content\/geometry-verified app-owned native Settings window only",
+  "captures" : [
+    "native-settings-20698.png"
+  ],
+  "comparableCapture" : false,
+  "fixture" : "J11.2\/base",
+  "formNode" : "36:5197",
+  "liveInteractionVerified" : false,
+  "nativeCapture" : "native-settings-20698.png",
+  "node" : "36:5186",
+  "pixel_diff" : null,
+  "processIdentifier" : 1312,
+  "reason" : "Captured verified app-owned native Settings window; visual comparison and live keyboard\/VoiceOver review remain pending",
+  "score" : null,
+  "screenCapturePreauthorized" : true,
+  "status" : "captured-awaiting-review",
+  "timestampUTC" : "2026-09-23T11:50:30Z",
+  "verifiedSettingsWindows" : [
+    {
+      "kCGWindowAlpha" : 1,
+      "kCGWindowBounds" : {
+        "Height" : 870,
+        "Width" : 580,
+        "X" : 610,
+        "Y" : 155
+      },
+      "kCGWindowIsOnscreen" : true,
+      "kCGWindowLayer" : 0,
+      "kCGWindowMemoryUsage" : 2432,
+      "kCGWindowName" : "Watt? Settings",
+      "kCGWindowNumber" : 20698,
+      "kCGWindowOwnerName" : "Watt?",
+      "kCGWindowOwnerPID" : 1312,
+      "kCGWindowSharingState" : 1,
+      "kCGWindowStoreType" : 1
+    }
+  ],
+  "visualPass" : false,
+  "windowNode" : "36:5188",
+  "windows" : [
+    {
+      "kCGWindowAlpha" : 1,
+      "kCGWindowBounds" : {
+        "Height" : 870,
+        "Width" : 580,
+        "X" : 610,
+        "Y" : 155
+      },
+      "kCGWindowIsOnscreen" : true,
+      "kCGWindowLayer" : 0,
+      "kCGWindowMemoryUsage" : 2432,
+      "kCGWindowName" : "Watt? Settings",
+      "kCGWindowNumber" : 20698,
+      "kCGWindowOwnerName" : "Watt?",
+      "kCGWindowOwnerPID" : 1312,
+      "kCGWindowSharingState" : 1,
+      "kCGWindowStoreType" : 1
+    }
+  ]
+}

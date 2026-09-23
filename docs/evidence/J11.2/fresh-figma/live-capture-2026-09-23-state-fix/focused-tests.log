@@ -1,0 +1,65 @@
+Building for debugging...
+[1 / 4]
+[2 / 5] Watt-product
+[3 / 6] Watt-product
+[5 / 9] Watt
+[6 / 10] Watt
+[11 / 16] Watt-product
+[21 / 26] Watt-product
+/private/tmp/watt-g079-j112-fix/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+187 | 
+188 |     static let title = "Pick one number for the menu bar"
+189 |     static let message = "Change it any time. Right-click Watt? or open Settings."
+    |                `- note: static property declared here
+190 | 
+191 |     enum Variant: Equatable {
+    :
+198 | 
+199 |         var message: String {
+200 |             self == .noBattery ? "No battery here, so it’s Draw or Components." : ChooseMenuReadingView.message
+    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+201 |         }
+202 |     }
+[23 / 27] Watt-product
+[26 / 30] Watt
+[36 / 40] Watt
+/private/tmp/watt-g079-j112-fix/Features/Onboarding/Views/OnboardingFlowView.swift:200:107: warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+187 | 
+188 |     static let title = "Pick one number for the menu bar"
+189 |     static let message = "Change it any time. Right-click Watt? or open Settings."
+    |                `- note: static property declared here
+190 | 
+191 |     enum Variant: Equatable {
+    :
+198 | 
+199 |         var message: String {
+200 |             self == .noBattery ? "No battery here, so it’s Draw or Components." : ChooseMenuReadingView.message
+    |                                                                                                         `- warning: main actor-isolated static property 'message' can not be referenced from a nonisolated context
+201 |         }
+202 |     }
+[39 / 42] WattTests-product
+[45 / 48] WattTests-product
+[47 / 48] WattTests-product
+[51 / 51] WattTests-product
+Build complete! (9.12 sec.)
+Test Suite 'Selected tests' started at 2026-09-23 21:52:44.857.
+Test Suite 'WattTests.xctest' started at 2026-09-23 21:52:44.858.
+Test Suite 'J112SettingsTests' started at 2026-09-23 21:52:44.858.
+Test Case '-[WattTests.J112SettingsTests testDestructiveConfirmationIsNativeAndNeverDefault]' started.
+Test Case '-[WattTests.J112SettingsTests testDestructiveConfirmationIsNativeAndNeverDefault]' passed (0.001 seconds).
+Test Case '-[WattTests.J112SettingsTests testFixtureValuesMatchEveryDisplayedControl]' started.
+Test Case '-[WattTests.J112SettingsTests testFixtureValuesMatchEveryDisplayedControl]' passed (0.001 seconds).
+Test Case '-[WattTests.J112SettingsTests testNativeRowsExposeExactLabelsValuesAndHelpText]' started.
+Test Case '-[WattTests.J112SettingsTests testNativeRowsExposeExactLabelsValuesAndHelpText]' passed (0.006 seconds).
+Test Case '-[WattTests.J112SettingsTests testPickerToggleAndAccessibilitySemanticsStayNative]' started.
+Test Case '-[WattTests.J112SettingsTests testPickerToggleAndAccessibilitySemanticsStayNative]' passed (0.007 seconds).
+Test Case '-[WattTests.J112SettingsTests testRegistryAndLaunchContractAreExactBaseOnly]' started.
+Test Case '-[WattTests.J112SettingsTests testRegistryAndLaunchContractAreExactBaseOnly]' passed (0.002 seconds).
+Test Case '-[WattTests.J112SettingsTests testSettingsSceneUsesNativeCloseAndNonResizableContentSize]' started.
+Test Case '-[WattTests.J112SettingsTests testSettingsSceneUsesNativeCloseAndNonResizableContentSize]' passed (0.001 seconds).
+Test Suite 'J112SettingsTests' passed at 2026-09-23 21:52:44.876.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.017 (0.018) seconds
+Test Suite 'WattTests.xctest' passed at 2026-09-23 21:52:44.876.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.017 (0.018) seconds
+Test Suite 'Selected tests' passed at 2026-09-23 21:52:44.876.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.017 (0.019) seconds

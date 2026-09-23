@@ -1,0 +1,20 @@
+{
+  "score": null,
+  "verdict": "blocked",
+  "category_match": true,
+  "differences": [
+    "Native grouped Form vertical rhythm is materially taller than the Figma reference; the lower General rows are below the visible viewport even though the window bounds match.",
+    "System-owned traffic-light and accent rendering differs on this host; it must not be painted or force-tinted to manufacture parity.",
+    "No calibrated pixel diff was run because the native Form layout still requires an approved visual correction and the native-control boundary forbids replacing it with painted rows."
+  ],
+  "suggestions": [
+    "Calibrate the native Settings Form against the Figma content crop without overriding native control metrics.",
+    "Repeat the AX-content/geometry capture and visual verdict after the layout correction.",
+    "Keep traffic lights, Picker arrows, Switches, typography and accent under AppKit/SwiftUI system ownership."
+  ],
+  "reasoning": "The PID-owned native Settings window, exact strings, On/Remove helper state and 580x870 bounds are verified. Visual acceptance is not met because the captured native Form does not yet fit the Figma content rhythm; no score is fabricated.",
+  "reference": "../reference-2026-09-23.png",
+  "nativeCapture": "native-settings-20698.png",
+  "visualPass": false,
+  "pixel_diff": null
+}

@@ -28,7 +28,9 @@ enum WattSpacing {
     static let settingsExcerptWidth: CGFloat = 520
     static let settingsExcerptHeight: CGFloat = 256
     static let settingsWidth: CGFloat = 580
-    static let settingsContentHeight: CGFloat = 799
+    // The Figma form is 799pt inside a 20pt top/bottom content inset. The
+    // Settings scene sizes its native window from the full 838pt content area.
+    static let settingsContentHeight: CGFloat = 838
     static let onboardingWidth: CGFloat = 480
     static let formRowHeight: CGFloat = 42
     static let buttonHeight: CGFloat = 24

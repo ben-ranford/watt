@@ -73,3 +73,25 @@ pixel comparison nor native Settings visual acceptance is claimed.
 - `J11.2/base` was launched, `Settings…` was activated through AX, and a PID-owned native Settings window appeared. Its measured 580 × 831 geometry and live Off/Turn On state did not match the 580 × 870 On/Remove Figma reference; strict capture therefore failed closed.
 - A diagnostic native PNG is retained but no visual-pass, pixel-parity, keyboard or VoiceOver claim is made. The mismatch is now a concrete follow-up rather than an implicit success.
 - The fixture was reaped; the normal Desktop app remained running.
+
+### State and native-window correction — 2026-09-23
+
+- The J11.2 fixture now prepares its isolated connected helper during app
+  composition, before the MenuBarExtra bridge is materialised. This avoids a
+  startup race where the Settings scene could refresh against the production
+  nil service. The helper row also retains its local-only privacy subtitle in
+  the connected state, matching the Figma hierarchy and AX content.
+- The native Settings content token now accounts for the Figma form's native
+  inset: 838 points of scene content produces the exact 580 × 870 native
+  window, without painting or resizing native controls.
+- The fresh PID-owned capture is retained under
+  `fresh-figma/live-capture-2026-09-23-state-fix/`. AXPress returned 0, exact
+  J11.2 strings were present, `Status: On` and `Helper: Remove…` were observed,
+  and the strict geometry/content capture gate returned
+  `captured-awaiting-review`. Visual Ralph remains intentionally false: the
+  PNG is evidence for the next visual comparison, not pixel-parity or
+  keyboard/VoiceOver acceptance.
+- Fresh validation on this correction: `xcrun swift test --filter
+  J112SettingsTests` passed 6/6 and an Xcode Debug app build passed. Release
+  build-for-testing and production/helper approval remain outside this
+  correction's claim.

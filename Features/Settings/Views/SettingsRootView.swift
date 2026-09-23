@@ -335,7 +335,7 @@ struct SettingsHelperRows: View {
                 }
             } label: {
                 Text(Self.helperTitle)
-                if !setup.wasRemoved && setup.state != .requiresApproval && !setup.helperOn { Text(Self.privacy) }
+                if !setup.wasRemoved && setup.state != .requiresApproval { Text(Self.privacy) }
             }
             if setup.isLoading { ProgressView().accessibilityLabel("Checking helper") }
             if let message = setup.message { Text(message).accessibilityIdentifier("settings.helper.result") }
