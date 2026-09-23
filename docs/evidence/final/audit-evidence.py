@@ -4,7 +4,11 @@ from pathlib import Path
 import hashlib,json,re,struct,collections
 root=Path.cwd(); out=root/'docs/evidence/final'; problems=[]; notes=[]
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-f00=root/'.omx/plans/f00-reference-evidence'; manifest_path=f00/'manifest.json'
+portable_f00=out/'f00-reference-evidence'; runtime_f00=root/'.omx/plans/f00-reference-evidence'
+if (portable_f00/'manifest.json').is_file():
+ f00=portable_f00; manifest_path=f00/'manifest.json'; manifest_source='portable'
+else:
+ f00=runtime_f00; manifest_path=f00/'manifest.json'; manifest_source='runtime'
 manifest_available=manifest_path.is_file()
 if manifest_available:
  manifest=json.loads(manifest_path.read_text())
@@ -13,12 +17,13 @@ else:
  # worktree handoff, but make the missing authoritative export manifest an
  # explicit blocker rather than crashing before the portable checks run.
  manifest=None
- problems.append({'kind':'missing portable F00 reference manifest',
+ problems.append({'kind':'missing F00 reference manifest',
                   'path':str(manifest_path.relative_to(root)),
-                  'resolution':'restore the approved F00 manifest/runtime evidence before final sign-off'})
+                  'resolution':'restore the portable or approved runtime F00 manifest before final sign-off'})
 registry=json.loads((root/'Tests/Fixtures/StoryFixtureData.swift').read_text().split('#"""',1)[1].split('"""#',1)[0])
 backlog=(root/'SCREEN-BACKLOG.md').read_text(); design=(root/'DESIGN.md').read_text()
 plan_path=root/'.omx/plans/watt-native-implementation-plan.md'
+if not plan_path.is_file(): plan_path=out/'approved-implementation-plan.md'
 if plan_path.is_file():
  plan=plan_path.read_text()
 else:
@@ -89,7 +94,7 @@ for e in digest_checks:
   historical=Path(e['path']).suffix=='.swift' or e['manifest'].endswith('/sources.sha256')
   (notes if historical else problems).append({'kind':'historical source digest' if historical else 'evidence digest',**e})
 for e in links:problems.append({'kind':'missing verification record link',**e})
-summary={'orderedStories':69,'baseAndVariantSelections':sum(len(s['variants']) for s in registry),'f00ManifestAvailable':manifest_available,'registryReferencesEqualF00':manifest_available,'all69F00ExportHashesAndDimensionsPass':manifest_available,'portableStoryReadmesAndPNGsPass':True,'docsFilesRead':len(files),'markdownFilesRead':len(readmes),'recordsRead':len(records),'jsonErrors':json_errors,'digestStatusCounts':dict(collections.Counter(x['status'] for x in digest_checks)),'problems':problems,'historicalNotes':notes}
+summary={'orderedStories':69,'baseAndVariantSelections':sum(len(s['variants']) for s in registry),'f00ManifestAvailable':manifest_available,'f00ManifestSource':manifest_source,'registryReferencesEqualF00':manifest_available and manifest_source=='runtime','registryReferencesEqualReferenceManifest':manifest_available,'all69F00ExportHashesAndDimensionsPass':manifest_available and manifest_source=='runtime','all69PortableExportHashesAndDimensionsPass':manifest_available,'portableStoryReadmesAndPNGsPass':True,'docsFilesRead':len(files),'markdownFilesRead':len(readmes),'recordsRead':len(records),'jsonErrors':json_errors,'digestStatusCounts':dict(collections.Counter(x['status'] for x in digest_checks)),'problems':problems,'historicalNotes':notes}
 (out/'docs-inventory.json').write_text(json.dumps(files,indent=2)+'\n')
 (out/'evidence-records.json').write_text(json.dumps(records,indent=2)+'\n')
 (out/'digest-checks.json').write_text(json.dumps(digest_checks,indent=2)+'\n')

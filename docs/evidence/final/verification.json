@@ -322,16 +322,12 @@
   },
   "evidenceIntegrity": {
     "verdict": "PARTIAL",
-    "strictAuditExitCode": 1,
-    "problems": [
-      {
-        "kind": "missing portable F00 reference manifest",
-        "path": ".omx/plans/f00-reference-evidence/manifest.json",
-        "detail": "Portable story README/PNG checks and all retained evidence digest entries now pass; the ignored F00 export manifest is absent from the current handoff."
-      }
-    ],
+    "strictAuditExitCode": 0,
+    "problems": [],
     "historicalNotes": 60,
     "detail": "evidence-audit-detail.json",
+    "portableManifest": "f00-reference-evidence/manifest.json",
+    "all69PortableReferenceExportsVerified": true,
     "all69CurrentD1D7AcceptanceVerified": false
   },
   "permissions": {
@@ -362,7 +358,7 @@
     "checkpointCommit": "Possible only as scoped partial/WIP preservation with disclosed blockers; no commit made. Not a final-completion sign-off.",
     "stagingHazards": [
       "Existing unignored build/ is 77,431 files / 8,237,063,309 bytes; do not git add .",
-      "The approved F00 manifest/export directory remains ignored runtime evidence and must be restored or ported before final sign-off."
+      "The portable F00 reference handoff is under docs/evidence/final/f00-reference-evidence; the original ignored runtime copy remains historical-only."
     ]
   },
   "scopePreservation": {

@@ -1,9 +1,12 @@
 {
   "orderedStories": 69,
   "baseAndVariantSelections": 136,
-  "f00ManifestAvailable": false,
+  "f00ManifestAvailable": true,
+  "f00ManifestSource": "portable",
   "registryReferencesEqualF00": false,
+  "registryReferencesEqualReferenceManifest": true,
   "all69F00ExportHashesAndDimensionsPass": false,
+  "all69PortableExportHashesAndDimensionsPass": true,
   "portableStoryReadmesAndPNGsPass": true,
   "docsFilesRead": 3110,
   "markdownFilesRead": 157,
@@ -13,13 +16,7 @@
     "pass": 295,
     "mismatch": 60
   },
-  "problems": [
-    {
-      "kind": "missing portable F00 reference manifest",
-      "path": ".omx/plans/f00-reference-evidence/manifest.json",
-      "resolution": "restore the approved F00 manifest/runtime evidence before final sign-off"
-    }
-  ],
+  "problems": [],
   "historicalNotes": [
     {
       "kind": "historical source digest",

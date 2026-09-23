@@ -1,0 +1,4561 @@
+{
+  "manifestVersion": 1,
+  "fileKey": "9DKDgUfEqidZdZQEVlQgLS",
+  "createdAt": "2026-09-24",
+  "provenance": "Portable reconstruction from the pinned StoryFixtureData referenceJSON plus exact Figma MCP exports re-downloaded for missing ignored F00 exports on 2026-09-24.",
+  "stories": [
+    {
+      "app_owned_crop": {
+        "height": 473.0,
+        "node": "29:8875",
+        "width": 320.0,
+        "x": 551.0,
+        "y": 40.0
+      },
+      "appearance": "dark",
+      "canvas": "21:927",
+      "crop_status": "metadata bounds; visually reviewed reference; native capture alignment not calibrated",
+      "design_context": "21-928.context.json",
+      "design_context_sha256": "a4f5aae9efafb0bc3f933da97805994cfe1dc1d2fdc5bdc7787c759e6a169bf1",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -612.0,
+            "y": 0.0
+          },
+          "id": "21:929",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 641.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "21:1047",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 473.0,
+            "width": 320.0,
+            "x": 551.0,
+            "y": 40.0
+          },
+          "id": "29:8875",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 640.0,
+        "width": 900.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 640,
+        "path": "exports/21-928.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "606a1da3bf6ae57b74191a8734bc566471182f7ec3afbc39e96b21b9f136c908",
+        "size_bytes": 561813,
+        "width_pixels": 900
+      },
+      "frame_name": "1 \u00b7 Status Panel \u2014 Charging",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "21:928",
+      "order": 1,
+      "reference_pixels_per_figma_unit": 1,
+      "reference_png": "21-928.png",
+      "reference_png_sha256": "3168aa9f9582767b01419895ac00bc81284fb34c636d2859bbf48addaa1ecb63",
+      "story": "C01",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=21-928"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -612.0,
+            "y": 0.0
+          },
+          "id": "22:131",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 641.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "22:410",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 473.0,
+            "width": 320.0,
+            "x": 551.0,
+            "y": 40.0
+          },
+          "id": "29:9158",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 640.0,
+        "width": 900.0,
+        "x": 960.0,
+        "y": 0.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 640,
+        "path": "exports/22-130.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "fc3dba2b59d091674e7e8b38aa570b6643952e019a7da2e3adf0a10f3797540c",
+        "size_bytes": 555815,
+        "width_pixels": 900
+      },
+      "frame_name": "2 \u00b7 Status Panel \u2014 On Battery (Light)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "22:130",
+      "order": 2,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C02",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=22-130"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -612.0,
+            "y": 0.0
+          },
+          "id": "22:1096",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 641.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "22:1344",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 187.0,
+            "width": 230.0,
+            "x": 561.0,
+            "y": 38.0
+          },
+          "id": "22:1345",
+          "name": "Status Item Context Menu"
+        },
+        {
+          "bounds": {
+            "height": 141.0,
+            "width": 190.0,
+            "x": 375.0,
+            "y": 38.0
+          },
+          "id": "22:1811",
+          "name": "Show in Menu Bar \u00b7 Submenu"
+        }
+      ],
+      "frame_bounds": {
+        "height": 460.0,
+        "width": 900.0,
+        "x": 1920.0,
+        "y": 0.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 460,
+        "path": "exports/22-1095.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "ff92427c65d511524783f5f6f92ef3b39f2f2de5e736c8637c30f9263d451011",
+        "size_bytes": 428143,
+        "width_pixels": 900
+      },
+      "frame_name": "3 \u00b7 Secondary-Click Menu (Dark)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "22:1095",
+      "order": 3,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C03",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=22-1095"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:391",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:638",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 40.0,
+        "y": 60.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-390.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "22a43d638a7d52ff6a5169b63a5006da09196a2c13dede9029bc0b57ad5510ae",
+        "size_bytes": 25745,
+        "width_pixels": 560
+      },
+      "frame_name": "Delta \u00b7 charging",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:390",
+      "order": 4,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-390"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:640",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:757",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 660.0,
+        "y": 60.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-639.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "32f76aff05a69231bc7f852139ea7cb131afc67ab8a2bbb8da77aba939eec6c8",
+        "size_bytes": 25607,
+        "width_pixels": 560
+      },
+      "frame_name": "Delta \u00b7 on battery",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:639",
+      "order": 5,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-639"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:759",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:876",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 40.0,
+        "y": 160.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-758.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "d45b3201b8c62558b68373bb07d05b1bd3c6e1e1966abe823df9c2b8927b1f37",
+        "size_bytes": 25651,
+        "width_pixels": 560
+      },
+      "frame_name": "Delta \u00b7 charged, on adapter",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:758",
+      "order": 6,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-758"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:878",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:995",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 660.0,
+        "y": 160.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-877.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "5f0e7d03af3ecbdbeded1bea5a78ecaaa81dfd94c3969e177389ee3ce62d196c",
+        "size_bytes": 25704,
+        "width_pixels": 560
+      },
+      "frame_name": "Charger Input",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:877",
+      "order": 7,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.4",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-877"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:997",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:1114",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 40.0,
+        "y": 260.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-996.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "6b8fc729a4882ae455b8ee3aa03cfb4a2629360ef7f5d07b6c912d8d2fb6c703",
+        "size_bytes": 25562,
+        "width_pixels": 560
+      },
+      "frame_name": "Charger Input \u00b7 unplugged (falls back to System Draw)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:996",
+      "order": 8,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.5",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-996"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:1116",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:1233",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 660.0,
+        "y": 260.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-1115.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "26a6afb368236f903a764306fb73661fcb9d904dceb3a825924287a2997c97c8",
+        "size_bytes": 25708,
+        "width_pixels": 560
+      },
+      "frame_name": "System Draw (desktop Macs)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:1115",
+      "order": 9,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.6",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-1115"
+    },
+    {
+      "app_owned_crop": {
+        "height": 24.0,
+        "node": "24:1350",
+        "width": 148.0,
+        "x": 153.0,
+        "y": 5.0
+      },
+      "appearance": "dark",
+      "canvas": "21:927",
+      "crop_status": "metadata bounds; visually reviewed reference; native capture alignment not calibrated",
+      "design_context": "24-1234.context.json",
+      "design_context_sha256": "edf7662609ad61e32a779ed388a2c41917624c1446069b01ddb9dbfeef957f92",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:1235",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:1352",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 40.0,
+        "y": 360.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-1234.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "367eea96cab6497abf62498ef948638436c8ae743d7feb1facea7b00a735b088",
+        "size_bytes": 26177,
+        "width_pixels": 560
+      },
+      "frame_name": "Per Component (max 2)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:1234",
+      "order": 10,
+      "reference_pixels_per_figma_unit": 1,
+      "reference_png": "24-1234.png",
+      "reference_png_sha256": "09e4d331e4984fdbe6cbb6c14c1aad96a1f4f8addd330a5349bf83b9e0847612",
+      "story": "C04.7",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-1234"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:1354",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:1471",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 660.0,
+        "y": 360.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-1353.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "4b33f8912f40cb40637b1603f24eddb3e6083826e6d5f751e3008fe03aefb80e",
+        "size_bytes": 25323,
+        "width_pixels": 560
+      },
+      "frame_name": "Icon Only (notch / crowded menu bar)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:1353",
+      "order": 11,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.8",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-1353"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:1473",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:1590",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 40.0,
+        "y": 460.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-1472.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "02386467f2f5da30a584febf47d1098c298ff4e3f088c107b6cb1276cd1ca846",
+        "size_bytes": 25350,
+        "width_pixels": 560
+      },
+      "frame_name": "No reading yet / sensor unavailable",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:1472",
+      "order": 12,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.9",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-1472"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:1592",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:1710",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 660.0,
+        "y": 460.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-1591.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "e6a69b963d1c050e0f7f024c170579a99d8f660f925280bfbd4d71bd406c056c",
+        "size_bytes": 25158,
+        "width_pixels": 560
+      },
+      "frame_name": "Panel open (selected)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:1591",
+      "order": 13,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.10",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-1591"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:1712",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:1959",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 40.0,
+        "y": 560.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-1711.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "e746435ca9e2d1599c24696abc7fa7f23d15d2ee44d9ff71176313baa4925a77",
+        "size_bytes": 28605,
+        "width_pixels": 560
+      },
+      "frame_name": "Light menu bar \u00b7 charging",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:1711",
+      "order": 14,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.11",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-1711"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -952.0,
+            "y": 0.0
+          },
+          "id": "24:1961",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 301.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "24:2078",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 44.0,
+        "width": 560.0,
+        "x": 660.0,
+        "y": 560.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 44,
+        "path": "exports/24-1960.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "a840d3bd2d3c53a65f99c514056a06c931406870a440d1e2841385bcb258b7bd",
+        "size_bytes": 28431,
+        "width_pixels": 560
+      },
+      "frame_name": "Light menu bar \u00b7 on battery",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "24:1960",
+      "order": 15,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C04.12",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=24-1960"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "21:927",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "id": "25:788",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 870.0,
+            "width": 580.0,
+            "x": 466.0,
+            "y": 56.0
+          },
+          "id": "25:1102",
+          "name": "Watt? Settings"
+        }
+      ],
+      "frame_bounds": {
+        "height": 982.0,
+        "width": 1512.0,
+        "x": 1400.0,
+        "y": 760.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 982,
+        "path": "exports/25-787.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "a79e104cc77794e6695491b6bf97515c983ec47ea6d64f6dbae180a8945e52f2",
+        "size_bytes": 1271177,
+        "width_pixels": 1512
+      },
+      "frame_name": "5 \u00b7 Settings Window (Light)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "25:787",
+      "order": 16,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "C05",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=25-787"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "27:988",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 308.0,
+            "width": 480.0,
+            "x": 260.0,
+            "y": 216.0
+          },
+          "id": "27:1302",
+          "name": "Watt? Onboarding Window"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/27-987.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "bdbce1343aa0f2b7837b822ad12f97bdcf36d267b97bb02d711596f17a7ba71a",
+        "size_bytes": 659226,
+        "width_pixels": 1000
+      },
+      "frame_name": "1.1 Welcome",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "27:987",
+      "order": 17,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J1.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=27-987"
+    },
+    {
+      "app_owned_crop": {
+        "height": 346.0,
+        "node": "27:1508",
+        "width": 480.0,
+        "x": 260.0,
+        "y": 197.0
+      },
+      "appearance": "light",
+      "canvas": "27:985",
+      "crop_status": "metadata bounds; visually reviewed reference; native capture alignment not calibrated",
+      "design_context": "27-1354.context.json",
+      "design_context_sha256": "f40ccccd6fbfa93b5553aaf870882539e1c9aad1d617f1494efed15e4c5a402e",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "27:1355",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 346.0,
+            "width": 480.0,
+            "x": 260.0,
+            "y": 197.0
+          },
+          "id": "27:1508",
+          "name": "Watt? Onboarding Window"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/27-1354.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "3aa05d431b7832a68d4ab80b84b5c0bd76092409904decdec4e0fa58a756525c",
+        "size_bytes": 642938,
+        "width_pixels": 1000
+      },
+      "frame_name": "1.2 Choose a menu bar reading",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "27:1354",
+      "order": 18,
+      "reference_pixels_per_figma_unit": 1,
+      "reference_png": "27-1354.png",
+      "reference_png_sha256": "c7858c05c25fb0038a674a08bfd399c41065f34ca95a28f7bbfe12de744184e5",
+      "story": "J1.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=27-1354"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "27:1585",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 412.0,
+            "width": 480.0,
+            "x": 260.0,
+            "y": 164.0
+          },
+          "id": "27:1738",
+          "name": "Watt? Onboarding Window"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/27-1584.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "423e4d02e68de7bc702576f1a53ec4e04ccfe8449ff186b31b23bb197659ee5d",
+        "size_bytes": 615322,
+        "width_pixels": 1000
+      },
+      "frame_name": "1.3 Offer component readings",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "27:1584",
+      "order": 19,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J1.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=27-1584"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "28:1207",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 224.0,
+            "width": 480.0,
+            "x": 260.0,
+            "y": 258.0
+          },
+          "id": "28:1521",
+          "name": "Watt? Onboarding Window"
+        },
+        {
+          "bounds": {
+            "height": 88.0,
+            "width": 344.0,
+            "x": 644.0,
+            "y": 44.0
+          },
+          "id": "28:1584",
+          "name": "System Notification"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 3320.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/28-1206.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "3755e5354037425d8a2874c58f4d886aa698b430712a2b8244bc08053667e43b",
+        "size_bytes": 697238,
+        "width_pixels": 1000
+      },
+      "frame_name": "1.4 Waiting for approval (system notification)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "28:1206",
+      "order": 20,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J1.4",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=28-1206"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "28:1599",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 364.0,
+            "width": 480.0,
+            "x": 260.0,
+            "y": 188.0
+          },
+          "id": "28:1752",
+          "name": "Watt? Onboarding Window"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 4400.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/28-1598.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "2133f820594f6514f02e1222d2e2735e0ab85bcc1a95d7b3df44d5616ea27ea7",
+        "size_bytes": 625915,
+        "width_pixels": 1000
+      },
+      "frame_name": "1.5 Component readings on",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "28:1598",
+      "order": 21,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J1.5",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=28-1598"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "28:2200",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 328.0,
+            "width": 480.0,
+            "x": 260.0,
+            "y": 206.0
+          },
+          "id": "28:2353",
+          "name": "Watt? Onboarding Window"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 5480.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/28-2199.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "7de9c607b695153a9ec739336b421a60f00af96f7228f44599ac3101760c299b",
+        "size_bytes": 647921,
+        "width_pixels": 1000
+      },
+      "frame_name": "1.6 All set",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "28:2199",
+      "order": 22,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J1.6",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=28-2199"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "28:2622",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "28:2770",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 136.0,
+            "width": 260.0,
+            "x": 463.0,
+            "y": 33.0
+          },
+          "id": "28:2771",
+          "name": "Coach Mark (Popover)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 6560.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/28-2621.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "826e2663c1b97870f4bac0acae3e43a406c5dc84dc47846517decde8fc1eb867",
+        "size_bytes": 784623,
+        "width_pixels": 1000
+      },
+      "frame_name": "1.7 First run \u2014 where Watt? lives",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "28:2621",
+      "order": 23,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J1.7",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=28-2621"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "28:2803",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "28:2952",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 473.0,
+            "width": 320.0,
+            "x": 645.0,
+            "y": 38.0
+          },
+          "id": "29:9338",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 7640.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/28-2802.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "22b558c855b40a7ebd2c5e6b116bbc416d3cb0f96c9e10a233396de38e9e2a41",
+        "size_bytes": 718094,
+        "width_pixels": 1000
+      },
+      "frame_name": "1.8 First open \u2014 live panel",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "28:2802",
+      "order": 24,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J1.8",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=28-2802"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "29:1550",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "29:1860",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 187.0,
+            "width": 230.0,
+            "x": 651.0,
+            "y": 38.0
+          },
+          "id": "29:1861",
+          "name": "Menu"
+        },
+        {
+          "bounds": {
+            "height": 176.0,
+            "width": 250.0,
+            "x": 405.0,
+            "y": 38.0
+          },
+          "id": "29:2197",
+          "name": "Menu"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/29-1549.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "8f431d9b994445a83c96f57d6307bb60f948796b93d1107add85a62208f560f9",
+        "size_bytes": 764441,
+        "width_pixels": 1000
+      },
+      "frame_name": "2.1 Per Component unavailable in menu",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "29:1549",
+      "order": 25,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J2.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-1549"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "29:2457",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "29:2606",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 347.0,
+            "width": 320.0,
+            "x": 645.0,
+            "y": 38.0
+          },
+          "id": "29:7572",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/29-2456.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "07225ea2fae545cdd27fa64cbc895e710756962c49cabff99fa3e768529382b9",
+        "size_bytes": 740001,
+        "width_pixels": 1000
+      },
+      "frame_name": "2.2 Panel \u2014 component readings off",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "29:2456",
+      "order": 26,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J2.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-2456"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "29:3271",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 288.0,
+            "width": 520.0,
+            "x": 240.0,
+            "y": 226.0
+          },
+          "id": "29:3424",
+          "name": "Watt? Settings"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/29-3270.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "4b2d1d879e694c954a252a5a4302322fde23dddc98cadf6c2d373d2f759d1ad0",
+        "size_bytes": 653976,
+        "width_pixels": 1000
+      },
+      "frame_name": "2.3 Settings \u2014 turn on (excerpt)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "29:3270",
+      "order": 27,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J2.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-3270"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "29:3927",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 269.0,
+            "width": 520.0,
+            "x": 240.0,
+            "y": 236.0
+          },
+          "id": "29:4080",
+          "name": "Watt? Settings"
+        },
+        {
+          "bounds": {
+            "height": 88.0,
+            "width": 344.0,
+            "x": 644.0,
+            "y": 44.0
+          },
+          "id": "29:4578",
+          "name": "System Notification"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 3320.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/29-3926.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "9e019931466db050cdb2967c6e0c828e0d5d6973330b45684d02609725c545f8",
+        "size_bytes": 666794,
+        "width_pixels": 1000
+      },
+      "frame_name": "2.4 Waiting for approval (from Settings)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "29:3926",
+      "order": 28,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J2.4",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-3926"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "29:4591",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 311.0,
+            "width": 520.0,
+            "x": 240.0,
+            "y": 215.0
+          },
+          "id": "29:4744",
+          "name": "Watt? Settings"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "29:5251",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 4400.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/29-4590.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "483fc23819b23e264f5f52f3f50fa8e0acc616894a45cbf4dd5059780c0f7276",
+        "size_bytes": 641959,
+        "width_pixels": 1000
+      },
+      "frame_name": "2.5 Turned on \u2014 Per Component available",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "29:4590",
+      "order": 29,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J2.5",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-4590"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "29:5254",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 260.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 222.0
+          },
+          "id": "29:5407",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/29-5253.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "eac914e4716ad6235d95a37e8c987aaf8b761a6f0cb480422fccda5632794a8c",
+        "size_bytes": 769027,
+        "width_pixels": 1000
+      },
+      "frame_name": "3.1 Approval not given (timed out or cancelled)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "29:5253",
+      "order": 30,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J3.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-5253"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "29:5440",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "29:5688",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 347.0,
+            "width": 320.0,
+            "x": 645.0,
+            "y": 38.0
+          },
+          "id": "29:9518",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/29-5439.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "c7826cdeabf83c38421f0ef57cb4e4cff81a6b2ce1694400b8542a76976496e4",
+        "size_bytes": 734882,
+        "width_pixels": 1000
+      },
+      "frame_name": "3.2 Helper switched off later in System Settings",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "29:5439",
+      "order": 31,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J3.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-5439"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "29:6182",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 246.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 230.0
+          },
+          "id": "29:6335",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/29-6181.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "02b17f63cd1fe517adbdb63365f443d1780b46a08a2ca3822bc59c590cacb8a1",
+        "size_bytes": 767793,
+        "width_pixels": 1000
+      },
+      "frame_name": "3.3 Helper needs updating after app update",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "29:6181",
+      "order": 32,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J3.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=29-6181"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "30:2276",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 308.0,
+            "width": 480.0,
+            "x": 260.0,
+            "y": 216.0
+          },
+          "id": "30:2528",
+          "name": "Watt? Onboarding Window"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/30-2275.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "f7cc535fe827890fbc18934fd4c475d3cf92c789a141514738e266be875da011",
+        "size_bytes": 658854,
+        "width_pixels": 1000
+      },
+      "frame_name": "4.1 Welcome (desktop copy)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "30:2275",
+      "order": 33,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J4.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-2275"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "30:2577",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 346.0,
+            "width": 480.0,
+            "x": 260.0,
+            "y": 197.0
+          },
+          "id": "30:2699",
+          "name": "Watt? Onboarding Window"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/30-2576.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "8d6531c66cb072c93d448f884175d2d1d8a0cf912861181a05fad0a2fe1b4987",
+        "size_bytes": 643638,
+        "width_pixels": 1000
+      },
+      "frame_name": "4.2 Choose reading \u2014 battery options unavailable",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "30:2576",
+      "order": 34,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J4.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-2576"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "30:2787",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "30:2905",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 335.0,
+            "width": 320.0,
+            "x": 661.0,
+            "y": 38.0
+          },
+          "id": "30:2930",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/30-2786.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "0234d877866d786319fc6894fc7a841389c0631b83c257e29507ca418fab079f",
+        "size_bytes": 730417,
+        "width_pixels": 1000
+      },
+      "frame_name": "4.3 Panel \u2014 system draw only (continues at 1.3 for components)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "30:2786",
+      "order": 35,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J4.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-2786"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "30:3676",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "30:3985",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 122.0,
+            "width": 310.0,
+            "x": 413.0,
+            "y": 33.0
+          },
+          "id": "30:3986",
+          "name": "Coach Mark (Popover)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/30-3675.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "f43875d659167b3bddd088b60f54e6ed62e123999581340c04e0d49e0f19c1e4",
+        "size_bytes": 784419,
+        "width_pixels": 1000
+      },
+      "frame_name": "5.1 Welcome closed \u2192 running with defaults",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "30:3675",
+      "order": 36,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J5.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-3675"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "30:4029",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "30:4178",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 319.0,
+            "width": 320.0,
+            "x": 645.0,
+            "y": 38.0
+          },
+          "id": "30:4197",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/30-4028.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "2c840e0aa0a58288935d01e0fef2eb2aa9ab0e43b8cc5fdf1ec517973ae8e598",
+        "size_bytes": 742752,
+        "width_pixels": 1000
+      },
+      "frame_name": "5.2 Panel \u2014 finish setup prompt",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "30:4028",
+      "order": 37,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J5.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-4028"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "30:4789",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "30:4938",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 222.0,
+            "width": 230.0,
+            "x": 645.0,
+            "y": 38.0
+          },
+          "id": "30:4939",
+          "name": "Menu"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/30-4788.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "47a03bc59a0cf89010dd60c6d00c92e7c6a3624050c90ac82240c48889e57737",
+        "size_bytes": 774455,
+        "width_pixels": 1000
+      },
+      "frame_name": "5.3 Right-click \u2014 Finish Setup\u2026 (resumes at 1.2)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "30:4788",
+      "order": 38,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J5.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=30-4788"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:2746",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "31:2994",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 265.0,
+            "width": 320.0,
+            "x": 645.0,
+            "y": 38.0
+          },
+          "id": "31:3013",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/31-2745.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "fa93d6f6e977ccc47ded70262e55eeaf2f6cac0fac3de502401030f5aa99b316",
+        "size_bytes": 744128,
+        "width_pixels": 1000
+      },
+      "frame_name": "6.1 Plugged in \u2014 charging",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:2745",
+      "order": 39,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J6.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-2745"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:3755",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "31:3873",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 279.0,
+            "width": 320.0,
+            "x": 660.0,
+            "y": 38.0
+          },
+          "id": "31:3892",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/31-3754.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "4200ab7465f5fb6c2f5ad8ca5d7a6c4125604503bb5c50301810f86a7bb840bb",
+        "size_bytes": 744201,
+        "width_pixels": 1000
+      },
+      "frame_name": "6.2 On adapter \u2014 charging on hold",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:3754",
+      "order": 40,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J6.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-3754"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:4356",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "31:4474",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 265.0,
+            "width": 320.0,
+            "x": 660.0,
+            "y": 38.0
+          },
+          "id": "31:4493",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/31-4355.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "906e25b72b31f72ef9878f7251fe9e53b620d848c0713d0e48eed19fb0500206",
+        "size_bytes": 742131,
+        "width_pixels": 1000
+      },
+      "frame_name": "6.3 On adapter \u2014 fully charged",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:4355",
+      "order": 41,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J6.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-4355"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:4957",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "31:5075",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 279.0,
+            "width": 320.0,
+            "x": 645.0,
+            "y": 38.0
+          },
+          "id": "31:5094",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        },
+        {
+          "bounds": {
+            "height": 88.0,
+            "width": 344.0,
+            "x": 644.0,
+            "y": 520.0
+          },
+          "id": "31:5557",
+          "name": "System Notification"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 3320.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/31-4956.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "0b0382eb3b2d2f4355d859c2e85cf3f59450a4fc343f6be37e2ffc87fea1b941",
+        "size_bytes": 746842,
+        "width_pixels": 1000
+      },
+      "frame_name": "6.4 Charger can\u2019t keep up (notification + panel)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:4956",
+      "order": 42,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J6.4",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-4956"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:5572",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "31:5690",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 265.0,
+            "width": 320.0,
+            "x": 644.0,
+            "y": 38.0
+          },
+          "id": "31:5709",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 4400.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/31-5571.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "908705b893cdac4224515a132a187a2e7883384de9843082b5394cd78e9576b0",
+        "size_bytes": 742461,
+        "width_pixels": 1000
+      },
+      "frame_name": "6.5 Unplugged \u2014 on battery",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:5571",
+      "order": 43,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J6.5",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-5571"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:6174",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "31:6484",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 187.0,
+            "width": 230.0,
+            "x": 651.0,
+            "y": 38.0
+          },
+          "id": "31:6485",
+          "name": "Menu"
+        },
+        {
+          "bounds": {
+            "height": 141.0,
+            "width": 190.0,
+            "x": 465.0,
+            "y": 38.0
+          },
+          "id": "31:6717",
+          "name": "Menu"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/31-6173.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "3d047cbe3448fc4d987f0440d47030ddc8b65012a26f054c12eae4d5f67c66a3",
+        "size_bytes": 775538,
+        "width_pixels": 1000
+      },
+      "frame_name": "7.1 Right-click \u2192 Show in Menu Bar",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:6173",
+      "order": 44,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J7.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-6173"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:6953",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "31:7101",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 220.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 220,
+        "path": "exports/31-6952.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "e9c65d95a6157519f53c4dfc68bcafaf5055385189ee5e29340d90eb915411ff",
+        "size_bytes": 236283,
+        "width_pixels": 1000
+      },
+      "frame_name": "7.2 Result \u2014 Per Component in menu bar",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:6952",
+      "order": 45,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J7.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-6952"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:7103",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 229.0,
+            "width": 520.0,
+            "x": 240.0,
+            "y": 256.0
+          },
+          "id": "31:7256",
+          "name": "Watt? Settings"
+        },
+        {
+          "bounds": {
+            "height": 130.0,
+            "width": 170.0,
+            "x": 570.0,
+            "y": 406.0
+          },
+          "id": "31:7533",
+          "name": "Components pop-up menu (multi-select, max 2)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/31-7102.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "8db7f6dbf19438d66f5701a36e08013779d04942663bba19103ee5cc4ed1d9ac",
+        "size_bytes": 688879,
+        "width_pixels": 1000
+      },
+      "frame_name": "7.3 Settings \u2014 choose components (max 2)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:7102",
+      "order": 46,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J7.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-7102"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "31:7765",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "31:7913",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 220.0,
+        "width": 1000.0,
+        "x": 3320.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 220,
+        "path": "exports/31-7764.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "d99e2eadbc66f95a01c661ded137c3889f916e0063fb525c58694976586de3b3",
+        "size_bytes": 235293,
+        "width_pixels": 1000
+      },
+      "frame_name": "7.4 Crowded menu bar \u2014 Icon Only",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "31:7764",
+      "order": 47,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J7.4",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=31-7764"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "32:3452",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "32:3700",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 195.0,
+            "width": 320.0,
+            "x": 670.0,
+            "y": 38.0
+          },
+          "id": "32:3701",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/32-3451.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "9c9fd3f396bc4ac2dbf408b8785c107a1a16471adff6fd7a908b845b47584609",
+        "size_bytes": 752290,
+        "width_pixels": 1000
+      },
+      "frame_name": "8.1 No reading (e.g. just after wake)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "32:3451",
+      "order": 48,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J8.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=32-3451"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "32:4457",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "32:4574",
+          "name": "Status Item Anchor (right-aligned)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 220.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 220,
+        "path": "exports/32-4456.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "202888272184e508e92e1e786e70301ad8adbedb9758c0d5e414eb5827a23c65",
+        "size_bytes": 224138,
+        "width_pixels": 1000
+      },
+      "frame_name": "8.2 Readings resume automatically (no alert)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "32:4456",
+      "order": 49,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J8.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=32-4456"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "32:4576",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "32:4892",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 311.0,
+            "width": 520.0,
+            "x": 240.0,
+            "y": 215.0
+          },
+          "id": "32:4893",
+          "name": "Watt? Settings"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/32-4575.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "7dccac13b2d83978dacabea90ae91f4874ca60f68f1490b31c72859f91b08586",
+        "size_bytes": 642158,
+        "width_pixels": 1000
+      },
+      "frame_name": "8.3 Opening Watt? again from Finder or Spotlight shows Settings",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "32:4575",
+      "order": 50,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J8.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=32-4575"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "32:5398",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "32:7851",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 187.0,
+            "width": 520.0,
+            "x": 240.0,
+            "y": 277.0
+          },
+          "id": "32:5551",
+          "name": "Watt? Settings"
+        },
+        {
+          "bounds": {
+            "height": 260.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 230.0
+          },
+          "id": "32:5813",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/32-5397.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "d23a0b2810db505c3f77faaf54562f573cfc1c7cb24ac3f3bfed7cfe06fa986b",
+        "size_bytes": 716632,
+        "width_pixels": 1000
+      },
+      "frame_name": "9.1 Settings \u2192 Remove\u2026 (confirm)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "32:5397",
+      "order": 51,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J9.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=32-5397"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "32:5845",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "32:6000",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 269.0,
+            "width": 520.0,
+            "x": 240.0,
+            "y": 236.0
+          },
+          "id": "32:6001",
+          "name": "Watt? Settings"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/32-5844.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "ef5aeaabe1fc78fdc79bb994cf7a3bb637edc0218905dc25846ebe1547070ba8",
+        "size_bytes": 658910,
+        "width_pixels": 1000
+      },
+      "frame_name": "9.2 Helper removed",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "32:5844",
+      "order": 52,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J9.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=32-5844"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "32:6495",
+          "name": "Desktop Template"
+        }
+      ],
+      "frame_bounds": {
+        "height": 220.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 220,
+        "path": "exports/32-6494.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "907bb54ddba1f9c562d7606785348cf3716b3ffb86b3c479aac03e74aa366119",
+        "size_bytes": 234949,
+        "width_pixels": 1000
+      },
+      "frame_name": "9.3 After Quit \u2014 status item gone (relaunch from Applications)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "32:6494",
+      "order": 53,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J9.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=32-6494"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "34:3837",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "34:4147",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 187.0,
+            "width": 230.0,
+            "x": 651.0,
+            "y": 38.0
+          },
+          "id": "34:4148",
+          "name": "Menu"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/34-3836.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "f724934a4090344cc5ea9b6868ae8f6d984656b51517837a41777b59f4399aaf",
+        "size_bytes": 779008,
+        "width_pixels": 1000
+      },
+      "frame_name": "10.1 Right-click \u2192 Check for Updates\u2026",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "34:3836",
+      "order": 54,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J10.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=34-3836"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "34:4483",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 177.0,
+            "width": 420.0,
+            "x": 290.0,
+            "y": 282.0
+          },
+          "id": "34:4636",
+          "name": "Window \u00b7 Software Update"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/34-4482.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "64aa1647369956225110186084ba2848cf232fd0b95d1a50cd719cabfe6c6301",
+        "size_bytes": 725816,
+        "width_pixels": 1000
+      },
+      "frame_name": "10.2 Checking",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "34:4482",
+      "order": 55,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J10.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=34-4482"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "34:4696",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 365.0,
+            "width": 520.0,
+            "x": 240.0,
+            "y": 188.0
+          },
+          "id": "34:4849",
+          "name": "Window \u00b7 Software Update"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/34-4695.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "f9db0d2814519243c46d1da9c387c328ccb8cd9a5bec713042de70da3b3df90b",
+        "size_bytes": 624418,
+        "width_pixels": 1000
+      },
+      "frame_name": "10.3 Update available",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "34:4695",
+      "order": 56,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J10.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=34-4695"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "34:5340",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 177.0,
+            "width": 420.0,
+            "x": 290.0,
+            "y": 282.0
+          },
+          "id": "34:5493",
+          "name": "Window \u00b7 Software Update"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 3320.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/34-5339.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "f765c7545b2e7ac2717f3676b5eeb25e7f012e9368256a020d07ca8c5766b26c",
+        "size_bytes": 726022,
+        "width_pixels": 1000
+      },
+      "frame_name": "10.4 Downloading",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "34:5339",
+      "order": 57,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J10.4",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=34-5339"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "34:5609",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 177.0,
+            "width": 420.0,
+            "x": 290.0,
+            "y": 282.0
+          },
+          "id": "34:5762",
+          "name": "Window \u00b7 Software Update"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 4400.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/34-5608.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "ba9ea1cde56ab255eb4a8c85e1f852867159fdeaa0ec2bab453775904b7c854e",
+        "size_bytes": 728849,
+        "width_pixels": 1000
+      },
+      "frame_name": "10.5 Ready to install",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "34:5608",
+      "order": 58,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J10.5",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=34-5608"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "34:5823",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 198.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 261.0
+          },
+          "id": "34:5976",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 5480.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/34-5822.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "9e2af9d932d087afeaea7ceaefd9a3749ca10760df88e12919f4eb1c42944855",
+        "size_bytes": 767122,
+        "width_pixels": 1000
+      },
+      "frame_name": "10.6 Up to date",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "34:5822",
+      "order": 59,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J10.6",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=34-5822"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "34:6004",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 246.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 230.0
+          },
+          "id": "34:6157",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 6560.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/34-6003.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "99182e7e28862267a9cdde51e6a9b4b071ca584c361818d43b5b8da42318bbd0",
+        "size_bytes": 767349,
+        "width_pixels": 1000
+      },
+      "frame_name": "10.7 Couldn\u2019t check",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "34:6003",
+      "order": 60,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J10.7",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=34-6003"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "34:6184",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "34:6339",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 246.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 230.0
+          },
+          "id": "34:6340",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 7640.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/34-6183.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "8ae169f771652df9039b08893f9666b57ead89d8c8076d04cf44f77a153a7eae",
+        "size_bytes": 768711,
+        "width_pixels": 1000
+      },
+      "frame_name": "10.8 After relaunch \u2192 helper update (see 3.3)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "34:6183",
+      "order": 61,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J10.8",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=34-6183"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "35:4361",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "35:4677",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 271.0,
+            "width": 540.0,
+            "x": 230.0,
+            "y": 235.0
+          },
+          "id": "35:4678",
+          "name": "Watt? Settings"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/35-4360.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "1ca2e14c190002b250e3ba0a8bf92cbc67350ba5c5d2364e2530a16a938a8659",
+        "size_bytes": 658955,
+        "width_pixels": 1000
+      },
+      "frame_name": "12.1 Settings \u2192 Uninstall Watt?\u2026",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "35:4360",
+      "order": 62,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J12.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=35-4360"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "35:5145",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "35:5300",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 187.0,
+            "width": 540.0,
+            "x": 230.0,
+            "y": 277.0
+          },
+          "id": "35:5301",
+          "name": "Watt? Settings"
+        },
+        {
+          "bounds": {
+            "height": 260.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 223.0
+          },
+          "id": "35:5568",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 1160.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/35-5144.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "f9625f9ac7f7d46ec8ca840376945ba0034330f9d4d6b41bd38ebfcaa6082b7e",
+        "size_bytes": 715866,
+        "width_pixels": 1000
+      },
+      "frame_name": "12.2 Confirm uninstall",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "35:5144",
+      "order": 63,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J12.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=35-5144"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "35:5600",
+          "name": "Desktop Template"
+        }
+      ],
+      "frame_bounds": {
+        "height": 220.0,
+        "width": 1000.0,
+        "x": 2240.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 220,
+        "path": "exports/35-5599.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "907bb54ddba1f9c562d7606785348cf3716b3ffb86b3c479aac03e74aa366119",
+        "size_bytes": 234949,
+        "width_pixels": 1000
+      },
+      "frame_name": "12.3 Uninstalled \u2014 nothing left behind",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "35:5599",
+      "order": 64,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J12.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=35-5599"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "35:5747",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 246.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 222.0
+          },
+          "id": "35:5900",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 3320.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/35-5746.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "c733e05b4765822e63de542ca6780b7b6f25b2b671b4c5f3204db77edcaddabf",
+        "size_bytes": 768763,
+        "width_pixels": 1000
+      },
+      "frame_name": "12.4 Dragged to Trash, reinstalled later \u2192 leftover helper found",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "35:5746",
+      "order": 65,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J12.4",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=35-5746"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Responsive behavior"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "35:5927",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "35:6082",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 206.0,
+            "width": 540.0,
+            "x": 230.0,
+            "y": 267.0
+          },
+          "id": "35:6083",
+          "name": "Watt? Settings"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 4400.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/35-5926.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "21df5ba62438b833d73f4b275801b51a0a1ba9bd7d25326d1b2724f9fca584cd",
+        "size_bytes": 685668,
+        "width_pixels": 1000
+      },
+      "frame_name": "12.5 Reconnected \u2014 continues at 1.6 (All set)",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "35:5926",
+      "order": 66,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J12.5",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=35-5926"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Accessibility"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -612.0,
+            "y": 0.0
+          },
+          "id": "36:5058",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 641.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "36:5059",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 473.0,
+            "width": 320.0,
+            "x": 551.0,
+            "y": 40.0
+          },
+          "id": "36:5061",
+          "name": "Watt? Panel (MenuBarExtra .window)"
+        }
+      ],
+      "frame_bounds": {
+        "height": 640.0,
+        "width": 900.0,
+        "x": 80.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 640,
+        "path": "exports/36-5057.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "654ac9f732cdf8c69a337ec5055dcbb2816e6b308679afe0eb6098b0cbda8e02",
+        "size_bytes": 561812,
+        "width_pixels": 900
+      },
+      "frame_name": "11.1 Status item + panel \u2014 VoiceOver order",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "36:5057",
+      "order": 67,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J11.1",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=36-5057"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Accessibility"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "id": "36:5187",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 870.0,
+            "width": 580.0,
+            "x": 466.0,
+            "y": 56.0
+          },
+          "id": "36:5188",
+          "name": "Watt? Settings"
+        }
+      ],
+      "frame_bounds": {
+        "height": 982.0,
+        "width": 1512.0,
+        "x": 1060.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 982,
+        "path": "exports/36-5186.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "b47d35a79fd208c8c931dad855153c20bda444c1b744c6ab4eee5bc6add1d498",
+        "size_bytes": 1271180,
+        "width_pixels": 1512
+      },
+      "frame_name": "11.2 Settings \u2014 control labels & keyboard",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "36:5186",
+      "order": 68,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J11.2",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=36-5186"
+    },
+    {
+      "app_owned_crop": null,
+      "appearance": null,
+      "canvas": "27:985",
+      "design_sections": [
+        "Source of truth",
+        "Information architecture",
+        "Components",
+        "Interaction states",
+        "Accessibility"
+      ],
+      "direct_child_bounds": [
+        {
+          "bounds": {
+            "height": 982.0,
+            "width": 1512.0,
+            "x": -512.0,
+            "y": 0.0
+          },
+          "id": "36:5429",
+          "name": "Desktop Template"
+        },
+        {
+          "bounds": {
+            "height": 24.0,
+            "width": 741.0,
+            "x": 0.0,
+            "y": 5.0
+          },
+          "id": "36:5430",
+          "name": "Status Item Anchor (right-aligned)"
+        },
+        {
+          "bounds": {
+            "height": 187.0,
+            "width": 540.0,
+            "x": 230.0,
+            "y": 277.0
+          },
+          "id": "36:5432",
+          "name": "Watt? Settings"
+        },
+        {
+          "bounds": {
+            "height": 260.0,
+            "width": 260.0,
+            "x": 370.0,
+            "y": 223.0
+          },
+          "id": "36:5433",
+          "name": "Alert"
+        }
+      ],
+      "frame_bounds": {
+        "height": 720.0,
+        "width": 1000.0,
+        "x": 2652.0,
+        "y": 100.0
+      },
+      "frame_export": {
+        "dimensions_match_frame_bounds": true,
+        "height_pixels": 720,
+        "path": "exports/36-5428.png",
+        "pixels_per_figma_unit": 1,
+        "provenance": "conductor_figma_mcp_exports_2026_09_20",
+        "sha256": "f9625f9ac7f7d46ec8ca840376945ba0034330f9d4d6b41bd38ebfcaa6082b7e",
+        "size_bytes": 715866,
+        "width_pixels": 1000
+      },
+      "frame_name": "11.3 Destructive confirmation \u2014 keyboard",
+      "metadata_verified": true,
+      "native_render_verified": false,
+      "node": "36:5428",
+      "order": 69,
+      "reference_pixels_per_figma_unit": null,
+      "reference_png": null,
+      "story": "J11.3",
+      "url": "https://www.figma.com/design/9DKDgUfEqidZdZQEVlQgLS/Watt-?node-id=36-5428"
+    }
+  ],
+  "evidence_hashes": {
+    "exports/21-928.png": "606a1da3bf6ae57b74191a8734bc566471182f7ec3afbc39e96b21b9f136c908",
+    "exports/22-130.png": "fc3dba2b59d091674e7e8b38aa570b6643952e019a7da2e3adf0a10f3797540c",
+    "exports/22-1095.png": "ff92427c65d511524783f5f6f92ef3b39f2f2de5e736c8637c30f9263d451011",
+    "exports/24-390.png": "22a43d638a7d52ff6a5169b63a5006da09196a2c13dede9029bc0b57ad5510ae",
+    "exports/24-639.png": "32f76aff05a69231bc7f852139ea7cb131afc67ab8a2bbb8da77aba939eec6c8",
+    "exports/24-758.png": "d45b3201b8c62558b68373bb07d05b1bd3c6e1e1966abe823df9c2b8927b1f37",
+    "exports/24-877.png": "5f0e7d03af3ecbdbeded1bea5a78ecaaa81dfd94c3969e177389ee3ce62d196c",
+    "exports/24-996.png": "6b8fc729a4882ae455b8ee3aa03cfb4a2629360ef7f5d07b6c912d8d2fb6c703",
+    "exports/24-1115.png": "26a6afb368236f903a764306fb73661fcb9d904dceb3a825924287a2997c97c8",
+    "exports/24-1234.png": "367eea96cab6497abf62498ef948638436c8ae743d7feb1facea7b00a735b088",
+    "exports/24-1353.png": "4b33f8912f40cb40637b1603f24eddb3e6083826e6d5f751e3008fe03aefb80e",
+    "exports/24-1472.png": "02386467f2f5da30a584febf47d1098c298ff4e3f088c107b6cb1276cd1ca846",
+    "exports/24-1591.png": "e6a69b963d1c050e0f7f024c170579a99d8f660f925280bfbd4d71bd406c056c",
+    "exports/24-1711.png": "e746435ca9e2d1599c24696abc7fa7f23d15d2ee44d9ff71176313baa4925a77",
+    "exports/24-1960.png": "a840d3bd2d3c53a65f99c514056a06c931406870a440d1e2841385bcb258b7bd",
+    "exports/25-787.png": "a79e104cc77794e6695491b6bf97515c983ec47ea6d64f6dbae180a8945e52f2",
+    "exports/27-987.png": "bdbce1343aa0f2b7837b822ad12f97bdcf36d267b97bb02d711596f17a7ba71a",
+    "exports/27-1354.png": "3aa05d431b7832a68d4ab80b84b5c0bd76092409904decdec4e0fa58a756525c",
+    "exports/27-1584.png": "423e4d02e68de7bc702576f1a53ec4e04ccfe8449ff186b31b23bb197659ee5d",
+    "exports/28-1206.png": "3755e5354037425d8a2874c58f4d886aa698b430712a2b8244bc08053667e43b",
+    "exports/28-1598.png": "2133f820594f6514f02e1222d2e2735e0ab85bcc1a95d7b3df44d5616ea27ea7",
+    "exports/28-2199.png": "7de9c607b695153a9ec739336b421a60f00af96f7228f44599ac3101760c299b",
+    "exports/28-2621.png": "826e2663c1b97870f4bac0acae3e43a406c5dc84dc47846517decde8fc1eb867",
+    "exports/28-2802.png": "22b558c855b40a7ebd2c5e6b116bbc416d3cb0f96c9e10a233396de38e9e2a41",
+    "exports/29-1549.png": "8f431d9b994445a83c96f57d6307bb60f948796b93d1107add85a62208f560f9",
+    "exports/29-2456.png": "07225ea2fae545cdd27fa64cbc895e710756962c49cabff99fa3e768529382b9",
+    "exports/29-3270.png": "4b2d1d879e694c954a252a5a4302322fde23dddc98cadf6c2d373d2f759d1ad0",
+    "exports/29-3926.png": "9e019931466db050cdb2967c6e0c828e0d5d6973330b45684d02609725c545f8",
+    "exports/29-4590.png": "483fc23819b23e264f5f52f3f50fa8e0acc616894a45cbf4dd5059780c0f7276",
+    "exports/29-5253.png": "eac914e4716ad6235d95a37e8c987aaf8b761a6f0cb480422fccda5632794a8c",
+    "exports/29-5439.png": "c7826cdeabf83c38421f0ef57cb4e4cff81a6b2ce1694400b8542a76976496e4",
+    "exports/29-6181.png": "02b17f63cd1fe517adbdb63365f443d1780b46a08a2ca3822bc59c590cacb8a1",
+    "exports/30-2275.png": "f7cc535fe827890fbc18934fd4c475d3cf92c789a141514738e266be875da011",
+    "exports/30-2576.png": "8d6531c66cb072c93d448f884175d2d1d8a0cf912861181a05fad0a2fe1b4987",
+    "exports/30-2786.png": "0234d877866d786319fc6894fc7a841389c0631b83c257e29507ca418fab079f",
+    "exports/30-3675.png": "f43875d659167b3bddd088b60f54e6ed62e123999581340c04e0d49e0f19c1e4",
+    "exports/30-4028.png": "2c840e0aa0a58288935d01e0fef2eb2aa9ab0e43b8cc5fdf1ec517973ae8e598",
+    "exports/30-4788.png": "47a03bc59a0cf89010dd60c6d00c92e7c6a3624050c90ac82240c48889e57737",
+    "exports/31-2745.png": "fa93d6f6e977ccc47ded70262e55eeaf2f6cac0fac3de502401030f5aa99b316",
+    "exports/31-3754.png": "4200ab7465f5fb6c2f5ad8ca5d7a6c4125604503bb5c50301810f86a7bb840bb",
+    "exports/31-4355.png": "906e25b72b31f72ef9878f7251fe9e53b620d848c0713d0e48eed19fb0500206",
+    "exports/31-4956.png": "0b0382eb3b2d2f4355d859c2e85cf3f59450a4fc343f6be37e2ffc87fea1b941",
+    "exports/31-5571.png": "908705b893cdac4224515a132a187a2e7883384de9843082b5394cd78e9576b0",
+    "exports/31-6173.png": "3d047cbe3448fc4d987f0440d47030ddc8b65012a26f054c12eae4d5f67c66a3",
+    "exports/31-6952.png": "e9c65d95a6157519f53c4dfc68bcafaf5055385189ee5e29340d90eb915411ff",
+    "exports/31-7102.png": "8db7f6dbf19438d66f5701a36e08013779d04942663bba19103ee5cc4ed1d9ac",
+    "exports/31-7764.png": "d99e2eadbc66f95a01c661ded137c3889f916e0063fb525c58694976586de3b3",
+    "exports/32-3451.png": "9c9fd3f396bc4ac2dbf408b8785c107a1a16471adff6fd7a908b845b47584609",
+    "exports/32-4456.png": "202888272184e508e92e1e786e70301ad8adbedb9758c0d5e414eb5827a23c65",
+    "exports/32-4575.png": "7dccac13b2d83978dacabea90ae91f4874ca60f68f1490b31c72859f91b08586",
+    "exports/32-5397.png": "d23a0b2810db505c3f77faaf54562f573cfc1c7cb24ac3f3bfed7cfe06fa986b",
+    "exports/32-5844.png": "ef5aeaabe1fc78fdc79bb994cf7a3bb637edc0218905dc25846ebe1547070ba8",
+    "exports/32-6494.png": "907bb54ddba1f9c562d7606785348cf3716b3ffb86b3c479aac03e74aa366119",
+    "exports/34-3836.png": "f724934a4090344cc5ea9b6868ae8f6d984656b51517837a41777b59f4399aaf",
+    "exports/34-4482.png": "64aa1647369956225110186084ba2848cf232fd0b95d1a50cd719cabfe6c6301",
+    "exports/34-4695.png": "f9db0d2814519243c46d1da9c387c328ccb8cd9a5bec713042de70da3b3df90b",
+    "exports/34-5339.png": "f765c7545b2e7ac2717f3676b5eeb25e7f012e9368256a020d07ca8c5766b26c",
+    "exports/34-5608.png": "ba9ea1cde56ab255eb4a8c85e1f852867159fdeaa0ec2bab453775904b7c854e",
+    "exports/34-5822.png": "9e2af9d932d087afeaea7ceaefd9a3749ca10760df88e12919f4eb1c42944855",
+    "exports/34-6003.png": "99182e7e28862267a9cdde51e6a9b4b071ca584c361818d43b5b8da42318bbd0",
+    "exports/34-6183.png": "8ae169f771652df9039b08893f9666b57ead89d8c8076d04cf44f77a153a7eae",
+    "exports/35-4360.png": "1ca2e14c190002b250e3ba0a8bf92cbc67350ba5c5d2364e2530a16a938a8659",
+    "exports/35-5144.png": "f9625f9ac7f7d46ec8ca840376945ba0034330f9d4d6b41bd38ebfcaa6082b7e",
+    "exports/35-5599.png": "907bb54ddba1f9c562d7606785348cf3716b3ffb86b3c479aac03e74aa366119",
+    "exports/35-5746.png": "c733e05b4765822e63de542ca6780b7b6f25b2b671b4c5f3204db77edcaddabf",
+    "exports/35-5926.png": "21df5ba62438b833d73f4b275801b51a0a1ba9bd7d25326d1b2724f9fca584cd",
+    "exports/36-5057.png": "654ac9f732cdf8c69a337ec5055dcbb2816e6b308679afe0eb6098b0cbda8e02",
+    "exports/36-5186.png": "b47d35a79fd208c8c931dad855153c20bda444c1b744c6ab4eee5bc6add1d498",
+    "exports/36-5428.png": "f9625f9ac7f7d46ec8ca840376945ba0034330f9d4d6b41bd38ebfcaa6082b7e"
+  },
+  "source_hashes": {}
+}

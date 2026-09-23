@@ -6,15 +6,18 @@
   "environment": {
     "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
   },
-  "exitCode": 1,
+  "exitCode": 0,
   "timedOut": false,
   "timeoutSeconds": 120,
-  "durationSeconds": 1.1,
+  "durationSeconds": 8.0,
   "log": "evidence-audit.log",
   "portableAudit": true,
-  "result": "blocked",
+  "result": "pass",
   "summary": {
-    "f00ManifestAvailable": false,
+    "f00ManifestAvailable": true,
+    "f00ManifestSource": "portable",
+    "registryReferencesEqualReferenceManifest": true,
+    "all69PortableExportHashesAndDimensionsPass": true,
     "portableStoryReadmesAndPNGsPass": true,
     "docsFilesRead": 3110,
     "recordsRead": 97,
@@ -22,12 +25,7 @@
       "pass": 295,
       "mismatch": 60
     },
-    "problems": [
-      {
-        "kind": "missing portable F00 reference manifest",
-        "path": ".omx/plans/f00-reference-evidence/manifest.json"
-      }
-    ],
+    "problems": [],
     "historicalSourceMismatches": 60
   }
 }
