@@ -1,5 +1,7 @@
 # J10.2 — Checking
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md`, `fresh-figma/reference-2026-09-23.png` and `fresh-figma/live-ax-2026-09-23.log` (SHA-256 `d8150ccf9231904f3d479dba54502186ab551edcc0ffd4b1f7b8e44a7bb29b02`).
+
 Exact Figma file 9DKDgUfEqidZdZQEVlQgLS / frame 34:4482; window 34:4636.
 Fresh MCP context, metadata and screenshot responses are retained as JSON; the
 retrieved and user-supplied PNGs have identical SHA256 hashes in reference.sha256.
@@ -39,3 +41,5 @@ No wallpaper or fabricated screenshot was introduced.
 
 Existing worktree/branch bug/G066-j102-checking was reused. No commit created.
 Unrelated pre-existing work is preserved. See changed-files.json for bounded slice.
+
+Fresh live AX evidence confirms native Software Update/ProgressView/Cancel semantics for `J10.2/base`; the visual gate remains explicitly open because no comparable implementation PNG was captured.

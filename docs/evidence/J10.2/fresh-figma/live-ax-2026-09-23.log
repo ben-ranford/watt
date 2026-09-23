@@ -1,0 +1,19 @@
+binary=/tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app/Contents/MacOS/Watt
+launch=--watt-fixture J10.2/base
+launcher_pid=84674
+sandbox_extension_issue_file_to_process failed for /tmp/watt-desktop-current-1790155591/Build/Products/Debug/Watt.app: 1 (Operation not permitted)
+--- axprobe ---
+true
+--- app pid / AX semantic scan ---
+actual_pid=84674
+  role=AXWindow subrole=AXStandardWindow title=Software Update desc= value= enabled=
+      role=AXStaticText subrole= title= desc= value=Checking for updates… enabled=true
+      role=AXBusyIndicator subrole= title= desc=Checking for updates… value= enabled=true
+      role=AXButton subrole= title= desc=Cancel value= enabled=true
+    role=AXStaticText subrole= title= desc= value=Software Update enabled=true
+        role=AXMenuItem subrole= title=Software Update desc= value= enabled=true
+        role=AXMenuItem subrole= title=Software Update desc= value= enabled=true
+--- compositor owner scan ---
+owner=Watt? name=Watt? number=20358 layer=0 alpha=1 bounds={
+--- cleanup ---
+fixture_process=absent
