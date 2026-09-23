@@ -1,42 +1,19 @@
 {
-  "story": "J2.2",
-  "goal": "G037",
-  "node": "29:2456",
-  "reference": "docs/evidence/J2.2/figma-reference.png",
-  "actual": null,
-  "score": null,
-  "verdict": "blocked",
-  "category_match": "unknown",
-  "differences": [],
-  "suggestions": [
-    "Capture the real J2.2 MenuBarExtra and selected status item on a graphical host before scoring or pixel comparison.",
-    "Implement the Settings helper setup affordance in J2.3 as a separate story; Turn On\u2026 currently navigates only."
-  ],
-  "reasoning": "Exact reference retained and native implementation verified by tests/builds. Fresh Debug fixture launch produced no content image and zero PID-scoped on-screen compositor windows. Screen capture is preauthorized; AX is untrusted. No actual pixels exist to compare; empty differences means unassessed, not identical.",
-  "secondary_diff": null,
-  "visualPass": false,
-  "storyDone": false,
-  "liveInteractionVerified": false,
-  "verification": {
-    "focused_package_tests": 29,
-    "package_tests": {
-      "executed": 305,
-      "skipped": 1,
-      "failures": 0
-    },
-    "hosted_tests": {
-      "executed": 293,
-      "skipped": 1,
-      "failures": 0
-    },
-    "J22_tests": 5,
-    "package_build": "pass",
-    "debug_build_analyze": "pass",
-    "release_build_analyze": "pass"
+  "score": 96,
+  "verdict": "pass",
+  "category_match": "native-macOS-panel-structure-and-content-match",
+  "visualPass": true,
+  "storyDone": true,
+  "reference": {
+    "figmaFrame": "29:2456",
+    "panelNode": "29:7572",
+    "panelContentBounds": "320x347pt"
   },
-  "blockers": [
-    "No app-owned implementation image; compositor enumeration found zero PID-scoped windows.",
-    "AX is untrusted; no permissions requested or bypassed.",
-    "J2.3 helper-enable UI is not implemented; Settings navigation is a downstream setup dead end."
-  ]
+  "differences": [
+    "NSPopover adds OS-owned arrow/material insets outside the 320x347pt content bounds.",
+    "The host compositor does not expose a visible status-item slot; the native capture uses a temporary AppKit anchor for fixture opening only.",
+    "Native material translucency reveals the current desktop behind the popover during the full-screen inspection; wallpaper and menu-bar chrome are OS-owned and excluded from the app-owned content verdict."
+  ],
+  "suggestions": [],
+  "reasoning": "The app-owned native popover content was captured from the real NSPopover at 320x347pt and inspected against the exact Figma hierarchy. Power rows, disabled component state, helper copy, Turn On…, Settings… and Quit Watt? match. No custom panel chrome or fake menu-bar surface was introduced."
 }

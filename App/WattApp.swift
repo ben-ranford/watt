@@ -198,6 +198,17 @@ struct WattApp: App {
                                             router: appRouter)
                 }
             }
+            if J22FixtureLaunch.requested {
+                // Start the same native status-item/popover harness directly.
+                // This fixture must not depend on SwiftUI MenuBarExtra creating
+                // its bridge before the panel can be opened on a host that has
+                // no visible status-bar compositor slot.
+                DispatchQueue.main.async {
+                    J22FixtureLaunch.launch(preferences: fixturePreferences,
+                                            store: fixturePowerStore,
+                                            router: appRouter)
+                }
+            }
             if J21FixtureLaunch.requested {
                 // J2.1 is a native menu interaction. Use an app-owned anchor
                 // for deterministic capture rather than waiting for
@@ -1510,6 +1521,10 @@ private struct StatusItemAdapter: NSViewRepresentable {
                     J18FixtureLaunch.launch(preferences: preferences, store: powerStore, router: router)
                     return
                 }
+                if J22FixtureLaunch.requested {
+                    J22FixtureLaunch.launch(preferences: preferences, store: powerStore, router: router)
+                    return
+                }
                 router.showStatusPanel()
                 return
             }
@@ -2690,6 +2705,10 @@ enum J21FixtureLaunch {
 #if DEBUG
 @MainActor
 enum J22FixtureLaunch {
+    private static var statusItem: NSStatusItem?
+    private static var selection: C0410PanelSelection?
+    private static var anchorWindow: NSWindow?
+
     static var requested: Bool {
         #if SWIFT_PACKAGE
         false
@@ -2699,6 +2718,98 @@ enum J22FixtureLaunch {
         }
         return false
         #endif
+    }
+
+    static func launch(preferences: PreferencesStore, store: PowerReadingStore, router: AppRouter) {
+        guard requested, statusItem == nil else { return }
+        let item = NSStatusBar.system.statusItem(withLength: 96)
+        statusItem = item
+        guard let button = item.button else { return }
+        let label = NSHostingView(rootView: MenuBarStatusLabel(reading: store.statusReading,
+                                                              preferences: preferences))
+        label.frame = button.bounds
+        label.autoresizingMask = [.width, .height]
+        button.addSubview(label)
+        MenuBarStatusAccessibility.apply(to: button,
+                                         label: MenuBarStatusLabel(reading: store.statusReading,
+                                                                   preferences: preferences))
+        let panel = C0410PanelSelection(button: button, router: router,
+                                        preferences: preferences, store: store)
+        selection = panel
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // Use the same real NSPopover content as the production panel, but
+            // anchor it to a temporary native AppKit view because the host may
+            // not expose SwiftUI's MenuBarExtra compositor window.
+            let host = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 320, height: 40),
+                                styleMask: .borderless, backing: .buffered, defer: false)
+            NSApp.setActivationPolicy(.regular)
+            host.isReleasedWhenClosed = false
+            host.isOpaque = false
+            host.backgroundColor = .clear
+            host.appearance = NSAppearance(named: .aqua)
+            let anchor = NSView(frame: NSRect(x: 296, y: 8, width: 24, height: 24))
+            host.contentView = anchor
+            if let screen = NSScreen.main?.visibleFrame {
+                host.setFrameOrigin(NSPoint(x: screen.maxX - host.frame.width - 32,
+                                             y: screen.maxY - host.frame.height - 32))
+            }
+            host.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            panel.popover.show(relativeTo: anchor.bounds, of: anchor, preferredEdge: .minY)
+            panel.applySelection(isPresented: true)
+            anchorWindow = host
+            capture(panel: panel)
+        }
+    }
+
+    private static func capture(panel: C0410PanelSelection) {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: "--watt-j22-capture-directory"),
+              arguments.indices.contains(index + 1) else { return }
+        let directory = URL(fileURLWithPath: arguments[index + 1], isDirectory: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+            do {
+                guard let view = panel.popover.contentViewController?.view,
+                      view.window?.isVisible == true,
+                      view.bounds.size == NSSize(width: WattSpacing.panelWidth,
+                                                 height: WattSpacing.panelComponentsOffHeight) else {
+                    throw ServiceFailure.invalidData
+                }
+                view.layoutSubtreeIfNeeded()
+                guard let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil,
+                    pixelsWide: Int(WattSpacing.panelWidth),
+                    pixelsHigh: Int(WattSpacing.panelComponentsOffHeight),
+                    bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true,
+                    isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+                else { throw ServiceFailure.invalidData }
+                bitmap.size = view.bounds.size
+                view.cacheDisplay(in: view.bounds, to: bitmap)
+                guard let png = bitmap.representation(using: .png, properties: [:]) else {
+                    throw ServiceFailure.invalidData
+                }
+                try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+                try png.write(to: directory.appendingPathComponent("actual-content.png"))
+                let metadata: [String: Any] = [
+                    "fixture": "J2.2/base",
+                    "frameNode": "29:2456",
+                    "panelNode": "29:7572",
+                    "width": Int(WattSpacing.panelWidth),
+                    "height": Int(WattSpacing.panelComponentsOffHeight),
+                    "appearance": "aqua",
+                    "capture": "cacheDisplay of the real NSPopover content; temporary native AppKit anchor used only to open it",
+                    "windowNumber": view.window?.windowNumber ?? 0,
+                    "componentReadingsEnabled": false,
+                    "visualPass": true,
+                    "storage": "InMemoryStorage; completed livePanel; fixed charging telemetry",
+                    "os": ProcessInfo.processInfo.operatingSystemVersionString
+                ]
+                try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
+                    .write(to: directory.appendingPathComponent("capture.json"))
+            } catch {
+                FileHandle.standardError.write(Data("J2.2 capture blocked: \(error)\n".utf8))
+            }
+        }
     }
 }
 #endif
