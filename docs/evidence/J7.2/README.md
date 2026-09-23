@@ -1,5 +1,7 @@
 # J7.2 — Result — Per Component in menu bar
 
+Fresh MCP retrieval on 2026-09-23 is pinned in `fresh-figma/context-2026-09-23.md` and `fresh-figma/reference-2026-09-23.png` (SHA-256 `5383443c3506f7d58834c6e20687a2564029fbbb288f3d22aedb2e086106fa75`).
+
 Implementation verified for G056 on branch
 `bug/G056-j72-result-per-component-in-menu-bar`. No commit was created;
 all prior cumulative changes are preserved. Visual acceptance remains blocked.
@@ -88,3 +90,5 @@ with preauthorized screen capture and Accessibility trust. It requires exact fix
 PID/window identity and independent AX text before real compositor capture, then reaps
 the app. Even successful capture remains awaiting visual review; it never auto-claims
 pixel similarity against OS-owned desktop chrome.
+
+Fresh native AX probe on 2026-09-23 is retained at `fresh-figma/live-ax-2026-09-23.log`; the real fixture registered the expected CPU/GPU label but the host edge placement and missing fixture-owned compositor capture keep visual acceptance open.
