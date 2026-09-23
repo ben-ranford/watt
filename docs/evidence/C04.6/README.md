@@ -74,3 +74,15 @@ The bounded backdrop is not the Figma desktop/compositor, and native text/glyph
 rasterization differs. This is not live system-chrome parity, real telemetry,
 AX/VoiceOver traversal or physical interaction proof. Those acceptance gates
 remain open; no visual-pass or completed-story claim is made.
+
+## Fresh final-source capture — 2026-09-23
+
+Figma MCP was re-queried for frame `24:1115`; the exact hierarchy and native
+contract are recorded in `current-figma-context-2026-09-23.md`.
+
+The final-source Debug binary was rebuilt and `capture.sh` was rerun. The
+resulting metadata records C04.6/base, the native `NSStatusBarButton`, Dark Aqua,
+reference IDs, 80×24 button geometry, and a direct 560×44 1× bitmap. The capture
+visibly contains the native bolt and `38.2 W`. `compare.sh` returned diagnostic
+exit 2 for both comparisons, so the evidence is refreshed but visual acceptance
+is not granted.

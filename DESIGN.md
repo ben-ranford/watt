@@ -2339,3 +2339,10 @@ and SF Pro Semibold 13/16. The final-source native capture was rebuilt after the
 `.chargerInput` scoping fix; it shows the expected fallback content and keeps
 the compositor/pixel gate explicitly open. Evidence:
 `docs/evidence/C04.5/current-figma-context-2026-09-23.md`.
+
+The exact C04.6 Figma MCP reinspection confirms frame `24:1115`, status item
+`24:1231`, anchor `24:1233`, native `bolt.fill`, unsigned `38.2 W`, and SF Pro
+Semibold 13/16. The final-source native capture was rebuilt and refreshed; the
+expected desktop no-battery state is present while the compositor/pixel gate
+remains open. Evidence:
+`docs/evidence/C04.6/current-figma-context-2026-09-23.md`.
