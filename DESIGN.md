@@ -2311,3 +2311,10 @@ The exact Figma MCP reinspection for C04.2 confirms frame `24:639`, status item
 Semibold 13/16. The existing native implementation and focused verification remain
 green; visual acceptance is still explicitly open. See
 `docs/evidence/C04.2/current-figma-context-2026-09-23.md`.
+
+The exact C04.3 Figma MCP reinspection confirms frame `24:758`, status item
+`24:874`, anchor `24:876`, native `battery.100percent.bolt`, real `0.0 W`, and
+SF Pro Semibold 13/16. Focused C04.3 package/native tests passed 4/4 per host and
+Release build/analyze passed. The existing native visual gate remains open because
+the retained 88/100 review does not establish live compositor parity. Evidence:
+`docs/evidence/C04.3/current-figma-context-2026-09-23.md`.
