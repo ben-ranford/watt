@@ -33,7 +33,7 @@ struct MenuBarStatusLabel: View {
                 guard reading.freshness == .fresh, (try? reading.validate()) != nil else { return "—" }
             }
             // C04.9/J8.1 retain the unit for the explicit no-reading state.
-            let formatted = PowerFormatter.watts(reading.value(for: effectiveMode, chargerFallback: reading.mode == .chargerInput ? .systemDrawWhenDisconnected : .batteryDelta),
+            let formatted = PowerFormatter.watts(reading.value(for: effectiveMode, chargerFallback: chargerFallback),
                                                  signed: effectiveMode == .delta, precision: preferences.precision)
             // C04.2 uses the typographic minus, without changing shared formatting.
             return isBatteryDischargingDelta ? formatted.replacingOccurrences(of: "-", with: "−") : formatted
@@ -99,6 +99,21 @@ struct MenuBarStatusLabel: View {
         isAvailableBatteryDelta && reading.batteryState == .discharging
     }
 
+    /// The live system adapter reports an unplugged Mac as `.onBattery`, while
+    /// the explicit Charger display still needs the measured system draw when
+    /// charger input is unavailable. Keep fixture/legacy battery-delta callers
+    /// unchanged; only a fresh system sample opts into this presentation.
+    private var usesDisconnectedChargerFallback: Bool {
+        effectiveMode == .charger
+            && reading.capabilities.charger == .disconnected
+            && (reading.mode == .chargerInput
+                || (reading.source == .system && reading.batteryState == .discharging))
+    }
+
+    private var chargerFallback: ChargerFallbackPolicy {
+        usesDisconnectedChargerFallback ? .systemDrawWhenDisconnected : .batteryDelta
+    }
+
     var symbolName: String {
         // Icon Only is a production preference, with the same physical-state semantics
         // for system/helper readings and fixtures. Unknown or stale data stays generic.
@@ -116,8 +131,7 @@ struct MenuBarStatusLabel: View {
                 && reading.capabilities.charger == .available)) {
             return "battery.100percent.bolt"
         }
-        if reading.mode == .chargerInput && effectiveMode == .charger && reading.capabilities.charger == .disconnected
-            && reading.source != .unavailable && reading.freshness == .fresh {
+        if usesDisconnectedChargerFallback && reading.source != .unavailable && reading.freshness == .fresh {
             return "battery.100percent"
         }
         if isBatteryDischargingDelta { return "battery.100percent" }

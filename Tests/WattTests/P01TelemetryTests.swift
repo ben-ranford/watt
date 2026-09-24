@@ -121,6 +121,28 @@ final class P01TelemetryTests: XCTestCase {
         try reading.validate()
     }
 
+    @MainActor
+    func testLiveUnpluggedChargerModeUsesMeasuredSystemDraw() throws {
+        let discharging = battery([
+            kIOPSIsChargingKey: false,
+            kIOPSPowerSourceStateKey: kIOPSBatteryPowerValue
+        ])
+        let reading = try SystemPowerSourceParser.parse(.init(
+            descriptions: [discharging], providingSource: kIOPSBatteryPowerValue,
+            timestamp: time,
+            batteryProperties: ["PowerTelemetryData": [
+                "BatteryPower": 12_000,
+                "SystemPowerIn": 0,
+                "SystemLoad": 18_400
+            ]]))
+        let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .charger
+        let label = MenuBarStatusLabel(reading: reading, preferences: preferences)
+        XCTAssertEqual(reading.mode, .onBattery)
+        XCTAssertEqual(label.text, "18.4 W")
+        XCTAssertEqual(label.symbolName, "battery.100percent")
+    }
+
     func testRegistryTelemetryPreservesZeroRateForFullBattery() throws {
         let full = battery([
             kIOPSIsChargingKey: false,

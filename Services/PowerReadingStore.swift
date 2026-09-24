@@ -19,6 +19,10 @@ final class PowerReadingStore: ObservableObject {
     @Published private(set) var isRefreshing = false
     static let statusMaximumAge: TimeInterval = 5
     static let retryInterval: TimeInterval = 3
+    // A configured five-second sample interval must not race the five-second
+    // status expiry. Leave a small lead so scheduler jitter cannot turn a
+    // healthy periodic sampler into a visible "No reading" state.
+    static let samplingRefreshLeadTime: TimeInterval = 0.5
     // Full status must be recent even if an adapter leaves its snapshot marked fresh.
     static let fullStatusMaximumAge: TimeInterval = 5
     static let chargerStatusMaximumAge: TimeInterval = 5
@@ -113,11 +117,20 @@ final class PowerReadingStore: ObservableObject {
         guard observesSystemWake else { return }
         while !Task.isCancelled {
             await refresh()
-            let seconds = interval()
-            let delay = seconds.isFinite && seconds > 0 ? seconds : Self.retryInterval
+            let delay = Self.samplingDelay(for: interval())
             do { try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000)) }
             catch { return }
         }
+    }
+
+    /// Keep scheduled samples inside the visible status freshness window.
+    /// Preference intervals shorter than the window remain unchanged; only an
+    /// interval that would expire the current reading is brought forward.
+    static func samplingDelay(for requestedInterval: TimeInterval) -> TimeInterval {
+        let normalized = requestedInterval.isFinite && requestedInterval > 0
+            ? requestedInterval : retryInterval
+        let maximum = max(0.1, statusMaximumAge - samplingRefreshLeadTime)
+        return min(normalized, maximum)
     }
     func disconnect() {
         onBatteryExpiry?.cancel()

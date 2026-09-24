@@ -359,6 +359,12 @@ DEC-04 retains the approved plan's **Shared approval cancellation acceptance mat
 - The normal production store is initialized with `SystemPowerSourceTelemetryService`. Because normal launch suppresses `MenuBarExtra` on hosts where it does not materialize a status item, the visible AppKit fallback status item now owns the cancellable three-second sampling task; the hidden SwiftUI label remains the fixture/harness scheduler.
 - Snapshot timestamps are app acquisition time, not hardware measurement timestamps. The service checks model validation and rejects future/nonfinite times; the store retains its existing generation, freshness and wake invalidation rules. Cancellation and acquisition failures remain `.cancelled`/`.unknownStatus`, not no-battery/zero. Reproducible checks and physical-host results are recorded in [P01 evidence](docs/evidence/P01/README.md). The 2026-09-23 host was full and on AC: battery rate `0.0 W`, live charger input `15.947 W`, system draw `15.947 W`; the installed status item announced `0.0 watts`. This is a local telemetry proof, not a claim that every Mac exposes the same registry keys or that component telemetry is available.
 
+## G086 live measurement freshness (2026-09-24)
+
+- Production sampling keeps the configured five-second preference inside the five-second status freshness window by refreshing at 4.5 seconds. This preserves fail-closed expiry while avoiding a scheduler-jitter race that briefly replaced healthy live telemetry with `No reading`. Shorter intervals and invalid-interval fallback behavior are unchanged.
+- Charger display semantics are explicit: a valid full battery has `BatteryPower = 0 mW`; `SystemPowerIn` is the live charger-input measurement. For a fresh live unplugged sample, Charger mode uses measured SystemLoad as its display fallback when charger input is disconnected. Fixture/legacy `.chargerInput` behavior remains covered separately.
+- Focused parser/label and freshness regressions live in `P01TelemetryTests` and `J81NoReadingTests`; runtime evidence is preserved in [G086 evidence](docs/evidence/G086/README.md).
+
 ### C01 implementation — node 21:928
 
 Historical implementation record: at this stage C01 alone was implemented in the

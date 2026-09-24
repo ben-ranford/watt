@@ -201,6 +201,13 @@ final class J81NoReadingTests: XCTestCase {
         await task.value
     }
 
+    func testFiveSecondSamplingIntervalRefreshesBeforeStatusExpiry() {
+        XCTAssertEqual(PowerReadingStore.samplingDelay(for: 5), 4.5, accuracy: 0.001)
+        XCTAssertEqual(PowerReadingStore.samplingDelay(for: 2), 2, accuracy: 0.001)
+        XCTAssertEqual(PowerReadingStore.samplingDelay(for: 0), PowerReadingStore.retryInterval, accuracy: 0.001)
+        XCTAssertEqual(PowerReadingStore.samplingDelay(for: .infinity), PowerReadingStore.retryInterval, accuracy: 0.001)
+    }
+
     func testRetryCallbackAndNativeFooterActionsPreserveRouterAndPreferences() async throws {
         let preferences = J81FixtureLaunch.makePreferences()
         let original = preferences.onboarding
