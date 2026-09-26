@@ -22,9 +22,10 @@ final class J63FullOnAdapterTests: XCTestCase {
         XCTAssertEqual(model.accessibilitySummary, "Full, 19.8 W, 100% · running straight off the charger")
         XCTAssertFalse(model.showsComponents)
         XCTAssertFalse(model.componentsOff, "Hiding this section must not imply the helper is off")
-        XCTAssertEqual(model.panelHeight, 265)
+        XCTAssertNil(model.panelHeight)
+        XCTAssertTrue(model.usesIntrinsicPowerTableHeight)
         XCTAssertFalse(StatusPanelModel(reading: .sampleFullOnAdapter).showsComponents)
-        XCTAssertEqual(StatusPanelModel(reading: .sampleFullOnAdapter).panelHeight, 265)
+        XCTAssertNil(StatusPanelModel(reading: .sampleFullOnAdapter).panelHeight)
     }
 
     func testFullRequiresExplicitStateAndValidatedFreshAvailableTelemetry() {
@@ -75,7 +76,7 @@ final class J63FullOnAdapterTests: XCTestCase {
         let hold = StatusPanelModel(reading: .sampleChargingHold)
         XCTAssertEqual(hold.state, .optimisedChargingHold(percentage: 80))
         XCTAssertEqual(hold.title, "Holding at 80%")
-        XCTAssertEqual(hold.panelHeight, 279)
+        XCTAssertNil(hold.panelHeight)
         XCTAssertFalse(hold.showsComponents)
     }
     #endif
@@ -90,7 +91,8 @@ final class J63FullOnAdapterTests: XCTestCase {
         XCTAssertTrue(ordinary.showsComponents)
         XCTAssertEqual(ordinary.panelHeight, 473)
         XCTAssertFalse(compact.showsComponents)
-        XCTAssertEqual(compact.panelHeight, 265)
+        XCTAssertNil(compact.panelHeight)
+        XCTAssertTrue(compact.usesIntrinsicPowerTableHeight)
     }
 
     private static let explanation = "100% · running straight off the charger"
@@ -130,7 +132,7 @@ final class J63FullOnAdapterTests: XCTestCase {
         window.appearance = NSAppearance(named: J63FixtureLaunch.appearanceName)
         window.contentView = host
         host.layoutSubtreeIfNeeded()
-        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 265))
+        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 308))
         XCTAssertEqual(host.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]), .darkAqua)
         // SwiftUI hosts text separately and leaves the backing NSButton's title/AX ID empty.
         // The native footer places Settings on the left and Quit on the right.

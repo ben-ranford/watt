@@ -22,9 +22,10 @@ final class J62ChargingHoldTests: XCTestCase {
         XCTAssertEqual(model.accessibilitySummary, "Holding at 80%, 0.0 W, Because Optimised Battery Charging is on. Charging resumes before you usually unplug.")
         XCTAssertFalse(model.showsComponents)
         XCTAssertFalse(model.componentsOff, "Hiding this section must not imply the helper is off")
-        XCTAssertEqual(model.panelHeight, 279)
+        XCTAssertNil(model.panelHeight)
+        XCTAssertTrue(model.usesIntrinsicPowerTableHeight)
         XCTAssertFalse(StatusPanelModel(reading: .sampleChargingHold).showsComponents)
-        XCTAssertEqual(StatusPanelModel(reading: .sampleChargingHold).panelHeight, 279)
+        XCTAssertNil(StatusPanelModel(reading: .sampleChargingHold).panelHeight)
     }
 
     func testHoldRequiresExplicitReasonAndValidatedFreshAdapterReadings() {
@@ -68,7 +69,8 @@ final class J62ChargingHoldTests: XCTestCase {
         XCTAssertTrue(ordinary.showsComponents)
         XCTAssertEqual(ordinary.panelHeight, 473)
         XCTAssertFalse(compact.showsComponents)
-        XCTAssertEqual(compact.panelHeight, 265)
+        XCTAssertNil(compact.panelHeight)
+        XCTAssertTrue(compact.usesIntrinsicPowerTableHeight)
     }
 
     private static let explanation = "Because Optimised Battery Charging is on. Charging resumes before you usually unplug."
@@ -108,7 +110,7 @@ final class J62ChargingHoldTests: XCTestCase {
         window.appearance = NSAppearance(named: J62FixtureLaunch.appearanceName)
         window.contentView = host
         host.layoutSubtreeIfNeeded()
-        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 279))
+        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 322))
         XCTAssertEqual(host.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]), .darkAqua)
         // SwiftUI hosts text separately and leaves the backing NSButton's title/AX ID empty.
         // The native footer places Settings on the left and Quit on the right.

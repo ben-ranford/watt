@@ -21,7 +21,8 @@ final class J65OnBatteryTests: XCTestCase {
         XCTAssertEqual(model.accessibilitySummary, "On battery, −18.4 W, 64% · about 4 h 10 min left")
         XCTAssertFalse(model.showsComponents)
         XCTAssertFalse(model.componentsOff)
-        XCTAssertEqual(model.panelHeight, 265)
+        XCTAssertNil(model.panelHeight)
+        XCTAssertTrue(model.usesIntrinsicPowerTableHeight)
         let c02 = StatusPanelModel(reading: .sampleOnBattery)
         XCTAssertTrue(c02.showsComponents)
         XCTAssertEqual(c02.components.count, 4)
@@ -138,7 +139,7 @@ final class J65OnBatteryTests: XCTestCase {
         window.appearance = NSAppearance(named: J65FixtureLaunch.appearanceName)
         window.contentView = host
         host.layoutSubtreeIfNeeded()
-        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 265))
+        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 291))
         XCTAssertEqual(host.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]), .darkAqua)
         // SwiftUI hosts text separately and leaves the backing NSButton's title/AX ID empty.
         // The native footer places Settings on the left and Quit on the right.

@@ -21,7 +21,8 @@ final class J61DarkChargingTests: XCTestCase {
         XCTAssertEqual(model.accessibilitySummary, "Charging, +42.1 W, 64% · full in about 38 min")
         XCTAssertFalse(model.showsComponents)
         XCTAssertFalse(model.componentsOff, "Hiding this section must not imply the helper is off")
-        XCTAssertEqual(model.panelHeight, 265)
+        XCTAssertNil(model.panelHeight)
+        XCTAssertTrue(model.usesIntrinsicPowerTableHeight)
         XCTAssertTrue(StatusPanelModel(reading: .sampleCharging).showsComponents)
         XCTAssertEqual(StatusPanelModel(reading: .sampleCharging).panelHeight, 473)
     }
@@ -73,7 +74,7 @@ final class J61DarkChargingTests: XCTestCase {
         window.appearance = NSAppearance(named: J61FixtureLaunch.appearanceName)
         window.contentView = host
         host.layoutSubtreeIfNeeded()
-        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 265))
+        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 308))
         XCTAssertEqual(host.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]), .darkAqua)
         // SwiftUI hosts text separately and leaves the backing NSButton's title/AX ID empty.
         // The native footer places Settings on the left and Quit on the right.
@@ -126,6 +127,8 @@ final class J61DarkChargingTests: XCTestCase {
         for token in ["Form {", ".formStyle(.grouped)", "LabeledContent", "if model.showsComponents",
                       "row(\"Charger input\"", "row(\"System draw\"", "row(\"Battery\"",
                       "Button(\"Settings…\", action: onSettings)", "Button(\"Quit Watt?\", action: onQuit)",
+                      ".scrollDisabled(model.usesIntrinsicPowerTableHeight)",
+                      ".fixedSize(horizontal: false, vertical: model.usesIntrinsicPowerTableHeight)",
                       ".buttonStyle(.borderless)"] {
             XCTAssertTrue(source.contains(token), token)
         }

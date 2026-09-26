@@ -2556,3 +2556,18 @@ shared native `SettingsRootView` in a correctly sized native window directly;
 the MenuBarExtra path continues to use SwiftUI's `openSettings()` environment
 action. This keeps settings controls, persistence, accessibility and native
 window chrome shared rather than creating a second settings implementation.
+
+### G088 — compact power table expands instead of scrolling — 2026-09-26
+
+The three-row native power table (Charger input, System draw, Battery) remains
+implemented with SwiftUI `Form`/`Section`/`LabeledContent`. When the panel has
+no component section, the Form is given intrinsic vertical sizing and native
+scrolling is disabled. The surrounding menu-bar popover therefore grows to fit
+the rows and footer rather than forcing the power table into the legacy
+265/279-point fixed frame. Component-heavy panels retain their existing bounded
+native Form behavior so a long component list can still scroll.
+
+This is a behavior decision, not a new painted table or custom window chrome.
+The live native popover was verified at 320×291 points for the current full
+battery host sample, with all three power rows visible; a wheel event left row
+positions unchanged. Evidence: `docs/evidence/G088/`.

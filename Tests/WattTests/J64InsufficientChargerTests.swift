@@ -23,7 +23,8 @@ final class J64InsufficientChargerTests: XCTestCase {
         XCTAssertEqual(model.accessibilitySummary, "Charger can’t keep up, −13.0 W, " + Self.message)
         XCTAssertFalse(model.showsComponents)
         XCTAssertFalse(model.componentsOff)
-        XCTAssertEqual(model.panelHeight, 279)
+        XCTAssertNil(model.panelHeight)
+        XCTAssertTrue(model.usesIntrinsicPowerTableHeight)
         XCTAssertEqual(InsufficientChargerPresentation.symbol, "exclamationmark.triangle.fill")
     }
 
@@ -119,7 +120,7 @@ final class J64InsufficientChargerTests: XCTestCase {
         window.appearance = NSAppearance(named: J64FixtureLaunch.appearanceName)
         window.contentView = host
         host.layoutSubtreeIfNeeded()
-        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 279))
+        XCTAssertEqual(host.fittingSize, NSSize(width: 320, height: 322))
         XCTAssertEqual(host.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]), .darkAqua)
         // SwiftUI hosts text separately and leaves the backing NSButton's title/AX ID empty.
         // The native footer places Settings on the left and Quit on the right.

@@ -77,10 +77,18 @@ struct StatusPanelModel {
     }
     var summaryLabel: String { hasNoReading ? NoReadingPresentation.title : isDesktop ? "System draw status" : "Battery status" }
     var showsComponents: Bool { includesComponents && !setupIncomplete && !hasNoReading && !hasOptimisedChargingHold && !hasFullOnAdapter && !hasInsufficientCharger }
+    /// Compact states contain only the three-row power table. Let the native
+    /// Form report its content height instead of constraining it to the old
+    /// fixed Figma frame, which made the Form's scroll container compete with
+    /// the rows for vertical space.
+    var usesIntrinsicPowerTableHeight: Bool {
+        !setupIncomplete && !isDesktop && (hasNoReading || !showsComponents)
+    }
     var panelHeight: CGFloat? {
         if setupIncomplete { return setupSaveFailed ? WattSpacing.setupPanelErrorHeight : WattSpacing.setupPanelHeight }
         // Let the native retry Form size its content without clipping controls.
         if hasNoReading { return nil }
+        if usesIntrinsicPowerTableHeight { return nil }
         if hasInsufficientCharger { return WattSpacing.insufficientChargerPanelHeight }
         if hasOptimisedChargingHold { return WattSpacing.chargingHoldPanelHeight }
         if hasFullOnAdapter || !includesComponents { return WattSpacing.compactPanelHeight }
@@ -313,7 +321,8 @@ struct StatusPanelView: View {
             }
             .formStyle(.grouped)
             .scrollContentBackground(.hidden)
-            .fixedSize(horizontal: false, vertical: model.hasNoReading)
+            .scrollDisabled(model.usesIntrinsicPowerTableHeight)
+            .fixedSize(horizontal: false, vertical: model.usesIntrinsicPowerTableHeight)
 
             HStack {
                 Button("Settings…", action: onSettings)
