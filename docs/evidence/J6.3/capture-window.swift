@@ -71,7 +71,7 @@ func frame(_ element: AXUIElement) -> CGRect? {
 let app = AXUIElementCreateApplication(pid)
 let axWindows = attribute(app, kAXWindowsAttribute) as? [AXUIElement] ?? []
 evidence["AXWindowCount"] = axWindows.count
-let expected = ["Full", "0.0 W",
+let expected = ["Full", "19.8 W",
                 "100% · running straight off the charger",
                 "Charger input", "96 W USB-C charger", "19.8 W", "System draw", "Battery", "Settings…", "Quit Watt?"]
 let panels = axWindows.filter { window in

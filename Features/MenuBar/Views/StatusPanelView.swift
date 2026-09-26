@@ -67,7 +67,14 @@ struct StatusPanelModel {
     var components: [PowerComponent] { !helperSwitchedOff && componentReadingsEnabled && reading.freshness == .fresh && available(reading.capabilities.components) ? reading.components : [] }
     var componentsOff: Bool { helperSwitchedOff || !componentReadingsEnabled }
     var isDesktop: Bool { reading.batteryState == .noBattery && reading.capabilities.battery == .unsupported }
-    var headlineValue: String { hasNoReading ? NoReadingPresentation.value : isDesktop ? system : battery }
+    /// A full battery has no charging delta, so the useful default headline is
+    /// the measured draw from the adapter. Keep the battery delta available in
+    /// the Battery row and leave explicit menu-bar display modes untouched.
+    var headlineValue: String {
+        if hasNoReading { return NoReadingPresentation.value }
+        if isDesktop || hasFullOnAdapter { return system }
+        return battery
+    }
     var summaryLabel: String { hasNoReading ? NoReadingPresentation.title : isDesktop ? "System draw status" : "Battery status" }
     var showsComponents: Bool { includesComponents && !setupIncomplete && !hasNoReading && !hasOptimisedChargingHold && !hasFullOnAdapter && !hasInsufficientCharger }
     var panelHeight: CGFloat? {

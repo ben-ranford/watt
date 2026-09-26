@@ -1458,7 +1458,7 @@ full presentation; frozen fixture clocks remain deterministic. The model consume
 the adapter freshness flag; the store enforces age when statusReading is evaluated.
 This change does not add a production polling scheduler.
 
-Qualified full telemetry supplies “Full”, “0.0 W”, and
+Qualified full telemetry supplies “Full”, the measured system-draw headline, and
 “100% · running straight off the charger”. The fixture supplies the same grouped
 Form/Section/LabeledContent rows: Charger input / 96 W USB-C charger / 19.8 W;
 System draw / 19.8 W; Battery / 0.0 W. The full state suppresses Components and
@@ -2537,3 +2537,11 @@ battery with `BatteryPower=0 mW`, `SystemPowerIn=16301 mW` and
 distinction between battery charge rate and live adapter input; retain both
 values rather than replacing a full-battery zero with adapter nominal wattage.
 See `docs/evidence/P01/live-charge-rate-2026-09-24.md` and its capture.
+
+### Full-on-adapter headline override — 2026-09-26
+
+The full-on-adapter panel now defaults its headline to measured system draw.
+This avoids presenting the valid but unhelpful `0.0 W` battery charge delta as
+the primary value when the battery is already full. The Battery row continues
+to show the battery delta, and explicit Delta, Charger and Draw display modes
+remain independent of this panel-state presentation choice.

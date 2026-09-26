@@ -20,7 +20,7 @@ cannot claim this explanatory state. Production polling composition remains outs
 geometry and shadow. Existing semantic typography and spacing tokens remain in use.
 No custom panel background, painted chrome, rounded rectangle or gradient is introduced.
 
-Exact content:
+The Figma reference content is:
 
 - Full; 0.0 W; 100% · running straight off the charger.
 - Charger input / 96 W USB-C charger / 19.8 W.
@@ -30,7 +30,9 @@ Exact content:
 
 The power rows use the existing grouped Form/LabeledContent mapping. Components are
 absent. Native borderless footer buttons retain Settings and Quit callbacks. The
-selected native status item displays the battery glyph and 0.0 W.
+current product presentation overrides the Figma headline to measured system
+draw (19.8 W in this fixture); the Battery row remains 0.0 W and the selected
+native status item remains 0.0 W because this fixture explicitly selects Delta.
 
 ## Reproduction
 

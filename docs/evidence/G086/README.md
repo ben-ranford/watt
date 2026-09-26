@@ -27,3 +27,17 @@ and legacy contracts remain unchanged.
 This verifies the local refresh/freshness path. It does not claim battery charge
 acceptance while the host is already full: on this host `BatteryPower = 0 mW`
 is correct, while `SystemPowerIn` is the charger-input measurement.
+
+## Full-charge presentation — 2026-09-26
+
+The full-on-adapter panel headline now defaults to measured system draw. The
+Battery row remains the actual battery charge delta (`0.0 W` on a full host),
+and explicit display-mode preferences are unchanged.
+
+Verification for this override: focused full-charge and VoiceOver regressions
+passed (`15` tests, `1` opt-in accessibility skip); the full SwiftPM suite passed
+(`715` tests, `5` skips); Release build and analysis passed. The rebuilt app was
+installed at `/Users/benranford/Desktop/Watt.app`. The live native panel showed
+the draw headline and retained `Battery 0.0 W`; raw `AppleSmartBattery` telemetry
+at capture was `SystemPowerIn=12965 mW`, `SystemLoad=12965 mW`, and
+`BatteryPower=0 mW`.

@@ -21,7 +21,7 @@ final class StatusPanelVoiceOverSummaryTests: XCTestCase {
 
     func testFullOnAdapterDoesNotAnnounceBatteryFlow() {
         XCTAssertEqual(StatusPanelModel(reading: .sampleFullOnAdapter).voiceOverSummary,
-                       "Full, 0.0 W, 100% · running straight off the charger")
+                       "Full, 19.8 W, 100% · running straight off the charger")
     }
 
     func testLegacyFullDoesNotAnnounceBatteryFlow() {
