@@ -1218,12 +1218,19 @@ private final class WattFallbackStatusItem: NSObject {
             case .coachMark: self?.togglePanel()
             case .settings:
                 guard let self else { return }
-                if !NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil) {
-                    self.showFallbackWindow(title: "Watt? Settings", content: SettingsRootView()
-                        .environmentObject(self.router)
-                        .environmentObject(self.powerStore)
-                        .environmentObject(self.preferences))
-                }
+                // The AppKit fallback is used when MenuBarExtra has not
+                // materialised. In that mode macOS can report
+                // `showSettingsWindow:` as handled without creating the
+                // SwiftUI Settings scene, leaving the panel apparently dead.
+                // Present the same native SettingsRootView directly instead.
+                self.closePanel()
+                self.showFallbackWindow(title: SettingsRootView.title,
+                                        size: NSSize(width: WattSpacing.settingsWidth,
+                                                     height: WattSpacing.settingsContentHeight),
+                                        content: SettingsRootView()
+                                            .environmentObject(self.router)
+                                            .environmentObject(self.powerStore)
+                                            .environmentObject(self.preferences))
             case .onboarding:
                 guard let self else { return }
                 self.showFallbackWindow(title: "Watt? Setup", content: OnboardingFlowView()
@@ -1327,8 +1334,16 @@ private final class WattFallbackStatusItem: NSObject {
             .environmentObject(preferences))
     }
 
-    private func showFallbackWindow<Content: View>(title: String, content: Content) {
-        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 420, height: 560),
+    private func closePanel() {
+        panel?.performClose(nil)
+        panel = nil
+        router.statusPanelPresented = false
+    }
+
+    private func showFallbackWindow<Content: View>(title: String,
+                                                   size: NSSize = NSSize(width: 420, height: 560),
+                                                   content: Content) {
+        let window = NSWindow(contentRect: NSRect(origin: .zero, size: size),
                               styleMask: [.titled, .closable, .miniaturizable],
                               backing: .buffered, defer: false)
         window.title = title

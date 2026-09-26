@@ -2545,3 +2545,14 @@ This avoids presenting the valid but unhelpful `0.0 W` battery charge delta as
 the primary value when the battery is already full. The Battery row continues
 to show the battery delta, and explicit Delta, Charger and Draw display modes
 remain independent of this panel-state presentation choice.
+
+### G087 — menu-bar Settings action fallback — 2026-09-26
+
+The production host uses a public AppKit `NSStatusItem` fallback when SwiftUI's
+`MenuBarExtra` does not materialise a status item. In that path,
+`NSApp.sendAction("showSettingsWindow:")` could report success without opening
+the SwiftUI Settings scene. The fallback now closes the panel and presents the
+shared native `SettingsRootView` in a correctly sized native window directly;
+the MenuBarExtra path continues to use SwiftUI's `openSettings()` environment
+action. This keeps settings controls, persistence, accessibility and native
+window chrome shared rather than creating a second settings implementation.

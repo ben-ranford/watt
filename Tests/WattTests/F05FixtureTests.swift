@@ -1500,6 +1500,18 @@ final class C05SettingsTests: XCTestCase {
         XCTAssertEqual(window.contentView?.frame.size, NSSize(width: 580, height: 1000))
     }
 
+    func testFallbackMenuBarSettingsUsesDirectNativeSettingsSurface() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+        let start = try XCTUnwrap(source.range(of: "router.present = { [weak self] destination in"))
+        let end = try XCTUnwrap(source.range(of: "case .onboarding:", range: start.upperBound..<source.endIndex))
+        let fallbackSettingsRoute = String(source[start.upperBound..<end.lowerBound])
+        XCTAssertTrue(fallbackSettingsRoute.contains("self.closePanel()"))
+        XCTAssertTrue(fallbackSettingsRoute.contains("SettingsRootView.title"))
+        XCTAssertTrue(fallbackSettingsRoute.contains("WattSpacing.settingsWidth"))
+        XCTAssertFalse(fallbackSettingsRoute.contains("NSApp.sendAction"))
+    }
+
     func testSettingsUsesNativeControlsWithoutPaintedChrome() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"), encoding: .utf8)
