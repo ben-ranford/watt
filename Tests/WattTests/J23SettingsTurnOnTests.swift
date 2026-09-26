@@ -38,16 +38,17 @@ final class J23SettingsTurnOnTests: XCTestCase {
         }
     }
     #endif
-    func testMissingServiceFailsClosedAndCanRetry() async {
+    func testMissingServiceIsExplicitlyUnavailableInsteadOfADeadRetry() async {
         let setup = SettingsHelperSetup(); let prefs = preferences()
         XCTAssertEqual(setup.state, .notDetermined)
-        XCTAssertEqual(setup.actionTitle, "Turn On…")
-        XCTAssertTrue(setup.canTurnOn)
+        XCTAssertEqual(setup.statusTitle, "Unavailable")
+        XCTAssertEqual(setup.statusSubtitle, "This build does not include Watt? Helper.")
+        XCTAssertEqual(setup.actionTitle, "Unavailable")
+        XCTAssertFalse(setup.canTurnOn)
         await setup.turnOn(preferences: prefs)
-        XCTAssertEqual(setup.state, .failed(.unknownStatus))
-        XCTAssertEqual(setup.actionTitle, "Retry")
+        XCTAssertEqual(setup.state, .notDetermined)
         XCTAssertFalse(prefs.componentReadings)
-        XCTAssertNotNil(setup.message)
+        XCTAssertEqual(setup.message, "Component readings are unavailable because this build does not include Watt? Helper.")
     }
     func testRequiresApprovalIsNotSuccessAndRetryReconciles() async {
         let service = FakeHelperService(); service.status = .pending
@@ -137,8 +138,10 @@ final class J23SettingsTurnOnTests: XCTestCase {
         await setup.refreshStatus()
         XCTAssertNil(setup.service)
         XCTAssertFalse(setup.helperOn)
-        XCTAssertTrue(setup.canTurnOn)
-        XCTAssertEqual(setup.actionTitle, "Turn On…")
+        XCTAssertFalse(setup.canTurnOn)
+        XCTAssertEqual(setup.actionTitle, "Unavailable")
+        XCTAssertEqual(setup.statusTitle, "Unavailable")
+        XCTAssertEqual(setup.message, "Component readings are unavailable because this build does not include Watt? Helper.")
         XCTAssertTrue(prefs.componentReadings) // Persisted intent is not silently rewritten.
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"), encoding: .utf8)
@@ -158,7 +161,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
         setup.service = nil
         XCTAssertFalse(setup.helperOn)
         XCTAssertEqual(setup.state, .notDetermined)
-        XCTAssertEqual(setup.actionTitle, "Turn On…")
+        XCTAssertEqual(setup.actionTitle, "Unavailable")
         setup.service = FakeHelperService() // Replacement is not trusted by the old connection.
         XCTAssertFalse(setup.helperOn)
     }

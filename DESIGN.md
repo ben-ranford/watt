@@ -1137,7 +1137,11 @@ needs_iteration/blocking; this correction does not establish visual acceptance.
   late replies, preserves another origin, and never unregisters the system helper.
   Failed/denied/cancelled states retain native Retry and truthful failure copy.
 - J2.3 authority correction remains: no service, stored intent or preview telemetry
-  can establish On. Production has no composed signed helper and fails closed.
+  can establish On. In the production composition, where no signed helper service
+  is currently packaged, Settings now shows **Unavailable** and an explicit
+  “this build does not include Watt? Helper” explanation instead of exposing a
+  Retry/Turn On action that can only fail with `unknownStatus`. Production still
+  has no composed signed helper and fails closed.
 - J2.4/base is DEBUG-only with isolated in-memory storage and a pending-only fake
   service; its Open Settings callback is inert. Native appearance is inherited.
 - “Background Items Added” and ““Watt? Helper” can run in the background. You can
@@ -2571,3 +2575,28 @@ This is a behavior decision, not a new painted table or custom window chrome.
 The live native popover was verified at 320×291 points for the current full
 battery host sample, with all three power rows visible; a wheel event left row
 positions unchanged. Evidence: `docs/evidence/G088/`.
+
+### G089 — sampling preference restarts the live sampler; helper absence is explicit — 2026-09-27
+
+The production AppKit fallback status item owns the visible sampling task. Its
+task is now cancelled and recreated when the native Settings `Update` picker
+changes, so an in-flight five-second sleep cannot delay a newly selected
+one-second or two-second cadence. The SwiftUI `MenuBarExtra` fixture path uses
+the matching `.task(id: preferences.updateInterval)` lifecycle. Both paths keep
+the configured interval as the single source of truth; no duplicated timer or
+custom scheduler was introduced.
+
+The production `WattApp` composition currently has no packaged signed helper
+binary, authenticated transport or `HelperLifecycleAdapter` instance. That is a
+real production integration prerequisite, not a transient macOS approval
+failure. Until that target and transport are supplied, Settings now renders a
+native disabled **Unavailable** value with an explicit “this build does not
+include Watt? Helper” explanation, preserves component readings off, and does
+not offer a dead retry action. DEBUG helper stories continue to inject their
+fake/contract services and retain the approval flows. This change improves
+truthfulness and prevents false helper authority; it does not claim the signed
+helper gate is complete.
+
+Focused cadence/helper regression coverage passes 49/49. A full project build,
+installed-app smoke check and eventual helper implementation remain required
+before component readings can be marked operational.

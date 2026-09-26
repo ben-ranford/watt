@@ -73,7 +73,7 @@ final class J112SettingsTests: XCTestCase {
 
         XCTAssertEqual(SettingsHelperRows.statusTitle, "Status")
         XCTAssertEqual(SettingsHelperRows.helperTitle, "Helper")
-        XCTAssertTrue(source.contains("if !setup.wasRemoved && setup.state != .requiresApproval { Text(Self.privacy) }"))
+        XCTAssertTrue(source.contains("if setup.helperServiceAvailable && !setup.wasRemoved && setup.state != .requiresApproval"))
         let fullMenu = try XCTUnwrap(source.range(of: "} else {\n                Section {"))
         let menu = String(source[fullMenu.lowerBound...])
         XCTAssertLessThan(try XCTUnwrap(menu.range(of: "Picker(\"Show\"")).lowerBound,

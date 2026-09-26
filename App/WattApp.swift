@@ -339,7 +339,12 @@ struct WattApp: App {
                 .environmentObject(preferences)
         } label: {
             statusLabel
-                .task { await powerStore.runSampling(interval: { preferences.updateIntervalSeconds }) }
+                // The task identity is the preference value so changing the
+                // native Settings picker cancels the old sleep immediately and
+                // starts the sampler with the new cadence.
+                .task(id: preferences.updateInterval) {
+                    await powerStore.runSampling(interval: { preferences.updateIntervalSeconds })
+                }
                 .onReceive(NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.didWakeNotification)) { _ in
                     guard powerStore.observesSystemWake else { return }
                     powerStore.handleWake()
@@ -1176,9 +1181,7 @@ private final class WattFallbackStatusItem: NSObject {
         // hosts do not materialise its status item. The fallback is therefore
         // also the owner of the production sampling task; attaching polling
         // only to the hidden SwiftUI label leaves the visible widget at “—”.
-        samplingTask = Task { [powerStore, preferences] in
-            await powerStore.runSampling(interval: { preferences.updateIntervalSeconds })
-        }
+        startSampling()
 
         wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(
             forName: NSWorkspace.didWakeNotification, object: nil, queue: .main
@@ -1259,6 +1262,17 @@ private final class WattFallbackStatusItem: NSObject {
             .sink { [weak self] _ in self?.scheduleButtonUpdate() }
             .store(in: &observations)
 
+        // The fallback status item owns sampling on the production host. Its
+        // Task is outside SwiftUI's task(id:) lifecycle, so restart it when the
+        // native Settings picker changes instead of waiting for the old sleep
+        // interval to expire.
+        preferences.$updateInterval
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                DispatchQueue.main.async { [weak self] in self?.startSampling() }
+            }
+            .store(in: &observations)
+
         // Give a double-click/open launch a visible native surface even on hosts
         // whose menu-bar compositor hides third-party status items.
         DispatchQueue.main.async { [weak self] in self?.showFallbackWindow() }
@@ -1312,6 +1326,15 @@ private final class WattFallbackStatusItem: NSObject {
         MenuBarStatusAccessibility.apply(to: button, label: label)
         button.sizeToFit()
         item?.length = max(42, button.intrinsicContentSize.width + 12)
+    }
+
+    private func startSampling() {
+        samplingTask?.cancel()
+        let powerStore = self.powerStore
+        let preferences = self.preferences
+        samplingTask = Task { [powerStore, preferences] in
+            await powerStore.runSampling(interval: { preferences.updateIntervalSeconds })
+        }
     }
 
     /// `ObservableObject.objectWillChange` is emitted before an `@Published`

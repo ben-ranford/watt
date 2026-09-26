@@ -389,8 +389,10 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertTrue(root.contains("isRetrying: powerStore.isRefreshing"))
         let app = try source("App/WattApp.swift")
         for token in ["MenuBarExtra(isInserted:", ".menuBarExtraStyle(.window)", "ScenePresentationBridge(",
-                      "await powerStore.runSampling(interval:", "NSWorkspace.didWakeNotification", "powerStore.handleWake()",
-                      "private var samplingTask: Task<Void, Never>?", "samplingTask = Task { [powerStore, preferences] in",
+                      ".task(id: preferences.updateInterval)", "await powerStore.runSampling(interval:",
+                      "NSWorkspace.didWakeNotification", "powerStore.handleWake()",
+                      "private var samplingTask: Task<Void, Never>?", "startSampling()",
+                      "preferences.$updateInterval", "private func startSampling()",
                       "samplingTask?.cancel()",
                       "await J81FixtureLaunch.prepare(router: router)", "view.observeJ81StatusFixture(router: router)"] {
             XCTAssertTrue(app.contains(token), token)

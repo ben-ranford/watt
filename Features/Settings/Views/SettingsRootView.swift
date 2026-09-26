@@ -325,6 +325,10 @@ struct SettingsHelperRows: View {
                         .buttonStyle(.bordered)
                         .disabled(removing || setup.isLoading)
                         .accessibilityIdentifier("settings.helper.remove")
+                } else if !setup.helperServiceAvailable {
+                    Text(setup.actionTitle)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("settings.helper.turnOn")
                 } else {
                     if setup.wasRemoved {
                         Button(setup.actionTitle) { Task { await setup.turnOn(preferences: preferences) } }
@@ -340,7 +344,9 @@ struct SettingsHelperRows: View {
                 }
             } label: {
                 Text(Self.helperTitle)
-                if !setup.wasRemoved && setup.state != .requiresApproval { Text(Self.privacy) }
+                if setup.helperServiceAvailable && !setup.wasRemoved && setup.state != .requiresApproval {
+                    Text(Self.privacy)
+                }
             }
             if setup.isLoading { ProgressView().accessibilityLabel("Checking helper") }
             if let message = setup.message { Text(message).accessibilityIdentifier("settings.helper.result") }
@@ -362,7 +368,8 @@ struct SettingsHelperRows: View {
             if setup.helperOn && setup.reconnectedFromLastInstall {
                 Text(Self.reconnectNote).font(.footnote).foregroundStyle(.secondary)
                     .accessibilityIdentifier("settings.helper.reconnected")
-            } else if !setup.wasRemoved && !setup.helperOn && setup.state != .requiresApproval { Text(Self.approvalNote) }
+            } else if setup.helperServiceAvailable && !setup.wasRemoved && !setup.helperOn
+                        && setup.state != .requiresApproval { Text(Self.approvalNote) }
         }
         .onExitCommand {
             if setup.isLoading || setup.state == .requiresApproval { setup.cancel() }
@@ -466,11 +473,14 @@ final class SettingsHelperSetup: ObservableObject {
         self.approvals = approvals ?? HelperApprovalStore()
         observeLifecycle()
     }
+    var helperServiceAvailable: Bool { service != nil || helperOn }
     var statusTitle: String {
-        state == .requiresApproval ? SettingsHelperRows.pendingStatus : helperOn ? "On" : "Off"
+        guard helperServiceAvailable else { return "Unavailable" }
+        return state == .requiresApproval ? SettingsHelperRows.pendingStatus : helperOn ? "On" : "Off"
     }
     var statusSubtitle: String {
-        state == .requiresApproval ? SettingsHelperRows.pendingSubtitle : SettingsHelperRows.statusSubtitle
+        guard helperServiceAvailable else { return "This build does not include Watt? Helper." }
+        return state == .requiresApproval ? SettingsHelperRows.pendingSubtitle : SettingsHelperRows.statusSubtitle
     }
     var isLoading: Bool { state == .loading }
     // Preferences and telemetry samples are not evidence that a helper is installed/alive.
@@ -479,7 +489,9 @@ final class SettingsHelperSetup: ObservableObject {
         if let lifecycle = service as? HelperLifecycleAdapter { return lifecycle.state == .connected }
         return true // Verified P05 reconnect is also evidence, even without a Settings-owned service.
     }
-    var canTurnOn: Bool { !isLoading && !helperOn }
+    // The production app currently has no composed signed helper/IPC service.
+    // Do not present a retry button that can only fail with unknownStatus.
+    var canTurnOn: Bool { service != nil && !isLoading && !helperOn }
 
     private func observeLifecycle() {
         lifecycleObservation = nil
@@ -559,6 +571,7 @@ final class SettingsHelperSetup: ObservableObject {
         }
     }
     var actionTitle: String {
+        guard service != nil || helperOn else { return "Unavailable" }
         switch state {
         case .failed, .denied, .cancelled: return "Retry"
         case .requiresApproval: return "Check Approval"
@@ -567,7 +580,9 @@ final class SettingsHelperSetup: ObservableObject {
     }
     var message: String? {
         switch state {
-        case .notDetermined: return nil
+        case .notDetermined: return !helperServiceAvailable
+            ? "Component readings are unavailable because this build does not include Watt? Helper."
+            : nil
         case .loading: return "Checking helper…"
         case .requiresApproval: return nil // The status row owns pending copy; no duplicate footer.
         case .denied: return "Helper access is denied. Allow Watt? Helper in System Settings, then retry."

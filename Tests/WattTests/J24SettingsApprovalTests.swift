@@ -212,10 +212,10 @@ final class J24SettingsApprovalTests: XCTestCase {
         XCTAssertFalse(setup.helperOn)
         setup.service = nil
         await setup.refreshStatus()
-        XCTAssertEqual(setup.statusTitle, "Off")
+        XCTAssertEqual(setup.statusTitle, "Unavailable")
         let preferences = preferences(); preferences.componentReadings = true
         await setup.turnOn(preferences: preferences)
-        XCTAssertEqual(setup.state, .failed(.unknownStatus))
+        XCTAssertEqual(setup.state, .notDetermined)
         XCTAssertFalse(setup.helperOn) // Persisted intent and preview telemetry confer no authority.
     }
 }
