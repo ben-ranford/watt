@@ -92,7 +92,15 @@ final class UserDefaultsStorage: PreferenceStorage {
 }
 
 enum WattPrecision: String, CaseIterable, Codable, Sendable {
-    case decimal = "42.1 W", whole = "42 W"
+    case decimal = "42.1 W", whole = "42 W", hundredths = "42.10 W"
+
+    var decimalPlaces: Int {
+        switch self {
+        case .whole: return 0
+        case .decimal: return 1
+        case .hundredths: return 2
+        }
+    }
 }
 
 private struct StoredPreferences: Codable {

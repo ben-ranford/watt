@@ -241,11 +241,13 @@ struct PowerComponent: Identifiable, Equatable, Sendable {
 enum PowerFormatter {
     static func watts(_ value: Double?, signed: Bool = true, precision: WattPrecision = .decimal) -> String {
         guard let value, value.isFinite else { return "—" }
-        let scale = precision == .decimal ? 10.0 : 1.0
+        let scale = pow(10.0, Double(precision.decimalPlaces))
         let rounded = (value * scale).rounded() / scale
         guard rounded.isFinite else { return "—" }
-        if rounded == 0 { return precision == .decimal ? "0.0 W" : "0 W" } // Includes negative zero and sub-precision noise.
-        let format = precision == .decimal ? (signed ? "%+.1f W" : "%.1f W") : (signed ? "%+.0f W" : "%.0f W")
-        return String(format: format, locale: Locale(identifier: "en_US_POSIX"), rounded)
+        if rounded == 0 {
+            return String(format: "%.*f W", locale: Locale(identifier: "en_US_POSIX"), precision.decimalPlaces, 0.0)
+        } // Includes negative zero and sub-precision noise.
+        let format = signed ? "%+.*f W" : "%.*f W"
+        return String(format: format, locale: Locale(identifier: "en_US_POSIX"), precision.decimalPlaces, rounded)
     }
 }

@@ -29,6 +29,7 @@ final class J112SettingsTests: XCTestCase {
         XCTAssertEqual(preferences.displayMode, .delta)
         XCTAssertTrue(preferences.showSymbol)
         XCTAssertEqual(preferences.precision, .decimal)
+        XCTAssertEqual(WattPrecision.allCases.map(\.rawValue), ["42.1 W", "42 W", "42.10 W"])
         XCTAssertEqual(preferences.selectedComponents, ["CPU", "GPU"])
         XCTAssertEqual(preferences.updateInterval, "Every 2 seconds")
         XCTAssertTrue(preferences.smoothReadings)

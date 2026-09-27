@@ -137,6 +137,14 @@ final class F05FixtureTests: XCTestCase {
         XCTAssertEqual(PowerFormatter.watts(.nan), "—")
     }
 
+    func testC01FormatterSupportsHundredthsPrecision() {
+        XCTAssertEqual(PowerFormatter.watts(42.106, precision: .hundredths), "+42.11 W")
+        XCTAssertEqual(PowerFormatter.watts(-18.4, precision: .hundredths), "-18.40 W")
+        XCTAssertEqual(PowerFormatter.watts(65, signed: false, precision: .hundredths), "65.00 W")
+        XCTAssertEqual(PowerFormatter.watts(-0.001, precision: .hundredths), "0.00 W")
+        XCTAssertEqual(PowerFormatter.watts(42.1, precision: .whole), "+42 W")
+    }
+
     @MainActor
     func testC01ActionsUseSuppliedCallbacks() {
         let router = AppRouter()
@@ -1472,6 +1480,12 @@ final class C05SettingsTests: XCTestCase {
                        || loaded.openAtLogin || loaded.checkForUpdatesAutomatically)
         XCTAssertTrue(loaded.fullyChargedNotification)
         XCTAssertEqual(MenuBarStatusLabel(reading: .sampleCharging, preferences: loaded).text, "+42 W")
+
+        preferences.precision = .hundredths
+        XCTAssertEqual(MenuBarStatusLabel(reading: .sampleCharging, preferences: preferences).text, "+42.10 W")
+        let hundredthsLoaded = PreferencesStore(storage: storage)
+        XCTAssertEqual(hundredthsLoaded.precision, .hundredths)
+        XCTAssertEqual(MenuBarStatusLabel(reading: .sampleCharging, preferences: hundredthsLoaded).text, "+42.10 W")
     }
 
     func testOldPreferencesWithoutPrecisionRemainReadable() throws {

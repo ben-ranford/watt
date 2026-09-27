@@ -2600,3 +2600,14 @@ helper gate is complete.
 Focused cadence/helper regression coverage passes 49/49. A full project build,
 installed-app smoke check and eventual helper implementation remain required
 before component readings can be marked operational.
+
+### G091 — precision offers whole, tenths and hundredths — 2026-09-27
+
+The native Settings **Precision** picker now exposes three persisted choices:
+`42.1 W` (`.decimal`), `42 W` (`.whole`) and `42.10 W` (`.hundredths`). All
+menu-bar and component readings continue through `PowerFormatter.watts`, which
+rounds and pads to the selected number of decimal places, including zero values
+(`0 W`, `0.0 W` or `0.00 W`). Existing stored preferences remain compatible and
+still default to tenths when no precision was saved. The native picker remains
+the single editing control; no custom selector or duplicated formatting is
+introduced.
