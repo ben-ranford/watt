@@ -20,8 +20,8 @@ final class J23SettingsTurnOnTests: XCTestCase {
         XCTAssertEqual(SettingsRootView.title, "Watt? Settings")
         XCTAssertEqual(SettingsHelperRows.statusTitle, "Status")
         XCTAssertEqual(SettingsHelperRows.helperTitle, "Helper")
-        XCTAssertEqual(SettingsHelperRows.statusSubtitle, "CPU/GPU estimates appear only when both are available. Display, SSD and Other are unavailable.")
-        XCTAssertEqual(SettingsHelperRows.privacy, "Reads Apple’s CPU/GPU power estimates. No network, nothing leaves this Mac.")
+        XCTAssertEqual(SettingsHelperRows.statusSubtitle, "Reading CPU and GPU power.")
+        XCTAssertEqual(SettingsHelperRows.privacy, "Reads power sensors only. No network, nothing leaves this Mac.")
         XCTAssertEqual(SettingsHelperRows.turnOn, "Turn On…")
         let fixture = try ScenarioRegistry.resolve("J2.3")
         XCTAssertEqual(fixture.story.node, "J2.3")
@@ -35,7 +35,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
         window.close()
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"), encoding: .utf8)
-        for token in ["Form {", "Picker(\"Show\"", ".pickerStyle(.menu)", ".buttonStyle(.borderedProminent)", ".disabled(removing || !setup.canTurnOn)", "ProgressView()", "role: .cancel", "router.openApprovalSettings()", "sectionTitle: helperExcerpt ? \"Helper\" : \"Component Readings\"", "Text(sectionTitle)"] {
+        for token in ["Form {", "Picker(\"Show\"", ".pickerStyle(.menu)", ".buttonStyle(.borderedProminent)", ".disabled(removing || !setup.canTurnOn)", "ProgressView()", "role: .cancel", "router.openApprovalSettings()", "Text(Self.helperTitle)", "Text(mode.title).accessibilityLabel(mode.title)"] {
             XCTAssertTrue(source.contains(token), token)
         }
     }

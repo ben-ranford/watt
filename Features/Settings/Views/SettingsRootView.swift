@@ -77,21 +77,23 @@ struct SettingsRootView: View {
             } else if showsRemovedExcerpt {
                 Section("Menu Bar") {
                     Picker("Show", selection: $preferences.displayMode) {
-                        ForEach(WattDisplayMode.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                        ForEach(WattDisplayMode.allCases, id: \.self) { mode in
+                            Text(mode.title).accessibilityLabel(mode.title).tag(mode)
+                        }
                     }
                     .accessibilityIdentifier("settings.show")
                 }
                 SettingsHelperRows(setup: router.settingsHelperSetup, removing: removing,
-                                   sectionTitle: "Helper",
                                    remove: { removal = .helper })
             } else if removalExcerpt {
                 SettingsHelperRows(setup: router.settingsHelperSetup, removing: removing,
-                                   sectionTitle: "Helper",
                                    remove: { removal = .helper })
             } else if relaunchExcerpt {
                 Section("Menu Bar") {
                     Picker("Show", selection: $preferences.displayMode) {
-                        ForEach(WattDisplayMode.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                        ForEach(WattDisplayMode.allCases, id: \.self) { mode in
+                            Text(mode.title).accessibilityLabel(mode.title).tag(mode)
+                        }
                     }
                     .accessibilityIdentifier("settings.show")
                     Toggle("Show symbol", isOn: $preferences.showSymbol)
@@ -106,7 +108,9 @@ struct SettingsRootView: View {
             } else {
                 Section {
                     Picker("Show", selection: $preferences.displayMode) {
-                        ForEach(WattDisplayMode.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                        ForEach(WattDisplayMode.allCases, id: \.self) { mode in
+                            Text(mode.title).accessibilityLabel(mode.title).tag(mode)
+                        }
                     }
                     .accessibilityIdentifier("settings.show")
                     .focused($focusedControl, equals: .show)
@@ -173,7 +177,6 @@ struct SettingsRootView: View {
                 if !menuBarExcerpt {
                     SettingsHelperRows(setup: router.settingsHelperSetup,
                                        removing: removing,
-                                       sectionTitle: helperExcerpt ? "Helper" : "Component Readings",
                                        remove: { removal = .helper })
                 }
                 if helperExcerpt, let removalMessage {
@@ -334,8 +337,8 @@ struct SettingsHelperRows: View {
     static let pendingSubtitle = "Turn on “Watt? Helper” in Login Items & Extensions."
     static let pendingStatus = "Waiting for approval…"
     static let openSettings = "Open System Settings"
-    static let statusSubtitle = "CPU/GPU estimates appear only when both are available. Display, SSD and Other are unavailable."
-    static let privacy = "Reads Apple’s CPU/GPU power estimates. No network, nothing leaves this Mac."
+    static let statusSubtitle = "Reading CPU and GPU power."
+    static let privacy = "Reads power sensors only. No network, nothing leaves this Mac."
     static let turnOn = "Turn On…"
     static let approvalNote = "Administrator approval is required in Login Items & Extensions."
     @ObservedObject var setup: SettingsHelperSetup
@@ -343,7 +346,6 @@ struct SettingsHelperRows: View {
     @EnvironmentObject private var router: AppRouter
     @Environment(\.scenePhase) private var scenePhase
     let removing: Bool
-    let sectionTitle: String
     let remove: () -> Void
 
     var body: some View {
@@ -409,13 +411,7 @@ struct SettingsHelperRows: View {
                 Button("Cancel", role: .cancel) { setup.cancel() }
             }
         } header: {
-            if sectionTitle == "Component Readings" {
-                // Keep the full Settings section title explicit for source-level
-                // contracts; the setup excerpt uses the title Helper.
-                Text("Component Readings")
-            } else {
-                Text(sectionTitle)
-            }
+            Text(Self.helperTitle)
         } footer: {
             if setup.helperOn && setup.reconnectedFromLastInstall {
                 Text(Self.reconnectNote).font(.footnote).foregroundStyle(.secondary)

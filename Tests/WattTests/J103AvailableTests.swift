@@ -167,6 +167,27 @@ final class J103AvailableTests: XCTestCase {
     }
     #endif
 
+    func testAvailableOfferCopy() throws {
+        XCTAssertEqual(UpdateAvailableContent.headline(version: "1.1"), "Watt? 1.1 is out")
+        XCTAssertEqual(UpdateAvailableContent.summary(installedVersion: "1.0"), "You have 1.0. Here’s what changed.")
+        XCTAssertEqual(UpdateAvailableContent.changesHeading, "What changed")
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("App/RootSceneView.swift"), encoding: .utf8)
+        for token in [
+            "Text(Self.headline(version: version))",
+            "Text(Self.summary(installedVersion: router.currentAppVersion))",
+            "Text(Self.changesHeading)",
+            ".accessibilityLabel(Self.headline(version: version))",
+            ".accessibilityLabel(Self.summary(installedVersion: router.currentAppVersion))",
+            ".accessibilityLabel(Self.changesHeading)"
+        ] {
+            XCTAssertTrue(source.contains(token), token)
+        }
+        XCTAssertFalse(source.contains("A new version of Watt? is available"))
+        XCTAssertFalse(source.contains("What’s New in"))
+    }
+
     func testAvailableNativeLayout() async {
         _ = NSApplication.shared
         let (router, _) = await offered()

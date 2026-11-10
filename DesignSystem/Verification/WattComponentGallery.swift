@@ -53,7 +53,7 @@ struct WattComponentGallery: View {
                 } trailing: {
                     Picker("Show", selection: $reading) {
                         ForEach(WattDisplayMode.allCases, id: \.self) { mode in
-                            Text(mode.rawValue).tag(mode)
+                            Text(mode.title).accessibilityLabel(mode.title).tag(mode)
                         }
                     }
                     .labelsHidden()
@@ -80,7 +80,7 @@ struct WattComponentGallery: View {
                     .fixedSize()
                 }
                 WattFormRow {
-                    WattRowLabel(title: "Helper", subtitle: "Reads power sensors only. No network, nothing leaves this Mac.")
+                    WattRowLabel(title: SettingsHelperRows.helperTitle, subtitle: SettingsHelperRows.privacy)
                 } trailing: {
                     WattActionButton(title: "Remove…") { showsConfirmation = true }
                         .accessibilityIdentifier("gallery.neutral-remove")
@@ -207,7 +207,9 @@ struct WattReferenceSpecimen: View {
             Section {
                 WattFormRow { Text("Show") } trailing: {
                     Picker("Show", selection: $reading) {
-                        ForEach(WattDisplayMode.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                        ForEach(WattDisplayMode.allCases, id: \.self) { mode in
+                            Text(mode.title).accessibilityLabel(mode.title).tag(mode)
+                        }
                     }.labelsHidden().pickerStyle(.menu).fixedSize()
                 }
                 WattFormRow { Text("Show symbol") } trailing: {
@@ -232,12 +234,12 @@ struct WattReferenceSpecimen: View {
                     WattRowLabel(title: "Smooth readings", subtitle: smoothing ? "On — averages the last 5 seconds, so the number doesn’t jump." : "Off — shows the latest reading.")
                 } trailing: { miniSwitch("Smooth readings", value: $smoothing) }
             }
-            Section("Helper") {
+            Section(SettingsHelperRows.helperTitle) {
                 WattFormRow {
-                    WattRowLabel(title: "Status", subtitle: removed ? "Demonstration helper removed." : "Reading CPU, GPU, display and the rest.")
+                    WattRowLabel(title: SettingsHelperRows.statusTitle, subtitle: removed ? "Demonstration helper removed." : SettingsHelperRows.statusSubtitle)
                 } trailing: { Text(removed ? "Off" : "On").foregroundStyle(WattColors.secondaryLabel) }
                 WattFormRow {
-                    WattRowLabel(title: "Helper", subtitle: "Reads power sensors only. No network, nothing leaves this Mac.")
+                    WattRowLabel(title: SettingsHelperRows.helperTitle, subtitle: SettingsHelperRows.privacy)
                 } trailing: {
                     WattActionButton(title: "Remove…") { confirmsRemoval = true }
                         .disabled(removed).accessibilityIdentifier("specimen.neutral-remove")

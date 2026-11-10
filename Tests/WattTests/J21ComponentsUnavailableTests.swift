@@ -33,9 +33,9 @@ final class J21ComponentsUnavailableTests: XCTestCase {
         XCTAssertFalse(sub.autoenablesItems)
         XCTAssertEqual(sub.minimumWidth, StatusItemContextMenu.unavailableReadingsMenuWidth)
         XCTAssertEqual(sub.items.map { $0.isSeparatorItem ? "|" : $0.title },
-                       ["Delta", "Charger", "Draw", "Components", "|", "Icon", "|", "Turn On Helper…"])
+                       ["Battery Delta", "Charger Input", "System Draw", "Per Component", "|", "Icon Only", "|", "Turn On Helper…"])
         XCTAssertFalse(sub.items[3].isEnabled)
-        XCTAssertEqual(sub.items.filter { $0.state == .on }.map(\.title), ["Delta"])
+        XCTAssertEqual(sub.items.filter { $0.state == .on }.map(\.title), ["Battery Delta"])
         XCTAssertTrue((menu.items + sub.items).allSatisfy { $0.view == nil && $0.image == nil })
         XCTAssertEqual(menu.items[3].keyEquivalent, ",")
         XCTAssertEqual(menu.items[8].keyEquivalent, "q")
@@ -53,9 +53,9 @@ final class J21ComponentsUnavailableTests: XCTestCase {
                                                   componentsAvailable: { available })
         let sub = try XCTUnwrap(menu.item(withTitle: "Show in Menu Bar")?.submenu)
         available = false // Capability loss while a menu is open must fail closed.
-        try invoke("Components", in: sub)
+        try invoke("Per Component", in: sub)
         XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .delta)
-        try invoke("Charger", in: sub)
+        try invoke("Charger Input", in: sub)
         XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .charger)
         prefs.displayMode = .components
         let rebuilt = StatusItemContextMenu.makeMenu(router: AppRouter(), preferences: prefs)
@@ -75,7 +75,7 @@ final class J21ComponentsUnavailableTests: XCTestCase {
                                                   componentsAvailable: { true })
         let sub = try XCTUnwrap(menu.item(withTitle: "Show in Menu Bar")?.submenu)
         XCTAssertFalse(sub.items[3].isEnabled)
-        try invoke("Components", in: sub)
+        try invoke("Per Component", in: sub)
         try invoke("Turn On Helper…", in: sub)
         XCTAssertEqual(destinations, [.settings])
         XCTAssertFalse(prefs.componentReadings)
@@ -86,7 +86,7 @@ final class J21ComponentsUnavailableTests: XCTestCase {
         let enabledSub = try XCTUnwrap(enabled.item(withTitle: "Show in Menu Bar")?.submenu)
         XCTAssertTrue(enabledSub.items[3].isEnabled)
         XCTAssertFalse(enabledSub.items.contains { $0.title == "Turn On Helper…" })
-        try invoke("Components", in: enabledSub)
+        try invoke("Per Component", in: enabledSub)
         XCTAssertEqual(prefs.displayMode, .components)
         XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .components)
     }

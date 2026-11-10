@@ -6,6 +6,17 @@ import WattMaintenanceShared
 
 enum WattDisplayMode: String, CaseIterable, Hashable, Codable, Sendable {
     case delta = "Delta", charger = "Charger", draw = "Draw", components = "Components", iconOnly = "Icon Only"
+
+    /// Menu bar and Settings label. Raw values stay the stored identifiers.
+    var title: String {
+        switch self {
+        case .delta: return "Battery Delta"
+        case .charger: return "Charger Input"
+        case .draw: return "System Draw"
+        case .components: return "Per Component"
+        case .iconOnly: return "Icon Only"
+        }
+    }
 }
 
 enum ServiceFailure: String, Error, Codable, Sendable {

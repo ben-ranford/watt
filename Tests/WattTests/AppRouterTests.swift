@@ -209,10 +209,8 @@ final class AppRouterTests: XCTestCase {
     }
 
     func testEveryDisplayModeMenuActionPersistsAndRebuiltMenuChecksOnlySelection() throws {
-        let modes: [(String, WattDisplayMode)] = [
-            ("Delta", .delta), ("Charger", .charger), ("Draw", .draw),
-            ("Components", .components), ("Icon", .iconOnly)
-        ]
+        let modes: [(String, WattDisplayMode)] = WattDisplayMode.allCases.map { ($0.title, $0) }
+        XCTAssertEqual(modes.map(\.0), ["Battery Delta", "Charger Input", "System Draw", "Per Component", "Icon Only"])
         for initial in WattDisplayMode.allCases {
             for (title, selected) in modes {
                 let storage = InMemoryStorage()

@@ -83,6 +83,10 @@ struct SoftwareUpdateContent: View {
 }
 
 struct UpdateAvailableContent: View {
+    static func headline(version: String) -> String { "Watt? \(version) is out" }
+    static func summary(installedVersion: String) -> String { "You have \(installedVersion). Here’s what changed." }
+    static let changesHeading = "What changed"
+
     @ObservedObject var router: AppRouter
     @ObservedObject var store: UpdateStore
     let version: String
@@ -103,13 +107,16 @@ struct UpdateAvailableContent: View {
                 Image("WattAppIcon").resizable().frame(width: 64, height: 64)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("A new version of Watt? is available")
+                    Text(Self.headline(version: version))
                         .font(.body).fontWeight(.semibold)
-                    Text("Watt? \(version) is available — you have \(router.currentAppVersion).")
+                        .accessibilityLabel(Self.headline(version: version))
+                    Text(Self.summary(installedVersion: router.currentAppVersion))
                         .font(.subheadline).foregroundStyle(.secondary)
+                        .accessibilityLabel(Self.summary(installedVersion: router.currentAppVersion))
                 }
             }
-            Text("What’s New in \(version)").font(.headline)
+            Text(Self.changesHeading).font(.headline)
+                .accessibilityLabel(Self.changesHeading)
             Form {
                 if version == "1.1" {
                     releaseRow("Neural Engine", "Now in Components.")

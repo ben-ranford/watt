@@ -113,7 +113,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
         let router = AppRouter()
         let menu = StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { true })
         let modes = try XCTUnwrap(menu.items.first?.submenu)
-        XCTAssertEqual(modes.items.map(\.title), ["Delta", "Charger", "Draw", "Components", "", "Icon"])
+        XCTAssertEqual(modes.items.map(\.title), ["Battery Delta", "Charger Input", "System Draw", "Per Component", "", "Icon Only"])
         modes.performActionForItem(at: 5)
         XCTAssertEqual(preferences.displayMode, .iconOnly)
         XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .iconOnly)
@@ -121,7 +121,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
         XCTAssertNil(label.text)
         XCTAssertEqual(label.symbolName, "battery.100percent.bolt")
         let rebuilt = StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { true })
-        XCTAssertEqual(rebuilt.items.first?.submenu?.items.filter { $0.state == .on }.map(\.title), ["Icon"])
+        XCTAssertEqual(rebuilt.items.first?.submenu?.items.filter { $0.state == .on }.map(\.title), ["Icon Only"])
         for item in modes.items { XCTAssertNil(item.view) }
         var routes: [AppDestination] = []
         router.present = { routes.append($0) }
