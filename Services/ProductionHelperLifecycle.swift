@@ -275,9 +275,13 @@ struct ProductionHelperComposition {
             do { object = try PropertyListSerialization.propertyList(from: Data(contentsOf: plist), format: nil) }
             catch { throw ServiceFailure.invalidData }
             guard let fields = object as? [String: Any],
+                  Set(fields.keys) == Set(["Label", "AssociatedBundleIdentifiers", "BundleProgram", "MachServices", "ProcessType", "AbandonProcessGroup"]),
                   fields["Label"] as? String == HelperIdentity.helperIdentifier,
+                  fields["AssociatedBundleIdentifiers"] as? [String] == [HelperIdentity.appIdentifier],
                   fields["BundleProgram"] as? String == "Contents/MacOS/" + HelperIdentity.executableName,
                   fields["Program"] == nil, fields["ProgramArguments"] == nil,
+                  fields["ProcessType"] as? String == "Background",
+                  fields["AbandonProcessGroup"] as? Bool == false,
                   fields["MachServices"] as? [String: Bool] == [HelperIdentity.machService: true] else {
                 throw ServiceFailure.invalidData
             }

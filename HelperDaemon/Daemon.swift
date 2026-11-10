@@ -35,8 +35,12 @@ private final class Session: NSObject, WattHelperXPC, @unchecked Sendable {
             switch request.command {
             case .ping: status = .ready
             case .prepareUpdate:
-                await coordinator.stop()
-                status = .preparingUpdate
+                if request.isAdmitted {
+                    await coordinator.stop()
+                    status = .preparingUpdate
+                } else {
+                    status = .unavailable
+                }
             case .sample:
                 // Never decode or present guessed schema. Source capture must establish it first.
                 status = .sourceUnvalidated
@@ -68,6 +72,10 @@ private final class ListenerDelegate: NSObject, NSXPCListenerDelegate, @unchecke
         }
         guard admitted else { return false }
         guard let requirement = try? policy.appRequirement else { remove(id); return false }
+        // macOS 13+ checks this requirement inside XPC before the connection is
+        // established. Certificate mode pins the Apple team and bundle ID;
+        // protected mode pins the installed app's cdhash. The listener sets the
+        // same requirement before resume.
         connection.setCodeSigningRequirement(requirement)
         connection.exportedInterface = NSXPCInterface(with: WattHelperXPC.self)
         connection.exportedObject = Session(coordinator: coordinator, instance: instance)

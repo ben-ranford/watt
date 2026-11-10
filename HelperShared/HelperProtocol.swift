@@ -28,6 +28,12 @@ public struct HelperRequest: Codable, Equatable, Sendable {
         self.receipt = receipt
         self.command = command
     }
+
+    /// `prepareUpdate` stops the privileged sampler. The app always binds that
+    /// command to an update receipt; a request without one is not admitted.
+    public var isAdmitted: Bool {
+        command != .prepareUpdate || receipt != nil
+    }
 }
 
 public enum HelperCaptureStatus: String, Codable, Sendable {

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
 <key>Label</key><string>dev.watt.verification.helper</string>
+<key>AssociatedBundleIdentifiers</key>
+<array><string>dev.watt.verification</string></array>
 <key>BundleProgram</key><string>Contents/MacOS/WattHelper</string>
 <key>MachServices</key><dict><key>dev.watt.verification.helper</key><true/></dict>
 <key>ProcessType</key><string>Background</string>

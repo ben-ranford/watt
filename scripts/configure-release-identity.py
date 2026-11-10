@@ -70,7 +70,9 @@ try:
     refs = [v for v in objects.values() if v.get('isa') == 'PBXFileReference' and str(v.get('path', '')).startswith('Resources/Helper/') and str(v.get('path', '')).endswith('.helper.plist')]
     if len(refs) != 1: raise ValueError('expected one helper daemon resource')
     old_path = root / refs[0]['path']; daemon = plistlib.loads(old_path.read_bytes())
-    daemon['Label'] = identity + '.helper'; daemon['MachServices'] = {identity + '.helper': True}
+    daemon['Label'] = identity + '.helper'
+    daemon['MachServices'] = {identity + '.helper': True}
+    daemon['AssociatedBundleIdentifiers'] = [identity]
     if args.write:
         changes[daemon_path] = plistlib.dumps(daemon)
         if old_path != daemon_path:
