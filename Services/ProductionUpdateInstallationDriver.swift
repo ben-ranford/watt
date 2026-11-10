@@ -145,6 +145,9 @@ final class ProductionUpdateInstallationDriver: UpdateInstallationDriver {
         let identity = try verified(candidate(receipt))
         guard identity.identifier == manifest.identity, identity.build == manifest.build,
               identity.minimumSystemVersion == manifest.minimumSystemVersion else { throw ServiceFailure.untrustedIdentity }
+        // Quarantine is not part of the signature. Clear it only after the
+        // digest and the code identity have both been checked.
+        try QuarantineAttribute.clear(at: candidate(receipt))
         value.replacement = identity; try save(value)
     }
     func verifyStaged(manifest: UpdateManifest, receipt: OperationReceipt) throws {
@@ -217,6 +220,7 @@ final class ProductionUpdateInstallationDriver: UpdateInstallationDriver {
         do { try move(candidate(receipt), to: application, expecting: value.replacement!) }
         catch { throw ServiceFailure.interruptedUpdate }
         guard try verified(application) == value.replacement else { throw ServiceFailure.interruptedUpdate }
+        try QuarantineAttribute.clear(at: application)
     }
     func placement(manifest: UpdateManifest, receipt: OperationReceipt) throws -> UpdatePlacement {
         let value = try record(receipt)
@@ -243,6 +247,7 @@ final class ProductionUpdateInstallationDriver: UpdateInstallationDriver {
     }
     func launch(manifest: UpdateManifest, receipt: OperationReceipt) throws {
         guard try placement(manifest: manifest, receipt: receipt) == .replacement else { throw ServiceFailure.untrustedIdentity }
+        try QuarantineAttribute.clear(at: application)
         try witness.launch(bundle: application, manifest: manifest, receipt: receipt)
     }
     func launched(manifest: UpdateManifest, receipt: OperationReceipt) throws -> Bool {

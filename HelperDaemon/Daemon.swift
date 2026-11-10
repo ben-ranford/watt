@@ -73,9 +73,10 @@ private final class ListenerDelegate: NSObject, NSXPCListenerDelegate, @unchecke
         guard admitted else { return false }
         guard let requirement = try? policy.appRequirement else { remove(id); return false }
         // macOS 13+ checks this requirement inside XPC before the connection is
-        // established. Certificate mode pins the Apple team and bundle ID;
-        // protected mode pins the installed app's cdhash. The listener sets the
-        // same requirement before resume.
+        // established. Release builds pin the installed app's cdhash. Certificate
+        // mode is only the Apple Development configuration. A stale or missing
+        // pin rejects the caller; it is never replaced with an identifier-only
+        // requirement. The listener sets the same requirement before resume.
         connection.setCodeSigningRequirement(requirement)
         connection.exportedInterface = NSXPCInterface(with: WattHelperXPC.self)
         connection.exportedObject = Session(coordinator: coordinator, instance: instance)

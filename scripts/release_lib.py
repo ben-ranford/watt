@@ -25,11 +25,6 @@ TAG_RE = re.compile(r'^v([1-9][0-9]*|0)\.([0-9]+)\.([0-9]+)$')
 IDENTITY_RE = re.compile(r'^[A-Za-z][A-Za-z0-9-]*(?:\.[A-Za-z0-9-]+)+$')
 BUILD_RE = re.compile(r'^[1-9][0-9]*$')
 MINIMUM_RE = re.compile(r'^[1-9][0-9]*(?:\.(?:0|[1-9][0-9]*)){1,2}$')
-TEAM_RE = re.compile(r'^[A-Z0-9]{10}$')
-NOTARY_KEY_RE = re.compile(r'^[A-Z0-9]{10}$')
-ISSUER_RE = re.compile(
-    r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
-)
 ED25519_SPKI_PREFIX = bytes.fromhex('302a300506032b6570032100')
 BASELINE_VERSION = '1.0.0'
 BASELINE_BUILD = 1
@@ -307,24 +302,3 @@ def parse_show_build_settings(text: str, target: str) -> dict[str, str]:
             settings[match.group(1)] = match.group(2)
     return settings
 
-
-def write_export_options(mode: str, team_id: str, path: Path) -> None:
-    if mode == 'developer-id':
-        if TEAM_RE.fullmatch(team_id) is None:
-            raise ReleaseError('APPLE_TEAM_ID must be 10 letters or digits')
-        payload = {
-            'method': 'developer-id',
-            'signingStyle': 'manual',
-            'signingCertificate': 'Developer ID Application',
-            'teamID': team_id,
-        }
-    elif mode == 'ad-hoc':
-        payload = {
-            'method': 'mac-application',
-            'signingStyle': 'manual',
-            'signingCertificate': '-',
-        }
-    else:
-        raise ReleaseError('unknown export mode')
-    with path.open('wb') as handle:
-        plistlib.dump(payload, handle)

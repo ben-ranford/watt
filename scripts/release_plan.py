@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Decide signing, notarization, and update embedding from the environment.
+"""Decide update embedding for an ad-hoc release.
 
-Secret values are not printed. Partial sets are errors. A completely absent
-set is skipped and explained on stderr.
+Releases are ad-hoc signed and are not notarised. Apple Developer ID and
+notary secrets are rejected so a leftover secret cannot change that.
+Secret values are not printed. Partial update-url sets are errors.
 """
 
 from __future__ import annotations
@@ -16,8 +17,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import release_lib
 
 
-SIGNING_NAMES = ('APPLE_CERTIFICATE_P12_BASE64', 'APPLE_CERTIFICATE_PASSWORD', 'APPLE_TEAM_ID')
-NOTARY_NAMES = ('APPLE_NOTARY_KEY_ID', 'APPLE_NOTARY_ISSUER_ID', 'APPLE_NOTARY_KEY_P8_BASE64')
+APPLE_SECRET_NAMES = (
+    'APPLE_CERTIFICATE_P12_BASE64',
+    'APPLE_CERTIFICATE_PASSWORD',
+    'APPLE_TEAM_ID',
+    'APPLE_NOTARY_KEY_ID',
+    'APPLE_NOTARY_ISSUER_ID',
+    'APPLE_NOTARY_KEY_P8_BASE64',
+)
 
 
 def _present(env: dict[str, str], name: str) -> bool:
@@ -36,43 +43,15 @@ def build_plan(env: dict[str, str], *, require_release: bool) -> dict[str, objec
         except release_lib.ReleaseError as error:
             errors.append(str(error))
 
-    signing_count = sum(_present(env, name) for name in SIGNING_NAMES)
-    notary_count = sum(_present(env, name) for name in NOTARY_NAMES)
-    code_signing = 'ad-hoc'
-    team_id = ''
-    if signing_count == 0:
-        messages.append(
-            'Developer ID signing secrets are absent. Archiving with the project ad-hoc identity and skipping notarization.'
-        )
-    elif signing_count != len(SIGNING_NAMES):
+    apple = [name for name in APPLE_SECRET_NAMES if _present(env, name)]
+    if apple:
         errors.append(
-            'Refusing to sign. Set all of APPLE_CERTIFICATE_P12_BASE64, APPLE_CERTIFICATE_PASSWORD, and APPLE_TEAM_ID, or leave all of them unset.'
+            'Developer ID signing and notarization are not the release path. Remove these repository secrets: '
+            + ', '.join(apple)
+            + '.'
         )
     else:
-        team_id = env['APPLE_TEAM_ID'].strip()
-        if release_lib.TEAM_RE.fullmatch(team_id) is None:
-            errors.append('APPLE_TEAM_ID must be 10 uppercase letters or digits.')
-        else:
-            code_signing = 'developer-id'
-            messages.append('Developer ID signing secrets are present. The archive will be signed.')
-
-    notarize = False
-    if notary_count == 0:
-        messages.append('Notarization secrets are absent. Skipping notarization.')
-    elif notary_count != len(NOTARY_NAMES):
-        errors.append(
-            'Refusing to notarize. Set all of APPLE_NOTARY_KEY_ID, APPLE_NOTARY_ISSUER_ID, and APPLE_NOTARY_KEY_P8_BASE64, or leave all of them unset.'
-        )
-    elif code_signing != 'developer-id':
-        errors.append('Notarization secrets are set, but Developer ID signing secrets are not.')
-    elif (
-        release_lib.NOTARY_KEY_RE.fullmatch(env['APPLE_NOTARY_KEY_ID'].strip()) is None
-        or release_lib.ISSUER_RE.fullmatch(env['APPLE_NOTARY_ISSUER_ID'].strip()) is None
-    ):
-        errors.append('Notarization key id or issuer id does not match the expected shape. The values were not logged.')
-    else:
-        notarize = True
-        messages.append('Notarization secrets are present. The app and disk image will be submitted with notarytool.')
+        messages.append('Archiving with an ad-hoc signature. Releases are not Developer ID signed or notarised.')
 
     key_present = _present(env, 'WATT_UPDATE_SIGNING_KEY')
     manifest_url = env.get('WATT_UPDATE_MANIFEST_URL', '').strip()
@@ -102,9 +81,7 @@ def build_plan(env: dict[str, str], *, require_release: bool) -> dict[str, objec
     return {
         'version': version,
         'tag': tag,
-        'code_signing': code_signing,
-        'team_id': team_id,
-        'notarize': notarize,
+        'code_signing': 'ad-hoc',
         'signing_key_present': key_present,
         'embed_update': embed_update,
         'manifest_url': manifest_url if embed_update else '',
