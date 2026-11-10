@@ -48,13 +48,33 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+      # The branch component is `component`, or package-name Watt when that is unset:
+      # release-please--branches--main--components--Watt. Read headBranchName and
+      # refuse any other name. Step env is evaluated before `if`, so a missing
+      # `pr` output still has to parse.
+      - name: Resolve the release pull request branch
+        id: release-branch
+        if: steps.release.outputs.prs_created == 'true' && steps.release.outputs.release_created != 'true'
+        env:
+          RELEASE_PLEASE_BRANCH: "${{ fromJSON(steps.release.outputs.pr || '{}').headBranchName }}"
+        run: |
+          set -euo pipefail
+          branch="${RELEASE_PLEASE_BRANCH}"
+          pattern='^release-please--branches--main(--components--[A-Za-z0-9._-]+)?$'
+          if [[ ! "${branch}" =~ ${pattern} ]]; then
+            echo "Refusing unexpected Release Please branch." >&2
+            exit 1
+          fi
+          echo "branch=${branch}" >> "${GITHUB_OUTPUT}"
       - name: Checkout the release pull request
         if: steps.release.outputs.prs_created == 'true' && steps.release.outputs.release_created != 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: release-please--branches--main
+          ref: ${{ steps.release-branch.outputs.branch }}
       - name: Sync CFBundleVersion onto the release pull request
         if: steps.release.outputs.prs_created == 'true' && steps.release.outputs.release_created != 'true'
+        env:
+          RELEASE_PLEASE_BRANCH: ${{ steps.release-branch.outputs.branch }}
         run: bash scripts/sync-release-branch.sh
 
   build:
