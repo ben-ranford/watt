@@ -370,11 +370,11 @@ private final class Harness {
         let updates = UpdateStore(storage: storage)
         if automaticInstall { XCTAssertTrue(updates.saveAutomaticInstallChoice(true)) }
         router = AppRouter(updateService: service, updates: updates)
-        router.present = { [weak self] route in self?.routes.append(route) }
         let clock = FakeWattClock()
         scheduler = ManualUpdateScheduler(clock: clock)
         coordinator = AutomaticUpdateCoordinator(router: router, preferences: preferences, scheduler: scheduler,
                                                  timing: timing, jitter: jitter)
+        router.present = { [weak self] route in self?.routes.append(route) }
     }
 }
 
