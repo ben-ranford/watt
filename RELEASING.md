@@ -7,7 +7,7 @@ Releases are cut from `main` by [Release Please](https://github.com/googleapis/r
 The manifest starts at **1.0.0**.
 
 - There are no git tags.
-- `Resources/ReleaseIdentity.json` is the reviewed local identity: `dev.watt.verification`, build `1`.
+- `Resources/ReleaseIdentity.json` is the reviewed release identity: `io.github.ben-ranford.watt`, build `1`. Debug and Release share it. Derived helper, maintenance, and installer identifiers follow that prefix.
 - The settings screen falls back to `1.0` when `CFBundleShortVersionString` is missing, and Xcode's marketing version was unset. `Config/Version.xcconfig` now sets it to `1.0.0`.
 - `bootstrap-sha` in `release-please-config.json` is `e66b12fb2b4b705ee3610c102374efc2f0cf3706`, the commit before this pipeline. Older history is not replayed into the first changelog.
 
@@ -62,7 +62,7 @@ In the repository settings, enable **Allow GitHub Actions to create and approve 
 
 The manifest is `SignedUpdate`: base64 `payload` and base64 `signature`. The payload is the compact JSON `UpdateManifest` (`identity`, `build`, `sha256`, `minimumSystemVersion`) in `JSONEncoder`'s default layout. The signature is Ed25519 over those exact payload bytes.
 
-`distribution-preflight` fails while the bundle identifier is still `dev.watt.verification`, or while the update URL and public key are absent. The job still uploads the app and the preflight log. It does **not** upload an update manifest in that case, even if the signing key secret is set. Publishing a manifest for an unprovisioned identity would give the updater nothing it can accept.
+`distribution-preflight` fails while the bundle identifier starts with `dev.watt.verification`, or while the update URL and public key are absent. The job still uploads the app and the preflight log. It does **not** upload an update manifest in that case, even if the signing key secret is set. Publishing a manifest for an unprovisioned identity would give the updater nothing it can accept. The current release identifier is `io.github.ben-ranford.watt`, so that prefix check passes; a missing update URL or public key still blocks the manifest.
 
 ## Updater endpoints
 
@@ -113,12 +113,12 @@ The token pushes `Casks/watt.rb` to that repository's `main` branch. Leave it un
 2. Remove any Apple signing or notarization secrets. Add the update secrets when you want a manifest, and add `HOMEBREW_TAP_TOKEN` when you want the cask commit. An ad-hoc archive does not need either.
 3. When you want the first tag to be exactly `v1.0.0`, add `"release-as": "1.0.0"` to the `.` package in `release-please-config.json` and push to `main`. Release Please opens a pull request that should also contain `chore: sync CFBundleVersion to the release marketing version` (build `1000000`). Merge that pull request, then delete `release-as` before the next release. Leaving `release-as` in the file pins every later release to the same version.
 4. If you skip `release-as`, the next `fix:` on `main` proposes `1.0.1` and the next `feat:` proposes `1.1.0`.
-5. After the macOS job publishes the release, read `distribution-preflight.txt`. It stays blocked until you replace `dev.watt.verification` with the production bundle identifier and the update secrets are present.
+5. After the macOS job publishes the release, read `distribution-preflight.txt`. The bundle identifier is already `io.github.ben-ranford.watt`. Preflight stays blocked until the update secrets are present, and it still rejects any identifier that starts with `dev.watt.verification`.
 6. If preflight passed, copy `Watt-X.Y.Z-update-manifest.json` to `WATT_UPDATE_MANIFEST_URL` and `Watt-X.Y.Z.tar` to `WATT_UPDATE_ARTIFACT_URL`.
 
 ## Decisions still open
 
-- The production bundle identifier is still `dev.watt.verification`. Distribution preflight is written to refuse that prefix, so the first archives will not publish an update manifest until it changes. The Homebrew cask reads the identifier from the published zip and uses it in the zap paths.
+- The release bundle identifier is `io.github.ben-ranford.watt`. Distribution preflight still refuses the `dev.watt.verification` prefix. The Homebrew cask reads the identifier from the published zip and uses it for the preference zap, the helper zap paths, and the `launchctl` label.
 - Where the stable manifest and tar are hosted. GitHub Release asset URLs are not usable as `WATTUpdate*URL`. The cask does use the Release zip; that is a separate download from the updater.
 - Zip and disk image are both attached for people installing by hand. The updater reads only the tar. The cask uses the zip. Drop either hand-install download later if you do not want it; keep the tar.
 

@@ -46,6 +46,9 @@ try:
     def serial(value):
         if isinstance(value, dict): return '{ ' + ' '.join(json.dumps(k) + ' = ' + serial(v) + ';' for k, v in value.items()) + ' }'
         if isinstance(value, list): return '(' + ''.join(serial(v) + ', ' for v in value) + ')'
+        # plutil decodes unquoted YES/NO as JSON booleans. Xcode accepts only YES/NO.
+        if value is True: return 'YES'
+        if value is False: return 'NO'
         return json.dumps(str(value))
     for target in objects.values():
         if target.get('isa') != 'PBXNativeTarget' or target['name'] not in targets: continue

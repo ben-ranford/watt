@@ -6,8 +6,8 @@ import Security
 }
 
 public enum HelperIdentity {
-    public static let appIdentifier = "dev.watt.verification"
-    public static let helperIdentifier = "dev.watt.verification.helper"
+    public static let appIdentifier = "io.github.ben-ranford.watt"
+    public static let helperIdentifier = "io.github.ben-ranford.watt.helper"
     public static let machService = helperIdentifier
     public static let daemonPlist = helperIdentifier + ".plist"
     public static let executableName = "WattHelper"

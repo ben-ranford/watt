@@ -43,7 +43,7 @@ class VersionTests(unittest.TestCase):
     def test_repository_baseline_matches_identity(self) -> None:
         self.assertEqual(release_lib.marketing_version(ROOT), '1.0.0')
         identity, build = release_lib.load_identity(ROOT)
-        self.assertEqual(identity, 'dev.watt.verification')
+        self.assertEqual(identity, 'io.github.ben-ranford.watt')
         self.assertEqual(build, 1)
         self.assertEqual(release_lib.compiled_build(ROOT), 1)
         self.assertIn(1, release_lib.acceptable_builds('1.0.0', release=False))
@@ -77,7 +77,7 @@ class VersionTests(unittest.TestCase):
             (root / 'Config/Version.xcconfig').write_text(xcconfig)
             result = run([sys.executable, str(ROOT / 'scripts/sync-release-version.py'), '--write', '--root', str(root)])
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(release_lib.load_identity(root), ('dev.watt.verification', 1_002_003))
+            self.assertEqual(release_lib.load_identity(root), ('io.github.ben-ranford.watt', 1_002_003))
             self.assertEqual(release_lib.compiled_build(root), 1_002_003)
             self.assertIn('baseConfigurationReference = E7A4C91B2D0F4A6C8B3E1D50', (root / 'Watt.xcodeproj/project.pbxproj').read_text())
             again = run([sys.executable, str(ROOT / 'scripts/sync-release-version.py'), '--release', '--root', str(root)])
@@ -387,7 +387,10 @@ class ReadinessTests(unittest.TestCase):
         self.assertFalse(any('team' in reason.lower() for reason in reasons))
         placeholder = self.info()
         placeholder['CFBundleIdentifier'] = 'dev.watt.verification'
-        self.assertTrue(release_readiness.distribution_plist_failures(placeholder))
+        self.assertTrue(any('unprovisioned' in reason for reason in release_readiness.distribution_plist_failures(placeholder)))
+        production = self.info()
+        production['CFBundleIdentifier'] = 'io.github.ben-ranford.watt'
+        self.assertEqual(release_readiness.distribution_plist_failures(production), [])
         missing_key = self.info()
         del missing_key['WATTUpdatePublicKey']
         self.assertTrue(any('public key' in reason for reason in release_readiness.distribution_plist_failures(missing_key)))
@@ -414,6 +417,23 @@ class ReadinessTests(unittest.TestCase):
 
 
 class HomebrewCaskTests(unittest.TestCase):
+    def test_repository_identity_sets_zap_paths_and_launchctl_label(self) -> None:
+        identity, _build = release_lib.load_identity(ROOT)
+        text = render_homebrew_cask.render_cask(
+            version='1.0.0',
+            sha256='ab' * 32,
+            bundle_id=identity,
+            minimum_system_version='13.0',
+        )
+        helper = identity + '.helper'
+        self.assertIn('"~/Library/Application Support/Watt"', text)
+        self.assertIn('"/Library/Application Support/Watt"', text)
+        self.assertIn('"/Library/Application Support/Watt-maintenance-result.json"', text)
+        self.assertIn('"~/Library/Preferences/' + identity + '.plist"', text)
+        self.assertIn('"/Library/LaunchDaemons/' + helper + '.plist"', text)
+        self.assertIn('"/Library/PrivilegedHelperTools/' + helper + '"', text)
+        self.assertIn('launchctl: "' + helper + '"', text)
+
     def test_rendered_cask_uses_the_release_zip_and_gatekeeper_caveats(self) -> None:
         text = render_homebrew_cask.render_cask(
             version='1.2.3',
