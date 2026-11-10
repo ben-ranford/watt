@@ -137,6 +137,54 @@ jobs:
           EOF
           clang -o "${RUNNER_TEMP}/helper-absence-scan" "${RUNNER_TEMP}/helper-absence-scan.c"
           "${RUNNER_TEMP}/helper-absence-scan"
+          python3 - << 'PY'
+          import os
+          paths = [
+              "/Library/Application Support/Watt/helper-trust.json",
+              "/Library/PrivilegedHelperTools/dev.watt.verification.helper",
+              "/Library/LaunchDaemons/dev.watt.verification.helper.plist",
+          ]
+          for path in paths:
+              try:
+                  st = os.lstat(path)
+                  print(f"lstat exists mode={oct(st.st_mode)} {path}")
+              except OSError as error:
+                  print(f"lstat errno={error.errno} {error.strerror} {path}")
+          PY
+          cat > "${RUNNER_TEMP}/helper-absence.swift" << 'EOF'
+          import Darwin
+          import Foundation
+          let estimate = proc_listallpids(nil, 0)
+          print("swift estimate=\(estimate)")
+          guard estimate > 0, estimate < 32_640 else { print("swift refuse estimate"); exit(0) }
+          let capacity = Int(estimate) + 128
+          var pids = [pid_t](repeating: 0, count: capacity)
+          let count = pids.withUnsafeMutableBytes { proc_listallpids($0.baseAddress, Int32($0.count)) }
+          print("swift count=\(count) capacity=\(capacity)")
+          guard count > 0, count < capacity else { print("swift refuse count"); exit(0) }
+          for pid in pids.prefix(Int(count)) where pid > 0 {
+            var buffer = [CChar](repeating: 0, count: 4096)
+            errno = 0
+            let length = proc_pidpath(pid, &buffer, UInt32(buffer.count))
+            if length <= 0 {
+              let saved = errno
+              let n = proc_name(pid, &buffer, UInt32(buffer.count))
+              let name = n > 0 ? String(cString: buffer) : "?"
+              print("swift unreadable pid=\(pid) errno=\(saved) proc_name=\(n) name=\(name)")
+              if n <= 0 || name == "WattHelper" || name == "powermetrics" || name == "dev.watt.verification.helper" {
+                print("swift refuse name")
+              }
+              continue
+            }
+            let path = String(cString: buffer)
+            let base = URL(fileURLWithPath: path).lastPathComponent
+            if path == "/Library/PrivilegedHelperTools/dev.watt.verification.helper" || path == "/usr/bin/powermetrics" || base == "WattHelper" {
+              print("swift match pid=\(pid) path=\(path)")
+            }
+          }
+          print("swift scan done")
+          EOF
+          swift "${RUNNER_TEMP}/helper-absence.swift"
 
       # Xcode and SwiftPM compile the same tests differently. Several cases are
       # host-injected under xcodebuild and SWIFT_PACKAGE-only under `swift test`.
