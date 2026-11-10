@@ -1,2 +1,0 @@
-App/WattApp.swift:12:        MenuBarExtra {
-App/WattApp.swift:193:/// Uses the existing MenuBarExtra's button; never allocates another NSStatusItem.

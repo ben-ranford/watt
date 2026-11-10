@@ -3,10 +3,9 @@ import AppKit
 /// Native secondary-click menu attached to the single SwiftUI status item.
 @MainActor
 enum StatusItemContextMenu {
-    // These are native NSMenu metrics, not custom row geometry. They are the
-    // dimensions of the corresponding macOS 27 Figma components (22:1345 and
-    // 22:1811); AppKit still owns the menu material, typography, separators,
-    // hit targets, keyboard navigation and accessibility semantics.
+    // These are native NSMenu metrics, not custom row geometry. AppKit owns
+    // the menu material, typography, separators, hit targets, keyboard
+    // navigation and accessibility semantics.
     static let referenceMenuWidth: CGFloat = 230
     static let referenceReadingsMenuWidth: CGFloat = 190
     static let unavailableReadingsMenuWidth: CGFloat = 250
@@ -42,9 +41,9 @@ enum StatusItemContextMenu {
         let componentsCanBeSelected = !router.settingsHelperSetup.helperSwitchedOff
             && preferences.componentReadings && componentsAvailable()
         let readings = NSMenu()
-        // The unavailable J2.1 native component is the wider macOS menu
-        // variant in Figma (250pt); available readings use the compact menu
-        // variant (190pt). AppKit still owns all row metrics and material.
+        // Unavailable component readings use the wider menu (250pt). Available
+        // readings use the compact menu (190pt). AppKit still owns all row
+        // metrics and material.
         if componentsCanBeSelected {
             readings.minimumWidth = referenceReadingsMenuWidth
         } else {

@@ -99,7 +99,7 @@ final class J43PanelSystemDrawTests: XCTestCase {
 
     func testFixtureSelectorsIsolationAndFrozenClock() throws {
         let fixture = try ScenarioRegistry.resolve("J4.3")
-        XCTAssertEqual(fixture.story.node, "30:2786")
+        XCTAssertEqual(fixture.story.node, "J4.3")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J4.3/base"])
         #if SWIFT_PACKAGE

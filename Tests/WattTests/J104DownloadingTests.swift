@@ -135,7 +135,7 @@ final class J104DownloadingTests: XCTestCase {
     func testFixtureSelection() throws {
         let selection = try XCTUnwrap(FixtureLaunchSelection.parse(["--watt-fixture", "J10.4/base"]))
         XCTAssertEqual(try selection.smokeLaunchArguments(), ["--watt-fixture", "J10.4/base"])
-        XCTAssertEqual(try ScenarioRegistry.resolve("J10.4").story.node, "34:5339")
+        XCTAssertEqual(try ScenarioRegistry.resolve("J10.4").story.node, "J10.4")
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.4"]))
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.4/other"]))
     }

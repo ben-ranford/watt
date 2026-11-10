@@ -1,5 +1,0 @@
-fixture_pid=92736
-found role=AXMenuItem title=Settings… desc=
-press=0
-wanted=Settings…, found=true
-BLOCKED: No unique live AX Settings window matched exact J11.2 content

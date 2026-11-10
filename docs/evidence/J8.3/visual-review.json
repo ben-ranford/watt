@@ -1,7 +1,0 @@
-{
-  "status": "blocked",
-  "score": null,
-  "pixel_diff": null,
-  "reason": "Native capture reached normal Xcode DerivedData, but AXTrusted=false blocked PID/window verification; ScreenCapture was preauthorized. PID 54372 was terminated and reaped.",
-  "referenceSha256": "95284e826372536b4105a03e4749ebf28412329359c01fe9168ced544a837242"
-}

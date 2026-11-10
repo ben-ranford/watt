@@ -147,7 +147,7 @@ final class J32HelperSwitchedOffTests: XCTestCase {
 
     func testRegistryExactNodeAndDarkNativeScene() throws {
         let fixture = try ScenarioRegistry.resolve("J3.2")
-        XCTAssertEqual(fixture.story.node, "29:5439")
+        XCTAssertEqual(fixture.story.node, "J3.2")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(),
                        ["--watt-fixture", "J3.2/base"])
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J3.2/live"]))

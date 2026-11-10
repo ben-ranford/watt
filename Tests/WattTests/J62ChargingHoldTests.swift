@@ -215,7 +215,7 @@ final class J62FixtureTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactBaseRegistryAndUnsupportedSelectorsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J6.2")
-        XCTAssertEqual(fixture.story.node, "31:3754")
+        XCTAssertEqual(fixture.story.node, "J6.2")
         XCTAssertEqual(fixture.story.appearance, "dark")
         XCTAssertEqual(fixture.story.expectedScene, "panel")
         XCTAssertEqual(fixture.story.status, "implemented")

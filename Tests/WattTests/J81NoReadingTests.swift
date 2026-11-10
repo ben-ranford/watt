@@ -305,7 +305,7 @@ final class J81NoReadingTests: XCTestCase {
 
     func testExactSelectorAndReleaseCompilationBoundary() throws {
         let fixture = try ScenarioRegistry.resolve("J8.1")
-        XCTAssertEqual(fixture.story.node, "32:3451")
+        XCTAssertEqual(fixture.story.node, "J8.1")
         XCTAssertEqual(fixture.story.appearance, "dark")
         XCTAssertEqual(fixture.story.expectedScene, "panel")
         XCTAssertEqual(fixture.story.status, "implemented")

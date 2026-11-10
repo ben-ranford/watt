@@ -1,4 +1,0 @@
-PASS: Tests/WattTests/StatusPanelVoiceOverSummaryTests.swift belongs exactly once to WattTests only
-PASS: Tests/WattTests/UpdateOfferInstallTests.swift belongs exactly once to WattTests only
-PASS: Release app testability enabled; fixture exclusions preserved; no DEBUG/SWIFT_PACKAGE flags or test exclusions added
-PASS: WattTests retains explicit dependency on Watt

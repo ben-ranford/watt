@@ -1,6 +1,0 @@
-{
-  "status": "blocked",
-  "score": null,
-  "diffArtifact": null,
-  "reason": "Native compositor scene composite/dark appearance is not geometrically or visually comparable with the light Figma desktop. No resampling or synthetic screenshot used for acceptance."
-}

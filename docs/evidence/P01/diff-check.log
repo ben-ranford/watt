@@ -1,5 +1,0 @@
-tracked diff whitespace exit=0
-Services/SystemPowerSourceTelemetryService.swift: whitespace PASS
-Tests/WattTests/P01TelemetryTests.swift: whitespace PASS
-docs/evidence/P01/README.md: whitespace PASS
-Watt.xcodeproj/project.pbxproj: OK

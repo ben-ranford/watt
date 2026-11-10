@@ -238,7 +238,7 @@ final class J63FixtureTests: XCTestCase {
     func testExactBaseRegistryAndUnsupportedSelectorsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J6.3")
         XCTAssertEqual(fixture.story.id, "J6.3")
-        XCTAssertEqual(fixture.story.node, "31:4355")
+        XCTAssertEqual(fixture.story.node, "J6.3")
         XCTAssertEqual(fixture.story.appearance, "dark")
         XCTAssertEqual(fixture.story.expectedScene, "panel")
         XCTAssertEqual(fixture.story.status, "implemented")

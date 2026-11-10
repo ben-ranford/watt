@@ -13,7 +13,7 @@ final class J33HelperUpdateTests: XCTestCase {
         XCTAssertEqual(HelperChangedAlert.primary, "Update Helper")
         XCTAssertEqual(HelperChangedAlert.secondary, "Later")
         let fixture = try ScenarioRegistry.resolve("J3.3")
-        XCTAssertEqual(fixture.story.node, "29:6181")
+        XCTAssertEqual(fixture.story.node, "J3.3")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J3.3/base"])
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("App/HelperUpdatePresentation.swift"), encoding: .utf8)

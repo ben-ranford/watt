@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 
 /// AppKit semantic colors resolve against the host appearance, including increased contrast.
-/// Reference swatches live in DESIGN.md; controls follow the user's macOS accent choice.
+/// Controls follow the user's macOS accent choice.
 enum WattColors {
     static let accent = Color.accentColor
     static let primaryLabel = Color(nsColor: .labelColor)

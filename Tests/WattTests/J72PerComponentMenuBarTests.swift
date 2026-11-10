@@ -171,7 +171,7 @@ final class J72PerComponentMenuBarTests: XCTestCase {
 
     func testOnlyExactBaseSelectorAndRegistryTargetAreAccepted() throws {
         let fixture = try ScenarioRegistry.resolve("J7.2")
-        XCTAssertEqual(fixture.story.node, "31:6952")
+        XCTAssertEqual(fixture.story.node, "J7.2")
         XCTAssertEqual(fixture.story.appearance, "light")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(fixture.story.variants, ["base"])

@@ -48,7 +48,6 @@ enum J113FixtureLaunch {
                 }) {
                     let record: [String: Any] = [
                         "fixture": "J11.3/base",
-                        "node": "36:5428",
                         "processIdentifier": ProcessInfo.processInfo.processIdentifier,
                         "method": "Native SwiftUI Settings scene identity; no replacement window or bitmap renderer",
                         "appearance": window.effectiveAppearance.name.rawValue,
@@ -75,7 +74,6 @@ enum J113FixtureLaunch {
             }
             write([
                 "fixture": "J11.3/base",
-                "node": "36:5428",
                 "processIdentifier": ProcessInfo.processInfo.processIdentifier,
                 "status": "blocked",
                 "reason": "Native Settings window did not become visible before observation timeout",

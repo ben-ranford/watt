@@ -1,7 +1,0 @@
-Bash syntax: PASS
-ShellCheck: PASS
-git diff --check: PASS
-/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/reading-light/gallery-reading-light.png: OK
-/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/reading-dark/gallery-reading-dark.png: OK
-/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/settings-light/gallery-settings-light.png: OK
-/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/verification/f02-gallery/reference-pass-2/settings-dark/gallery-settings-dark.png: OK

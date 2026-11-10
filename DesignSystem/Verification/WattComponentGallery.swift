@@ -1,7 +1,7 @@
 #if DEBUG
 import SwiftUI
 
-/// App-owned F02 smoke target, not a backlog screen. No service graph, storage, clock or polling.
+/// Debug component gallery. No service graph, storage, clock or polling.
 /// F01 hosts one instance per appearance in a key window to capture the native focus ring.
 struct WattComponentGallery: View {
     var colorScheme: ColorScheme = .light

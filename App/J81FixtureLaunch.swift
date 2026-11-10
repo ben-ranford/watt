@@ -46,7 +46,7 @@ enum J81FixtureLaunch {
         guard let index = arguments.firstIndex(of: "--watt-j81-capture-directory"),
               arguments.indices.contains(index + 1), let window = button.window else { return }
         let record: [String: Any] = [
-            "fixture": "J8.1/base", "node": "32:3451",
+            "fixture": "J8.1/base",
             "processIdentifier": ProcessInfo.processInfo.processIdentifier,
             "method": "Native MenuBarExtra identity only; no in-process bitmap capture",
             "appearance": button.effectiveAppearance.name.rawValue,

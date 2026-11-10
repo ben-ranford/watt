@@ -411,7 +411,7 @@ struct SettingsHelperRows: View {
         } header: {
             if sectionTitle == "Component Readings" {
                 // Keep the full Settings section title explicit for source-level
-                // contracts; the J2.3/J2.4 excerpt uses the Figma title Helper.
+                // contracts; the setup excerpt uses the title Helper.
                 Text("Component Readings")
             } else {
                 Text(sectionTitle)

@@ -1,8 +1,0 @@
-[
-  {
-    "pid": 53420,
-    "command": "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/.build/G081-Debug/Build/Products/Debug/Watt.app/Contents/MacOS/Watt -NSTreatUnknownArgumentsAsOpen NO -ApplePersistenceIgnoreState YES",
-    "signal": "SIGTERM",
-    "stillPresent": false
-  }
-]

@@ -134,7 +134,7 @@ final class J71ShowInMenuBarTests: XCTestCase {
 
     func testExactFixtureSelectorAndMalformedRejections() throws {
         let fixture = try ScenarioRegistry.resolve("J7.1")
-        XCTAssertEqual(fixture.story.node, "31:6173")
+        XCTAssertEqual(fixture.story.node, "J7.1")
         XCTAssertEqual(fixture.story.appearance, "light")
         XCTAssertEqual(fixture.story.variants, ["base"])
         XCTAssertEqual(fixture.story.status, "implemented")

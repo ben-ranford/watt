@@ -1,5 +1,0 @@
---- xcodebuild: WARNING: Using the first of multiple matching destinations:
-{ platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
-{ platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
-BLOCKED: Accessibility trust unavailable; no permission requested
-docs/evidence/J9.1/capture.sh: line 13: 58671 Terminated: 15          "$app" --watt-fixture J9.1/base --watt-j91-capture-directory "$out" > "$out/app.log" 2>&1

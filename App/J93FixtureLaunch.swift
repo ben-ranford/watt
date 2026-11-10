@@ -25,7 +25,7 @@ enum J93FixtureLaunch {
         if let flag = args.firstIndex(of: "--watt-j93-capture-directory"), args.indices.contains(flag + 1) {
             let output = URL(fileURLWithPath: args[flag + 1], isDirectory: true)
             let record: [String: Any] = [
-                "fixture": "J9.3/base", "node": "32:6494",
+                "fixture": "J9.3/base",
                 "processIdentifier": ProcessInfo.processInfo.processIdentifier,
                 "statusWindowNumber": window.windowNumber,
                 "method": "Programmatic invocation of production native Quit menu action; not a user AX click",

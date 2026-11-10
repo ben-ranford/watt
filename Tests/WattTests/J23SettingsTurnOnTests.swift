@@ -24,7 +24,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
         XCTAssertEqual(SettingsHelperRows.privacy, "Reads Apple’s CPU/GPU power estimates. No network, nothing leaves this Mac.")
         XCTAssertEqual(SettingsHelperRows.turnOn, "Turn On…")
         let fixture = try ScenarioRegistry.resolve("J2.3")
-        XCTAssertEqual(fixture.story.node, "29:3270")
+        XCTAssertEqual(fixture.story.node, "J2.3")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J2.3/base"])
         XCTAssertThrowsError(try ScenarioRegistry.resolve("J2.3", variant: "dark"))
         let window = J23FixtureLaunch.makeWindow()

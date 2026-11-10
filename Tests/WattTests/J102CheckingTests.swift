@@ -85,7 +85,7 @@ final class J102CheckingTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureSelectionAndPackageIsolation() throws {
         let fixture = try ScenarioRegistry.resolve("J10.2")
-        XCTAssertEqual(fixture.story.node, "34:4482")
+        XCTAssertEqual(fixture.story.node, "J10.2")
         XCTAssertEqual(fixture.story.status, "implemented")
         let selection = try XCTUnwrap(FixtureLaunchSelection.parse(["--watt-fixture", "J10.2/base"]))
         XCTAssertEqual(try selection.smokeLaunchArguments(), ["--watt-fixture", "J10.2/base"])

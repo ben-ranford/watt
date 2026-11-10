@@ -11,7 +11,7 @@ final class J18LivePanelTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testFixtureIsImplementedAndLaunchable() throws {
         let fixture = try ScenarioRegistry.resolve("J1.8")
-        XCTAssertEqual(fixture.story.node, "28:2802")
+        XCTAssertEqual(fixture.story.node, "J1.8")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J1.8/base"])
         XCTAssertThrowsError(try ScenarioRegistry.resolve("J1.8", variant: "unavailable"))
@@ -81,7 +81,7 @@ final class J22ComponentsOffTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndUnsupportedVariantsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J2.2")
-        XCTAssertEqual(fixture.story.node, "29:2456")
+        XCTAssertEqual(fixture.story.node, "J2.2")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(),
                        ["--watt-fixture", "J2.2/base"])

@@ -9,7 +9,7 @@ final class J125ReconnectedTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactRegistryAndCopy() throws {
         let fixture = try ScenarioRegistry.resolve("J12.5")
-        XCTAssertEqual(fixture.story.node, "35:5926")
+        XCTAssertEqual(fixture.story.node, "J12.5")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J12.5/base"])
         XCTAssertEqual(SettingsHelperRows.reconnectNote, "Reconnected from your last install.")

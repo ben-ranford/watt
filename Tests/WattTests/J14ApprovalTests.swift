@@ -34,7 +34,7 @@ final class J14ApprovalTests: XCTestCase {
         XCTAssertEqual(WaitingForApprovalView.title, "One switch in System Settings")
         XCTAssertEqual(WaitingForApprovalView.message, "Approve Watt? Helper as an administrator in Login Items & Extensions.")
         let fixture = try ScenarioRegistry.resolve("J1.4")
-        XCTAssertEqual(fixture.story.node, "28:1206")
+        XCTAssertEqual(fixture.story.node, "J1.4")
         XCTAssertNoThrow(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments())
         for variant in fixture.story.variants where variant != "base" {
             XCTAssertThrowsError(try FixtureLaunchSelection.story(ScenarioRegistry.resolve("J1.4", variant: variant)).smokeLaunchArguments())

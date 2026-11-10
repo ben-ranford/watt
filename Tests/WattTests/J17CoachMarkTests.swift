@@ -12,7 +12,7 @@ final class J17CoachMarkTests: XCTestCase {
         XCTAssertEqual(CoachMarkView.title, "Watt? lives here")
         XCTAssertEqual(CoachMarkView.message, "Click for the detail. Right-click to change the number.")
         let fixture = try ScenarioRegistry.resolve("J1.7")
-        XCTAssertEqual(fixture.story.node, "28:2621")
+        XCTAssertEqual(fixture.story.node, "J1.7")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J1.7/base"])
         XCTAssertThrowsError(try ScenarioRegistry.resolve("J1.7", variant: "unavailable"))

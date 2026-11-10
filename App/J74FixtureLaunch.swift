@@ -48,7 +48,7 @@ enum J74FixtureLaunch {
         let output = URL(fileURLWithPath: arguments[index + 1], isDirectory: true)
         let label = MenuBarStatusLabel(reading: reading, preferences: preferences)
         let record: [String: Any] = [
-            "fixture": "J7.4/base", "reference": "31:7764",
+            "fixture": "J7.4/base",
             "processIdentifier": ProcessInfo.processInfo.processIdentifier,
             "method": "Native status button identity only; no in-process bitmap capture",
             "statusText": label.text ?? "", "showsSymbol": label.showsSymbol,

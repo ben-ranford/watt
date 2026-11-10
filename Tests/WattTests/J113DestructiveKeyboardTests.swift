@@ -10,7 +10,7 @@ final class J113DestructiveKeyboardTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndLaunchGate() throws {
         let fixture = try ScenarioRegistry.resolve("J11.3")
-        XCTAssertEqual(fixture.story.node, "36:5428")
+        XCTAssertEqual(fixture.story.node, "J11.3")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(),
                        ["--watt-fixture", "J11.3/base"])

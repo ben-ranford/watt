@@ -11,7 +11,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactSelectorAndRegistry() throws {
         let fixture = try ScenarioRegistry.resolve("J7.4")
-        XCTAssertEqual(fixture.story.node, "31:7764")
+        XCTAssertEqual(fixture.story.node, "J7.4")
         XCTAssertEqual(fixture.story.appearance, "light")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(fixture.story.variants, ["base"])

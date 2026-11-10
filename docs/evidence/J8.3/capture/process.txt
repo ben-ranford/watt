@@ -1,1 +1,0 @@
-54372 /Users/benranford/Library/Developer/Xcode/DerivedData/Watt-cbfxmqglvkfqprdczqloqihyfrym/Build/Products/Debug/Watt.app/Contents/MacOS/Watt

@@ -13,7 +13,7 @@ final class J31ApprovalNotGivenTests: XCTestCase {
         XCTAssertEqual(HelperNotApprovedAlert.primary, "Open System Settings")
         XCTAssertEqual(HelperNotApprovedAlert.secondary, "Skip for Now")
         let fixture = try ScenarioRegistry.resolve("J3.1")
-        XCTAssertEqual(fixture.story.node, "29:5253")
+        XCTAssertEqual(fixture.story.node, "J3.1")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J3.1/base"])
         XCTAssertThrowsError(try FixtureLaunchSelection.story(ScenarioRegistry.resolve("J3.1", variant: "timeout")).smokeLaunchArguments())
     }

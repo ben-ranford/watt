@@ -243,7 +243,7 @@ struct WattApp: App {
             catch { productionUpdate = nil; updateFailure = error as? ServiceFailure ?? .untrustedIdentity }
         }
         #if DEBUG
-        // C03's Figma reference shows an enabled Check for Updates… row. Keep
+        // The menu fixture shows an enabled Check for Updates… row. Keep
         // that deterministic fixture state without composing an updater into
         // the real app, which remains fail-closed until a trusted P04 service
         // is configured.
@@ -517,7 +517,7 @@ enum C03FixtureLaunch {
 
 @MainActor
 enum C041FixtureLaunch {
-    // Exact Figma frame and app-owned component geometry, in points.
+    // Capture frame and app-owned component geometry, in points.
     static let captureSize = NSSize(width: 560, height: 44)
     static let itemRect = NSRect(x: 205, y: 5, width: 96, height: 24)
 
@@ -1895,8 +1895,7 @@ final class StatusAnchorView: NSView {
                         }
                         try png1x.write(to: output.appendingPathComponent("actual-status-item-1x.png"))
                         var record: [String: Any] = [
-                            "fixture": story + "/base", "node": lightOnBattery ? "24:1960" : light ? "24:1711" : selected ? "24:1591" : unavailable ? "24:1472" : iconOnly ? "24:1353" : components ? "24:1234" : desktop ? "24:1115" : unplugged ? "24:996" : charger ? "24:877" : charged ? "24:758" : onBattery ? "24:639" : "24:390",
-                            "component": lightOnBattery ? "24:2076" : light ? "24:1957" : selected ? "24:1707" : unavailable ? "24:1588" : iconOnly ? "24:1469" : components ? "24:1350" : desktop ? "24:1231" : unplugged ? "24:1112" : charger ? "24:993" : charged ? "24:874" : onBattery ? "24:755" : "24:636", "anchor": lightOnBattery ? "24:2078" : light ? "24:1959" : selected ? "24:1710" : unavailable ? "24:1590" : iconOnly ? "24:1471" : components ? "24:1352" : desktop ? "24:1233" : unplugged ? "24:1114" : charger ? "24:995" : charged ? "24:876" : onBattery ? "24:757" : "24:638",
+                            "fixture": story + "/base",
                             "captureAPI": "NSView.cacheDisplay (screen-scale diagnostic); NSView.displayIgnoringOpacity(_:in:) (direct 1x)",
                             "bitmap1xPixels": [bitmap1x.pixelsWide, bitmap1x.pixelsHigh],
                             "bitmap1xPoints": [bitmap1x.size.width, bitmap1x.size.height],
@@ -2043,7 +2042,6 @@ final class StatusAnchorView: NSView {
                             "fixture": J53FixtureLaunch.requested ? "J5.3/base" : J21FixtureLaunch.requested ? "J2.1/base" : "C03/base",
                             "processIdentifier": ProcessInfo.processInfo.processIdentifier,
                             "windowOwnership": "NSApplication.shared.windows from this process",
-                            "reference": J53FixtureLaunch.requested ? "30:4788" : J21FixtureLaunch.requested ? "29:1549" : "22:1095",
                             "method": "app-owned NSView.cacheDisplay during native NSMenu tracking",
                             "appearance": (J53FixtureLaunch.requested || J21FixtureLaunch.requested) ? "aqua" : "darkAqua", "windows": records,
                             "parentHighlighted": self?.fixtureMenu?.highlightedItem === self?.fixtureMenu?.items.first,
@@ -2155,13 +2153,11 @@ enum C05FixtureLaunch {
                 guard let png = bitmap.representation(using: .png, properties: [:]) else { throw ServiceFailure.invalidData }
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
                 let metadata: [String: Any] = [
-                    "fixture": "C05/base", "frameNode": "25:787", "windowNode": "25:1102",
-                    "contentNode": "25:1129", "formNodes": ["25:1501", "25:1751", "25:1994", "25:2243", "25:2492"],
-                    "appearance": "aqua", "locale": "en_US", "width": 580, "height": 1000,
+                    "fixture": "C05/base", "appearance": "aqua", "locale": "en_US", "width": 580, "height": 1000,
                     "capture": "NSView.cacheDisplay; actual app-owned native form; titlebar excluded",
                     "storage": "fresh InMemoryStorage; fixed sampleCharging clock; no live services",
                     "os": ProcessInfo.processInfo.operatingSystemVersionString,
-                    "visualPass": false, "limitation": "Native system metrics; not pixel-identical to Figma. AX/VoiceOver not audited."
+                    "visualPass": false, "limitation": "Native system metrics. AX/VoiceOver not audited."
                 ]
                 try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
                     .write(to: directory.appendingPathComponent("capture.json"))
@@ -2223,13 +2219,11 @@ enum J11FixtureLaunch {
                 guard let png = bitmap.representation(using: .png, properties: [:]) else { throw ServiceFailure.invalidData }
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
                 let metadata: [String: Any] = [
-                    "fixture": "J1.1/base", "frameNode": "27:987", "windowNode": "27:1302",
-                    "contentNode": "27:1319", "figmaWindowBounds": [260, 216, 480, 308],
-                    "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
+                    "fixture": "J1.1/base", "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
                     "capture": "NSView.cacheDisplay; actual app-owned welcome content; native titlebar not assessed",
                     "storage": "fresh InMemoryStorage; welcome checkpoint; no live services",
                     "os": ProcessInfo.processInfo.operatingSystemVersionString,
-                    "visualPass": false, "limitation": "Native system metrics; not pixel-identical to Figma. AX/VoiceOver not audited."
+                    "visualPass": false, "limitation": "Native system metrics. AX/VoiceOver not audited."
                 ]
                 try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
                     .write(to: directory.appendingPathComponent("capture.json"))
@@ -2295,13 +2289,11 @@ enum J12FixtureLaunch {
                 guard let png = bitmap.representation(using: .png, properties: [:]) else { throw ServiceFailure.invalidData }
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
                 let metadata: [String: Any] = [
-                    "fixture": "J1.2/base", "frameNode": "27:1354", "windowNode": "27:1508",
-                    "contentNode": "27:1520", "figmaWindowBounds": [260, 197, 480, 346],
-                    "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
+                    "fixture": "J1.2/base", "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
                     "capture": "NSView.cacheDisplay; actual app-owned reading content; native titlebar not assessed",
                     "storage": "fresh InMemoryStorage; picker checkpoint; Delta selected; fixed preview telemetry; no live services",
                     "os": ProcessInfo.processInfo.operatingSystemVersionString,
-                    "visualPass": false, "limitation": "Native system metrics; not pixel-identical to Figma. AX/VoiceOver not audited."
+                    "visualPass": false, "limitation": "Native system metrics. AX/VoiceOver not audited."
                 ]
                 try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
                     .write(to: directory.appendingPathComponent("capture.json"))
@@ -2367,13 +2359,11 @@ enum J13FixtureLaunch {
                 guard let png = bitmap.representation(using: .png, properties: [:]) else { throw ServiceFailure.invalidData }
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
                 let metadata: [String: Any] = [
-                    "fixture": "J1.3/base", "frameNode": "27:1584", "windowNode": "27:1738",
-                    "contentNode": "27:1750", "rowsNode": "27:2106", "figmaWindowBounds": [260, 164, 480, 412],
-                    "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
+                    "fixture": "J1.3/base", "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
                     "capture": "NSView.cacheDisplay; actual app-owned helper offer content; native titlebar not assessed",
                     "storage": "fresh InMemoryStorage; helperOffer checkpoint; Delta selected; fixed preview telemetry; no live services",
                     "os": ProcessInfo.processInfo.operatingSystemVersionString,
-                    "visualPass": false, "limitation": "Native system metrics; not pixel-identical to Figma. AX/VoiceOver not audited."
+                    "visualPass": false, "limitation": "Native system metrics. AX/VoiceOver not audited."
                 ]
                 try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
                     .write(to: directory.appendingPathComponent("capture.json"))
@@ -2440,14 +2430,12 @@ enum J14FixtureLaunch {
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
                 let metadata: [String: Any] = [
                     "title": WaitingForApprovalView.title, "body": WaitingForApprovalView.message,
-                    "fixture": "J1.4/base", "frameNode": "28:1206", "windowNode": "28:1521",
-                    "contentNode": "28:1535", "spinnerNode": "28:1537", "notificationNode": "28:1584", "figmaWindowBounds": [260, 258, 480, 224],
-                    "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
+                    "fixture": "J1.4/base", "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
                     "capture": "NSView.cacheDisplay; actual app-owned waiting for approval content; native titlebar not assessed",
                     "storage": "fresh InMemoryStorage; approval checkpoint; Delta selected; fixed preview telemetry; no live services",
                     "os": ProcessInfo.processInfo.operatingSystemVersionString,
                     "systemNotification": "Unavailable: system-owned surface excluded by safe app-owned capture/TCC",
-                    "visualPass": false, "limitation": "Native system metrics; not pixel-identical to Figma. AX/VoiceOver not audited."
+                    "visualPass": false, "limitation": "Native system metrics. AX/VoiceOver not audited."
                 ]
                 try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
                     .write(to: directory.appendingPathComponent("capture.json"))
@@ -2516,13 +2504,11 @@ enum J15FixtureLaunch {
                     "rows": ComponentPreviewView.componentNames.map {
                         $0 + " " + ComponentPreviewView.value(for: $0, reading: .sampleCharging)
                     },
-                    "fixture": "J1.5/base", "frameNode": "28:1598", "windowNode": "28:1752",
-                    "contentNode": "28:1764", "rowsNode": "28:2108", "figmaWindowBounds": [260, 188, 480, 364],
-                    "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
+                    "fixture": "J1.5/base", "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
                     "capture": "NSView.cacheDisplay; actual app-owned component preview content; native titlebar not assessed",
                     "storage": "fresh InMemoryStorage; preview checkpoint; Delta selected; fixed preview telemetry; no live services",
                     "os": ProcessInfo.processInfo.operatingSystemVersionString,
-                    "visualPass": false, "limitation": "Native system metrics; not pixel-identical to Figma. AX/VoiceOver not audited."
+                    "visualPass": false, "limitation": "Native system metrics. AX/VoiceOver not audited."
                 ]
                 try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
                     .write(to: directory.appendingPathComponent("capture.json"))
@@ -2587,13 +2573,11 @@ enum J16FixtureLaunch {
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
                 let metadata: [String: Any] = [
                     "title": AllSetView.title, "body": AllSetView.message, "openAtLogin": true,
-                    "fixture": "J1.6/base", "frameNode": "28:2199", "windowNode": "28:2353",
-                    "contentNode": "28:2365", "rowsNode": "28:2532", "figmaWindowBounds": [260, 206, 480, 328],
-                    "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
+                    "fixture": "J1.6/base", "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
                     "capture": "NSView.cacheDisplay; actual app-owned all-set content; native titlebar not assessed",
                     "storage": "fresh InMemoryStorage; allSet checkpoint; Delta selected; fixed preview telemetry; no live services",
                     "os": ProcessInfo.processInfo.operatingSystemVersionString,
-                    "visualPass": false, "limitation": "Native system metrics; not pixel-identical to Figma. AX/VoiceOver not audited."
+                    "visualPass": false, "limitation": "Native system metrics. AX/VoiceOver not audited."
                 ]
                 try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
                     .write(to: directory.appendingPathComponent("capture.json"))
@@ -2699,8 +2683,8 @@ enum J17FixtureLaunch {
                     guard let png = bitmap.representation(using: .png, properties: [:]) else { throw ServiceFailure.invalidData }
                     try png.write(to: directory.appendingPathComponent(name + ".png"))
                 }
-                let metadata: [String: Any] = ["fixture": "J1.7/base", "frameNode": "28:2621",
-                    "popoverShown": popover.isShown, "actualStatusButton": true,
+                let metadata: [String: Any] = ["fixture": "J1.7/base",
+                "popoverShown": popover.isShown, "actualStatusButton": true,
                     "capture": "cacheDisplay of real DEBUG NSStatusItem button and production NSPopover content; no relocation; not live MenuBarExtra interaction",
                     "contentFallback": fallbackWindow != nil ? "temporary native AppKit anchor; actual NSPopover chrome" : "none",
                     "storage": "InMemoryStorage; completed coachMark; fixed preview telemetry",
@@ -2805,8 +2789,7 @@ struct J18PanelCaptureView: NSViewRepresentable {
                 guard let png = bitmap.representation(using: .png, properties: [:]) else { throw ServiceFailure.invalidData }
                 try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
-                let metadata: [String: Any] = ["fixture": voiceOrder ? "J11.1/base" : lost ? "J3.2/base" : off ? "J2.2/base" : "J1.8/base", "frameNode": voiceOrder ? "36:5057" : lost ? "29:5439" : off ? "29:2456" : "28:2802",
-                    "panelNode": voiceOrder ? "36:5061" : lost ? "29:9518" : off ? "29:7572" : "29:9338", "width": Int(WattSpacing.panelWidth), "height": height, "appearance": voiceOrder || lost ? "darkAqua" : "aqua",
+                let metadata: [String: Any] = ["fixture": voiceOrder ? "J11.1/base" : lost ? "J3.2/base" : off ? "J2.2/base" : "J1.8/base", "width": Int(WattSpacing.panelWidth), "height": height, "appearance": voiceOrder || lost ? "darkAqua" : "aqua",
                     "capture": "cacheDisplay of attached real MenuBarExtra content; native chrome excluded",
                     "windowNumber": window.windowNumber, "visualPass": false,
                     "storage": "InMemoryStorage; completed livePanel; fixed charging telemetry",
@@ -2840,7 +2823,7 @@ enum J21FixtureLaunch {
     static func launch(router _: AppRouter, preferences: PreferencesStore) {
         guard requested, captureWindow == nil else { return }
         NSApplication.shared.appearance = NSAppearance(named: .aqua)
-        // Keep the visual fixture's update row in the Figma idle state. The
+        // Keep the visual fixture's update row in the idle state. The
         // production composition remains fail-closed until an updater is
         // configured; this isolated fixture supplies the deterministic native
         // service used by the reference menu.
@@ -2961,8 +2944,6 @@ enum J22FixtureLaunch {
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
                 let metadata: [String: Any] = [
                     "fixture": "J2.2/base",
-                    "frameNode": "29:2456",
-                    "panelNode": "29:7572",
                     "width": Int(WattSpacing.panelWidth),
                     "height": Int(WattSpacing.panelComponentsOffHeight),
                     "appearance": "aqua",
@@ -3503,7 +3484,7 @@ enum J53FixtureLaunch {
                      "windowNumber": window.windowNumber]
                 }
                 let metadata: [String: Any] = [
-                    "fixture": "J5.3/base", "reference": "30:4788",
+                    "fixture": "J5.3/base",
                     "processIdentifier": ProcessInfo.processInfo.processIdentifier,
                     "method": "NSMenu tracking identity only; no in-process bitmap capture",
                     "appearance": "aqua", "windows": windows,
@@ -3839,7 +3820,7 @@ enum J71FixtureLaunch {
                      "title": $0.title, "windowNumber": $0.windowNumber]
                 }
                 let metadata: [String: Any] = [
-                    "fixture": "J7.1/base", "reference": "31:6173",
+                    "fixture": "J7.1/base",
                     "processIdentifier": ProcessInfo.processInfo.processIdentifier,
                     "method": "App-local secondary click and arrow keys; native tracking identity only",
                     "appearance": "aqua", "windows": windows,
@@ -3905,7 +3886,7 @@ enum J72FixtureLaunch {
         let output = URL(fileURLWithPath: arguments[index + 1], isDirectory: true)
         let label = MenuBarStatusLabel(reading: reading, preferences: preferences)
         let record: [String: Any] = [
-            "fixture": "J7.2/base", "reference": "31:6952",
+            "fixture": "J7.2/base",
             "processIdentifier": ProcessInfo.processInfo.processIdentifier,
             "method": "Native status button identity only; no in-process bitmap capture",
             "statusText": label.text ?? "", "showsSymbol": label.showsSymbol,

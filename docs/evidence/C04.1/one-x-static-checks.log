@@ -1,2 +1,0 @@
-PASS: whitespace, Bash syntax and ShellCheck
-PASS: C04.1 DEBUG capture selectors absent from Release

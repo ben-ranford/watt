@@ -15,7 +15,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         XCTAssertEqual(CoachMarkView.Variant.standard.title, CoachMarkView.title)
         XCTAssertEqual(CoachMarkView.Variant.standard.message, CoachMarkView.message)
         let fixture = try ScenarioRegistry.resolve("J5.1")
-        XCTAssertEqual(fixture.story.node, "30:3675")
+        XCTAssertEqual(fixture.story.node, "J5.1")
         XCTAssertEqual(fixture.story.appearance, "light")
         XCTAssertEqual(fixture.story.variants, ["base"])
         XCTAssertEqual(fixture.story.status, "implemented")

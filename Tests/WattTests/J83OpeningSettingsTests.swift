@@ -11,7 +11,7 @@ final class J83OpeningSettingsTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactStoryMetadataAndSelector() throws {
         let fixture = try ScenarioRegistry.resolve("J8.3")
-        XCTAssertEqual(fixture.story.node, "32:4575")
+        XCTAssertEqual(fixture.story.node, "J8.3")
         XCTAssertEqual(fixture.story.frame, "8.3 Opening Watt? again from Finder or Spotlight shows Settings")
         XCTAssertEqual(fixture.story.expectedScene, "settings")
         XCTAssertEqual(fixture.story.status, "implemented")

@@ -82,7 +82,7 @@ final class J42ReadingBatteryUnavailableTests: XCTestCase {
 
     func testFixtureIsolationAndNativeWindow() throws {
         let selection = try ScenarioRegistry.resolve("J4.2", variant: "base")
-        XCTAssertEqual(selection.story.node, "30:2576")
+        XCTAssertEqual(selection.story.node, "J4.2")
         XCTAssertNoThrow(try selection.story.requireRenderTarget())
         XCTAssertEqual(try FixtureLaunchSelection.parse(["Watt", "--watt-fixture", "J4.2/base"])?
             .smokeLaunchArguments(), ["--watt-fixture", "J4.2/base"])

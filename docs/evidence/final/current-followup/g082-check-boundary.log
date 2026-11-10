@@ -1,3 +1,0 @@
-PASS: 0 changed test files contain only conditional-compilation additions
-PASS: fixture symbols and DEBUG-only samples are guarded throughout WattTests
-PASS: existing test bodies, helpers, imports, and Release-safe sampleCharging uses preserved

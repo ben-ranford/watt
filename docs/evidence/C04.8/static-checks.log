@@ -1,4 +1,0 @@
-PASS git diff --check
-PASS bash -n
-PASS shellcheck
-PASS exact reference copy

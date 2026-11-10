@@ -20,7 +20,7 @@ final class J15PreviewTests: XCTestCase {
         XCTAssertEqual(ComponentPreviewView.value(for: "CPU", reading: .unavailable), "—")
         XCTAssertEqual(ComponentPreviewView.value(for: "Missing", reading: .sampleCharging), "—")
         let fixture = try ScenarioRegistry.resolve("J1.5")
-        XCTAssertEqual(fixture.story.node, "28:1598")
+        XCTAssertEqual(fixture.story.node, "J1.5")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(),
                        ["--watt-fixture", "J1.5/base"])
         XCTAssertEqual(ComponentPreviewView.componentNames, ["CPU", "GPU", "Display"])

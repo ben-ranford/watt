@@ -1,4 +1,0 @@
-58995 02:58 /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Watt.xcodeproj -scheme Watt -destination platform=macOS -configuration Debug -derivedDataPath build/J91-native-tests -only-testing:WattTests test
-
-Agent bounded native test attempt: host launch produced no test-case output after approximately three minutes. Terminated only owned xcodebuild PID 58995; no tests claimed passed.
-Owned native-test host PID 59858 terminated

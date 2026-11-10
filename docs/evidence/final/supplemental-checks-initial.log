@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/benranford/Projects/watt-worktrees/swiftui-implementation/docs/evidence/final/supplemental-checks.py", line 62, in <module>
-    assert json.loads(outputs[0]) == registry
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError

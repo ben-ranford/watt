@@ -1,1 +1,0 @@
-docs/evidence/J7.3/capture.sh: line 10: 24681 Terminated: 15          "$app" --watt-fixture J7.3/base --watt-j73-capture-directory "$out" > "$out/app.log" 2>&1

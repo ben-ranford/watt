@@ -52,7 +52,7 @@ enum J82FixtureLaunch {
               arguments.indices.contains(index + 1), let window = button.window else { return }
         let label = MenuBarStatusLabel(reading: reading, preferences: preferences)
         let record: [String: Any] = [
-            "fixture": "J8.2/base", "node": "32:4456",
+            "fixture": "J8.2/base",
             "processIdentifier": ProcessInfo.processInfo.processIdentifier,
             "method": "Native MenuBarExtra identity only; no in-process bitmap capture",
             "appearance": button.effectiveAppearance.name.rawValue,
