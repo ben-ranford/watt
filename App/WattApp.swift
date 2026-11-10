@@ -275,6 +275,7 @@ struct WattApp: App {
             }
         }
         if let helper = productionHelper {
+            appRouter.helperChangedAfterUpdate = helper.hasPendingUpdate
             appRouter.settingsHelperSetup.service = helper.service
             appRouter.settingsHelperSetup.configureRepair(receipt: helper.updateReceipt, pending: helper.hasPendingUpdate)
             appRouter.settingsHelperSetup.captureDiagnostic = {
@@ -1345,6 +1346,7 @@ private final class WattFallbackStatusItem: NSObject {
 
         // The normal launch does not mount the SwiftUI status-item bridge, so
         // route persisted setup here after installing its presentation handler.
+        router.startAutomaticUpdates(preferences: preferences)
         router.launch(preferences: preferences)
     }
 
@@ -1712,6 +1714,7 @@ private struct StatusItemAdapter: NSViewRepresentable {
             view.updateAccessibility?()
             Task {
                 await router.presentLeftoverHelperAfterReinstall()
+                router.startAutomaticUpdates(preferences: preferences)
                 router.launch(preferences: preferences)
             }
         }

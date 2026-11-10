@@ -157,6 +157,19 @@ final class AppRouter: ObservableObject {
     private let updateService: (any UpdateService)?
     let updateConfigurationFailure: ServiceFailure?
     private var updateCheck: Task<Void, Never>?
+    private var automaticUpdateCoordinator: AutomaticUpdateCoordinator?
+    private var unattendedInstallReceipt: OperationReceipt?
+    /// True only while a fresh automatic check in this process opted into install.
+    /// A saved preference is not consent for a staged or restored transaction.
+    var isUnattendedInstall: Bool { unattendedInstallReceipt != nil }
+    /// Existing helper-update alert. Production sets this from the helper lifecycle.
+    /// Default stays quiet: missing evidence is not a changed helper.
+    var helperChangedAfterUpdate: () -> Bool = { false }
+    private var presentationReady = false
+    private var helperFollowUpReceipt: OperationReceipt?
+    var canScheduleAutomaticChecks: Bool {
+        updateService != nil && updateConfigurationFailure == nil
+    }
     @Published private(set) var updateOfferIntent: UpdateOfferIntent?
     @Published private(set) var upToDateGeneration: UUID?
     var upToDatePresented: Bool {
@@ -241,7 +254,12 @@ final class AppRouter: ObservableObject {
         let pending = await adapter.recoverProtectedStartup()
         let next = adapter.state
         guard updates.restoreVerifiedTransaction(next) else { return }
-        if case .completed = next { downloadVersion = nil; pendingProtectedReceipt = nil; return }
+        if case .completed(let receipt) = next {
+            downloadVersion = nil
+            pendingProtectedReceipt = nil
+            noteHelperFollowUp(receipt)
+            return
+        }
         if let item = pending.first {
             pendingProtectedReceipt = item.receipt
             downloadVersion = item.version
@@ -356,13 +374,20 @@ final class AppRouter: ObservableObject {
             }
             guard let self else { return }
             self.downloadTask = nil
-            guard self.updates.generation == generation else { return }
+            guard self.updates.generation == generation else {
+                if self.unattendedInstallReceipt == receipt { self.unattendedInstallReceipt = nil }
+                return
+            }
             switch outcome {
             case .success(.staged(let returned)) where returned == receipt:
-                self.updates.accept(.staged(receipt), generation: generation)
+                if self.updates.accept(.staged(receipt), generation: generation) {
+                    self.continueUnattendedInstall(receipt: receipt)
+                }
             case .failure(let reason):
+                if self.unattendedInstallReceipt == receipt { self.unattendedInstallReceipt = nil }
                 self.updates.accept(.failed(reason, receipt), generation: generation)
             default:
+                if self.unattendedInstallReceipt == receipt { self.unattendedInstallReceipt = nil }
                 self.updates.accept(.failed(.invalidData, receipt), generation: generation)
             }
         }
@@ -376,6 +401,7 @@ final class AppRouter: ObservableObject {
         case .downloading, .staged, .failed, .adminRequired: break
         default: return false
         }
+        if unattendedInstallReceipt == receipt { unattendedInstallReceipt = nil }
         cancellationPending = true
         defer { cancellationPending = false }
         let generation = updates.renewGeneration()
@@ -499,6 +525,7 @@ final class AppRouter: ObservableObject {
     }
 
     func launch(preferences: PreferencesStore) {
+        notePresentationReady()
         guard !launched else { return }
         launched = true
         let state = preferences.onboarding
@@ -589,6 +616,135 @@ final class AppRouter: ObservableObject {
         }
     }
 
+    /// Schedules launch and periodic checks while the preference is on.
+    /// Missing update configuration does not schedule anything.
+    func startAutomaticUpdates(preferences: PreferencesStore,
+                               scheduler: any UpdateScheduling = TaskUpdateScheduler(),
+                               timing: AutomaticUpdateTiming = .production,
+                               jitter: any UpdateJitter = SystemUpdateJitter()) {
+        guard automaticUpdateCoordinator == nil, canScheduleAutomaticChecks else { return }
+        let coordinator = AutomaticUpdateCoordinator(router: self, preferences: preferences,
+                                                     scheduler: scheduler, timing: timing, jitter: jitter)
+        automaticUpdateCoordinator = coordinator
+        coordinator.start()
+    }
+
+    /// Background admission. Up to date and every check failure stay silent.
+    /// An available update opens the existing software-update window.
+    /// Automatic install runs only for this fresh offer while the saved preference is on.
+    @discardableResult
+    func checkForUpdatesInBackground(isEnabled: @escaping @MainActor () -> Bool,
+                                     finished: @escaping @MainActor (ServiceOutcome<String?>) -> Void) -> Bool {
+        guard canScheduleAutomaticChecks, isEnabled(), canCheckForUpdates, let updateService else { return false }
+        guard updates.accept(.checking, generation: updates.generation) else { return false }
+        let generation = updates.renewGeneration()
+        updateOfferIntent = nil
+        checkFailurePresentation = nil
+        dismissUpToDate()
+        updateCheck = Task { [weak self] in
+            let outcome = await updateService.check()
+            self?.finishBackgroundCheck(outcome, generation: generation, isEnabled: isEnabled, finished: finished)
+        }
+        return true
+    }
+
+    private func finishBackgroundCheck(_ outcome: ServiceOutcome<String?>, generation: UUID,
+                                       isEnabled: @MainActor () -> Bool,
+                                       finished: @MainActor (ServiceOutcome<String?>) -> Void) {
+        updateCheck = nil
+        var reported = outcome
+        defer { finished(reported) }
+        guard updates.generation == generation else {
+            reported = .failure(.cancelled)
+            return
+        }
+        if Task.isCancelled || !isEnabled() {
+            reported = .failure(.cancelled)
+            _ = updates.accept(.idle, generation: generation)
+            return
+        }
+        let next: UpdateState
+        switch outcome {
+        case .success(let version): next = version.map { .available(version: $0) } ?? .idle
+        case .failure(let reason): next = .failed(reason, nil)
+        }
+        guard updates.accept(next, generation: generation) else { return }
+        guard case .success(let version?) = outcome else { return }
+        if updates.installFutureUpdatesAutomatically,
+           installOfferedUpdate(version: version, generation: updates.generation, automaticUpdates: true) {
+            unattendedInstallReceipt = updates.downloadReceipt
+        }
+        present(.softwareUpdate)
+    }
+
+    /// Installs a download that this process just fetched because automatic install was already on.
+    /// Restored receipts never reach this path, and verification stays inside the adapter.
+    private func continueUnattendedInstall(receipt: OperationReceipt) {
+        guard unattendedInstallReceipt == receipt else { return }
+        guard updates.installFutureUpdatesAutomatically, installReady != nil else {
+            unattendedInstallReceipt = nil
+            return
+        }
+        let token = updates.renewGeneration()
+        Task { [weak self] in
+            guard let self else { return }
+            guard let installReady = self.installReady else {
+                self.unattendedInstallReceipt = nil
+                return
+            }
+            let outcome = await installReady(receipt)
+            self.unattendedInstallReceipt = nil
+            guard self.updates.generation == token else { return }
+            self.applyUnattended(outcome, receipt: receipt, generation: token)
+        }
+    }
+
+    private func applyUnattended(_ outcome: ServiceOutcome<UpdateState>, receipt: OperationReceipt, generation: UUID) {
+        let next: UpdateState
+        switch outcome {
+        case .success(let value): next = value
+        case .failure(.adminRequired): next = .adminRequired(receipt)
+        case .failure(let reason): next = .failed(reason, receipt)
+        }
+        switch next {
+        case .awaitingRelaunch:
+            _ = updates.accept(.installing(receipt), generation: generation)
+            _ = updates.accept(next, generation: generation)
+        case .completed:
+            _ = updates.accept(.installing(receipt), generation: generation)
+            _ = updates.accept(.awaitingRelaunch(receipt), generation: generation)
+            _ = updates.accept(next, generation: generation)
+            noteHelperFollowUp(receipt)
+        case .handoffAccepted:
+            _ = updates.accept(next, generation: generation)
+            onMaintenanceHandoff()
+        case .adminRequired:
+            _ = updates.accept(next, generation: generation)
+        case .failed:
+            _ = updates.accept(next, generation: generation)
+        default:
+            _ = updates.accept(.failed(.invalidData, receipt), generation: generation)
+        }
+    }
+
+    func notePresentationReady() {
+        presentationReady = true
+        deliverHelperUpdateFollowUp()
+    }
+
+    private func noteHelperFollowUp(_ receipt: OperationReceipt) {
+        helperFollowUpReceipt = receipt
+        if presentationReady { deliverHelperUpdateFollowUp() }
+    }
+
+    /// One alert per completed app-update receipt. The helper prompt still verifies before it installs.
+    private func deliverHelperUpdateFollowUp() {
+        guard presentationReady, let receipt = helperFollowUpReceipt else { return }
+        helperFollowUpReceipt = nil
+        guard helperChangedAfterUpdate(), updates.claimHelperFollowUp(receipt) else { return }
+        showUpdate()
+    }
+
     /// Synchronous admission prevents two native actions from scheduling duplicate checks.
     /// A retained item from a closed/replaced menu is not a fresh user intent.
     @discardableResult
@@ -611,6 +767,11 @@ final class AppRouter: ObservableObject {
             case .failure(let reason): next = .failed(reason, nil)
             }
             guard self.updates.accept(next, generation: generation) else { return }
+            if case .success(let version?) = outcome, self.updates.installFutureUpdatesAutomatically,
+               self.installOfferedUpdate(version: version, generation: self.updates.generation, automaticUpdates: true) {
+                self.unattendedInstallReceipt = self.updates.downloadReceipt
+                return
+            }
             if case .success(nil) = outcome {
                 self.upToDateGeneration = generation
             } else if case .failure(let reason) = outcome, reason != .cancelled {
