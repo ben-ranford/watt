@@ -38,6 +38,49 @@ final class AppRouterTests: XCTestCase {
         }
     }
 
+    func testFallbackInstallationRoutesFreshAndPersistedSetupOnce() {
+        for checkpoint in [OnboardingCheckpoint.welcome, .picker, .approval, .runningDefaults] {
+            let preferences = PreferencesStore(storage: InMemoryStorage())
+            preferences.onboarding.checkpoint = checkpoint
+            let savedState = preferences.onboarding
+            let router = AppRouter()
+            let delegate = WattApplicationDelegate()
+            let existingWindows = Set(NSApplication.shared.windows.map(ObjectIdentifier.init))
+
+            delegate.installFallbackStatusItem(router: router, powerStore: .preview, preferences: preferences)
+            let newWindows = NSApplication.shared.windows.filter {
+                !existingWindows.contains(ObjectIdentifier($0)) && $0.isVisible && $0.title == "Watt? Setup"
+            }
+            XCTAssertEqual(newWindows.count, checkpoint == .runningDefaults ? 0 : 1)
+            XCTAssertEqual(preferences.onboarding, savedState)
+
+            var repeatedRequests: [AppDestination] = []
+            router.present = { repeatedRequests.append($0) }
+            delegate.installFallbackStatusItem(router: router, powerStore: .preview, preferences: preferences)
+            router.launch(preferences: preferences)
+            XCTAssertTrue(repeatedRequests.isEmpty)
+            delegate.applicationWillTerminate(Notification(name: NSApplication.willTerminateNotification))
+        }
+    }
+
+    func testFallbackInstallationRoutesCompletedSetupToSettings() {
+        let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.onboarding.completed = true
+        preferences.onboarding.checkpoint = .allSet
+        let savedState = preferences.onboarding
+        let delegate = WattApplicationDelegate()
+        let existingWindows = Set(NSApplication.shared.windows.map(ObjectIdentifier.init))
+        defer { delegate.applicationWillTerminate(Notification(name: NSApplication.willTerminateNotification)) }
+
+        delegate.installFallbackStatusItem(router: AppRouter(), powerStore: .preview, preferences: preferences)
+
+        let newWindows = NSApplication.shared.windows.filter {
+            !existingWindows.contains(ObjectIdentifier($0)) && $0.isVisible && $0.title == SettingsRootView.title
+        }
+        XCTAssertEqual(newWindows.count, 1)
+        XCTAssertEqual(preferences.onboarding, savedState)
+    }
+
     func testReopenUsesCurrentCompletionStateWithoutRepeatingLaunch() {
         for initiallyComplete in [false, true] {
             let preferences = PreferencesStore(storage: InMemoryStorage())
@@ -1301,18 +1344,34 @@ private final class P02Driver: HelperLifecycleDriver {
     var removalFails = false
     var updateFails = false
     var applied = false
+    var holdMutation = false
+    var pendingMutation: CheckedContinuation<Void, Never>?
+    var didSuspendMutation: (() -> Void)?
     func updateApplied(receipt: OperationReceipt) async throws -> Bool { applied }
     func status() async throws -> HelperRegistrationStatus { current }
     func verifyCandidate() throws -> HelperPeer { candidate }
-    func register(receipt: OperationReceipt) async throws { registrations += 1; current = .requiresApproval }
+    func register(receipt: OperationReceipt) async throws {
+        registrations += 1
+        await suspendMutationIfNeeded()
+        current = .requiresApproval
+    }
     func update(receipt: OperationReceipt) async throws {
         updates += 1
+        await suspendMutationIfNeeded()
         if updateFails { throw ServiceFailure.interruptedUpdate }
     }
     func unregister(receipt: OperationReceipt) async throws {
         removals += 1
+        await suspendMutationIfNeeded()
         if removalFails { throw ServiceFailure.interruptedRemoval }
         current = .absent
+    }
+    private func suspendMutationIfNeeded() async {
+        guard holdMutation else { return }
+        await withCheckedContinuation { continuation in
+            pendingMutation = continuation
+            didSuspendMutation?()
+        }
     }
 }
 
@@ -1326,8 +1385,9 @@ private final class P02Transport: HelperIPCTransport {
     var hold = false
     var pending: CheckedContinuation<HelperMessage, any Error>?
     var didSuspend: (() -> Void)?
+    var onInvalidated: (() -> Void)?
     func connect() async throws -> HelperPeer { peer }
-    func invalidate() {}
+    func invalidate() { onInvalidated?() }
     func send(_ request: HelperMessage) async throws -> HelperMessage {
         sent.append(request)
         if let sendFailure { throw sendFailure }
@@ -1883,7 +1943,7 @@ final class J12ReadingTests: XCTestCase {
             "How fast the battery fills or drains. +42.1 W",
             "What the charger is giving. 65 W",
             "What your Mac uses right now. 22.9 W",
-            "CPU, GPU and the rest. Needs the helper — next step."
+            "CPU/GPU estimates. Needs administrator approval."
         ])
         XCTAssertEqual(ChooseMenuReadingView.title, "Pick one number for the menu bar")
         XCTAssertEqual(ChooseMenuReadingView.message, "Change it any time. Right-click Watt? or open Settings.")
@@ -1938,4 +1998,112 @@ final class J12ReadingTests: XCTestCase {
         XCTAssertFalse(window.isVisible)
     }
     #endif
+}
+
+extension P02HelperLifecycleTests {
+    func testInvalidationDuringOwnedUnregisterDoesNotAbortRemovalOrRepeatIt() async {
+        let (driver, transport, adapter) = fixture()
+        driver.current = .enabled
+        _ = await adapter.reconcile(receipt: nil)
+        transport.onInvalidated = { [weak adapter] in adapter?.connectionLost() }
+        driver.holdMutation = true
+        let suspended = expectation(description: "owned unregister suspended")
+        driver.didSuspendMutation = { suspended.fulfill() }
+        let operation = receipt
+        let task = Task { await adapter.remove(receipt: operation) }
+        await fulfillment(of: [suspended], timeout: 2)
+        let generation = adapter.generation
+        transport.invalidate() // Shared telemetry transport ends while OS unregister is suspended.
+        XCTAssertEqual(adapter.generation, generation)
+        driver.pendingMutation?.resume(); driver.pendingMutation = nil
+        let outcome = await task.value
+        XCTAssertEqual(outcome, .verifiedAbsent)
+        XCTAssertEqual(adapter.state, .absent)
+        driver.holdMutation = false
+        let repeated = await adapter.remove(receipt: operation)
+        XCTAssertEqual(repeated, .verifiedAbsent)
+        XCTAssertEqual(driver.removals, 1)
+    }
+
+    func testInvalidationDuringOwnedReplacementDoesNotAbortOrRepeatUpdate() async {
+        let (driver, transport, adapter) = fixture()
+        driver.current = .enabled
+        driver.applied = true
+        transport.onInvalidated = { [weak adapter] in adapter?.connectionLost() }
+        driver.holdMutation = true
+        let suspended = expectation(description: "owned replacement suspended")
+        driver.didSuspendMutation = { suspended.fulfill() }
+        let operation = receipt
+        let task = Task { await adapter.update(receipt: operation) }
+        await fulfillment(of: [suspended], timeout: 2)
+        let generation = adapter.generation
+        transport.invalidate()
+        XCTAssertEqual(adapter.generation, generation)
+        driver.pendingMutation?.resume(); driver.pendingMutation = nil
+        guard case .success(.connected) = await task.value else { return XCTFail("replacement must complete") }
+        driver.holdMutation = false
+        guard case .success(.connected) = await adapter.update(receipt: operation) else { return XCTFail("receipt retry") }
+        XCTAssertEqual(driver.updates, 1)
+    }
+
+    func testIdleTransportInvalidationClearsConnectedStateAndRotatesGeneration() async {
+        let (driver, transport, adapter) = fixture()
+        driver.current = .enabled
+        _ = await adapter.reconcile(receipt: nil)
+        XCTAssertEqual(adapter.state, .connected)
+        let generation = adapter.generation
+        transport.onInvalidated = { [weak adapter] in adapter?.connectionLost() }
+        transport.invalidate()
+        XCTAssertEqual(adapter.state, .disconnected)
+        XCTAssertNotEqual(adapter.generation, generation)
+    }
+}
+
+extension P02HelperLifecycleTests {
+    func testInvalidationDuringOwnedRegistrationDoesNotAbortOrRepeatRegister() async {
+        let (driver, transport, adapter) = fixture()
+        transport.onInvalidated = { [weak adapter] in adapter?.connectionLost() }
+        driver.holdMutation = true
+        let suspended = expectation(description: "registration suspended")
+        driver.didSuspendMutation = { suspended.fulfill() }
+        let operation = receipt
+        let task = Task { await adapter.register(receipt: operation) }
+        await fulfillment(of: [suspended], timeout: 2)
+        let generation = adapter.generation
+        transport.invalidate()
+        XCTAssertEqual(adapter.generation, generation)
+        driver.pendingMutation?.resume(); driver.pendingMutation = nil
+        guard case .success(.awaitingApproval) = await task.value else { return XCTFail("registration must complete") }
+        driver.holdMutation = false
+        guard case .success(.awaitingApproval) = await adapter.register(receipt: operation) else { return XCTFail("receipt retry") }
+        XCTAssertEqual(driver.registrations, 1)
+    }
+
+    func testFinalUpdatePingInvalidationRejectsLateReply() async {
+        let (driver, transport, adapter) = fixture()
+        driver.current = .enabled
+        driver.applied = true
+        transport.onInvalidated = { [weak adapter] in adapter?.connectionLost() }
+        // First ping is the old compatibility handshake; third send is the new final ping.
+        transport.onSend = {
+            if transport.sent.count == 3 { transport.invalidate() }
+        }
+        guard case .failure(.disconnected) = await adapter.update(receipt: receipt) else {
+            return XCTFail("new-session invalidation must reject its racing ping reply")
+        }
+        XCTAssertEqual(adapter.state, .disconnected)
+        XCTAssertEqual(driver.updates, 1)
+    }
+
+    func testExistingRegistrationPingInvalidationCannotPublishConnected() async {
+        let (driver, transport, adapter) = fixture()
+        driver.current = .enabled
+        transport.onInvalidated = { [weak adapter] in adapter?.connectionLost() }
+        transport.onSend = { transport.invalidate() }
+        guard case .failure(.disconnected) = await adapter.register(receipt: receipt) else {
+            return XCTFail("existing registration still requires live authenticated IPC")
+        }
+        XCTAssertEqual(adapter.state, .disconnected)
+        XCTAssertEqual(driver.registrations, 0)
+    }
 }

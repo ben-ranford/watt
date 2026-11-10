@@ -11,10 +11,10 @@ final class J13OfferTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFactsAndFixture() throws {
         XCTAssertEqual(OfferComponentReadingsView.title, "See where the power goes")
-        XCTAssertEqual(OfferComponentReadingsView.message, "Watt? needs a small helper to read CPU, GPU and display power. macOS asks you to approve it once.")
+        XCTAssertEqual(OfferComponentReadingsView.message, "Watt? uses a helper to read Apple’s CPU/GPU power estimates. macOS requires administrator approval. Both estimates appear only when both are available. Display, SSD and Other are unavailable.")
         XCTAssertEqual(OfferComponentReadingsView.Action.allCases.count, 2)
         XCTAssertEqual(OfferComponentReadingsView.facts.map(\.label), ["What it reads", "Network", "Remove it"])
-        XCTAssertEqual(OfferComponentReadingsView.facts.map(\.value), ["Power sensors only", "Never", "Any time, in Settings"])
+        XCTAssertEqual(OfferComponentReadingsView.facts.map(\.value), ["CPU/GPU power estimates", "Never", "Any time, in Settings"])
         let selection = try ScenarioRegistry.resolve("J1.3", variant: "base")
         XCTAssertEqual(selection.stableID, "J1.3/base")
         XCTAssertEqual(selection.story.node, "27:1584")
@@ -105,6 +105,33 @@ final class J13OfferTests: XCTestCase {
                 OfferComponentReadingsView.perform(action, preferences: preferences)
                 XCTAssertEqual(preferences.onboarding, initial)
             }
+        }
+    }
+
+    func testMissingHelperCannotEnterApprovalAndPickerSkipsOffer() {
+        let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.onboarding.checkpoint = .picker
+        preferences.displayMode = .components
+        XCTAssertEqual(ChooseMenuReadingView.unavailableModes(reading: .sampleCharging,
+                                                                 helperAvailable: false), [.components])
+        XCTAssertEqual(ChooseMenuReadingView.options(reading: .sampleCharging,
+                                                      helperAvailable: false).last?.description,
+                       "Component readings are unavailable in this build.")
+        ChooseMenuReadingView.prepareSelection(preferences: preferences, reading: .sampleCharging,
+                                               helperAvailable: false)
+        XCTAssertEqual(preferences.displayMode, .delta)
+        ChooseMenuReadingView.advance(preferences: preferences, helperAvailable: false)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
+        XCTAssertFalse(preferences.onboarding.helperOptIn)
+
+        for checkpoint: OnboardingCheckpoint in [.helperOffer, .approval, .preview] {
+            preferences.onboarding.checkpoint = checkpoint // Existing persisted helper checkpoints.
+            preferences.onboarding.helperOptIn = true
+            OfferComponentReadingsView.perform(.turnOn, preferences: preferences, helperAvailable: false)
+            XCTAssertEqual(preferences.onboarding.checkpoint, checkpoint)
+            OfferComponentReadingsView.perform(.notNow, preferences: preferences, helperAvailable: false)
+            XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
+            XCTAssertFalse(preferences.onboarding.helperOptIn)
         }
     }
 

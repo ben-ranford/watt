@@ -9,7 +9,7 @@ import WattFixtures
 final class J15PreviewTests: XCTestCase {
     func testExactSuccessCopy() {
         XCTAssertEqual(ComponentPreviewView.title, "Helper’s on")
-        XCTAssertEqual(ComponentPreviewView.message, "Here’s where the power is going right now.")
+        XCTAssertEqual(ComponentPreviewView.message, "CPU/GPU estimates appear when both are available. Display, SSD and Other are unavailable.")
     }
 
     #if DEBUG || SWIFT_PACKAGE
@@ -73,7 +73,7 @@ final class J15PreviewTests: XCTestCase {
         window.close()
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Onboarding/Views/OnboardingFlowView.swift"), encoding: .utf8)
-        XCTAssertTrue(source.contains("checkpoint == .preview {\n                ComponentPreviewView()"))
+        XCTAssertTrue(source.contains("checkpoint == .preview {\n                if router.settingsHelperSetup.helperServiceAvailable {\n                    ComponentPreviewView()"))
         let view = source.components(separatedBy: "struct ComponentPreviewView")[1]
         for token in ["Form {", "Section {", "LabeledContent(", "Image(systemName: \"checkmark.circle.fill\")", ".foregroundStyle(.green)", "Text(Self.title)", "Text(Self.message)", ".accessibilityAddTraits(.isHeader)", ".buttonStyle(.borderedProminent)"] {
             XCTAssertTrue(view.contains(token), token)

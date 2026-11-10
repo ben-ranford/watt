@@ -1,6 +1,44 @@
 import SwiftUI
 import Combine
 
+#if SWIFT_PACKAGE
+import WattHelperShared
+#endif
+
+enum HelperUnavailableReason: Equatable {
+    case missingBundle, signingRequired, verificationFailed, configurationFailed, installationRequired
+
+    static func configurationFailure(_ error: Error, packagedHelperPresent: Bool) -> Self {
+        guard packagedHelperPresent else { return .missingBundle }
+        if error is ProtectedTrustError { return .installationRequired }
+        if let signing = error as? HelperSigningError {
+            switch signing {
+            case .missingTeam: return .signingRequired
+            case .invalidRequirement, .invalidSignature: return .verificationFailed
+            }
+        }
+        if let failure = error as? ServiceFailure, [.untrustedIdentity, .invalidData].contains(failure) {
+            return .verificationFailed
+        }
+        return .configurationFailed
+    }
+
+    var message: String {
+        switch self {
+        case .missingBundle:
+            return "This build does not include Watt? Helper. Install a complete build to enable CPU/GPU estimates."
+        case .signingRequired:
+            return "This build selected certificate-based helper trust but has no signing team configured. Use the GitHub administrator installer for the ad-hoc build."
+        case .verificationFailed:
+            return "Watt? Helper could not pass package or code-identity verification. Reinstall the verified GitHub build with the administrator installer."
+        case .configurationFailed:
+            return "Watt? Helper could not be configured. Relaunch Watt? or reinstall a complete build."
+        case .installationRequired:
+            return "Install Watt? Helper with the administrator installer, then launch the installed app. No Apple certificate is required."
+        }
+    }
+}
+
 /// C05: system-owned grouped form and window chrome; shared preference bindings.
 struct SettingsRootView: View {
     var helperExcerpt = false
@@ -197,12 +235,16 @@ struct SettingsRootView: View {
                         switch outcome {
                         case .verifiedAbsent: removalMessage = "Watt? removed."
                         case .cancelled: removalMessage = nil
+                        case .adminRequired: removalMessage = "Administrator access is required. Use the Watt? installer to remove this installation."
+                        case .handoffAccepted: removalMessage = "Watt? will close while removal finishes."
                         default: removalMessage = "Removal could not be verified. No successful removal has been reported."
                         }
                     } else if case .verifiedAbsent = outcome {
                         preferences.componentReadings = false
                         router.settingsHelperSetup.resetAfterVerifiedRemoval()
                         removalMessage = target == .helper ? "Helper removed." : "Watt? removed."
+                    } else if case .adminRequired = outcome {
+                        removalMessage = "Administrator access is required. Use the Watt? installer to remove the helper."
                     } else if case .cancelled = outcome {
                         removalMessage = nil
                     } else {
@@ -292,10 +334,10 @@ struct SettingsHelperRows: View {
     static let pendingSubtitle = "Turn on “Watt? Helper” in Login Items & Extensions."
     static let pendingStatus = "Waiting for approval…"
     static let openSettings = "Open System Settings"
-    static let statusSubtitle = "Reading CPU, GPU, display and the rest."
-    static let privacy = "Reads power sensors only. No network, nothing leaves this Mac."
+    static let statusSubtitle = "CPU/GPU estimates appear only when both are available. Display, SSD and Other are unavailable."
+    static let privacy = "Reads Apple’s CPU/GPU power estimates. No network, nothing leaves this Mac."
     static let turnOn = "Turn On…"
-    static let approvalNote = "macOS asks you to approve it once, in Login Items & Extensions."
+    static let approvalNote = "Administrator approval is required in Login Items & Extensions."
     @ObservedObject var setup: SettingsHelperSetup
     @EnvironmentObject private var preferences: PreferencesStore
     @EnvironmentObject private var router: AppRouter
@@ -320,7 +362,13 @@ struct SettingsHelperRows: View {
                         .buttonStyle(.borderedProminent)
                         .disabled(removing)
                         .accessibilityIdentifier("settings.helper.openSettings")
-                } else if setup.helperOn {
+                }
+                if setup.canRepairHelper {
+                    Button("Repair Helper…") { Task { await setup.repairHelper() } }
+                        .disabled(removing || setup.isLoading)
+                        .accessibilityIdentifier("settings.helper.repair")
+                }
+                if setup.canRemoveHelper {
                     Button("Remove…", action: remove)
                         .buttonStyle(.bordered)
                         .disabled(removing || setup.isLoading)
@@ -347,6 +395,10 @@ struct SettingsHelperRows: View {
                 if setup.helperServiceAvailable && !setup.wasRemoved && setup.state != .requiresApproval {
                     Text(Self.privacy)
                 }
+            }
+            if setup.helperOn, let captureDiagnostic = setup.captureDiagnostic {
+                Button("Export Helper Diagnostic…") { Task { await captureDiagnostic() } }
+                    .accessibilityIdentifier("settings.helper.diagnostic")
             }
             if setup.isLoading { ProgressView().accessibilityLabel("Checking helper") }
             if let message = setup.message { Text(message).accessibilityIdentifier("settings.helper.result") }
@@ -473,13 +525,46 @@ final class SettingsHelperSetup: ObservableObject {
         self.approvals = approvals ?? HelperApprovalStore()
         observeLifecycle()
     }
+    var captureDiagnostic: (() async -> Void)?
+    private var repairReceipt: (() -> OperationReceipt)?
+    private var pendingRepair: () -> Bool = { false }
+
+    func configureRepair(receipt: @escaping () -> OperationReceipt, pending: @escaping () -> Bool = { false }) {
+        repairReceipt = receipt
+        pendingRepair = pending
+    }
+
+    var canRepairHelper: Bool {
+        repairReceipt != nil && (canRemoveHelper || pendingRepair()) && !helperOn
+            && state != .requiresApproval && !isLoading
+    }
+
+    func repairHelper() async {
+        guard canRepairHelper, let lifecycle = service as? HelperLifecycleAdapter,
+              let repairReceipt else { return }
+        let current = UUID(); attempt = current
+        state = .loading
+        let result = await lifecycle.update(receipt: repairReceipt())
+        guard current == attempt else { return }
+        switch result {
+        case .success(.connected): applyStatus(.connected)
+        case .success(.awaitingApproval): applyStatus(.pending)
+        case .failure(let error): applyStatus(.failed(error))
+        default: applyStatus(.unknown)
+        }
+    }
+
+    var canRemoveHelper: Bool {
+        helperOn || (service as? HelperLifecycleAdapter)?.registrationPresent == true
+    }
+    @Published var unavailableReason: HelperUnavailableReason = .missingBundle
     var helperServiceAvailable: Bool { service != nil || helperOn }
     var statusTitle: String {
         guard helperServiceAvailable else { return "Unavailable" }
         return state == .requiresApproval ? SettingsHelperRows.pendingStatus : helperOn ? "On" : "Off"
     }
     var statusSubtitle: String {
-        guard helperServiceAvailable else { return "This build does not include Watt? Helper." }
+        guard helperServiceAvailable else { return unavailableReason.message }
         return state == .requiresApproval ? SettingsHelperRows.pendingSubtitle : SettingsHelperRows.statusSubtitle
     }
     var isLoading: Bool { state == .loading }
@@ -489,8 +574,7 @@ final class SettingsHelperSetup: ObservableObject {
         if let lifecycle = service as? HelperLifecycleAdapter { return lifecycle.state == .connected }
         return true // Verified P05 reconnect is also evidence, even without a Settings-owned service.
     }
-    // The production app currently has no composed signed helper/IPC service.
-    // Do not present a retry button that can only fail with unknownStatus.
+    // Unsigned builds have no registration-capable service.
     var canTurnOn: Bool { service != nil && !isLoading && !helperOn }
 
     private func observeLifecycle() {
@@ -514,7 +598,7 @@ final class SettingsHelperSetup: ObservableObject {
         if let preferences { activePreferences = preferences }
         let current = UUID(); attempt = current
         guard let service else { state = .notDetermined; return }
-        state = .loading // Withdraw stale connected presentation while a new query is outstanding.
+        if state != .connected { state = .loading }
         let status = await service.reconcile(receipt: approvals.checkpoint.receipt)
         guard attempt == current else { return }
         if let lifecycle = service as? HelperLifecycleAdapter,
@@ -581,13 +665,14 @@ final class SettingsHelperSetup: ObservableObject {
     var message: String? {
         switch state {
         case .notDetermined: return !helperServiceAvailable
-            ? "Component readings are unavailable because this build does not include Watt? Helper."
+            ? unavailableReason.message
             : nil
         case .loading: return "Checking helper…"
         case .requiresApproval: return nil // The status row owns pending copy; no duplicate footer.
         case .denied: return "Helper access is denied. Allow Watt? Helper in System Settings, then retry."
         case .connected: return nil
         case .cancelled: return "Setup cancelled. macOS approval has not been changed."
+        case .failed(.adminRequired): return "Administrator installation is required. Use the Watt? installer, then retry."
         case .failed: return "Helper setup could not be verified. Try again."
         }
     }

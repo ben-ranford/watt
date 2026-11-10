@@ -16,7 +16,7 @@ final class J25SettingsConnectedTests: XCTestCase {
         await session.connect()
         XCTAssertTrue(session.componentsAvailable)
         XCTAssertEqual(session.router.settingsHelperSetup.statusTitle, "On")
-        XCTAssertEqual(session.router.settingsHelperSetup.statusSubtitle, "Reading CPU, GPU, display and the rest.")
+        XCTAssertEqual(session.router.settingsHelperSetup.statusSubtitle, "CPU/GPU estimates appear only when both are available. Display, SSD and Other are unavailable.")
         XCTAssertNil(session.router.settingsHelperSetup.message)
         XCTAssertEqual(SettingsRootView.componentsSubtitle, "Two fit.")
         XCTAssertEqual(session.preferences.displayMode.rawValue, "Components")

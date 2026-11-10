@@ -76,6 +76,7 @@ protocol UpdateInstallationDriver {
     // against the manifest in addition to the release digest.
     func stage(_ bytes: Data, manifest: UpdateManifest, receipt: OperationReceipt) throws
     func verifyStaged(manifest: UpdateManifest, receipt: OperationReceipt) throws
+    func preflightReplacement(manifest: UpdateManifest, receipt: OperationReceipt) throws
     // Preserve a verified original backup BEFORE replacement. On error retain recovery evidence.
     func replace(manifest: UpdateManifest, receipt: OperationReceipt) throws
     func placement(manifest: UpdateManifest, receipt: OperationReceipt) throws -> UpdatePlacement
@@ -87,8 +88,12 @@ protocol UpdateInstallationDriver {
     func stagingAbsent(receipt: OperationReceipt) throws -> Bool
 }
 
+extension UpdateInstallationDriver {
+    func preflightReplacement(manifest: UpdateManifest, receipt: OperationReceipt) throws {}
+}
+
 struct UpdateTransaction: Codable, Equatable {
-    enum Phase: String, Codable { case downloading, staged, cancelled, discarded, replacing, awaitingRelaunch, completed, rolledBack }
+    enum Phase: String, Codable { case downloading, staged, cancelled, discarded, replacing, awaitingRelaunch, completed, rolledBack, protectedHandoff }
     let receipt: OperationReceipt
     let release: SignedUpdate
     var phase: Phase
@@ -102,16 +107,51 @@ final class UpdateAdapter: UpdateService {
     private let driver: any UpdateInstallationDriver
     private let storage: any PreferenceStorage
     private let trust: UpdateTrust
+    private let protectedUpdates: (any ProtectedUpdateCoordinating)?
     private var offer: SignedUpdate?
     private var busy = false
     private var epoch = UUID()
     private var consent: OperationReceipt?
     private let key = "updater.transactions.v1"
     private(set) var state: UpdateState = .idle
+    var administratorCommand: String? { protectedUpdates?.administratorCommand }
+    var protectedPackageDirectory: URL? { protectedUpdates?.packageDirectory }
+
+    struct PendingProtectedUpdate: Equatable, Sendable {
+        let receipt: OperationReceipt
+        let version: String
+        let handedOff: Bool
+    }
+    func pendingProtectedUpdates() throws -> [PendingProtectedUpdate] {
+        guard protectedUpdates != nil else { return [] }
+        return try journal().filter { $0.phase == .staged || $0.phase == .protectedHandoff }.map {
+            PendingProtectedUpdate(receipt: $0.receipt, version: String(try trust.authenticate($0.release).build), handedOff: $0.phase == .protectedHandoff)
+        }
+    }
+    /// Restores observation only. Install consent remains absent after every restart.
+    func recoverProtectedStartup() async -> [PendingProtectedUpdate] {
+        let pending: [PendingProtectedUpdate]
+        do { pending = try pendingProtectedUpdates() }
+        catch {
+            state = .failed(error as? ServiceFailure ?? .persistence, nil)
+            return []
+        }
+        for item in pending {
+            _ = await recover(receipt: item.receipt)
+        }
+        do { return try pendingProtectedUpdates() }
+        catch {
+            state = .failed(error as? ServiceFailure ?? .persistence, nil)
+            // Preserve the last authenticated receipt inventory for retry/diagnostics. A failed
+            // rescan cannot establish that the operation disappeared or grant install consent.
+            return pending
+        }
+    }
 
     init(source: any UpdateSource, driver: any UpdateInstallationDriver,
-         storage: any PreferenceStorage, trust: UpdateTrust) {
+         storage: any PreferenceStorage, trust: UpdateTrust, protectedUpdates: (any ProtectedUpdateCoordinating)? = nil) {
         self.source = source; self.driver = driver; self.storage = storage; self.trust = trust
+        self.protectedUpdates = protectedUpdates
     }
 
     private func journal() throws -> [UpdateTransaction] {
@@ -146,7 +186,8 @@ final class UpdateAdapter: UpdateService {
     }
     private func failure<T>(_ error: Error, receipt: OperationReceipt? = nil) -> ServiceOutcome<T> {
         let reason = error as? ServiceFailure ?? (error is CancellationError ? .cancelled : .invalidData)
-        state = .failed(reason, receipt)
+        if reason == .adminRequired, let receipt { state = .adminRequired(receipt) }
+        else { state = .failed(reason, receipt) }
         return .failure(reason)
     }
     private func result(_ next: UpdateState) -> ServiceOutcome<UpdateState> {
@@ -223,7 +264,8 @@ final class UpdateAdapter: UpdateService {
     func confirmInstall(receipt: OperationReceipt) throws {
         do {
             try requireIdle()
-            guard try transaction(receipt).phase == .staged else { throw ServiceFailure.invalidData }
+            let phase = try transaction(receipt).phase
+            guard phase == .staged || (phase == .protectedHandoff && protectedUpdates != nil) else { throw ServiceFailure.invalidData }
             consent = receipt
         } catch {
             state = .failed(error as? ServiceFailure ?? .invalidData, receipt)
@@ -234,10 +276,18 @@ final class UpdateAdapter: UpdateService {
         do {
             try requireIdle()
             let entry = try transaction(receipt)
-            guard entry.phase == .staged, consent == receipt else { throw ServiceFailure.denied }
+            guard (entry.phase == .staged || (entry.phase == .protectedHandoff && protectedUpdates != nil)), consent == receipt else { throw ServiceFailure.denied }
             let manifest = try trust.authenticate(entry.release)
             try trust.requireCompatible(manifest)
             try driver.verifyStaged(manifest: manifest, receipt: receipt)
+            if let protectedUpdates {
+                consent = nil
+                let next = try await protectedUpdates.install(release: entry.release, manifest: manifest, receipt: receipt) {
+                    try self.transition(entry, to: .protectedHandoff)
+                }
+                return result(next)
+            }
+            try driver.preflightReplacement(manifest: manifest, receipt: receipt)
             try transition(entry, to: .replacing) // write-ahead: crash cannot become fresh install
             consent = nil; state = .installing(receipt)
             try driver.replace(manifest: manifest, receipt: receipt)
@@ -271,6 +321,11 @@ final class UpdateAdapter: UpdateService {
             let entry = try transaction(receipt)
             let manifest = try trust.authenticate(entry.release)
             switch entry.phase {
+            case .protectedHandoff:
+                guard let protectedUpdates else { throw ServiceFailure.interruptedUpdate }
+                let next = try protectedUpdates.recover(release: entry.release, manifest: manifest, receipt: receipt)
+                if case .completed = next { try transition(entry, to: .completed) }
+                return result(next)
             case .replacing, .awaitingRelaunch, .completed:
                 switch try driver.placement(manifest: manifest, receipt: receipt) {
                 case .replacement:

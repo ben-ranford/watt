@@ -114,7 +114,7 @@ final class J92HelperRemovedTests: XCTestCase {
         for token in ["Section(\"General\")", "settings.openAtLogin", "settings.automaticUpdates"] {
             XCTAssertTrue(general.contains(token), token)
         }
-        let helper = try sourceSlice(source, from: "} else if setup.helperOn {", to: "            } label: {")
+        let helper = try sourceSlice(source, from: "if setup.canRemoveHelper {", to: "            } label: {")
         XCTAssertTrue(helper.contains("settings.helper.remove"))
         let removedHelper = try sourceSlice(helper, from: "if setup.wasRemoved {", to: "} else {")
         XCTAssertTrue(removedHelper.contains("settings.helper.turnOn"))
@@ -176,6 +176,22 @@ final class J92HelperRemovedTests: XCTestCase {
         XCTAssertTrue(settings.contains("removalExcerpt: settingsRemovalExcerpt"))
     }
 
+    func testOwnedPendingAndDisconnectedHelperKeepRemovalAvailableUntilAbsent() async {
+        let driver = J92RegistrationDriver()
+        let adapter = HelperLifecycleAdapter(driver: driver, transport: J92DisconnectedTransport(),
+            expectedPeer: driver.peer)
+        let setup = SettingsHelperSetup(service: adapter)
+        for status in [HelperRegistrationStatus.requiresApproval, .enabled] {
+            driver.current = status
+            await setup.refreshStatus()
+            XCTAssertFalse(setup.helperOn)
+            XCTAssertTrue(setup.canRemoveHelper, "An owned registration remains removable without a live connection")
+        }
+        driver.current = .absent
+        await setup.refreshStatus()
+        XCTAssertFalse(setup.canRemoveHelper)
+    }
+
     private func settingsSource() throws -> String {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         return try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"), encoding: .utf8)
@@ -223,4 +239,24 @@ private final class ApprovalService: HelperService {
         return .success(.awaitingApproval)
     }
     func remove(receipt: OperationReceipt) async -> RemovalOutcome { .cancelled }
+}
+
+
+@MainActor
+private final class J92RegistrationDriver: HelperLifecycleDriver {
+    var current: HelperRegistrationStatus = .absent
+    let peer = HelperPeer(identifier: "test.helper", team: "TEST", protocolVersion: 1)
+    func status() async throws -> HelperRegistrationStatus { current }
+    func verifyCandidate() throws -> HelperPeer { peer }
+    func register(receipt: OperationReceipt) async throws { current = .requiresApproval }
+    func update(receipt: OperationReceipt) async throws { }
+    func unregister(receipt: OperationReceipt) async throws { current = .absent }
+    func updateApplied(receipt: OperationReceipt) async throws -> Bool { false }
+}
+
+@MainActor
+private final class J92DisconnectedTransport: HelperIPCTransport {
+    func connect() async throws -> HelperPeer { throw ServiceFailure.disconnected }
+    func send(_ request: HelperMessage) async throws -> HelperMessage { throw ServiceFailure.disconnected }
+    func invalidate() { }
 }

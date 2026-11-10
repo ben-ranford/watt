@@ -23,20 +23,27 @@ final class AppRouter: ObservableObject {
     @Published private(set) var uninstallCompleted = false
     /// The app composition supplies native termination; unit tests observe without exiting.
     var onUninstalled: () -> Void = {}
+    var onMaintenanceHandoff: () -> Void = {}
 
     /// P05 owns effects and evidence. No presentation-supplied paths or broad cleanup.
-    func configureUninstall(adapter: ScopedRemovalAdapter) {
+    func configureUninstall(coordinator: any UninstallCoordinator) {
         var uninstallReceipt: OperationReceipt?
         let previousRemoval = removeFromSettings
         removeFromSettings = { target in
             guard target == .uninstall else { return await previousRemoval(target) }
-            guard Set(adapter.manifest.resources.map(\.kind)) == Set(RemovalManifest.Kind.allCases) else {
-                return .failed(.invalidData)
-            }
             let receipt = uninstallReceipt ?? OperationReceipt(createdAt: Date())
             uninstallReceipt = receipt
-            return await adapter.removeOwnedResources(receipt: receipt)
+            return await coordinator.removeOwnedResources(receipt: receipt)
         }
+    }
+
+    func configureUninstall(adapter: ScopedRemovalAdapter) {
+        guard Set(adapter.manifest.resources.map(\.kind)) == Set(RemovalManifest.Kind.allCases) else {
+            let previous = removeFromSettings
+            removeFromSettings = { target in target == .uninstall ? .failed(.invalidData) : await previous(target) }
+            return
+        }
+        configureUninstall(coordinator: adapter)
     }
 
     func beginUninstallPresentation() -> UUID {
@@ -75,6 +82,12 @@ final class AppRouter: ObservableObject {
             uninstallPresentation = nil
             statusPanelPresented = false
             onUninstalled()
+        }
+        if case .handoffAccepted = result {
+            uninstallIntent = nil
+            uninstallPresentation = nil
+            statusPanelPresented = false
+            onMaintenanceHandoff()
         }
         return result
     }
@@ -142,6 +155,7 @@ final class AppRouter: ObservableObject {
 
     let updates: UpdateStore
     private let updateService: (any UpdateService)?
+    let updateConfigurationFailure: ServiceFailure?
     private var updateCheck: Task<Void, Never>?
     @Published private(set) var updateOfferIntent: UpdateOfferIntent?
     @Published private(set) var upToDateGeneration: UUID?
@@ -219,6 +233,46 @@ final class AppRouter: ObservableObject {
         let receipt: OperationReceipt
     }
     @Published private(set) var readyIntent: ReadyIntent?
+    private var installReady: ((OperationReceipt) async -> ServiceOutcome<UpdateState>)?
+    @Published private(set) var pendingProtectedReceipt: OperationReceipt?
+    @Published private(set) var resumingProtectedUpdate = false
+
+    func recoverUpdateStartup(adapter: UpdateAdapter) async {
+        let pending = await adapter.recoverProtectedStartup()
+        let next = adapter.state
+        guard updates.restoreVerifiedTransaction(next) else { return }
+        if case .completed = next { downloadVersion = nil; pendingProtectedReceipt = nil; return }
+        if let item = pending.first {
+            pendingProtectedReceipt = item.receipt
+            downloadVersion = item.version
+        }
+    }
+
+    func resumeProtectedUpdate() async {
+        guard !resumingProtectedUpdate, let receipt = pendingProtectedReceipt, let installReady else { return }
+        resumingProtectedUpdate = true
+        defer { resumingProtectedUpdate = false }
+        let token = updates.renewGeneration()
+        let outcome = await installReady(receipt)
+        guard updates.generation == token else { return }
+        let next: UpdateState
+        switch outcome {
+        case .success(let value): next = value
+        case .failure(let reason): next = .failed(reason, receipt)
+        }
+        guard updates.accept(next, generation: token) else { return }
+        if case .handoffAccepted = next { onMaintenanceHandoff() }
+    }
+
+    func configureUpdateInstallation(adapter: UpdateAdapter) {
+        installReady = { receipt in
+            do { try adapter.confirmInstall(receipt: receipt) }
+            catch { return .failure(error as? ServiceFailure ?? .invalidData) }
+            let installed = await adapter.install(receipt: receipt)
+            if case .success(.awaitingRelaunch) = installed { return await adapter.relaunch(receipt: receipt) }
+            return installed
+        }
+    }
     private var readyPresentation: UUID?
 
     var readyReceipt: OperationReceipt? {
@@ -252,6 +306,26 @@ final class AppRouter: ObservableObject {
         readyIntent = ReadyIntent(action: action, version: version, generation: generation, receipt: receipt)
         readyPresentation = nil
         updates.renewGeneration()
+        if action == .installAndRelaunch, let installReady {
+            let token = updates.generation
+            Task { [weak self] in
+                let outcome = await installReady(receipt)
+                guard let self, self.updates.generation == token else { return }
+                let next: UpdateState
+                switch outcome {
+                case .success(let value): next = value
+                case .failure(.adminRequired): next = .adminRequired(receipt)
+                case .failure(let reason): next = .failed(reason, receipt)
+                }
+                // Only the configured adapter can provide transaction progress.
+                if case .awaitingRelaunch = next {
+                    _ = self.updates.accept(.installing(receipt), generation: token)
+                }
+                _ = self.updates.accept(next, generation: token)
+                if case .handoffAccepted = next { self.onMaintenanceHandoff(); return }
+                self.present(.softwareUpdate)
+            }
+        }
         return true
     }
 
@@ -299,7 +373,7 @@ final class AppRouter: ObservableObject {
     func cancelUpdateDownload() async -> Bool {
         guard !cancellationPending, let receipt = updates.downloadReceipt else { return false }
         switch updates.state {
-        case .downloading, .staged, .failed: break
+        case .downloading, .staged, .failed, .adminRequired: break
         default: return false
         }
         cancellationPending = true
@@ -329,8 +403,10 @@ final class AppRouter: ObservableObject {
         return saved
     }
 
-    init(updateService: (any UpdateService)? = nil, updates: UpdateStore? = nil) {
+    init(updateService: (any UpdateService)? = nil, updates: UpdateStore? = nil,
+         updateConfigurationFailure: ServiceFailure? = nil) {
         self.updateService = updateService
+        self.updateConfigurationFailure = updateConfigurationFailure
         self.updates = updates ?? UpdateStore()
         helperObservation = settingsHelperSetup.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
@@ -398,7 +474,7 @@ final class AppRouter: ObservableObject {
     /// Reverify before removal and apply only verified absence to shared preferences/presentation.
     func removeVerifiedHelper(preferences: PreferencesStore) async -> RemovalOutcome {
         await settingsHelperSetup.refreshStatus()
-        guard settingsHelperSetup.helperOn else { return .failed(.unknownStatus) }
+        guard settingsHelperSetup.canRemoveHelper else { return .failed(.unknownStatus) }
         let result = await removeFromSettings(.helper)
         if case .verifiedAbsent = result {
             preferences.componentReadings = false

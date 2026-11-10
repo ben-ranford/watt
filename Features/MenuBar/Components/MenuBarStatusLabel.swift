@@ -17,7 +17,7 @@ struct MenuBarStatusLabel: View {
                   reading.capabilities.components == .available,
                   (try? reading.validate()) != nil else { return "—" }
             let values = preferences.selectedComponents.map { id in
-                let component = reading.components.first { $0.id == id }
+                let component = reading.components.first { $0.id.lowercased() == id.lowercased() }
                 return "\(component?.name ?? id) \(PowerFormatter.watts(component?.watts, signed: false, precision: preferences.precision))"
             }
             // C04.7 shares one unit only for an explicit per-component state.

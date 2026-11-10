@@ -61,7 +61,7 @@ final class J112SettingsTests: XCTestCase {
             "Text(\"Smooth readings\")",
             "On — averages the last 5 seconds, so the number doesn’t jump.",
             "Text(\"Component Readings\")", "Text(Self.statusTitle)", "Text(Self.helperTitle)",
-            "Reads power sensors only. No network, nothing leaves this Mac.",
+            "Reads Apple’s CPU/GPU power estimates. No network, nothing leaves this Mac.",
             "Section(\"Notifications\")", "Text(\"Charger can’t keep up\")",
             "When your Mac draws more than the charger gives for 5 minutes.",
             "Toggle(\"Fully charged\"", "Section(\"General\")", "Toggle(\"Open at login\"",

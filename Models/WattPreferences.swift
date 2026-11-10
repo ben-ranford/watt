@@ -1,5 +1,8 @@
 import Combine
 import Foundation
+#if SWIFT_PACKAGE
+import WattMaintenanceShared
+#endif
 
 enum WattDisplayMode: String, CaseIterable, Hashable, Codable, Sendable {
     case delta = "Delta", charger = "Charger", draw = "Draw", components = "Components", iconOnly = "Icon Only"
@@ -8,17 +11,14 @@ enum WattDisplayMode: String, CaseIterable, Hashable, Codable, Sendable {
 enum ServiceFailure: String, Error, Codable, Sendable {
     case denied, timedOut, disconnected, network, interruptedUpdate, interruptedRemoval
     case cancelled, invalidData, persistence, untrustedIdentity, incompatibleVersion, unknownStatus
+    case adminRequired
 }
 enum ServiceOutcome<Value: Sendable>: Sendable {
     case success(Value)
     case failure(ServiceFailure)
 }
 
-struct OperationReceipt: Equatable, Codable, Sendable {
-    let id: UUID
-    let createdAt: Date
-    init(id: UUID = UUID(), createdAt: Date) { self.id = id; self.createdAt = createdAt }
-}
+typealias OperationReceipt = MaintenanceReceipt
 
 enum HelperState: Equatable, Codable, Sendable {
     case unknown, absent, awaitingApproval, disabled, connected, updateRequired, disconnected
@@ -47,9 +47,11 @@ enum UpdateState: Equatable, Codable, Sendable {
     case idle, checking, available(version: String), downloading(progress: Double)
     case staged(OperationReceipt), installing(OperationReceipt), awaitingRelaunch(OperationReceipt)
     case completed(OperationReceipt), failed(ServiceFailure, OperationReceipt?)
+    case adminRequired(OperationReceipt), handoffAccepted(OperationReceipt)
 }
 enum RemovalOutcome: Equatable, Sendable {
     case verifiedAbsent, cancelled, failed(ServiceFailure), interrupted(OperationReceipt)
+    case adminRequired(OperationReceipt), handoffAccepted(OperationReceipt)
 }
 enum NotificationAuthorization: String, Sendable { case notDetermined, denied, authorized }
 enum OnboardingCheckpoint: String, Codable, Sendable { case welcome, picker, helperOffer, approval, preview, allSet, coachMark, livePanel, welcomeClosed, runningDefaults }

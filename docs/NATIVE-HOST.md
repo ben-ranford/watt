@@ -119,3 +119,11 @@ Before distributing, owners must approve identifiers, Developer ID team/signing,
 hardened runtime and reviewed entitlements, notarization/stapling, app artwork,
 and helper/login-item packaging. This project intentionally provides none of
 those production capabilities. Do not treat Archive as a shipping release.
+
+## GitHub helper and maintenance route
+
+See [stable release evidence](evidence/stable-release/README.md) for the current administrator-installed launchd route. Debug/Release use ad-hoc code identities; `HelperSigned` explicitly selects optional certificate trust. The app/helper authenticate protected per-generation hashes in both XPC directions. Apple credentials do not grant measurement access: root execution and validated source data remain separate requirements.
+
+The app embeds `WattHelper`, `WattMaintenance` and `WattHelperInstaller`. The installer is an explicit administrator entry point; the measurement daemon remains read-only. Protected app/helper updates and uninstall require administrator tooling. Unprivileged maintenance distinguishes durable acceptance from completion and observes the exact parent exit externally.
+
+The user authorized removing quarantine from Watt. `scripts/verify-release-readiness.sh local <physical-app-path> --clear-quarantine` verifies the bundle before applying the scoped attribute change. Production provisioning and genuine installed/hardware tests remain blocked; successful local compilation does not make this a stable release.

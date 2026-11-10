@@ -57,6 +57,19 @@ struct SoftwareUpdateContent: View {
     @ViewBuilder private var content: some View {
         if router.upToDatePresented || router.couldntCheckPresented {
             Color.clear
+        } else if case .adminRequired = store.state {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("The update is ready. Administrator installation is required to update Watt? and its helper together. Use the Watt? installer, then launch the installed app.")
+                Button("Discard Download") { Task { if await router.cancelUpdateDownload() { dismiss() } } }
+            }.padding(20).frame(width: 420)
+        } else if case .handoffAccepted = store.state {
+            Text("Watt? will close while the update finishes.").padding(20).frame(width: 420)
+        } else if router.pendingProtectedReceipt != nil {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("An update needs recovery. Resume to verify the installer result and relaunch Watt?.")
+                Button("Resume Install and Relaunch") { Task { await router.resumeProtectedUpdate() } }
+                    .disabled(router.resumingProtectedUpdate)
+            }.padding(20).frame(width: 420)
         } else if let receipt = router.readyReceipt, let version = router.downloadVersion {
             UpdateReadyContent(router: router, store: store, version: version, receipt: receipt)
         } else if let version = router.downloadVersion {

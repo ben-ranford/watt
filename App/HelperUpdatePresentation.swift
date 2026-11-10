@@ -1,4 +1,7 @@
 import SwiftUI
+#if SWIFT_PACKAGE
+import WattHelperShared
+#endif
 
 /// J3.3: injected boundaries retain responsibility for signed receipts and OS approval.
 @MainActor
@@ -34,6 +37,7 @@ final class HelperUpdatePrompt: ObservableObject {
         case .success(.awaitingApproval): return "Waiting for macOS approval. Check again after approving in System Settings."
         case .success(.connected): return "Helper update verified."
         case .failure(.incompatibleVersion): return "This helper protocol cannot be updated by this app. An authenticated migration is required."
+        case .failure(.adminRequired): return "Administrator installation is required to update the helper."
         case .failure: return "The helper update could not be verified. Try again."
         default: return "Update the helper after the app update."
         }
@@ -173,3 +177,39 @@ enum J108FixtureLaunch {
     }
 }
 #endif
+
+
+/// Explicit, one-shot source evidence export through the authenticated helper.
+/// The destination is opened by the unprivileged app; it is never sent to the daemon.
+@MainActor
+enum HelperDiagnosticExport {
+    static func capture(connect: () async throws -> Void,
+                        request: (HelperRequest) async throws -> HelperReply) async throws -> Data {
+        try await connect()
+        let command = HelperRequest(command: .diagnosticCapture, generation: UUID())
+        let reply = try await request(command)
+        // Enforce correlation and bounds even for injected transports.
+        let data = try HelperWire.encode(reply)
+        let checked = try HelperWire.decodeReply(data, for: command)
+        guard checked.capture != nil else { throw ServiceFailure.invalidData }
+        return data
+    }
+
+    static func present(transport: ProductionHelperIPC) async {
+        let panel = NSSavePanel()
+        panel.title = "Export Helper Diagnostic"
+        panel.message = "Save one raw CPU/GPU source sample for diagnosis. This does not enable component estimates."
+        panel.nameFieldStringValue = "watt-helper-diagnostic.json"
+        guard panel.runModal() == .OK, let destination = panel.url else { return }
+        do {
+            let data = try await capture(connect: { _ = try await transport.connect() },
+                                         request: { try await transport.request($0) })
+            try data.write(to: destination, options: .atomic)
+        } catch {
+            let alert = NSAlert()
+            alert.messageText = "Helper diagnostic could not be saved"
+            alert.informativeText = "Check that the helper is approved and connected, then try again."
+            alert.runModal()
+        }
+    }
+}

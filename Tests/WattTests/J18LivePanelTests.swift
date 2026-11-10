@@ -139,7 +139,7 @@ final class J22ComponentsOffTests: XCTestCase {
     func testNativeOffControlsAndProductionPreferenceWiring() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/MenuBar/Views/StatusPanelView.swift"), encoding: .utf8)
-        for token in ["Text(\"Off\")", "Turn on the helper to see where the power goes.",
+        for token in ["Text(\"Off\")", "Approve the helper to see CPU/GPU estimates.",
                       "Button(\"Turn On…\", action: onSettings)", ".buttonStyle(.bordered)",
                       ".buttonStyle(.borderless)", "LabeledContent", "WattTypography.subheadline"] {
             XCTAssertTrue(source.contains(token), token)

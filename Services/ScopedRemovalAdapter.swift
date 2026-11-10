@@ -17,7 +17,8 @@ struct RemovalManifest: Equatable, Codable, Sendable {
         for resource in resources {
             let path = resource.path
             guard path.hasPrefix("/"), path != "/", !path.contains("\0"),
-                  URL(fileURLWithPath: path).standardizedFileURL.path == path else {
+                  !path.hasSuffix("/"), !path.contains("//"),
+                  !path.split(separator: "/").contains(where: { $0 == "." || $0 == ".." }) else {
                 throw ServiceFailure.invalidData
             }
             // Nested roots would authorize accidental recursive removal of another entry.

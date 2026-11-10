@@ -1,6 +1,9 @@
 import AppKit
 import Combine
 import SwiftUI
+#if SWIFT_PACKAGE
+import WattHelperShared
+#endif
 
 @main
 struct WattApp: App {
@@ -10,12 +13,16 @@ struct WattApp: App {
     @StateObject private var preferences: PreferencesStore
 
     private static var isHarnessLaunch: Bool {
-        ProcessInfo.processInfo.arguments.dropFirst().contains { $0.hasPrefix("--watt-") }
+        ProcessInfo.processInfo.arguments.dropFirst().contains { $0.hasPrefix("--watt-") && $0 != "--watt-update-handshake" }
     }
 
     init() {
+        if Array(ProcessInfo.processInfo.arguments.dropFirst()) == ["--watt-update-handshake"] {
+            do { try UpdateLaunchAcknowledgementService.acknowledge() }
+            catch { exit(EXIT_FAILURE) }
+        }
         #if DEBUG
-        if let rejection = WattFixtureLaunchGate.rejection(arguments: ProcessInfo.processInfo.arguments) {
+        if let rejection = WattFixtureLaunchGate.rejection(arguments: ProcessInfo.processInfo.arguments.filter { $0 != "--watt-update-handshake" }) {
             FileHandle.standardError.write(Data((rejection + "\n").utf8))
             // Exit before constructing stores or allowing SwiftUI to evaluate any scene.
             exit(EXIT_FAILURE)
@@ -228,6 +235,13 @@ struct WattApp: App {
             return
         }
         #endif
+        let productionUpdate: ProductionUpdateComposition?
+        let updateFailure: ServiceFailure?
+        if Self.isHarnessLaunch { productionUpdate = nil; updateFailure = nil }
+        else {
+            do { productionUpdate = try ProductionUpdateComposition.configured(); updateFailure = nil }
+            catch { productionUpdate = nil; updateFailure = error as? ServiceFailure ?? .untrustedIdentity }
+        }
         #if DEBUG
         // C03's Figma reference shows an enabled Check for Updates… row. Keep
         // that deterministic fixture state without composing an updater into
@@ -235,14 +249,69 @@ struct WattApp: App {
         // is configured.
         let appRouter = C03FixtureLaunch.requested
             ? AppRouter(updateService: FakeUpdateService())
-            : AppRouter()
+            : AppRouter(updateService: productionUpdate?.adapter,
+                updates: UpdateStore(storage: UserDefaultsStorage(defaults: .standard)), updateConfigurationFailure: updateFailure)
         #else
-        let appRouter = AppRouter()
+        let appRouter = AppRouter(updateService: productionUpdate?.adapter,
+            updates: UpdateStore(storage: UserDefaultsStorage(defaults: .standard)), updateConfigurationFailure: updateFailure)
         #endif
+        if let update = productionUpdate {
+            appRouter.configureUpdateInstallation(adapter: update.adapter)
+            Task { await appRouter.recoverUpdateStartup(adapter: update.adapter) }
+        }
+        let productionHelper: ProductionHelperComposition?
+        if Self.isHarnessLaunch {
+            productionHelper = nil
+        } else {
+            do { productionHelper = try ProductionHelperComposition.configured() }
+            catch {
+                productionHelper = nil
+                let bundle = Bundle.main.bundleURL
+                let helper = bundle.appendingPathComponent("Contents/MacOS/" + HelperIdentity.executableName)
+                let plist = bundle.appendingPathComponent("Contents/Library/LaunchDaemons/" + HelperIdentity.daemonPlist)
+                appRouter.settingsHelperSetup.unavailableReason = .configurationFailure(error,
+                    packagedHelperPresent: FileManager.default.fileExists(atPath: helper.path)
+                        && FileManager.default.fileExists(atPath: plist.path))
+            }
+        }
+        if let helper = productionHelper {
+            appRouter.settingsHelperSetup.service = helper.service
+            appRouter.settingsHelperSetup.configureRepair(receipt: helper.updateReceipt, pending: helper.hasPendingUpdate)
+            appRouter.settingsHelperSetup.captureDiagnostic = {
+                await HelperDiagnosticExport.present(transport: helper.transport)
+            }
+            let previousRemoval = appRouter.removeFromSettings
+            var helperRemovalReceipt: OperationReceipt?
+            appRouter.removeFromSettings = { target in
+                guard target == .helper else { return await previousRemoval(target) }
+                let receipt = helperRemovalReceipt ?? helper.removalReceipt()
+                helperRemovalReceipt = receipt
+                let result = await helper.service.remove(receipt: receipt)
+                if case .verifiedAbsent = result { helperRemovalReceipt = nil }
+                return result
+            }
+        }
+        if !Self.isHarnessLaunch {
+            do {
+                let removal = try ProductionRemovalComposition.configured(helper: productionHelper?.service)
+                appRouter.configureUninstall(coordinator: removal)
+            } catch {
+                let previous = appRouter.removeFromSettings
+                appRouter.removeFromSettings = { target in
+                    target == .uninstall ? .failed((error as? ServiceFailure) ?? .untrustedIdentity) : await previous(target)
+                }
+            }
+        }
         appRouter.onUninstalled = { NSApplication.shared.terminate(nil) }
+        appRouter.onMaintenanceHandoff = { NSApplication.shared.terminate(nil) }
         _router = StateObject(wrappedValue: appRouter)
         let appPowerStore = PowerReadingStore(currentReading: .unavailable,
-            telemetry: SystemPowerSourceTelemetryService())
+            telemetry: SystemPowerSourceTelemetryService(),
+            componentTelemetry: productionHelper.map { ProductionHelperTelemetry(transport: $0.transport) })
+        productionHelper?.transport.onInvalidated = { [weak appPowerStore, weak service = productionHelper?.service] in
+            service?.connectionLost()
+            appPowerStore?.invalidateComponents()
+        }
         let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
@@ -349,6 +418,9 @@ struct WattApp: App {
                     guard powerStore.observesSystemWake else { return }
                     powerStore.handleWake()
                     Task { await powerStore.refresh() }
+                }
+                .onReceive(powerStore.$componentEstimate) { pair in
+                    if let pair { router.settingsHelperSetup.confirmRecoveredComponents(PowerReading.unavailable.presenting(pair)) }
                 }
                 .onReceive(powerStore.$currentReading) { reading in
                     router.settingsHelperSetup.confirmRecoveredComponents(reading)
@@ -1202,9 +1274,7 @@ private final class WattFallbackStatusItem: NSObject {
                 preferences: self.preferences,
                 componentsAvailable: {
                     !self.router.settingsHelperSetup.helperSwitchedOff
-                        && self.powerStore.currentReading.source != .unavailable
-                        && self.powerStore.currentReading.freshness == .fresh
-                        && self.powerStore.currentReading.capabilities.components == .available
+                        && !self.powerStore.availableComponentIDs.isEmpty
                 })
             button.highlight(true)
             defer {
@@ -1273,9 +1343,9 @@ private final class WattFallbackStatusItem: NSObject {
             }
             .store(in: &observations)
 
-        // Give a double-click/open launch a visible native surface even on hosts
-        // whose menu-bar compositor hides third-party status items.
-        DispatchQueue.main.async { [weak self] in self?.showFallbackWindow() }
+        // The normal launch does not mount the SwiftUI status-item bridge, so
+        // route persisted setup here after installing its presentation handler.
+        router.launch(preferences: preferences)
     }
 
     func uninstall() {
@@ -1315,6 +1385,9 @@ private final class WattFallbackStatusItem: NSObject {
     }
 
     private func updateButton() {
+        if let pair = powerStore.freshComponentEstimate {
+            router.settingsHelperSetup.confirmRecoveredComponents(PowerReading.unavailable.presenting(pair))
+        }
         guard let button = item?.button else { return }
         let label = MenuBarStatusLabel(reading: powerStore.statusReading,
                                        preferences: preferences,
@@ -1348,13 +1421,6 @@ private final class WattFallbackStatusItem: NSObject {
             self.buttonUpdateScheduled = false
             self.updateButton()
         }
-    }
-
-    private func showFallbackWindow() {
-        showFallbackWindow(title: "Watt?", content: MenuBarRootView()
-            .environmentObject(router)
-            .environmentObject(powerStore)
-            .environmentObject(preferences))
     }
 
     private func closePanel() {
@@ -1466,9 +1532,7 @@ private struct StatusItemAdapter: NSViewRepresentable {
                 router.reopen(preferences: preferences)
             }
             view.makeMenu = { StatusItemContextMenu.makeMenu(router: router, preferences: preferences,
-                componentsAvailable: { !router.settingsHelperSetup.helperSwitchedOff && powerStore.currentReading.source != .unavailable
-                    && powerStore.currentReading.freshness == .fresh
-                    && powerStore.currentReading.capabilities.components == .available }) }
+                componentsAvailable: { !router.settingsHelperSetup.helperSwitchedOff && !powerStore.availableComponentIDs.isEmpty }) }
             #if DEBUG
             let arguments = ProcessInfo.processInfo.arguments
             if J93FixtureLaunch.requested {
@@ -2194,10 +2258,12 @@ enum J12FixtureLaunch {
     static func makeWindow() -> NSWindow {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .picker
+        let router = AppRouter()
+        router.settingsHelperSetup.service = FakeHelperService()
         let host = NSHostingView(rootView: OnboardingFlowView()
             .environmentObject(PowerReadingStore.preview)
             .environmentObject(preferences)
-            .environmentObject(AppRouter())
+            .environmentObject(router)
             .environment(\.locale, Locale(identifier: "en_US")))
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 346),
                               styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
@@ -2264,10 +2330,12 @@ enum J13FixtureLaunch {
     static func makeWindow() -> NSWindow {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .helperOffer
+        let router = AppRouter()
+        router.settingsHelperSetup.service = FakeHelperService()
         let host = NSHostingView(rootView: OnboardingFlowView()
             .environmentObject(PowerReadingStore.preview)
             .environmentObject(preferences)
-            .environmentObject(AppRouter())
+            .environmentObject(router)
             .environment(\.locale, Locale(identifier: "en_US")))
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 412),
                               styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
@@ -2334,10 +2402,12 @@ enum J14FixtureLaunch {
     static func makeWindow() -> NSWindow {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .approval
+        let router = AppRouter()
+        router.settingsHelperSetup.service = FakeHelperService()
         let host = NSHostingView(rootView: OnboardingFlowView()
             .environmentObject(PowerReadingStore.preview)
             .environmentObject(preferences)
-            .environmentObject(AppRouter())
+            .environmentObject(router)
             .environment(\.locale, Locale(identifier: "en_US")))
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 224),
                               styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
@@ -2406,10 +2476,12 @@ enum J15FixtureLaunch {
     static func makeWindow() -> NSWindow {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .preview
+        let router = AppRouter()
+        router.settingsHelperSetup.service = FakeHelperService()
         let host = NSHostingView(rootView: OnboardingFlowView()
             .environmentObject(PowerReadingStore.preview)
             .environmentObject(preferences)
-            .environmentObject(AppRouter())
+            .environmentObject(router)
             .environment(\.locale, Locale(identifier: "en_US")))
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 364),
                               styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],

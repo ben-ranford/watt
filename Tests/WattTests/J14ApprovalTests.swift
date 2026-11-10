@@ -32,7 +32,7 @@ final class J14ApprovalTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testNativePendingContractAndFixture() throws {
         XCTAssertEqual(WaitingForApprovalView.title, "One switch in System Settings")
-        XCTAssertEqual(WaitingForApprovalView.message, "Turn on “Watt? Helper” in Login Items & Extensions. This window moves on by itself.")
+        XCTAssertEqual(WaitingForApprovalView.message, "Approve Watt? Helper as an administrator in Login Items & Extensions.")
         let fixture = try ScenarioRegistry.resolve("J1.4")
         XCTAssertEqual(fixture.story.node, "28:1206")
         XCTAssertNoThrow(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments())
@@ -41,7 +41,7 @@ final class J14ApprovalTests: XCTestCase {
         }
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Onboarding/Views/OnboardingFlowView.swift"), encoding: .utf8)
-        XCTAssertTrue(source.contains("checkpoint == .approval {\n                WaitingForApprovalView()"))
+        XCTAssertTrue(source.contains("checkpoint == .approval {\n                if router.settingsHelperSetup.helperServiceAvailable {\n                    WaitingForApprovalView()"))
         let view = source.components(separatedBy: "struct WaitingForApprovalView")[1]
         for token in ["Text(Self.title)", "Text(Self.message)", "ProgressView()", ".buttonStyle(.bordered)", ".buttonStyle(.borderedProminent)", "Button(\"Cancel\")", "Button(\"Open System Settings\")"] {
             XCTAssertTrue(view.contains(token), token)

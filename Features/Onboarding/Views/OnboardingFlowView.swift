@@ -19,9 +19,17 @@ struct OnboardingFlowView: View {
             } else if preferences.onboarding.checkpoint == .helperOffer {
                 OfferComponentReadingsView()
             } else if preferences.onboarding.checkpoint == .approval {
-                WaitingForApprovalView()
+                if router.settingsHelperSetup.helperServiceAvailable {
+                    WaitingForApprovalView()
+                } else {
+                    OfferComponentReadingsView()
+                }
             } else if preferences.onboarding.checkpoint == .preview {
-                ComponentPreviewView()
+                if router.settingsHelperSetup.helperServiceAvailable {
+                    ComponentPreviewView()
+                } else {
+                    OfferComponentReadingsView()
+                }
             } else if preferences.onboarding.checkpoint == .allSet {
                 AllSetView()
             } else {
@@ -184,6 +192,7 @@ struct WelcomeView: View {
 struct ChooseMenuReadingView: View {
     @EnvironmentObject private var preferences: PreferencesStore
     @EnvironmentObject private var powerStore: PowerReadingStore
+    @EnvironmentObject private var router: AppRouter
 
     static let title = "Pick one number for the menu bar"
     static let message = "Change it any time. Right-click Watt? or open Settings."
@@ -196,32 +205,40 @@ struct ChooseMenuReadingView: View {
                 ? .noBattery : .standard
         }
 
-        var message: String {
+        @MainActor var message: String {
             self == .noBattery ? "No battery here, so it’s Draw or Components." : ChooseMenuReadingView.message
         }
     }
 
-    static func unavailableModes(reading: PowerReading) -> Set<WattDisplayMode> {
-        guard Variant(reading: reading) == .noBattery else { return [] }
-        var modes: Set<WattDisplayMode> = [.delta, .charger]
+    static func unavailableModes(reading: PowerReading, helperAvailable: Bool = true) -> Set<WattDisplayMode> {
+        var modes: Set<WattDisplayMode> = helperAvailable ? [] : [.components]
+        guard Variant(reading: reading) == .noBattery else { return modes }
+        modes.formUnion([.delta, .charger])
         if reading.capabilities.components != .available { modes.insert(.components) }
         return modes
     }
 
-    static func prepareSelection(preferences: PreferencesStore, reading: PowerReading) {
-        guard preferences.onboarding.checkpoint == .picker,
-              Variant(reading: reading) == .noBattery,
-              preferences.displayMode == .iconOnly || unavailableModes(reading: reading).contains(preferences.displayMode)
-        else { return }
-        preferences.displayMode = .draw
+    static func prepareSelection(preferences: PreferencesStore, reading: PowerReading,
+                                 helperAvailable: Bool = true) {
+        guard preferences.onboarding.checkpoint == .picker else { return }
+        if Variant(reading: reading) == .noBattery,
+           preferences.displayMode == .iconOnly || unavailableModes(reading: reading, helperAvailable: helperAvailable)
+            .contains(preferences.displayMode) {
+            preferences.displayMode = .draw
+        } else if !helperAvailable && preferences.displayMode == .components {
+            preferences.displayMode = .delta
+        }
     }
 
-    static func options(reading: PowerReading) -> [ReadingPicker.Option] {
+    static func options(reading: PowerReading, helperAvailable: Bool = true) -> [ReadingPicker.Option] {
+        let componentDescription = helperAvailable
+            ? "CPU/GPU estimates. Needs administrator approval."
+            : "Component readings are unavailable in this build."
         if Variant(reading: reading) == .noBattery {
             return [
                 .init(mode: .draw, description: "What your Mac uses right now. " +
                       PowerFormatter.watts(reading.value(for: .draw), signed: false)),
-                .init(mode: .components, description: "CPU, GPU and the rest. Needs the helper — next step."),
+                .init(mode: .components, description: componentDescription),
                 .init(mode: .delta, description: "Needs a battery. This Mac doesn’t have one."),
                 .init(mode: .charger, description: "Needs a battery. This Mac doesn’t have one.")
             ]
@@ -234,7 +251,7 @@ struct ChooseMenuReadingView: View {
                                        signed: false, precision: .whole)),
             .init(mode: .draw, description: "What your Mac uses right now. " +
                   PowerFormatter.watts(reading.value(for: .draw), signed: false)),
-            .init(mode: .components, description: "CPU, GPU and the rest. Needs the helper — next step.")
+            .init(mode: .components, description: componentDescription)
         ]
     }
 
@@ -243,9 +260,9 @@ struct ChooseMenuReadingView: View {
         preferences.onboarding.checkpoint = .welcome
     }
 
-    static func advance(preferences: PreferencesStore) {
+    static func advance(preferences: PreferencesStore, helperAvailable: Bool = true) {
         guard preferences.onboarding.checkpoint == .picker else { return }
-        preferences.onboarding.checkpoint = .helperOffer
+        preferences.onboarding.checkpoint = helperAvailable ? .helperOffer : .allSet
     }
 
     var body: some View {
@@ -257,8 +274,10 @@ struct ChooseMenuReadingView: View {
                 .font(WattTypography.body)
                 .foregroundStyle(.secondary)
             ReadingPicker(selection: $preferences.displayMode,
-                          unavailableModes: Self.unavailableModes(reading: powerStore.currentReading),
-                          options: Self.options(reading: powerStore.currentReading))
+                          unavailableModes: Self.unavailableModes(reading: powerStore.currentReading,
+                                                                  helperAvailable: router.settingsHelperSetup.helperServiceAvailable),
+                          options: Self.options(reading: powerStore.currentReading,
+                                                helperAvailable: router.settingsHelperSetup.helperServiceAvailable))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 24)
                 .accessibilityIdentifier("onboarding.reading.picker")
@@ -267,7 +286,8 @@ struct ChooseMenuReadingView: View {
                 WattActionButton(title: "Back") { Self.back(preferences: preferences) }
                     .accessibilityIdentifier("onboarding.reading.back")
                 WattActionButton(title: "Continue", style: .prominent) {
-                    Self.advance(preferences: preferences)
+                    Self.advance(preferences: preferences,
+                                 helperAvailable: router.settingsHelperSetup.helperServiceAvailable)
                 }
                 .keyboardShortcut(.defaultAction)
                 .accessibilityIdentifier("onboarding.reading.continue")
@@ -277,9 +297,13 @@ struct ChooseMenuReadingView: View {
         .padding(.top, 24)
         .padding(.bottom, 24)
         .frame(width: WattSpacing.onboardingWidth)
-        .onAppear { Self.prepareSelection(preferences: preferences, reading: powerStore.currentReading) }
+        .onAppear {
+            Self.prepareSelection(preferences: preferences, reading: powerStore.currentReading,
+                                  helperAvailable: router.settingsHelperSetup.helperServiceAvailable)
+        }
         .onChange(of: powerStore.currentReading) { reading in
-            Self.prepareSelection(preferences: preferences, reading: reading)
+            Self.prepareSelection(preferences: preferences, reading: reading,
+                                  helperAvailable: router.settingsHelperSetup.helperServiceAvailable)
         }
     }
 }
@@ -287,19 +311,28 @@ struct ChooseMenuReadingView: View {
 /// J1.3: informational facts use native form layout, never painted settings rows.
 struct OfferComponentReadingsView: View {
     @EnvironmentObject private var preferences: PreferencesStore
+    @EnvironmentObject private var router: AppRouter
 
     static let title = "See where the power goes"
-    static let message = "Watt? needs a small helper to read CPU, GPU and display power. macOS asks you to approve it once."
+    static let message = "Watt? uses a helper to read Apple’s CPU/GPU power estimates. macOS requires administrator approval. Both estimates appear only when both are available. Display, SSD and Other are unavailable."
+    static let unavailableTitle = "Component readings unavailable"
+    static let unavailableMessage = unavailableMessage(for: .missingBundle)
+    static func unavailableMessage(for reason: HelperUnavailableReason) -> String {
+        reason.message + " You can still use battery, charger and system readings."
+    }
 
     static let facts = [
-        (label: "What it reads", value: "Power sensors only"),
+        (label: "What it reads", value: "CPU/GPU power estimates"),
         (label: "Network", value: "Never"),
         (label: "Remove it", value: "Any time, in Settings")
     ]
     enum Action: CaseIterable { case notNow, turnOn }
 
-    static func perform(_ action: Action, preferences: PreferencesStore) {
-        guard preferences.onboarding.checkpoint == .helperOffer else { return }
+    static func perform(_ action: Action, preferences: PreferencesStore, helperAvailable: Bool = true) {
+        guard preferences.onboarding.checkpoint == .helperOffer
+                || (!helperAvailable && (preferences.onboarding.checkpoint == .approval
+                    || preferences.onboarding.checkpoint == .preview)) else { return }
+        guard action != .turnOn || helperAvailable else { return }
         var state = preferences.onboarding
         switch action {
         case .notNow:
@@ -321,10 +354,10 @@ struct OfferComponentReadingsView: View {
                     .scaledToFit()
                     .frame(width: 64, height: 64)
                     .accessibilityHidden(true)
-                Text(Self.title)
+                Text(router.settingsHelperSetup.helperServiceAvailable ? Self.title : Self.unavailableTitle)
                     .font(WattTypography.title)
                     .accessibilityAddTraits(.isHeader)
-                Text(Self.message)
+                Text(router.settingsHelperSetup.helperServiceAvailable ? Self.message : Self.unavailableMessage(for: router.settingsHelperSetup.unavailableReason))
                     .font(WattTypography.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -332,8 +365,10 @@ struct OfferComponentReadingsView: View {
             }
             .padding(.horizontal, 32)
             Form {
-                ForEach(Self.facts, id: \.label) { fact in
-                    LabeledContent(fact.label, value: fact.value)
+                if router.settingsHelperSetup.helperServiceAvailable {
+                    ForEach(Self.facts, id: \.label) { fact in
+                        LabeledContent(fact.label, value: fact.value)
+                    }
                 }
             }
             .formStyle(.grouped)
@@ -341,17 +376,21 @@ struct OfferComponentReadingsView: View {
             .accessibilityIdentifier("onboarding.helper.facts")
             HStack {
                 Spacer()
-                Button { Self.perform(.notNow, preferences: preferences) } label: {
-                    Text("Not Now")
+                Button { Self.perform(.notNow, preferences: preferences,
+                                      helperAvailable: router.settingsHelperSetup.helperServiceAvailable) } label: {
+                    Text(router.settingsHelperSetup.helperServiceAvailable ? "Not Now" : "Continue")
                 }
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("onboarding.helper.notNow")
-                Button { Self.perform(.turnOn, preferences: preferences) } label: {
-                    Text("Turn On…")
+                if router.settingsHelperSetup.helperServiceAvailable {
+                    Button { Self.perform(.turnOn, preferences: preferences,
+                                          helperAvailable: router.settingsHelperSetup.helperServiceAvailable) } label: {
+                        Text("Turn On…")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .keyboardShortcut(.defaultAction)
+                    .accessibilityIdentifier("onboarding.helper.turnOn")
                 }
-                .buttonStyle(.borderedProminent)
-                .keyboardShortcut(.defaultAction)
-                .accessibilityIdentifier("onboarding.helper.turnOn")
             }
             .padding(.horizontal, 32)
         }
@@ -366,7 +405,7 @@ struct WaitingForApprovalView: View {
     @EnvironmentObject private var router: AppRouter
 
     static let title = "One switch in System Settings"
-    static let message = "Turn on “Watt? Helper” in Login Items & Extensions. This window moves on by itself."
+    static let message = "Approve Watt? Helper as an administrator in Login Items & Extensions."
 
     static func openSettings(preferences: PreferencesStore, router: AppRouter) {
         guard preferences.onboarding.checkpoint == .approval else { return }
@@ -495,7 +534,7 @@ struct ComponentPreviewView: View {
     @EnvironmentObject private var powerStore: PowerReadingStore
 
     static let title = "Helper’s on"
-    static let message = "Here’s where the power is going right now."
+    static let message = "CPU/GPU estimates appear when both are available. Display, SSD and Other are unavailable."
 
     static let componentNames = ["CPU", "GPU", "Display"]
 
@@ -504,7 +543,7 @@ struct ComponentPreviewView: View {
               reading.freshness == .fresh, reading.source != .unavailable else {
             return PowerFormatter.watts(nil, signed: false)
         }
-        return PowerFormatter.watts(reading.components.first { $0.name == name }?.watts, signed: false)
+        return PowerFormatter.watts(reading.components.first { $0.name == name || $0.id == name.lowercased() }?.watts, signed: false)
     }
 
     static func advance(preferences: PreferencesStore) {
@@ -529,7 +568,7 @@ struct ComponentPreviewView: View {
             Form {
                 Section {
                     ForEach(Self.componentNames, id: \.self) { name in
-                        LabeledContent(name, value: Self.value(for: name, reading: powerStore.currentReading))
+                        LabeledContent(name == "CPU" || name == "GPU" ? "\(name) estimate" : name, value: Self.value(for: name, reading: powerStore.statusReading))
                             .accessibilityIdentifier("onboarding.preview." + name.lowercased())
                     }
                 }

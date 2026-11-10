@@ -2,14 +2,19 @@ import Combine
 import Foundation
 
 @MainActor
-protocol WattClock { var now: Date { get } }
+protocol WattClock { var now: Date { get }; var uptime: TimeInterval { get } }
+extension WattClock { var uptime: TimeInterval { now.timeIntervalSince1970 } }
 @MainActor
-struct SystemWattClock: WattClock { var now: Date { Date() } }
+struct SystemWattClock: WattClock {
+    var now: Date { Date() }
+    var uptime: TimeInterval { ProcessInfo.processInfo.systemUptime }
+}
 @MainActor
 final class FakeWattClock: WattClock {
     var now: Date
+    private(set) var uptime: TimeInterval = 0
     init(now: Date = Date(timeIntervalSince1970: 1_700_000_000)) { self.now = now }
-    func advance(by interval: TimeInterval) { now = now.addingTimeInterval(interval) }
+    func advance(by interval: TimeInterval) { now = now.addingTimeInterval(interval); uptime += max(0, interval) }
 }
 
 @MainActor
@@ -30,6 +35,10 @@ final class PowerReadingStore: ObservableObject {
     static let componentsStatusMaximumAge: TimeInterval = 5
     // Retain the last sample for diagnostics, but suppress qualified status after a failed update.
     var statusReading: PowerReading {
+        if componentTelemetry != nil { return systemStatusReading.presenting(freshComponentEstimate) }
+        return systemStatusReading
+    }
+    private var systemStatusReading: PowerReading {
         guard failure == nil, freshness(maximumAge: Self.statusMaximumAge) == .fresh else { return .unavailable }
         if currentReading.mode == .perComponent,
            failure != nil || freshness(maximumAge: Self.componentsStatusMaximumAge) != .fresh { return .unavailable }
@@ -42,15 +51,35 @@ final class PowerReadingStore: ObservableObject {
            freshness(maximumAge: Self.fullStatusMaximumAge) != .fresh { return .unavailable }
         return currentReading
     }
+    @Published private(set) var componentFailure: ServiceFailure?
+    @Published private(set) var componentEstimate: ComponentEstimatePair?
+    private let componentTelemetry: (any ComponentTelemetryService)?
+    private var componentRequest: UUID?
+    private var componentReceivedUptime: TimeInterval?
+    private var componentInitialAge: TimeInterval = 0
+    private var lastComponentStart: TimeInterval?
+    private var componentExpiry: Task<Void, Never>?
+    private var lastAcquisition: (id: UUID, startedAt: Date)?
+    var freshComponentEstimate: ComponentEstimatePair? {
+        guard componentFailure == nil, let pair = componentEstimate,
+              let received = componentReceivedUptime,
+              clock.uptime >= received,
+              componentInitialAge + clock.uptime - received <= Self.componentsStatusMaximumAge,
+              clock.now >= pair.startedAt,
+              clock.now.timeIntervalSince(pair.startedAt) <= Self.componentsStatusMaximumAge else { return nil }
+        return pair
+    }
     private let clock: any WattClock
     private let telemetry: (any TelemetryService)?
     var observesSystemWake: Bool { clock is SystemWattClock && telemetry != nil }
     private var refreshRequest: UUID?
     private var onBatteryExpiry: Task<Void, Never>?
     private(set) var generation = UUID()
-    init(currentReading: PowerReading, clock: (any WattClock)? = nil, telemetry: (any TelemetryService)? = nil) {
+    init(currentReading: PowerReading, clock: (any WattClock)? = nil, telemetry: (any TelemetryService)? = nil,
+         componentTelemetry: (any ComponentTelemetryService)? = nil) {
         self.clock = clock ?? SystemWattClock()
         self.telemetry = telemetry
+        self.componentTelemetry = componentTelemetry
         do {
             try currentReading.validate()
             guard currentReading.timestamp <= self.clock.now else { throw ServiceFailure.invalidData }
@@ -59,7 +88,7 @@ final class PowerReadingStore: ObservableObject {
         catch { self.currentReading = .unavailable; failure = .invalidData }
         scheduleOnBatteryExpiry()
     }
-    deinit { onBatteryExpiry?.cancel() }
+    deinit { onBatteryExpiry?.cancel(); componentExpiry?.cancel() }
 
     private func scheduleOnBatteryExpiry() {
         onBatteryExpiry?.cancel()
@@ -80,6 +109,7 @@ final class PowerReadingStore: ObservableObject {
     @discardableResult
     func restart() -> UUID {
         generation = UUID()
+        invalidateComponents()
         refreshRequest = nil
         isRefreshing = false
         return generation
@@ -115,11 +145,69 @@ final class PowerReadingStore: ObservableObject {
     /// The status item's task owns cancellation; frozen fixture clocks never poll the host.
     func runSampling(interval: @escaping @MainActor () -> TimeInterval = { PowerReadingStore.retryInterval }) async {
         guard observesSystemWake else { return }
+        async let components: Void = runComponentSampling()
         while !Task.isCancelled {
             await refresh()
             let delay = Self.samplingDelay(for: interval())
             do { try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000)) }
-            catch { return }
+            catch { break }
+        }
+        _ = await components
+    }
+
+    private func runComponentSampling() async {
+        guard componentTelemetry != nil else { return }
+        while !Task.isCancelled {
+            let started = clock.uptime
+            await refreshComponents()
+            let delay = max(0.05, Self.retryInterval - (clock.uptime - started))
+            do { try await Task.sleep(for: .seconds(delay)) } catch { return }
+        }
+    }
+
+    func invalidateComponents() {
+        componentRequest = nil
+        componentExpiry?.cancel()
+        componentEstimate = nil
+        componentReceivedUptime = nil
+        componentFailure = .disconnected
+    }
+
+    func refreshComponents() async {
+        guard !Task.isCancelled, let componentTelemetry, componentRequest == nil else { return }
+        let started = clock.uptime
+        guard lastComponentStart.map({ started - $0 >= Self.retryInterval }) ?? true else { return }
+        lastComponentStart = started
+        let request = UUID(), expectedGeneration = generation
+        componentRequest = request
+        defer { if componentRequest == request { componentRequest = nil } }
+        let outcome = await componentTelemetry.sampleComponents()
+        guard !Task.isCancelled, generation == expectedGeneration, componentRequest == request else { return }
+        switch outcome {
+        case .failure(let failure):
+            componentEstimate = nil
+            componentFailure = failure
+        case .success(let pair):
+            let elapsed = clock.uptime - started
+            let age = clock.now.timeIntervalSince(pair.startedAt)
+            guard (try? pair.validate()) != nil, elapsed >= 0, elapsed <= 5,
+                  age >= pair.duration, age <= Self.componentsStatusMaximumAge,
+                  lastAcquisition.map({ pair.acquisitionID != $0.id && pair.startedAt > $0.startedAt }) ?? true else {
+                componentEstimate = nil; componentFailure = .invalidData; return
+            }
+            lastAcquisition = (pair.acquisitionID, pair.startedAt)
+            componentInitialAge = max(age, elapsed)
+            componentReceivedUptime = clock.uptime
+            componentEstimate = pair
+            componentFailure = nil
+            componentExpiry?.cancel()
+            if clock is SystemWattClock {
+                let delay = max(0, Self.componentsStatusMaximumAge - componentInitialAge) + 0.01
+                componentExpiry = Task { [weak self] in
+                    do { try await Task.sleep(for: .seconds(delay)) } catch { return }
+                    self?.objectWillChange.send()
+                }
+            }
         }
     }
 
@@ -153,6 +241,7 @@ final class PowerReadingStore: ObservableObject {
     }
 
     var availableComponentIDs: [String] {
+        if componentTelemetry != nil { return freshComponentEstimate?.components.map(\.id) ?? [] }
         let ids = currentReading.components.map(\.id)
         guard failure == nil, currentReading.capabilities.components == .available,
               freshness(maximumAge: Self.componentsStatusMaximumAge) == .fresh,
@@ -164,6 +253,11 @@ final class PowerReadingStore: ObservableObject {
     static var preview: PowerReadingStore {
         PowerReadingStore(currentReading: .sampleCharging, clock: FakeWattClock())
     }
+}
+
+@MainActor
+protocol ComponentTelemetryService {
+    func sampleComponents() async -> ServiceOutcome<ComponentEstimatePair>
 }
 
 // Adapters must return outcomes, not throw permission/network failures through view code.
@@ -408,7 +502,7 @@ final class UpdateStore: ObservableObject {
             if let data = try self.storage.read(key: "update.v1") {
                 let restored = try JSONDecoder().decode(UpdateState.self, from: data)
                 switch restored {
-                case .staged(let receipt), .installing(let receipt), .awaitingRelaunch(let receipt):
+                case .staged(let receipt), .installing(let receipt), .awaitingRelaunch(let receipt), .handoffAccepted(let receipt):
                     state = .failed(.interruptedUpdate, receipt)
                 case .checking, .downloading, .available: state = .failed(.interruptedUpdate, nil)
                 default: state = restored
@@ -490,11 +584,28 @@ final class UpdateStore: ObservableObject {
     }
     private func receipt(in state: UpdateState) -> OperationReceipt? {
         switch state {
-        case .staged(let r), .installing(let r), .awaitingRelaunch(let r), .completed(let r): return r
+        case .staged(let r), .installing(let r), .awaitingRelaunch(let r), .completed(let r),
+             .adminRequired(let r), .handoffAccepted(let r): return r
         case .failed(_, let r): return r
         case .downloading: return downloadReceipt
         default: return nil
         }
+    }
+    /// The ordinary composition calls this only with fresh adapter recovery evidence.
+    /// This restores observation; install consent stays in the adapter's ephemeral state.
+    @discardableResult
+    func restoreVerifiedTransaction(_ next: UpdateState) -> Bool {
+        guard let incoming = receipt(in: next), incoming.isValid,
+              receipt(in: state) == nil || receipt(in: state) == incoming else { return false }
+        switch next {
+        case .staged, .failed(.interruptedUpdate, .some), .completed: break
+        default: return false
+        }
+        do {
+            try storage.write(JSONEncoder().encode(next), key: "update.v1")
+            state = next; downloadReceipt = incoming; persistenceFailure = nil
+            return true
+        } catch { persistenceFailure = .persistence; return false }
     }
     private func validTransition(to next: UpdateState) -> Bool {
         if case .downloading(let progress) = next {
@@ -506,9 +617,13 @@ final class UpdateStore: ObservableObject {
         case (.idle, .checking), (.completed, .checking), (.checking, .idle), (.checking, .available),
              (.available, .idle), (.available, .downloading), (.downloading, .downloading), (.downloading, .staged),
              (.staged, .installing), (.installing, .awaitingRelaunch), (.awaitingRelaunch, .completed): return true
+        case (.staged, .adminRequired), (.adminRequired, .staged), (.adminRequired, .installing),
+             (.staged, .handoffAccepted), (.handoffAccepted, .awaitingRelaunch),
+             (.handoffAccepted, .completed): return true
         case (.failed(_, nil), .checking): return true
         // Only an adapter's authoritative recovery result may resume a retained transaction.
         case (.failed(_, .some), .staged), (.failed(_, .some), .awaitingRelaunch), (.failed(_, .some), .completed): return true
+        case (.failed(_, .some), .handoffAccepted): return true
         case (_, .failed(_, let incoming)): return incoming == receipt(in: state)
         default: return false
         }
@@ -636,10 +751,27 @@ enum HelperRegistrationStatus: Sendable {
     case absent, requiresApproval, enabled, disabled, unknown
 }
 
+enum HelperPeerIdentity: Equatable, Sendable {
+    case appleTeam(String)
+    case protectedCodeHash(installationID: UUID, generation: UInt64, cdhash: Data)
+    var valid: Bool {
+        switch self {
+        case .appleTeam(let team): return !team.isEmpty
+        case .protectedCodeHash(_, let generation, let hash): return generation > 0 && hash.count == 20
+        }
+    }
+}
+
 struct HelperPeer: Equatable, Sendable {
     let identifier: String
-    let team: String
+    let identity: HelperPeerIdentity
     let protocolVersion: Int
+    init(identifier: String, identity: HelperPeerIdentity, protocolVersion: Int) {
+        self.identifier = identifier; self.identity = identity; self.protocolVersion = protocolVersion
+    }
+    init(identifier: String, team: String, protocolVersion: Int) {
+        self.init(identifier: identifier, identity: .appleTeam(team), protocolVersion: protocolVersion)
+    }
 }
 
 struct HelperMessage: Equatable, Sendable {
@@ -652,6 +784,7 @@ struct HelperMessage: Equatable, Sendable {
 
 @MainActor
 protocol HelperLifecycleDriver {
+    var supportsOwnedOfflineUpdate: Bool { get }
     // .absent must include proof that no registration/removal is in flight.
     func status() async throws -> HelperRegistrationStatus
     // Authenticate the bundled candidate before register/update, not after execution.
@@ -661,6 +794,10 @@ protocol HelperLifecycleDriver {
     func unregister(receipt: OperationReceipt) async throws
     // Receipt-specific installed-version proof; connection alone is not update success.
     func updateApplied(receipt: OperationReceipt) async throws -> Bool
+}
+
+extension HelperLifecycleDriver {
+    var supportsOwnedOfflineUpdate: Bool { false }
 }
 
 @MainActor
@@ -678,13 +815,23 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
     private let transport: any HelperIPCTransport
     private let expectedPeer: HelperPeer
     @Published private(set) var state: HelperState = .unknown
+    @Published private(set) var registrationPresent = false
     private(set) var generation = UUID()
     private var busy = false
+    private var ownsRegistrationMutation = false
     private var registrations: Set<UUID> = []
     private var updates: Set<UUID> = []
 
     init(driver: any HelperLifecycleDriver, transport: any HelperIPCTransport, expectedPeer: HelperPeer) {
         self.driver = driver; self.transport = transport; self.expectedPeer = expectedPeer
+    }
+
+    func connectionLost() {
+        // Update/removal deliberately end the old IPC session. Their OS operation and
+        // receipt remain authoritative until completion; transport loss must not cancel them.
+        guard !ownsRegistrationMutation else { return }
+        generation = UUID()
+        state = .disconnected
     }
 
     func disconnect() {
@@ -694,8 +841,8 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
     }
 
     private func authenticate(_ peer: HelperPeer) throws {
-        guard !expectedPeer.identifier.isEmpty, !expectedPeer.team.isEmpty,
-              peer.identifier == expectedPeer.identifier, peer.team == expectedPeer.team else {
+        guard !expectedPeer.identifier.isEmpty, expectedPeer.identity.valid,
+              peer.identifier == expectedPeer.identifier, peer.identity == expectedPeer.identity else {
             throw ServiceFailure.untrustedIdentity
         }
         guard peer.protocolVersion == expectedPeer.protocolVersion else { throw ServiceFailure.incompatibleVersion }
@@ -719,11 +866,21 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
         let status = try await driver.status()
         try check(captured)
         switch status {
+        case .enabled, .disabled, .requiresApproval: registrationPresent = true
+        case .absent: registrationPresent = false
+        case .unknown: break
+        }
+        switch status {
         case .absent: transport.invalidate(); state = .absent; return .absent
         case .requiresApproval: transport.invalidate(); state = .awaitingApproval; return .pending
         case .disabled: transport.invalidate(); state = .disabled; return .failed(.denied)
         case .unknown: transport.invalidate(); state = .unknown; return .unknown
         case .enabled:
+            // Even an operation-owned registration must authenticate a live session.
+            // Invalidation while awaiting this handshake cannot be treated as old-session teardown.
+            let mutationOwnership = ownsRegistrationMutation
+            ownsRegistrationMutation = false
+            defer { ownsRegistrationMutation = mutationOwnership }
             let peer = try await transport.connect()
             try check(captured)
             try authenticate(peer)
@@ -739,7 +896,6 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
     func reconcile(receipt: OperationReceipt?) async -> HelperReconciliation {
         guard !busy else { return .unknown }
         busy = true; defer { busy = false }
-        disconnect()
         let captured = generation
         do { try check(captured); return try await query(captured) }
         catch { return .failed(failure(error, generation: captured)) }
@@ -747,7 +903,9 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
 
     func register(receipt: OperationReceipt) async -> ServiceOutcome<HelperState> {
         guard !busy else { return .failure(.unknownStatus) }
-        busy = true; defer { busy = false }
+        busy = true
+        ownsRegistrationMutation = true
+        defer { busy = false; ownsRegistrationMutation = false }
         disconnect()
         let captured = generation
         do {
@@ -756,7 +914,7 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
             switch status {
             case .absent:
                 // Acknowledged receipts never execute twice; retry uses fresh OS evidence.
-                if !registrations.contains(receipt.id) {
+                if !registrations.contains(receipt.id) || driver.supportsOwnedOfflineUpdate {
                     try authenticate(driver.verifyCandidate())
                     registrations.insert(receipt.id) // Ambiguous failures must reconcile, not blindly replay.
                     try await driver.register(receipt: receipt)
@@ -766,6 +924,7 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
             case .unknown: throw ServiceFailure.unknownStatus
             case .failed(let reason): throw reason
             }
+            ownsRegistrationMutation = false
             let result = try await query(captured)
             if case .failed(let reason) = result { throw reason }
             if case .unknown = result { throw ServiceFailure.unknownStatus }
@@ -789,18 +948,27 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
 
     func update(receipt: OperationReceipt) async -> ServiceOutcome<HelperState> {
         guard !busy else { return .failure(.unknownStatus) }
-        busy = true; defer { busy = false }
+        busy = true
+        ownsRegistrationMutation = true
+        defer { busy = false; ownsRegistrationMutation = false }
         disconnect()
         let captured = generation
         do {
             try check(captured)
             try authenticate(driver.verifyCandidate())
-            if !updates.contains(receipt.id) {
-                guard case .connected = try await query(captured) else { throw ServiceFailure.disconnected }
-                let request = HelperMessage(requestID: UUID(), generation: captured, receiptID: receipt.id, command: .prepareUpdate)
-                let reply = try await transport.send(request)
-                try check(captured)
-                guard request == reply else { throw ServiceFailure.invalidData }
+            if !updates.contains(receipt.id) || driver.supportsOwnedOfflineUpdate {
+                if driver.supportsOwnedOfflineUpdate {
+                    // Candidate authentication and exact OS registration own replacement;
+                    // an incompatible or crashed old process must not prevent recovery.
+                    let status = try await driver.status()
+                    if case .unknown = status { throw ServiceFailure.unknownStatus }
+                } else {
+                    guard case .connected = try await query(captured) else { throw ServiceFailure.disconnected }
+                    let request = HelperMessage(requestID: UUID(), generation: captured, receiptID: receipt.id, command: .prepareUpdate)
+                    let reply = try await transport.send(request)
+                    try check(captured)
+                    guard request == reply else { throw ServiceFailure.invalidData }
+                }
                 updates.insert(receipt.id)
                 transport.invalidate()
                 state = .updateRequired
@@ -810,6 +978,7 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
             let applied = try await driver.updateApplied(receipt: receipt)
             try check(captured)
             guard applied else { throw ServiceFailure.interruptedUpdate }
+            ownsRegistrationMutation = false
             switch try await query(captured) {
             case .connected: return .success(.connected)
             case .pending: return .success(.awaitingApproval)
@@ -822,7 +991,9 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
         // Invalidate pending reconnect/IPC immediately; never let its late reply resurrect state.
         disconnect()
         guard !busy else { return .interrupted(receipt) }
-        busy = true; defer { busy = false }
+        busy = true
+        ownsRegistrationMutation = true
+        defer { busy = false; ownsRegistrationMutation = false }
         let captured = generation
         do {
             try check(captured)
@@ -836,6 +1007,7 @@ final class HelperLifecycleAdapter: HelperService, ObservableObject {
             try check(captured)
             guard case .absent = after else { throw ServiceFailure.interruptedRemoval }
             state = .absent
+            registrationPresent = false
             return .verifiedAbsent
         } catch {
             let reason = failure(error, generation: captured)

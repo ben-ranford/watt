@@ -51,6 +51,26 @@ enum NoReadingPresentation {
     static let retryAction = "Try Again"
 }
 
+/// A pair is atomic: neither channel is presented without its sibling acquisition.
+struct ComponentEstimatePair: Equatable, Sendable {
+    let acquisitionID: UUID
+    let startedAt: Date
+    let duration: TimeInterval
+    let cpuWatts: Double
+    let gpuWatts: Double
+    let provenance: String
+
+    func validate() throws {
+        guard startedAt.timeIntervalSince1970.isFinite, duration.isFinite,
+              duration > 0, duration <= 4, cpuWatts.isFinite, gpuWatts.isFinite,
+              cpuWatts >= 0, gpuWatts >= 0, !provenance.isEmpty else { throw ServiceFailure.invalidData }
+    }
+    var components: [PowerComponent] {
+        [.init(id: "cpu", name: "CPU estimate", watts: cpuWatts),
+         .init(id: "gpu", name: "GPU estimate", watts: gpuWatts)]
+    }
+}
+
 struct PowerReading: Equatable, Sendable {
     let mode: PowerMode
     let watts: Double?
@@ -66,6 +86,7 @@ struct PowerReading: Equatable, Sendable {
     let systemWatts: Double?
     let chargingHoldReason: BatteryChargingHoldReason?
     let chargerThreshold: ChargerThresholdProvenance?
+    let componentEstimate: ComponentEstimatePair?
 
     init(mode: PowerMode, watts: Double?, batteryPercentage: Int? = nil,
          detail: String? = nil, components: [PowerComponent] = [],
@@ -73,7 +94,8 @@ struct PowerReading: Equatable, Sendable {
          capabilities: PowerCapabilities = .init(), freshness: ReadingFreshness = .fresh,
          source: ReadingSource = .unavailable, chargerWatts: Double? = nil, systemWatts: Double? = nil,
          chargingHoldReason: BatteryChargingHoldReason? = nil,
-         chargerThreshold: ChargerThresholdProvenance? = nil) {
+         chargerThreshold: ChargerThresholdProvenance? = nil,
+         componentEstimate: ComponentEstimatePair? = nil) {
         self.mode = mode
         self.watts = watts
         self.batteryPercentage = batteryPercentage
@@ -88,6 +110,7 @@ struct PowerReading: Equatable, Sendable {
         self.systemWatts = systemWatts
         self.chargingHoldReason = chargingHoldReason
         self.chargerThreshold = chargerThreshold
+        self.componentEstimate = componentEstimate
     }
 
     // Validation binds the threshold decision to this sample and the Settings five-minute rule.
@@ -113,6 +136,10 @@ struct PowerReading: Equatable, Sendable {
     }
 
     func validate() throws {
+        if let componentEstimate {
+            try componentEstimate.validate()
+            guard components == componentEstimate.components else { throw ServiceFailure.invalidData }
+        }
         guard timestamp.timeIntervalSince1970.isFinite,
               [watts, chargerWatts, systemWatts].compactMap({ $0 }).allSatisfy(\.isFinite),
               batteryPercentage.map({ (0...100).contains($0) }) ?? true,
@@ -153,6 +180,19 @@ struct PowerReading: Equatable, Sendable {
         case .draw: return capabilities.systemDraw == .available ? systemWatts : nil
         case .components, .iconOnly: return nil
         }
+    }
+
+    /// System timestamp and values remain tied to the system observation.
+    func presenting(_ pair: ComponentEstimatePair?) -> PowerReading {
+        var capabilities = capabilities
+        capabilities.components = pair == nil ? .unknown : .available
+        let componentOnly = mode == .noReading && pair != nil
+        return PowerReading(mode: componentOnly ? .perComponent : mode, watts: watts,
+            batteryPercentage: batteryPercentage, detail: detail, components: pair?.components ?? [],
+            timestamp: componentOnly ? pair!.startedAt : timestamp, batteryState: batteryState,
+            capabilities: capabilities, freshness: componentOnly ? .fresh : freshness,
+            source: componentOnly ? .helper : source, chargerWatts: chargerWatts, systemWatts: systemWatts,
+            chargingHoldReason: chargingHoldReason, chargerThreshold: chargerThreshold, componentEstimate: pair)
     }
 
     static let unavailable = PowerReading(mode: .noReading, watts: nil, timestamp: .distantPast,

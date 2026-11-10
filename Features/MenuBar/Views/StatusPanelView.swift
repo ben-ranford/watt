@@ -299,7 +299,7 @@ struct StatusPanelView: View {
                             } label: {
                                 VStack(alignment: .leading, spacing: WattSpacing.xxs) {
                                     Text("Off").font(WattTypography.body)
-                                    Text("Turn on the helper to see where the power goes.")
+                                    Text("Approve the helper to see CPU/GPU estimates.")
                                         .font(WattTypography.subheadline)
                                         .foregroundStyle(.secondary)
                                         .fixedSize(horizontal: false, vertical: true)
@@ -310,6 +310,12 @@ struct StatusPanelView: View {
                         } else {
                             ForEach(model.components) { component in
                                 row(component.name, value: PowerFormatter.watts(component.watts, signed: false))
+                            }
+                            if reading.componentEstimate != nil {
+                                Text("Apple’s power estimates. Display, SSD and Other are unavailable.")
+                                    .font(WattTypography.footnote)
+                                    .foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
                             }
                         }
                     } header: {

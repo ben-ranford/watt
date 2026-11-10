@@ -73,7 +73,7 @@ struct ReadingPicker: View {
         case .delta: return "How fast the battery fills or drains."
         case .charger: return "What the charger is giving."
         case .draw: return "What your Mac uses right now."
-        case .components: return "CPU, GPU and the rest. Needs the helper — next step."
+        case .components: return "CPU/GPU estimates. Needs administrator approval."
         case .iconOnly: return nil
         }
     }

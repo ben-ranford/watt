@@ -1,7 +1,9 @@
 import AppKit
+import ServiceManagement
 import XCTest
 #if SWIFT_PACKAGE
 import WattFixtures
+import WattHelperShared
 #endif
 @testable import Watt
 
@@ -18,8 +20,8 @@ final class J23SettingsTurnOnTests: XCTestCase {
         XCTAssertEqual(SettingsRootView.title, "Watt? Settings")
         XCTAssertEqual(SettingsHelperRows.statusTitle, "Status")
         XCTAssertEqual(SettingsHelperRows.helperTitle, "Helper")
-        XCTAssertEqual(SettingsHelperRows.statusSubtitle, "Reading CPU, GPU, display and the rest.")
-        XCTAssertEqual(SettingsHelperRows.privacy, "Reads power sensors only. No network, nothing leaves this Mac.")
+        XCTAssertEqual(SettingsHelperRows.statusSubtitle, "CPU/GPU estimates appear only when both are available. Display, SSD and Other are unavailable.")
+        XCTAssertEqual(SettingsHelperRows.privacy, "Reads Apple’s CPU/GPU power estimates. No network, nothing leaves this Mac.")
         XCTAssertEqual(SettingsHelperRows.turnOn, "Turn On…")
         let fixture = try ScenarioRegistry.resolve("J2.3")
         XCTAssertEqual(fixture.story.node, "29:3270")
@@ -42,13 +44,13 @@ final class J23SettingsTurnOnTests: XCTestCase {
         let setup = SettingsHelperSetup(); let prefs = preferences()
         XCTAssertEqual(setup.state, .notDetermined)
         XCTAssertEqual(setup.statusTitle, "Unavailable")
-        XCTAssertEqual(setup.statusSubtitle, "This build does not include Watt? Helper.")
+        XCTAssertEqual(setup.statusSubtitle, HelperUnavailableReason.missingBundle.message)
         XCTAssertEqual(setup.actionTitle, "Unavailable")
         XCTAssertFalse(setup.canTurnOn)
         await setup.turnOn(preferences: prefs)
         XCTAssertEqual(setup.state, .notDetermined)
         XCTAssertFalse(prefs.componentReadings)
-        XCTAssertEqual(setup.message, "Component readings are unavailable because this build does not include Watt? Helper.")
+        XCTAssertEqual(setup.message, HelperUnavailableReason.missingBundle.message)
     }
     func testRequiresApprovalIsNotSuccessAndRetryReconciles() async {
         let service = FakeHelperService(); service.status = .pending
@@ -141,16 +143,16 @@ final class J23SettingsTurnOnTests: XCTestCase {
         XCTAssertFalse(setup.canTurnOn)
         XCTAssertEqual(setup.actionTitle, "Unavailable")
         XCTAssertEqual(setup.statusTitle, "Unavailable")
-        XCTAssertEqual(setup.message, "Component readings are unavailable because this build does not include Watt? Helper.")
+        XCTAssertEqual(setup.message, HelperUnavailableReason.missingBundle.message)
         XCTAssertTrue(prefs.componentReadings) // Persisted intent is not silently rewritten.
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"), encoding: .utf8)
         let helperSource = try XCTUnwrap(source.components(separatedBy: "struct SettingsHelperRows: View").last)
         XCTAssertFalse(helperSource.contains("powerStore"), "Telemetry must not grant helper lifecycle authority")
-        XCTAssertFalse(source.contains("helperOn ||"))
+        XCTAssertFalse(setup.canRemoveHelper, "Telemetry and preferences cannot authorize removal")
         XCTAssertTrue(source.contains("router.removeVerifiedHelper(preferences: preferences)"))
         let routerSource = try String(contentsOf: root.appendingPathComponent("App/AppRouter.swift"), encoding: .utf8)
-        XCTAssertTrue(routerSource.contains("guard settingsHelperSetup.helperOn else"))
+        XCTAssertTrue(routerSource.contains("guard settingsHelperSetup.canRemoveHelper else"))
     }
 
     func testCompositionRemovalAndReplacementInvalidateConnectedEvidence() async {
@@ -236,6 +238,119 @@ final class J23SettingsTurnOnTests: XCTestCase {
         XCTAssertFalse(prefs.componentReadings)
         XCTAssertEqual(prefs.onboarding, before)
     }
+    func testProductionRepairRouteRecoversDisconnectedHelperAndReusesDurableReceipt() async throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: url) }
+        let system = RepairRegistrationSystem()
+        let transport = RepairTransport()
+        let peer = transport.peer
+        func driver() throws -> ProductionHelperLifecycle {
+            try ProductionHelperLifecycle(system: system, journalURL: url, targetBuild: "2",
+                candidate: { peer }, installedBuild: { "2" }, processesAbsent: { true })
+        }
+        let first = try driver()
+        let adapter = HelperLifecycleAdapter(driver: first, transport: transport, expectedPeer: peer)
+        let setup = SettingsHelperSetup(service: adapter)
+        setup.configureRepair(receipt: { first.updateReceipt() })
+        await setup.refreshStatus()
+        XCTAssertTrue(setup.canRepairHelper)
+        system.failRegistration = true
+        await setup.repairHelper()
+        XCTAssertEqual(system.removals, 1)
+        let receipt = try XCTUnwrap(first.journal?.receipt)
+
+        let resumed = try driver()
+        let resumedAdapter = HelperLifecycleAdapter(driver: resumed, transport: transport, expectedPeer: peer)
+        let resumedSetup = SettingsHelperSetup(service: resumedAdapter)
+        resumedSetup.configureRepair(receipt: { resumed.updateReceipt() }, pending: { true })
+        await resumedSetup.refreshStatus()
+        XCTAssertTrue(resumedSetup.canRepairHelper)
+        system.failRegistration = false
+        transport.connected = true
+        await resumedSetup.repairHelper()
+        XCTAssertTrue(resumedSetup.helperOn)
+        XCTAssertEqual(resumed.journal?.receipt, receipt)
+        XCTAssertEqual(system.removals, 1)
+        XCTAssertEqual(system.registrations, 2)
+        resumedAdapter.connectionLost()
+        XCTAssertFalse(resumedSetup.helperOn)
+        XCTAssertTrue(resumedSetup.canRemoveHelper)
+        XCTAssertTrue(resumedSetup.canRepairHelper)
+        await resumedSetup.refreshStatus()
+        XCTAssertTrue(resumedSetup.helperOn)
+    }
+
+    func testProductionRepairRouteReplacesIncompatibleHelper() async throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: url) }
+        let system = RepairRegistrationSystem(), transport = RepairTransport()
+        transport.connected = true
+        transport.protocolVersion = 99
+        let peer = transport.peer
+        system.onRegister = { transport.protocolVersion = 1 }
+        let driver = try ProductionHelperLifecycle(system: system, journalURL: url, targetBuild: "2",
+            candidate: { peer }, installedBuild: { "2" }, processesAbsent: { true })
+        let adapter = HelperLifecycleAdapter(driver: driver, transport: transport, expectedPeer: peer)
+        let setup = SettingsHelperSetup(service: adapter)
+        setup.configureRepair(receipt: { driver.updateReceipt() })
+        await setup.refreshStatus()
+        XCTAssertEqual(setup.state, .failed(.incompatibleVersion))
+        XCTAssertTrue(setup.canRepairHelper)
+        await setup.repairHelper()
+        XCTAssertTrue(setup.helperOn)
+        XCTAssertEqual(system.removals, 1)
+        XCTAssertEqual(system.registrations, 1)
+    }
+
+    func testDiagnosticExportUsesFixedCommandAndRejectsUncorrelatedEvidence() async throws {
+        var authenticated = false
+        let data = try await HelperDiagnosticExport.capture(connect: { authenticated = true }, request: { request in
+            XCTAssertTrue(authenticated)
+            XCTAssertEqual(request.command, .diagnosticCapture)
+            XCTAssertNil(request.receipt)
+            return HelperReply(request: request, build: "1", daemonInstance: UUID(), status: .sourceUnvalidated,
+                capture: HelperCapture(startedAt: Date(), duration: 1, stdout: Data("source".utf8),
+                    stderr: Data(), exitStatus: 0, status: .completed, terminationConfirmed: true))
+        })
+        XCTAssertLessThan(data.count, HelperLimits.diagnosticReplyBytes)
+        do {
+            _ = try await HelperDiagnosticExport.capture(connect: {}, request: { request in
+                HelperReply(request: HelperRequest(command: request.command, generation: UUID()),
+                            build: "1", daemonInstance: UUID(), status: .unavailable)
+            })
+            XCTFail("Uncorrelated evidence must be rejected")
+        } catch { }
+    }
+
+    func testConfigurationFailureReasonsPreserveDisabledRegistrationAndSharedCopy() {
+        let cases: [(Error, Bool, HelperUnavailableReason)] = [
+            (HelperSigningError.missingTeam, false, .missingBundle),
+            (HelperSigningError.missingTeam, true, .signingRequired),
+            (HelperSigningError.invalidSignature, true, .verificationFailed),
+            (HelperSigningError.invalidRequirement, true, .verificationFailed),
+            (ServiceFailure.untrustedIdentity, true, .verificationFailed),
+            (ServiceFailure.invalidData, true, .verificationFailed),
+            (ServiceFailure.persistence, true, .configurationFailed),
+            (NSError(domain: "private diagnostic", code: 99), true, .configurationFailed)
+        ]
+        for (error, present, expected) in cases {
+            let reason = HelperUnavailableReason.configurationFailure(error, packagedHelperPresent: present)
+            XCTAssertEqual(reason, expected)
+            let setup = SettingsHelperSetup()
+            setup.unavailableReason = reason
+            XCTAssertFalse(setup.helperServiceAvailable)
+            XCTAssertFalse(setup.canTurnOn)
+            XCTAssertFalse(setup.helperOn)
+            XCTAssertEqual(setup.statusTitle, "Unavailable")
+            XCTAssertEqual(setup.statusSubtitle, reason.message)
+            XCTAssertEqual(setup.message, reason.message)
+            XCTAssertTrue(OfferComponentReadingsView.unavailableMessage(for: reason).contains(reason.message))
+            XCTAssertFalse(reason.message.contains("private diagnostic"))
+        }
+        XCTAssertTrue(HelperUnavailableReason.signingRequired.message.contains("certificate-based"))
+        XCTAssertFalse(HelperUnavailableReason.verificationFailed.message.contains("does not include"))
+    }
+
 }
 
 @MainActor
@@ -270,5 +385,36 @@ private final class J23Transport: HelperIPCTransport {
         onSend?()
         return request
     }
+    func invalidate() {}
+
+}
+
+@MainActor
+private final class RepairRegistrationSystem: HelperRegistrationSystem {
+    var unregisterInFlight = false
+    var registrationStatus: SMAppService.Status = .enabled
+    var failRegistration = false
+    var onRegister: () -> Void = {}
+    var registrations = 0
+    var removals = 0
+    func register() throws {
+        registrations += 1
+        if failRegistration { throw ServiceFailure.denied }
+        registrationStatus = .enabled
+        onRegister()
+    }
+    func unregister() async throws { removals += 1; registrationStatus = .notRegistered }
+}
+
+@MainActor
+private final class RepairTransport: HelperIPCTransport {
+    let peer = HelperPeer(identifier: "helper", team: "TEAM", protocolVersion: 1)
+    var connected = false
+    var protocolVersion = 1
+    func connect() async throws -> HelperPeer {
+        guard connected else { throw ServiceFailure.disconnected }
+        return HelperPeer(identifier: peer.identifier, identity: peer.identity, protocolVersion: protocolVersion)
+    }
+    func send(_ request: HelperMessage) async throws -> HelperMessage { request }
     func invalidate() {}
 }
