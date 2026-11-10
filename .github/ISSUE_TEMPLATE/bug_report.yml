@@ -1,0 +1,66 @@
+name: Bug report
+description: A problem in the Watt menu-bar app.
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe what Watt did. Vulnerability details belong in [GitHub Security Advisories](https://github.com/ben-ranford/watt/security/advisories/new), not in this form.
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS version
+      description: Apple menu → About This Mac.
+      placeholder: 15.1 (24B83)
+    validations:
+      required: true
+  - type: input
+    id: watt-version
+    attributes:
+      label: Watt version
+      description: Settings or About Watt?. Include the build number when you have it.
+      placeholder: 1.0.1 (1000001)
+    validations:
+      required: true
+  - type: input
+    id: mac-model
+    attributes:
+      label: Mac model
+      description: The model name from About This Mac.
+      placeholder: MacBook Pro (16-inch, 2023)
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What you did before the problem showed up.
+      placeholder: |
+        1. Open Watt? from the menu bar.
+        2. Choose Charger Input.
+        3. Unplug the charger.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+      description: What you expected Watt to show or do.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+      description: What Watt showed or did instead.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Console output, a crash report, or anything Watt printed. Remove personal information. Leave this empty if you have none.
+      render: shell
+    validations:
+      required: false

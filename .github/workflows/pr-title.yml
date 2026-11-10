@@ -1,0 +1,25 @@
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+
+# Read-only. The title arrives in the environment, not in the shell script.
+permissions:
+  contents: read
+
+jobs:
+  conventional-commit:
+    name: Conventional commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check the pull request title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: python3 scripts/check_pr_title.py

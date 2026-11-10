@@ -1,0 +1,4 @@
+blank_issues_enabled: false
+# No contact link: this repository has no SECURITY.md.
+# Vulnerability reports stay in the README security section, which points at
+# https://github.com/ben-ranford/watt/security/advisories/new

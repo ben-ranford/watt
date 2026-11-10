@@ -1,0 +1,33 @@
+name: Feature request
+description: A change you want Watt to make.
+labels:
+  - feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem first, then the behavior you want, then how you would know the change is done.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is hard or missing today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-behavior
+    attributes:
+      label: Proposed behavior
+      description: What Watt should do instead.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: The checks that would show this is done.
+      placeholder: |
+        - The menu bar shows charger watts while the battery is full.
+        - VoiceOver reads the same number.
+    validations:
+      required: true

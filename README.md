@@ -145,7 +145,7 @@ Watt is free and open source. [GitHub Sponsors](https://github.com/sponsors/ben-
 
 ## Contributing
 
-Questions and bug reports go in [GitHub issues](https://github.com/ben-ranford/watt/issues). Pull requests are welcome. Open one against `main`.
+Questions and bug reports go in [GitHub issues](https://github.com/ben-ranford/watt/issues). Pull requests are welcome. Open one against `main`. The issue forms, the pull request template, and the checks that run before merge are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 This repository uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) because [Release Please](https://github.com/googleapis/release-please) cuts releases from them. `fix:` is a patch, `feat:` is a minor, and `feat!:` or `BREAKING CHANGE` is a major. `ci:` and `chore:` do not bump the version. The release steps are in [RELEASING.md](RELEASING.md).
 
