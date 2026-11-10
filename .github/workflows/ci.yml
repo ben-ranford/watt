@@ -96,6 +96,48 @@ jobs:
           build_configuration Debug
           build_configuration Release
 
+      # The helper-absence check refuses removal when any powermetrics process
+      # exists or when a process cannot be named. Print that table before tests
+      # so a runner-specific refusal is visible in the log.
+      - name: Process table relevant to helper absence
+        run: |
+          set -euo pipefail
+          cat > "${RUNNER_TEMP}/helper-absence-scan.c" << 'EOF'
+          #include <errno.h>
+          #include <stdio.h>
+          #include <stdlib.h>
+          #include <string.h>
+          #include <libproc.h>
+          int main(void) {
+            int estimate = proc_listallpids(NULL, 0);
+            printf("estimate_bytes=%d\n", estimate);
+            if (estimate <= 0) return 0;
+            int cap = estimate / (int)sizeof(pid_t) + 128;
+            pid_t *pids = calloc((size_t)cap, sizeof(pid_t));
+            int count = proc_listallpids(pids, cap * (int)sizeof(pid_t));
+            printf("count_bytes=%d\n", count);
+            int n = count > 0 ? count / (int)sizeof(pid_t) : 0;
+            for (int i = 0; i < n; i++) {
+              pid_t pid = pids[i];
+              if (pid <= 0) continue;
+              char buf[4096];
+              errno = 0;
+              int len = proc_pidpath(pid, buf, sizeof(buf));
+              if (len <= 0) {
+                int saved = errno;
+                char name[64] = {0};
+                int nn = proc_name(pid, name, sizeof(name));
+                printf("unreadable pid=%d errno=%d proc_name=%d name=%s\n", pid, saved, nn, nn > 0 ? name : "?");
+              } else if (strcmp(buf, "/usr/bin/powermetrics") == 0 || strstr(buf, "WattHelper") != NULL) {
+                printf("match pid=%d path=%s\n", pid, buf);
+              }
+            }
+            return 0;
+          }
+          EOF
+          clang -o "${RUNNER_TEMP}/helper-absence-scan" "${RUNNER_TEMP}/helper-absence-scan.c"
+          "${RUNNER_TEMP}/helper-absence-scan"
+
       # Xcode and SwiftPM compile the same tests differently. Several cases are
       # host-injected under xcodebuild and SWIFT_PACKAGE-only under `swift test`.
       # WattUITests drive the menu bar and are not part of this unit-test run.
@@ -117,6 +159,7 @@ jobs:
             "COMPILER_INDEX_STORE_ENABLE=NO"
 
       - name: Unit tests (swift test)
+        if: success() || failure()
         run: |
           set -euo pipefail
           swift test --configuration debug
