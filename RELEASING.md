@@ -40,7 +40,7 @@ Minor and patch must stay below 1000. `1.0.0` / build `1` remains valid only on 
 
 1. **Release Please** opens or updates one pull request, branch `release-please--branches--main`. When that pull request is merged it creates a **draft** GitHub Release and tag `vX.Y.Z`.
 2. While the pull request is open, the same job syncs `CFBundleVersion` onto that branch. Wait until that job is green before merging, so the tag contains the encoded build.
-3. **Build and publish** checks out the release commit on `macos-latest`, runs `xcodebuild -showBuildSettings`, archives the `Watt` scheme in the Release configuration, exports the app, and uploads artifacts. A successful upload marks the release as published. A failed build leaves the draft in place; delete that draft if you are not going to retry it.
+3. **Build and publish** checks out the release commit on `xcode-27` (the same runner and Xcode 27 selection as CI), runs `xcodebuild -showBuildSettings`, archives the `Watt` scheme in the Release configuration, exports the app, and uploads artifacts. A successful upload marks the release as published. A failed build leaves the draft in place; delete that draft if you are not going to retry it.
 
 The `test` job has `contents: read`. Release Please adds `contents`, `pull-requests`, and `issues` write so it can open the pull request and tag. The build job has only `contents: write`. Third-party actions are pinned to commit SHAs. Release names and tags are passed to scripts through the environment and checked against `vMAJOR.MINOR.PATCH` before they are used.
 

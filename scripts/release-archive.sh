@@ -72,8 +72,22 @@ case "$identity_build" in
   ''|*[!0-9]*) echo "Refusing identity build." >&2; exit 1 ;;
 esac
 
-if [[ -d /Applications/Xcode.app/Contents/Developer ]]; then
-  export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+# Same preference as .github/workflows/ci.yml. Xcode.app on the xcode-27 image
+# is an older symlink than Xcode_27.2.app, so do not pin that path.
+selected=""
+for app in \
+  /Applications/Xcode_27.2.app \
+  /Applications/Xcode_27.1.app \
+  /Applications/Xcode_27.app \
+  /Applications/Xcode.app
+do
+  if [[ -d "${app}/Contents/Developer" ]]; then
+    selected="${app}"
+    break
+  fi
+done
+if [[ -n "${selected}" ]]; then
+  export DEVELOPER_DIR="${selected}/Contents/Developer"
 fi
 xcodebuild -version
 

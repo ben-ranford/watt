@@ -307,7 +307,7 @@ class WorkflowTests(unittest.TestCase):
             {'contents': 'write', 'pull-requests': 'write', 'issues': 'write'},
         )
         self.assertEqual(workflow['jobs']['build']['permissions'], {'contents': 'write'})
-        self.assertEqual(workflow['jobs']['build']['runs-on'], 'macos-latest')
+        self.assertEqual(workflow['jobs']['build']['runs-on'], 'xcode-27')
         seen = set()
 
         def walk(node: object) -> None:
