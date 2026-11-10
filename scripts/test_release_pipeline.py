@@ -497,6 +497,7 @@ class WorkflowTests(unittest.TestCase):
             'upload-release-assets.sh',
             'update-homebrew-cask.sh',
             'publish-pages-update.sh',
+            'retry_on_timeout.sh',
         ):
             result = subprocess.run(['bash', '-n', str(ROOT / 'scripts' / name)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -1051,6 +1052,199 @@ class PagesPublishTests(unittest.TestCase):
             )
         self.assertEqual(result.returncode, 1)
         self.assertIn('GitHub Pages file limit', result.stderr)
+
+
+class ContributorTemplateTests(unittest.TestCase):
+    def test_issue_forms_match_the_contributing_checks(self) -> None:
+        import yaml
+        config = yaml.safe_load((ROOT / '.github/ISSUE_TEMPLATE/config.yml').read_text())
+        self.assertIs(config['blank_issues_enabled'], False)
+        if (ROOT / 'SECURITY.md').exists():
+            about = ' '.join(link['url'] for link in config['contact_links'])
+            self.assertIn('security/advisories/new', about)
+        else:
+            self.assertNotIn('contact_links', config)
+        bug = yaml.safe_load((ROOT / '.github/ISSUE_TEMPLATE/bug_report.yml').read_text())
+        feature = yaml.safe_load((ROOT / '.github/ISSUE_TEMPLATE/feature_request.yml').read_text())
+        self.assertEqual(bug['labels'], ['bug'])
+        self.assertEqual(feature['labels'], ['feature'])
+        bug_ids = [item['id'] for item in bug['body'] if 'id' in item]
+        self.assertEqual(
+            bug_ids,
+            ['macos-version', 'watt-version', 'mac-model', 'steps', 'expected', 'actual', 'logs'],
+        )
+        feature_ids = [item['id'] for item in feature['body'] if 'id' in item]
+        self.assertEqual(feature_ids, ['problem', 'proposed-behavior', 'acceptance-criteria'])
+        template = (ROOT / '.github/pull_request_template.md').read_text()
+        for line in (
+            '## Summary',
+            'Closes #',
+            '## Change type',
+            'Unit tests pass',
+            'xcodebuild',
+            'gitleaks',
+            'scripts/test_release_pipeline.py',
+            'screenshots',
+            'CHANGELOG.md',
+        ):
+            self.assertIn(line, template)
+        self.assertIn('CONTRIBUTING.md', (ROOT / 'README.md').read_text())
+
+
+class PullRequestTitleTests(unittest.TestCase):
+    def test_accepts_release_please_and_version_bumps(self) -> None:
+        import check_pr_title
+        for title in (
+            'fix: compile update endpoints into the release Info.plist',
+            'feat: publish under io.github.ben-ranford.watt',
+            'feat!: change the reading',
+            'feat(menu-bar)!: change the reading',
+            'chore(main): release 1.0.1',
+            'ci: build and test on macOS',
+            'docs: follow Standard Readme',
+            'test: read the marketing version instead of assuming 1.0.0',
+            'build: enable hardened runtime with minimal entitlements',
+            'perf: sample less often',
+            'refactor(helper): bind the daemon',
+            'revert: restore the panel',
+            'style: wrap the settings row',
+            'deps: bump gitleaks',
+        ):
+            self.assertIsNone(check_pr_title.title_error(title), title)
+
+    def test_rejects_titles_release_please_cannot_read(self) -> None:
+        import check_pr_title
+        for title in (
+            'Update the readme',
+            'Feat: uppercase type',
+            'fix:',
+            'fix: ',
+            'fix:missing space',
+            'feat(): empty scope',
+            'chore(main): release 1.0.1\nfix: hidden',
+            ' fix: leading space',
+            'fix: trailing space ',
+            'wip: not a type',
+        ):
+            self.assertIsNotNone(check_pr_title.title_error(title), title)
+
+    def test_cli_reads_the_environment_and_does_not_need_the_shell(self) -> None:
+        accepted = run(
+            [sys.executable, 'scripts/check_pr_title.py'],
+            env={'PR_TITLE': 'chore: add issue and PR templates'},
+        )
+        self.assertEqual(accepted.returncode, 0, accepted.stderr)
+        self.assertIn('PASS', accepted.stdout)
+        missing = run([sys.executable, 'scripts/check_pr_title.py'], env={'PR_TITLE': ''})
+        self.assertEqual(missing.returncode, 1, missing.stdout)
+        cleaned = os.environ.copy()
+        cleaned.pop('PR_TITLE', None)
+        unset_result = subprocess.run(
+            [sys.executable, 'scripts/check_pr_title.py'],
+            cwd=ROOT,
+            env=cleaned,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(unset_result.returncode, 1)
+        self.assertIn('PR_TITLE is not set', unset_result.stderr)
+
+    def test_workflow_passes_the_title_in_the_environment(self) -> None:
+        import yaml
+        workflow = yaml.safe_load((ROOT / '.github/workflows/pr-title.yml').read_text())
+        triggers = workflow.get('on', workflow.get(True))
+        self.assertEqual(set(triggers), {'pull_request'})
+        self.assertIn('edited', triggers['pull_request']['types'])
+        self.assertNotIn('pull_request_target', triggers)
+        self.assertEqual(workflow['permissions'], {'contents': 'read'})
+        job = workflow['jobs']['conventional-commit']
+        self.assertEqual(job['name'], 'Conventional commit')
+        self.assertEqual(job['runs-on'], 'ubuntu-latest')
+        check = next(step for step in job['steps'] if step.get('name') == 'Check the pull request title')
+        self.assertEqual(check['env']['PR_TITLE'], '${{ github.event.pull_request.title }}')
+        self.assertNotIn('${{', check['run'])
+        self.assertEqual(check['run'], 'python3 scripts/check_pr_title.py')
+        checkout = next(step for step in job['steps'] if 'uses' in step)
+        self.assertRegex(checkout['uses'], r'@([0-9a-f]{40})( # .+)?$')
+
+
+class CIWorkflowTests(unittest.TestCase):
+    def test_pull_requests_still_build_and_test(self) -> None:
+        import yaml
+        workflow = yaml.safe_load((ROOT / '.github/workflows/ci.yml').read_text())
+        triggers = workflow.get('on', workflow.get(True))
+        self.assertIn('pull_request', triggers)
+        self.assertIn('push', triggers)
+        job = workflow['jobs']['macos']
+        self.assertEqual(job['name'], 'macOS')
+        self.assertEqual(job['runs-on'], 'xcode-27')
+        steps = {step['name']: step['run'] for step in job['steps'] if 'run' in step}
+        self.assertIn('xcodebuild build', steps['Build Debug and Release'])
+        self.assertIn('build_configuration Debug', steps['Build Debug and Release'])
+        self.assertIn('build_configuration Release', steps['Build Debug and Release'])
+        test = steps['Unit tests (xcodebuild)']
+        self.assertIn('xcodebuild test', test)
+        self.assertIn('-only-testing:WattTests', test)
+        self.assertIn('-test-timeouts-enabled YES', test)
+        self.assertIn('-default-test-execution-time-allowance 120', test)
+        self.assertIn('-maximum-test-execution-time-allowance 120', test)
+        self.assertIn('bash scripts/retry_on_timeout.sh 600 1 --', test)
+        self.assertIn('swift test --configuration debug', steps['Unit tests (swift test)'])
+        for run in steps.values():
+            self.assertNotIn('${{', run)
+
+    def test_watchdog_retries_only_a_timeout(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            marker = root / 'runs'
+            script = (
+                'import pathlib, sys, time\n'
+                'path = pathlib.Path(sys.argv[1])\n'
+                'count = int(path.read_text()) if path.exists() else 0\n'
+                'path.write_text(str(count + 1))\n'
+                'if count == 0:\n'
+                '    time.sleep(30)\n'
+            )
+            command = [sys.executable, '-c', script, str(marker)]
+            bundle = root / 'WattTests.xcresult'
+            bundle.mkdir()
+            (bundle / 'stale').write_text('x')
+            retried = run(
+                ['bash', 'scripts/retry_on_timeout.sh', '1', '1', '--', *command],
+                env={'WATT_RESULT_BUNDLE': str(bundle)},
+            )
+            self.assertEqual(retried.returncode, 0, retried.stderr)
+            self.assertEqual(marker.read_text(), '2')
+            self.assertIn('retrying (1/1)', retried.stderr)
+            self.assertFalse(bundle.exists())
+            failures = root / 'failures'
+            failed = run(
+                [
+                    'bash', 'scripts/retry_on_timeout.sh', '5', '1', '--',
+                    sys.executable, '-c',
+                    'import pathlib,sys; p=pathlib.Path(sys.argv[1]); p.write_text(str(int(p.read_text())+1) if p.exists() else "1"); raise SystemExit(65)',
+                    str(failures),
+                ],
+            )
+            self.assertEqual(failed.returncode, 65, failed.stderr)
+            self.assertEqual(failures.read_text(), '1')
+            self.assertNotIn('retrying', failed.stderr)
+
+    def test_watchdog_exits_124_when_retries_are_spent(self) -> None:
+        result = run(
+            ['bash', 'scripts/retry_on_timeout.sh', '1', '0', '--', sys.executable, '-c', 'import time; time.sleep(30)'],
+        )
+        self.assertEqual(result.returncode, 124, result.stderr)
+        missing = run([sys.executable, 'scripts/run_with_timeout.py', '--seconds', '2', '--', 'watt-missing-command'])
+        self.assertEqual(missing.returncode, 127)
+        usage = run(['bash', 'scripts/retry_on_timeout.sh'])
+        self.assertEqual(usage.returncode, 2)
+        refused = run(
+            ['bash', 'scripts/retry_on_timeout.sh', '5', '0', '--', 'true'],
+            env={'WATT_RESULT_BUNDLE': '/'},
+        )
+        self.assertEqual(refused.returncode, 2, refused.stderr)
+        self.assertIn('refusing to delete', refused.stderr)
 
 
 if __name__ == '__main__':
