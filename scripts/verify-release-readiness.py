@@ -10,6 +10,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import release_lib
 import release_readiness
 
 
@@ -94,7 +95,8 @@ def main(argv: list[str] | None = None) -> None:
         require(not re.search(r'J[0-9]+FixtureLaunch|StoryFixtures|FixtureLaunchSelection', symbols), 'debug fixture symbols present')
         require((application / 'Contents/Library/LaunchDaemons' / (identity + '.helper.plist')).is_file(), 'missing bundled daemon plist')
         if args.mode == 'distribution-preflight':
-            failures.extend(release_readiness.distribution_plist_failures(info))
+            endpoints = release_lib.load_update_endpoints(Path(__file__).resolve().parents[1])
+            failures.extend(release_readiness.distribution_plist_failures(info, endpoints=endpoints))
         if failures:
             raise ValueError('\n'.join(failures))
         if args.clear_quarantine:

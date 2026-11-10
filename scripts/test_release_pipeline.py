@@ -43,7 +43,14 @@ class VersionTests(unittest.TestCase):
     def test_repository_baseline_matches_identity(self) -> None:
         self.assertEqual(release_lib.marketing_version(ROOT), '1.0.0')
         identity, build = release_lib.load_identity(ROOT)
-        self.assertEqual(identity, 'dev.watt.verification')
+        self.assertEqual(identity, 'io.github.ben-ranford.watt')
+        self.assertEqual(
+            release_lib.load_update_endpoints(ROOT),
+            (
+                'https://ben-ranford.github.io/watt/updates/manifest.json',
+                'https://ben-ranford.github.io/watt/updates/Watt.tar',
+            ),
+        )
         self.assertEqual(build, 1)
         self.assertEqual(release_lib.compiled_build(ROOT), 1)
         self.assertIn(1, release_lib.acceptable_builds('1.0.0', release=False))
@@ -77,7 +84,14 @@ class VersionTests(unittest.TestCase):
             (root / 'Config/Version.xcconfig').write_text(xcconfig)
             result = run([sys.executable, str(ROOT / 'scripts/sync-release-version.py'), '--write', '--root', str(root)])
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(release_lib.load_identity(root), ('dev.watt.verification', 1_002_003))
+            self.assertEqual(release_lib.load_identity(root), ('io.github.ben-ranford.watt', 1_002_003))
+            self.assertEqual(
+                release_lib.load_update_endpoints(root),
+                (
+                    'https://ben-ranford.github.io/watt/updates/manifest.json',
+                    'https://ben-ranford.github.io/watt/updates/Watt.tar',
+                ),
+            )
             self.assertEqual(release_lib.compiled_build(root), 1_002_003)
             self.assertIn('baseConfigurationReference = E7A4C91B2D0F4A6C8B3E1D50', (root / 'Watt.xcodeproj/project.pbxproj').read_text())
             again = run([sys.executable, str(ROOT / 'scripts/sync-release-version.py'), '--release', '--root', str(root)])
@@ -163,8 +177,12 @@ class PlanTests(unittest.TestCase):
         self.assertEqual(plan['code_signing'], 'ad-hoc')
         self.assertNotIn('notarize', plan)
         self.assertFalse(plan['signing_key_present'])
-        self.assertFalse(plan['embed_update'])
+        self.assertFalse(plan['embed_public_key'])
+        self.assertTrue(plan['embed_update'])
+        self.assertEqual(plan['manifest_url'], 'https://ben-ranford.github.io/watt/updates/manifest.json')
+        self.assertEqual(plan['artifact_url'], 'https://ben-ranford.github.io/watt/updates/Watt.tar')
         self.assertTrue(any('ad-hoc' in message for message in plan['messages']))
+        self.assertTrue(any('preflight' in message for message in plan['messages']))
         self.assertFalse(any('fallback' in message.lower() for message in plan['messages']))
 
     def test_apple_signing_secrets_are_rejected(self) -> None:
@@ -179,7 +197,7 @@ class PlanTests(unittest.TestCase):
         self.assertEqual(partial['code_signing'], 'ad-hoc')
 
     def test_partial_and_invalid_secrets_fail_closed(self) -> None:
-        urls = release_plan.build_plan(
+        leftover = release_plan.build_plan(
             {
                 'RELEASE_VERSION': '1.2.3',
                 'RELEASE_TAG': 'v1.2.3',
@@ -189,17 +207,17 @@ class PlanTests(unittest.TestCase):
             },
             require_release=True,
         )
-        self.assertTrue(any('query' in error or 'https' in error for error in urls['errors']))
-        missing_key = release_plan.build_plan(
-            {
-                'RELEASE_VERSION': '1.2.3',
-                'RELEASE_TAG': 'v1.2.3',
-                'WATT_UPDATE_MANIFEST_URL': 'https://updates.example/manifest.json',
-                'WATT_UPDATE_ARTIFACT_URL': 'https://updates.example/Watt.tar',
-            },
+        self.assertTrue(any('not a release secret' in error for error in leftover['errors']))
+        self.assertNotIn('cGVt', json.dumps(leftover))
+        invalid = release_plan.build_plan(
+            {'RELEASE_VERSION': '1.2.3', 'RELEASE_TAG': 'v1.2.3'},
             require_release=True,
+            endpoints=(
+                'https://github.com/ben-ranford/watt/releases/download/v1.2.3/Watt.tar?raw=1',
+                'https://ben-ranford.github.io/watt/updates/Watt.tar',
+            ),
         )
-        self.assertTrue(missing_key['errors'])
+        self.assertTrue(any('query' in error or 'https' in error for error in invalid['errors']))
         mismatch = release_plan.build_plan({'RELEASE_VERSION': '1.2.3', 'RELEASE_TAG': 'v9.9.9'}, require_release=True)
         self.assertTrue(mismatch['errors'])
 
@@ -209,14 +227,15 @@ class PlanTests(unittest.TestCase):
                 'RELEASE_VERSION': '1.2.3',
                 'RELEASE_TAG': 'v1.2.3',
                 'WATT_UPDATE_SIGNING_KEY': 'cGVt',
-                'WATT_UPDATE_MANIFEST_URL': 'https://updates.example/manifest.json',
-                'WATT_UPDATE_ARTIFACT_URL': 'https://updates.example:443/Watt.tar',
             },
             require_release=True,
         )
         self.assertEqual(plan['errors'], [])
         self.assertEqual(plan['code_signing'], 'ad-hoc')
         self.assertTrue(plan['embed_update'])
+        self.assertTrue(plan['embed_public_key'])
+        self.assertEqual(plan['manifest_url'], 'https://ben-ranford.github.io/watt/updates/manifest.json')
+        self.assertEqual(plan['artifact_url'], 'https://ben-ranford.github.io/watt/updates/Watt.tar')
         encoded = json.dumps(plan)
         self.assertNotIn('cGVt', encoded)
         apple = release_plan.build_plan(
@@ -227,8 +246,6 @@ class PlanTests(unittest.TestCase):
                 'APPLE_CERTIFICATE_PASSWORD': 'secret-password',
                 'APPLE_NOTARY_KEY_P8_BASE64': 'cDhrZXk=',
                 'WATT_UPDATE_SIGNING_KEY': 'cGVt',
-                'WATT_UPDATE_MANIFEST_URL': 'https://updates.example/manifest.json',
-                'WATT_UPDATE_ARTIFACT_URL': 'https://updates.example/Watt.tar',
             },
             require_release=True,
         )
@@ -290,6 +307,8 @@ Build settings for action build and target WattTests:
             self.assertNotIn(name, text)
         self.assertIn('HOMEBREW_TAP_TOKEN', text)
         self.assertIn('WATT_UPDATE_SIGNING_KEY', text)
+        self.assertNotIn('WATT_UPDATE_MANIFEST_URL', text)
+        self.assertNotIn('WATT_UPDATE_ARTIFACT_URL', text)
 
     def test_update_urls_match_the_updater_rules(self) -> None:
         self.assertEqual(
@@ -324,6 +343,10 @@ class WorkflowTests(unittest.TestCase):
         )
         self.assertEqual(workflow['jobs']['build']['permissions'], {'contents': 'write'})
         self.assertEqual(workflow['jobs']['build']['runs-on'], 'xcode-27')
+        pages = workflow['jobs']['pages']
+        self.assertEqual(pages['permissions'], {'pages': 'write', 'id-token': 'write'})
+        self.assertEqual(pages['environment']['name'], 'github-pages')
+        self.assertEqual(pages['needs'], ['release-please', 'build'])
         seen = set()
 
         def walk(node: object) -> None:
@@ -346,11 +369,19 @@ class WorkflowTests(unittest.TestCase):
             {
                 '3d3c42e5aac5ba805825da76410c181273ba90b1',
                 '45996ed1f6d02564a971a2fa1b5860e934307cf7',
+                'fc324d3547104276b827a68afc52ff2a11cc49c9',
+                '368f82528645a54fb793d4d04e342629a3f51346',
             },
         )
 
     def test_shell_scripts_parse(self) -> None:
-        for name in ('release-archive.sh', 'sync-release-branch.sh', 'upload-release-assets.sh', 'update-homebrew-cask.sh'):
+        for name in (
+            'release-archive.sh',
+            'sync-release-branch.sh',
+            'upload-release-assets.sh',
+            'update-homebrew-cask.sh',
+            'publish-pages-update.sh',
+        ):
             result = subprocess.run(['bash', '-n', str(ROOT / 'scripts' / name)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
 
@@ -404,6 +435,17 @@ class ReadinessTests(unittest.TestCase):
         self.assertTrue(release_readiness.entitlement_failures(
             'com.apple.security.get-task-allow', 'Watt', distribution=True, main_app=True))
 
+    def test_distribution_accepts_the_production_identity_and_pages_endpoints(self) -> None:
+        manifest, artifact = release_lib.load_update_endpoints(ROOT)
+        info = self.info()
+        info['CFBundleIdentifier'] = 'io.github.ben-ranford.watt'
+        info['WATTUpdateManifestURL'] = manifest
+        info['WATTUpdateArtifactURL'] = artifact
+        self.assertEqual(release_readiness.distribution_plist_failures(info, endpoints=(manifest, artifact)), [])
+        mismatched = dict(info)
+        mismatched['WATTUpdateArtifactURL'] = 'https://updates.example/Watt.tar'
+        self.assertTrue(release_readiness.distribution_plist_failures(mismatched, endpoints=(manifest, artifact)))
+
     def test_local_mode_still_accepts_a_developer_certificate(self) -> None:
         detail = 'Authority=Developer ID Application: Example (ABCDE12345)\nflags=0x10000(runtime)\n'
         requirement = 'designated => anchor apple generic and identifier "com.example.watt"\n'
@@ -435,11 +477,22 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertIn('"/Library/LaunchDaemons/com.example.watt.helper.plist"', text)
         self.assertIn('"/Library/PrivilegedHelperTools/com.example.watt.helper"', text)
         self.assertIn('launchctl: "com.example.watt.helper"', text)
-        self.assertIn('Control-click Watt and choose Open', text)
-        self.assertIn('System Settings → Privacy & Security and choose Open Anyway', text)
+        production = render_homebrew_cask.render_cask(
+            version='1.2.3',
+            sha256='ab' * 32,
+            bundle_id='io.github.ben-ranford.watt',
+            minimum_system_version='13.0',
+        )
+        self.assertIn('"~/Library/Preferences/io.github.ben-ranford.watt.plist"', production)
+        self.assertIn('"/Library/LaunchDaemons/io.github.ben-ranford.watt.helper.plist"', production)
+        self.assertIn('"/Library/PrivilegedHelperTools/io.github.ben-ranford.watt.helper"', production)
+        self.assertIn('launchctl: "io.github.ben-ranford.watt.helper"', production)
+        self.assertIn('postflight do', text)
+        self.assertIn('system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{appdir}/Watt.app"]', text)
+        self.assertNotIn('Control-click', text)
+        self.assertNotIn('Open Anyway', text)
         self.assertNotIn('no-quarantine', text)
         self.assertNotIn('no_quarantine', text)
-        self.assertNotIn('xattr', text)
         self.assertNotIn('notarytool', text)
         self.assertIn('not notarised', text)
         with self.assertRaises(release_lib.ReleaseError):
@@ -496,6 +549,107 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertIn('CODE_SIGN_IDENTITY=-', text)
         self.assertIn('INFOPLIST_KEY_WATTHelperTrustMode=protected-installation', text)
         self.assertIn('WATT_HELPER_TRUST_MODE=protected-installation', text)
+        self.assertIn('INFOPLIST_KEY_WATTUpdateManifestURL=$manifest_url', text)
+        self.assertIn('INFOPLIST_KEY_WATTUpdateArtifactURL=$artifact_url', text)
+        self.assertNotIn('WATT_UPDATE_MANIFEST_URL', text)
+        self.assertNotIn('WATT_UPDATE_ARTIFACT_URL', text)
+
+
+class PagesPublishTests(unittest.TestCase):
+    def _ustar(self, payload: bytes = b'watt-app') -> bytes:
+        import io
+        import tarfile
+
+        buffer = io.BytesIO()
+        with tarfile.open(fileobj=buffer, mode='w', format=tarfile.USTAR_FORMAT) as archive:
+            info = tarfile.TarInfo('Watt.app/Contents/Info.plist')
+            info.size = len(payload)
+            archive.addfile(info, io.BytesIO(payload))
+        data = buffer.getvalue()
+        self.assertEqual(data[257:262], b'ustar')
+        return data
+
+    def _serve(self, files: dict[str, bytes | None]):
+        import threading
+        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self) -> None:  # noqa: N802
+                name = self.path.rsplit('/', 1)[-1]
+                body = files.get(name)
+                if body is None:
+                    self.send_response(404)
+                    self.end_headers()
+                    return
+                self.send_response(200)
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, _format: str, *_args: object) -> None:
+                return
+
+        server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        return f'http://127.0.0.1:{server.server_port}/download/v1.2.3'
+
+    def test_stages_both_files_from_one_release_and_skips_when_the_manifest_is_absent(self) -> None:
+        manifest = b'{"payload":"e30=","signature":"YQ=="}'
+        archive = self._ustar()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / 'github-output'
+            site = root / 'site'
+            present = run(
+                ['bash', 'scripts/publish-pages-update.sh'],
+                env={
+                    'RELEASE_TAG': 'v1.2.3',
+                    'RELEASE_ASSET_BASE': self._serve({
+                        'Watt-1.2.3-update-manifest.json': manifest,
+                        'Watt-1.2.3.tar': archive,
+                    }),
+                    'PAGES_DIR': str(site),
+                    'GITHUB_OUTPUT': str(output),
+                },
+            )
+            self.assertEqual(present.returncode, 0, present.stderr)
+            self.assertEqual((site / 'updates/manifest.json').read_bytes(), manifest)
+            self.assertEqual((site / 'updates/Watt.tar').read_bytes(), archive)
+            self.assertIn('deploy=true', output.read_text())
+            missing_output = root / 'missing-output'
+            missing = run(
+                ['bash', 'scripts/publish-pages-update.sh'],
+                env={
+                    'RELEASE_TAG': 'v1.2.3',
+                    'RELEASE_ASSET_BASE': self._serve({}),
+                    'PAGES_DIR': str(root / 'absent'),
+                    'GITHUB_OUTPUT': str(missing_output),
+                },
+            )
+            self.assertEqual(missing.returncode, 0, missing.stderr)
+            self.assertIn('Skipping', missing.stdout)
+            self.assertIn('deploy=false', missing_output.read_text())
+            self.assertFalse((root / 'absent').exists())
+
+    def test_oversized_tar_is_refused(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            result = run(
+                ['bash', 'scripts/publish-pages-update.sh'],
+                env={
+                    'RELEASE_TAG': 'v1.2.3',
+                    'RELEASE_ASSET_BASE': self._serve({
+                        'Watt-1.2.3-update-manifest.json': b'{"payload":"e30=","signature":"YQ=="}',
+                        'Watt-1.2.3.tar': self._ustar(b'x' * 64),
+                    }),
+                    'PAGES_DIR': str(Path(temporary) / 'site'),
+                    'PAGES_MAX_BYTES': '8',
+                },
+            )
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('GitHub Pages file limit', result.stderr)
 
 
 if __name__ == '__main__':

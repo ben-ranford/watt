@@ -8,6 +8,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import release_lib
+
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--input', type=Path, default=root / 'Resources/ReleaseIdentity.json')
@@ -15,11 +18,11 @@ parser.add_argument('--write', action='store_true', help='apply the reviewed ide
 args = parser.parse_args()
 try:
     data = json.loads(args.input.read_text())
-    identity, build = data['appIdentifier'], data['build']
-    if set(data) != {'appIdentifier', 'build'} or not isinstance(identity, str) or not re.fullmatch(r'[A-Za-z][A-Za-z0-9-]*(?:\.[A-Za-z0-9-]+)+', identity) or len(identity) > 128:
-        raise ValueError('invalid appIdentifier')
-    if isinstance(build, bool) or not isinstance(build, int) or not 0 < build < 2**64:
-        raise ValueError('positive UInt64 build required')
+    try:
+        release_config = release_lib.parse_release_config(data)
+    except release_lib.ReleaseError as error:
+        raise ValueError(str(error)) from error
+    identity, build = str(release_config['appIdentifier']), int(release_config['build'])
     source_path = root / 'HelperShared/HelperXPC.swift'
     source = source_path.read_text()
     values = {'appIdentifier': identity, 'helperIdentifier': identity + '.helper', 'build': str(build)}
@@ -44,8 +47,10 @@ try:
     objects = project['objects']; project_text = project_path.read_text()
     targets = {'Watt': '', 'WattHelper': '.helper', 'WattMaintenance': '.maintenance', 'WattHelperInstaller': '.installer', 'WattTests': '.WattTests', 'WattUITests': '.WattUITests'}
     def serial(value):
+        # macOS plutil turns bare YES/NO into JSON booleans. Keep those tokens so a later --write stays valid.
         if isinstance(value, dict): return '{ ' + ' '.join(json.dumps(k) + ' = ' + serial(v) + ';' for k, v in value.items()) + ' }'
         if isinstance(value, list): return '(' + ''.join(serial(v) + ', ' for v in value) + ')'
+        if isinstance(value, bool): return 'YES' if value else 'NO'
         return json.dumps(str(value))
     for target in objects.values():
         if target.get('isa') != 'PBXNativeTarget' or target['name'] not in targets: continue
@@ -83,7 +88,7 @@ try:
     if args.write:
         for path, contents in changes.items(): path.write_bytes(contents)
         if old_path != daemon_path: old_path.unlink()
-        (root / 'Resources/ReleaseIdentity.json').write_text(json.dumps(data, sort_keys=True) + '\n')
+        (root / 'Resources/ReleaseIdentity.json').write_text(release_lib.dump_release_config(release_config))
     elif source_path.read_bytes() != changes[source_path]:
         raise ValueError('compiled identity differs from release identity')
     print('PASS: compiled app/helper identity, daemon naming and native targets match reviewed input')
