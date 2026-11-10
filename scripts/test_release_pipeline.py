@@ -161,6 +161,101 @@ class ManifestTests(unittest.TestCase):
             self.assertEqual(verify.returncode, 0, verify.stderr)
             der = subprocess.run(['openssl', 'pkey', '-in', str(pem), '-pubout', '-outform', 'DER'], check=True, capture_output=True).stdout
             self.assertEqual(public_out.read_text().strip(), base64.b64encode(release_lib.raw_ed25519_public_key(der)).decode('ascii'))
+            self.assertNotIn('notes', json.loads(payload))
+
+    def test_notes_are_inside_the_signed_payload(self) -> None:
+        digest = hashlib.sha256(b'watt').digest()
+        notes = 'See "updates" at https://example.test/notes\n\n* one'
+        payload = release_lib.manifest_payload('dev.watt.example', 1_002_003, digest, '13.0', notes)
+        self.assertTrue(payload.endswith(b'}'))
+        self.assertIn(b'"notes":', payload)
+        self.assertEqual(json.loads(payload)['notes'], notes)
+        self.assertEqual(
+            release_lib.manifest_payload('dev.watt.example', 1_002_003, digest, '13.0'),
+            payload[: payload.index(b',"notes":')] + b'}',
+        )
+        with self.assertRaises(release_lib.ReleaseError):
+            release_lib.manifest_payload('dev.watt.example', 1_002_003, digest, '13.0', ' ')
+        with self.assertRaises(release_lib.ReleaseError):
+            release_lib.manifest_payload('dev.watt.example', 1_002_003, digest, '13.0', 'bad\x01')
+        with self.assertRaises(release_lib.ReleaseError):
+            release_lib.manifest_payload('dev.watt.example', 1_002_003, digest, '13.0', 'a' * (release_lib.NOTES_LIMIT + 1))
+
+    def test_changelog_section_is_bounded_and_version_scoped(self) -> None:
+        text = (ROOT / 'CHANGELOG.md').read_text(encoding='utf-8')
+        current = release_lib.changelog_notes(text, '1.0.1')
+        self.assertIn('compile update endpoints', current)
+        self.assertNotIn('initial public release', current)
+        self.assertNotIn('## [1.0.0]', current)
+        initial = release_lib.changelog_notes(text, '1.0.0')
+        self.assertIn('initial public release', initial)
+        self.assertNotIn('compile update endpoints', initial)
+        self.assertNotIn('## Changelog', initial)
+        self.assertLessEqual(len(current.encode('utf-8')), release_lib.NOTES_LIMIT)
+        with self.assertRaises(release_lib.ReleaseError):
+            release_lib.changelog_notes(text, '9.9.9')
+        with self.assertRaises(release_lib.ReleaseError):
+            release_lib.changelog_notes('## [1.2.3](https://example.test) (2026-11-10)\n\n\n', '1.2.3')
+        with self.assertRaises(release_lib.ReleaseError):
+            release_lib.changelog_notes('## [1.2.3](https://example.test)\n\nbad\x01\n', '1.2.3')
+        long_section = '## [1.2.3](https://example.test)\n\n' + ('* line\n' * 3000)
+        limited = release_lib.changelog_notes(long_section, '1.2.3')
+        self.assertLessEqual(len(limited.encode('utf-8')), release_lib.NOTES_LIMIT)
+        self.assertTrue(limited.endswith('\n\n...'))
+        self.assertIn('* line', limited)
+
+    def test_signed_notes_fail_verification_when_changed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            pem = directory / 'key.pem'
+            archive = directory / 'Watt-1.2.3.tar'
+            output = directory / 'manifest.json'
+            changelog = directory / 'CHANGELOG.md'
+            archive.write_bytes(b'ustar-bytes')
+            changelog.write_text(
+                '## [1.2.3](https://example.test/compare/v1.2.2...v1.2.3) (2026-11-10)\n\n'
+                '### Fixes\n\n* steadier numbers\n\n'
+                '## [1.2.2](https://example.test/compare) (2026-11-01)\n\n### Fixes\n\n* older\n',
+                encoding='utf-8',
+            )
+            subprocess.run(['openssl', 'genpkey', '-algorithm', 'ED25519', '-out', str(pem)], check=True, capture_output=True)
+            result = run(
+                [sys.executable, 'scripts/sign-update-manifest.py', '--archive', str(archive), '--identity', 'dev.watt.example',
+                 '--build', '1002003', '--minimum-system-version', '13.0', '--changelog', str(changelog),
+                 '--marketing-version', '1.2.3', '--output', str(output)],
+                env={'WATT_UPDATE_SIGNING_KEY': base64.b64encode(pem.read_bytes()).decode('ascii')},
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            document = json.loads(output.read_text())
+            payload = base64.b64decode(document['payload'])
+            self.assertEqual(json.loads(payload)['notes'], '### Fixes\n\n* steadier numbers')
+            self.assertNotIn('older', json.loads(payload)['notes'])
+            payload_path = directory / 'payload.json'
+            signature_path = directory / 'sig.bin'
+            public_pem = directory / 'public.pem'
+            payload_path.write_bytes(payload)
+            signature_path.write_bytes(base64.b64decode(document['signature']))
+            subprocess.run(['openssl', 'pkey', '-in', str(pem), '-pubout', '-out', str(public_pem)], check=True, capture_output=True)
+            verified = subprocess.run(
+                ['openssl', 'pkeyutl', '-verify', '-pubin', '-inkey', str(public_pem), '-rawin', '-in', str(payload_path), '-sigfile', str(signature_path)],
+                capture_output=True,
+            )
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            payload_path.write_bytes(payload.replace(b'steadier numbers', b'steadier NUMBER'))
+            tampered = subprocess.run(
+                ['openssl', 'pkeyutl', '-verify', '-pubin', '-inkey', str(public_pem), '-rawin', '-in', str(payload_path), '-sigfile', str(signature_path)],
+                capture_output=True,
+            )
+            self.assertNotEqual(tampered.returncode, 0)
+            missing = run(
+                [sys.executable, 'scripts/sign-update-manifest.py', '--archive', str(archive), '--identity', 'dev.watt.example',
+                 '--build', '1002003', '--minimum-system-version', '13.0', '--changelog', str(changelog),
+                 '--marketing-version', '9.9.9', '--output', str(directory / 'missing.json')],
+                env={'WATT_UPDATE_SIGNING_KEY': base64.b64encode(pem.read_bytes()).decode('ascii')},
+            )
+            self.assertEqual(missing.returncode, 1)
+            self.assertIn('BLOCKED', missing.stderr)
+            self.assertFalse((directory / 'missing.json').exists())
 
     def test_non_ed25519_key_is_refused(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -868,6 +963,9 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertIn('WATT_UPDATE_MANIFEST_URL=$manifest_url', text)
         self.assertIn('WATT_UPDATE_ARTIFACT_URL=$artifact_url', text)
         self.assertIn('WATT_UPDATE_PUBLIC_KEY=$public_key', text)
+        self.assertIn('--changelog "$root/CHANGELOG.md"', text)
+        self.assertIn('--marketing-version "$version"', text)
+        self.assertLess(text.index('--changelog "$root/CHANGELOG.md"'), text.index('--output "$output/Watt-$version-update-manifest.json"'))
         self.assertNotIn('${WATT_UPDATE_MANIFEST_URL', text)
         self.assertNotIn('${WATT_UPDATE_ARTIFACT_URL', text)
         self.assertLess(text.index('check_archived_plist.py'), text.index('\nset +e\n'))

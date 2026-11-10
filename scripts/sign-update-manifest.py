@@ -4,6 +4,8 @@
 The secret is base64 of a PKCS#8 PEM (openssl genpkey -algorithm ED25519).
 It is read from the environment, never from argv. The payload bytes match
 JSONEncoder().encode(UpdateManifest), and the output matches SignedUpdate.
+Pass --changelog and --marketing-version to include that release's notes in
+the signed payload. Omitting them leaves the notes field out.
 """
 
 from __future__ import annotations
@@ -71,12 +73,16 @@ def main() -> None:
     parser.add_argument('--identity')
     parser.add_argument('--build')
     parser.add_argument('--minimum-system-version')
+    parser.add_argument('--changelog', type=Path, help='CHANGELOG.md whose section is signed into the manifest')
+    parser.add_argument('--marketing-version', help='release whose changelog section is signed, for example 1.2.3')
     parser.add_argument('--output', type=Path, help='SignedUpdate JSON path')
     args = parser.parse_args()
     if args.public_key_out is None and args.output is None:
         parser.error('pass --public-key-out, --output, or both')
     if args.output is not None and None in (args.archive, args.identity, args.build, args.minimum_system_version):
         parser.error('--output requires --archive, --identity, --build, and --minimum-system-version')
+    if (args.changelog is None) != (args.marketing_version is None):
+        parser.error('--changelog and --marketing-version are used together')
     try:
         with tempfile.TemporaryDirectory(prefix='watt-update-sign-') as temporary:
             directory = Path(temporary)
@@ -86,7 +92,12 @@ def main() -> None:
                 args.public_key_out.chmod(0o600)
             if args.output is not None:
                 digest = release_lib.sha256_file(args.archive)
-                payload = release_lib.manifest_payload(args.identity, int(args.build), digest, args.minimum_system_version)
+                notes = None
+                if args.changelog is not None:
+                    notes = release_lib.changelog_notes(args.changelog.read_text(encoding='utf-8'), args.marketing_version)
+                payload = release_lib.manifest_payload(
+                    args.identity, int(args.build), digest, args.minimum_system_version, notes
+                )
                 signature = sign_payload(pem, payload, directory)
                 args.output.write_bytes(release_lib.signed_update_document(payload, signature) + b'\n')
                 print('Signed update manifest for build', args.build)

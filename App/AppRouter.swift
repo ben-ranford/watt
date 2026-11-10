@@ -8,6 +8,10 @@ struct UpdateOfferIntent: Equatable {
     let version: String
     let automaticUpdates: Bool
 }
+struct OfferedUpdateNotes: Equatable {
+    let version: String
+    let notes: String?
+}
 
 /// Presentation requests only. Feature progress belongs to PreferencesStore.
 @MainActor
@@ -171,6 +175,31 @@ final class AppRouter: ObservableObject {
         updateService != nil && updateConfigurationFailure == nil
     }
     @Published private(set) var updateOfferIntent: UpdateOfferIntent?
+    /// Notes from the signed manifest for the offer currently on screen.
+    @Published private(set) var offeredUpdateNotes: OfferedUpdateNotes?
+
+    func promptNotes(version: String) -> String? {
+        guard offeredUpdateNotes?.version == version else { return nil }
+        return offeredUpdateNotes?.notes
+    }
+
+    private func applyCheckedOffer(_ outcome: ServiceOutcome<String?>, generation: UUID) -> UpdateState? {
+        let next: UpdateState
+        switch outcome {
+        case .success(let version): next = version.map { .available(version: $0) } ?? .idle
+        case .failure(let reason): next = .failed(reason, nil)
+        }
+        if case .success(let version?) = outcome, let updateService {
+            offeredUpdateNotes = OfferedUpdateNotes(version: version, notes: updateService.releaseNotes(for: version))
+        } else {
+            offeredUpdateNotes = nil
+        }
+        guard updates.accept(next, generation: generation) else {
+            offeredUpdateNotes = nil
+            return nil
+        }
+        return next
+    }
     @Published private(set) var upToDateGeneration: UUID?
     var upToDatePresented: Bool {
         upToDateGeneration == updates.generation && updates.state == .idle
@@ -639,6 +668,7 @@ final class AppRouter: ObservableObject {
         guard updates.accept(.checking, generation: updates.generation) else { return false }
         let generation = updates.renewGeneration()
         updateOfferIntent = nil
+        offeredUpdateNotes = nil
         checkFailurePresentation = nil
         dismissUpToDate()
         updateCheck = Task { [weak self] in
@@ -663,13 +693,8 @@ final class AppRouter: ObservableObject {
             _ = updates.accept(.idle, generation: generation)
             return
         }
-        let next: UpdateState
-        switch outcome {
-        case .success(let version): next = version.map { .available(version: $0) } ?? .idle
-        case .failure(let reason): next = .failed(reason, nil)
-        }
-        guard updates.accept(next, generation: generation) else { return }
-        guard case .success(let version?) = outcome else { return }
+        guard let next = applyCheckedOffer(outcome, generation: generation) else { return }
+        guard case .available(let version) = next else { return }
         if updates.installFutureUpdatesAutomatically,
            installOfferedUpdate(version: version, generation: updates.generation, automaticUpdates: true) {
             unattendedInstallReceipt = updates.downloadReceipt
@@ -755,18 +780,14 @@ final class AppRouter: ObservableObject {
         guard updates.accept(.checking, generation: updates.generation) else { return false }
         let generation = updates.renewGeneration()
         updateOfferIntent = nil
+        offeredUpdateNotes = nil
         checkFailurePresentation = nil
         updateCheck = Task { [weak self] in
             let outcome = await updateService.check()
             guard let self else { return }
             defer { self.updateCheck = nil }
             guard !Task.isCancelled else { return }
-            let next: UpdateState
-            switch outcome {
-            case .success(let version): next = version.map { .available(version: $0) } ?? .idle
-            case .failure(let reason): next = .failed(reason, nil)
-            }
-            guard self.updates.accept(next, generation: generation) else { return }
+            guard self.applyCheckedOffer(outcome, generation: generation) != nil else { return }
             if case .success(let version?) = outcome, self.updates.installFutureUpdatesAutomatically,
                self.installOfferedUpdate(version: version, generation: self.updates.generation, automaticUpdates: true) {
                 self.unattendedInstallReceipt = self.updates.downloadReceipt

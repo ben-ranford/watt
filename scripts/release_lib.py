@@ -253,16 +253,78 @@ def _replace(path: Path, text: str) -> bool:
     return True
 
 
-def manifest_payload(identity: str, build: int, digest: bytes, minimum: str) -> bytes:
-    """Bytes matching JSONEncoder().encode(UpdateManifest) with default strategies."""
+# Signed release notes stay inside the manifest payload. 8192 bytes is the
+# same cap the app enforces after the signature check. The prompt shows less.
+NOTES_LIMIT = 8192
+_NOTES_MARKER = '\n\n...'
+
+
+def validate_notes(value: str) -> str:
+    """Accept changelog text the app will keep after verifying the signature."""
+    if not isinstance(value, str) or value.strip() == '':
+        raise ReleaseError('release notes are empty')
+    if len(value.encode('utf-8')) > NOTES_LIMIT:
+        raise ReleaseError('release notes exceed 8192 bytes')
+    for char in value:
+        code = ord(char)
+        if code == 127 or (code < 32 and char not in '\n\r\t'):
+            raise ReleaseError('release notes contain a control character')
+    return value
+
+
+def limit_notes(text: str) -> str:
+    """Keep a changelog section inside the signed-notes cap, on a line boundary."""
+    encoded = text.encode('utf-8')
+    if len(encoded) <= NOTES_LIMIT:
+        return validate_notes(text)
+    for char in text:
+        code = ord(char)
+        if code == 127 or (code < 32 and char not in '\n\r\t'):
+            raise ReleaseError('release notes contain a control character')
+    marker = _NOTES_MARKER.encode('utf-8')
+    budget = NOTES_LIMIT - len(marker)
+    trimmed = encoded[:budget].decode('utf-8', errors='ignore').encode('utf-8')
+    newline = trimmed.rfind(b'\n')
+    if newline >= budget // 2:
+        trimmed = trimmed[:newline]
+    return validate_notes(trimmed.decode('utf-8').rstrip() + _NOTES_MARKER)
+
+
+def changelog_notes(text: str, version: str) -> str:
+    """Body of the Release Please section for `version`, without the version heading."""
+    parse_version(version)
+    if not isinstance(text, str):
+        raise ReleaseError('changelog must be text')
+    normalized = text.replace('\r\n', '\n').replace('\r', '\n')
+    match = re.search(
+        r'^## \[' + re.escape(version) + r'\][^\n]*\n(.*?)(?=^## |\Z)',
+        normalized,
+        re.M | re.S,
+    )
+    if match is None:
+        raise ReleaseError('changelog has no section for ' + version)
+    body = match.group(1).strip('\n')
+    if body.strip() == '':
+        raise ReleaseError('changelog section for ' + version + ' is empty')
+    return limit_notes(body)
+
+
+def manifest_payload(identity: str, build: int, digest: bytes, minimum: str, notes: str | None = None) -> bytes:
+    """Bytes matching JSONEncoder().encode(UpdateManifest) with default strategies.
+
+    `notes` is omitted when absent so a manifest signed before that field still
+    decodes. When present, the field is part of these exact signed bytes.
+    """
     if len(digest) != 32:
         raise ReleaseError('sha256 must be 32 bytes')
-    body = {
+    body: dict[str, str | int] = {
         'identity': validate_identity(identity),
         'build': validate_build(build),
         'sha256': base64.b64encode(digest).decode('ascii'),
         'minimumSystemVersion': validate_minimum(minimum),
     }
+    if notes is not None:
+        body['notes'] = validate_notes(notes)
     return json.dumps(body, separators=(',', ':'), ensure_ascii=True).encode('ascii')
 
 

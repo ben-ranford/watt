@@ -61,7 +61,7 @@ In the repository settings, enable **Allow GitHub Actions to create and approve 
 | `distribution-preflight.txt` | Result of `scripts/verify-release-readiness.sh distribution-preflight`. |
 | `Watt-X.Y.Z-update-manifest.json` | Signed updater document. Present only when preflight passed and `WATT_UPDATE_SIGNING_KEY` is set. |
 
-The manifest is `SignedUpdate`: base64 `payload` and base64 `signature`. The payload is the compact JSON `UpdateManifest` (`identity`, `build`, `sha256`, `minimumSystemVersion`) in `JSONEncoder`'s default layout. The signature is Ed25519 over those exact payload bytes.
+The manifest is `SignedUpdate`: base64 `payload` and base64 `signature`. The payload is the compact JSON `UpdateManifest` (`identity`, `build`, `sha256`, `minimumSystemVersion`, and `notes` when that release has changelog text). `notes` is the body of the matching `CHANGELOG.md` section and is omitted when absent, so a manifest signed before this field still verifies. The signature is Ed25519 over those exact payload bytes, including `notes` when the field is present.
 
 `distribution-preflight` fails while the bundle identifier starts with `dev.watt.verification`, while the compiled update URLs differ from `Resources/ReleaseIdentity.json`, or while the Ed25519 public key is absent. The job still uploads the app and the preflight log. It does **not** upload an update manifest in that case, and the Pages job does not deploy. Publishing a manifest the installed app cannot accept would give the updater nothing it can use.
 
