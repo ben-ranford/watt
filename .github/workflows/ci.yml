@@ -17,7 +17,9 @@ concurrency:
 jobs:
   macos:
     name: macOS
-    runs-on: macos-15
+    # macos-15 tops out at Xcode 26.3. WattTests calls NSMenuItem.preferredImageVisibility,
+    # which the macOS 27 SDK declares, so the job needs the Xcode 27 runner.
+    runs-on: xcode-27
     timeout-minutes: 90
     steps:
       - name: Checkout
@@ -31,24 +33,20 @@ jobs:
           path: |
             .build
             ~/Library/Caches/org.swift.swiftpm
-          key: macos-15-spm-${{ hashFiles('Package.swift') }}-${{ hashFiles('**/*.swift') }}
+          key: xcode-27-spm-${{ hashFiles('Package.swift') }}-${{ hashFiles('**/*.swift') }}
           restore-keys: |
-            macos-15-spm-${{ hashFiles('Package.swift') }}-
-            macos-15-spm-
+            xcode-27-spm-${{ hashFiles('Package.swift') }}-
+            xcode-27-spm-
 
       - name: Select Xcode
         run: |
           set -euo pipefail
-          # macos-15 defaults to Xcode 16.4. Prefer the newest stable Xcode 26
-          # already on the image. Xcode 27 is a public preview and is not used.
+          # Image default is Xcode 27.1. Prefer the newest 27.x already installed.
           selected=""
           for app in \
-            /Applications/Xcode_26.3.app \
-            /Applications/Xcode_26.2.app \
-            /Applications/Xcode_26.1.1.app \
-            /Applications/Xcode_26.1.app \
-            /Applications/Xcode_26.0.1.app \
-            /Applications/Xcode_26.app \
+            /Applications/Xcode_27.2.app \
+            /Applications/Xcode_27.1.app \
+            /Applications/Xcode_27.app \
             /Applications/Xcode.app
           do
             if [[ -d "${app}" ]]; then
