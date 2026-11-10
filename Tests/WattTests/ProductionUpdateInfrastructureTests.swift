@@ -442,8 +442,10 @@ final class ProductionUpdateInstallationDriverTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(getxattr(app.path, QuarantineAttribute.name, nil, 0, 0, XATTR_NOFOLLOW), 0)
         try driver.stage(bytes, manifest: manifest, receipt: receipt)
         try driver.replace(manifest: manifest, receipt: receipt)
-        XCTAssertTrue(try driver.placement(manifest: manifest, receipt: receipt) == .replacement)
+        // placement() verifies again, and this fixture's validator re-applies the attribute.
+        // The replacement itself must already be clear before that second read.
         XCTAssertLessThan(getxattr(app.path, QuarantineAttribute.name, nil, 0, 0, XATTR_NOFOLLOW), 0)
+        XCTAssertTrue(try driver.placement(manifest: manifest, receipt: receipt) == .replacement)
         try driver.launch(manifest: manifest, receipt: receipt)
         XCTAssertLessThan(getxattr(app.path, QuarantineAttribute.name, nil, 0, 0, XATTR_NOFOLLOW), 0)
     }
