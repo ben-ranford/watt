@@ -1,0 +1,18 @@
+{
+  "bootstrap-sha": "e66b12fb2b4b705ee3610c102374efc2f0cf3706",
+  "packages": {
+    ".": {
+      "package-name": "Watt",
+      "release-type": "simple",
+      "changelog-path": "CHANGELOG.md",
+      "draft": true,
+      "include-component-in-tag": false,
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "Config/Version.xcconfig"
+        }
+      ]
+    }
+  }
+}

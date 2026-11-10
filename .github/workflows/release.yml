@@ -1,0 +1,119 @@
+name: Release
+
+"on":
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Release config
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check release scripts
+        run: python3 scripts/test_release_pipeline.py
+
+  release-please:
+    name: Release Please
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+      sha: ${{ steps.release.outputs.sha }}
+    steps:
+      - name: Open or tag the release
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+      - name: Checkout the release pull request
+        if: steps.release.outputs.prs_created == 'true' && steps.release.outputs.release_created != 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: release-please--branches--main
+      - name: Sync CFBundleVersion onto the release pull request
+        if: steps.release.outputs.prs_created == 'true' && steps.release.outputs.release_created != 'true'
+        run: bash scripts/sync-release-branch.sh
+
+  build:
+    name: Build and publish
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    # Same image as .github/workflows/ci.yml. macos-latest does not include the
+    # Xcode 27 SDK this project builds with.
+    runs-on: xcode-27
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.release-please.outputs.sha }}
+          persist-credentials: false
+      - name: Select Xcode
+        run: |
+          set -euo pipefail
+          # Match ci.yml: newest Xcode 27 on the image, not the older default symlink.
+          selected=""
+          for app in \
+            /Applications/Xcode_27.2.app \
+            /Applications/Xcode_27.1.app \
+            /Applications/Xcode_27.app \
+            /Applications/Xcode.app
+          do
+            if [[ -d "${app}" ]]; then
+              selected="${app}"
+              break
+            fi
+          done
+          if [[ -z "${selected}" ]]; then
+            echo "error: no Xcode found" >&2
+            exit 1
+          fi
+          sudo xcode-select -s "${selected}"
+          xcodebuild -version
+          swift --version
+      - name: Archive, package, and sign the update manifest
+        env:
+          RELEASE_VERSION: ${{ needs.release-please.outputs.version }}
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
+          OUTPUT_DIR: ${{ runner.temp }}/watt-dist
+          APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_NOTARY_KEY_ID: ${{ secrets.APPLE_NOTARY_KEY_ID }}
+          APPLE_NOTARY_ISSUER_ID: ${{ secrets.APPLE_NOTARY_ISSUER_ID }}
+          APPLE_NOTARY_KEY_P8_BASE64: ${{ secrets.APPLE_NOTARY_KEY_P8_BASE64 }}
+          WATT_UPDATE_SIGNING_KEY: ${{ secrets.WATT_UPDATE_SIGNING_KEY }}
+          WATT_UPDATE_MANIFEST_URL: ${{ secrets.WATT_UPDATE_MANIFEST_URL }}
+          WATT_UPDATE_ARTIFACT_URL: ${{ secrets.WATT_UPDATE_ARTIFACT_URL }}
+        run: bash scripts/release-archive.sh
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
+          OUTPUT_DIR: ${{ runner.temp }}/watt-dist
+        run: bash scripts/upload-release-assets.sh
