@@ -30,7 +30,7 @@ final class J32HelperSwitchedOffTests: XCTestCase {
         let menu = StatusItemContextMenu.makeMenu(router: session.router, preferences: session.preferences,
                                                   componentsAvailable: { true })
         let readings = try XCTUnwrap(menu.items.first?.submenu)
-        XCTAssertEqual(readings.items.filter { $0.state == .on }.map(\.title), ["Delta"])
+        XCTAssertEqual(readings.items.filter { $0.state == .on }.map(\.title), ["Battery Delta"])
         XCTAssertFalse(readings.items[3].isEnabled)
         await session.connect()
         XCTAssertTrue(setup.helperSwitchedOff) // Authentication alone is insufficient.

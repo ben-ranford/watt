@@ -31,10 +31,10 @@ final class J53FinishSetupTests: XCTestCase {
             let submenu = try XCTUnwrap(menu.items.first { $0.title == "Show in Menu Bar" }?.submenu)
             XCTAssertTrue(submenu.showsStateColumn)
             XCTAssertFalse(submenu.autoenablesItems)
-            XCTAssertEqual(submenu.items.map(\.title), ["Delta", "Charger", "Draw", "Components", "", "Icon", "", "Turn On Helper…"])
-            XCTAssertEqual(submenu.items.filter { $0.state == .on }.map(\.title), ["Delta"])
+            XCTAssertEqual(submenu.items.map(\.title), ["Battery Delta", "Charger Input", "System Draw", "Per Component", "", "Icon Only", "", "Turn On Helper…"])
+            XCTAssertEqual(submenu.items.filter { $0.state == .on }.map(\.title), ["Battery Delta"])
             XCTAssertFalse(submenu.items[3].isEnabled)
-            XCTAssertTrue(submenu.items.filter { !$0.isSeparatorItem && $0.title != "Components" }.allSatisfy(\.isEnabled))
+            XCTAssertTrue(submenu.items.filter { !$0.isSeparatorItem && $0.title != WattDisplayMode.components.title }.allSatisfy(\.isEnabled))
             XCTAssertTrue(submenu.items.allSatisfy { $0.view == nil })
         }
     }
@@ -47,8 +47,8 @@ final class J53FinishSetupTests: XCTestCase {
         var available = true
         let menu = StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { available })
         let submenu = try XCTUnwrap(menu.items.first?.submenu)
-        XCTAssertEqual(submenu.items.map(\.title), ["Delta", "Charger", "Draw", "Components", "", "Icon"])
-        XCTAssertEqual(submenu.items.filter { $0.state == .on }.map(\.title), ["Charger"])
+        XCTAssertEqual(submenu.items.map(\.title), ["Battery Delta", "Charger Input", "System Draw", "Per Component", "", "Icon Only"])
+        XCTAssertEqual(submenu.items.filter { $0.state == .on }.map(\.title), ["Charger Input"])
         XCTAssertTrue(submenu.items[3].isEnabled)
         available = false
         try invoke(submenu.items[3])
@@ -172,7 +172,7 @@ final class J53FinishSetupTests: XCTestCase {
     }
 
     func testOtherMenuActionsConsumeFinishSetupAndRouteNormally() throws {
-        for title in ["Open Watt?", "Settings…", "About Watt?", "Quit Watt?", "Draw", "Turn On Helper…"] {
+        for title in ["Open Watt?", "Settings…", "About Watt?", "Quit Watt?", "System Draw", "Turn On Helper…"] {
             let storage = CountingStorage()
             let preferences = PreferencesStore(storage: storage)
             let router = AppRouter()

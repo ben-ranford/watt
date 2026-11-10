@@ -342,7 +342,7 @@ final class C03ContextMenuTests: XCTestCase {
         for i in [3, 8] { XCTAssertEqual(menu.items[i].keyEquivalentModifierMask, .command) }
         let submenu = try XCTUnwrap(menu.items.first?.submenu)
         XCTAssertEqual(submenu.items.map { $0.isSeparatorItem ? "|" : $0.title },
-                       ["Delta", "Charger", "Draw", "Components", "|", "Icon"])
+                       ["Battery Delta", "Charger Input", "System Draw", "Per Component", "|", "Icon Only"])
         XCTAssertEqual(submenu.items.map(\.state), [.on, .off, .off, .off, .off, .off])
         XCTAssertTrue(submenu.items.allSatisfy { $0.keyEquivalent.isEmpty })
         XCTAssertFalse(menu.items.contains { $0.title == "Finish Setup…" })

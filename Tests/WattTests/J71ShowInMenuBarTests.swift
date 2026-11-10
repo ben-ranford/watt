@@ -16,9 +16,12 @@ final class J71ShowInMenuBarTests: XCTestCase {
                                                "About Watt?", "Check for Updates…", "", "Quit Watt?"])
         XCTAssertEqual(menu.items.map(\.isSeparatorItem), [false, true, false, false, true, false, false, true, false])
         let readings = try submenu(menu)
-        XCTAssertEqual(readings.items.map(\.title), ["Delta", "Charger", "Draw", "Components", "", "Icon"])
+        XCTAssertEqual(WattDisplayMode.allCases.map(\.rawValue), ["Delta", "Charger", "Draw", "Components", "Icon Only"])
+        XCTAssertEqual(WattDisplayMode.allCases.map(\.title), ["Battery Delta", "Charger Input", "System Draw", "Per Component", "Icon Only"])
+        XCTAssertEqual(readings.items.map(\.title), ["Battery Delta", "Charger Input", "System Draw", "Per Component", "", "Icon Only"])
         XCTAssertEqual(readings.items.map(\.isSeparatorItem), [false, false, false, false, true, false])
-        XCTAssertEqual(readings.items.filter { $0.state == .on }.map(\.title), ["Delta"])
+        XCTAssertEqual(readings.items.filter { !$0.isSeparatorItem }.map { $0.accessibilityLabel() ?? "" }, WattDisplayMode.allCases.map(\.title))
+        XCTAssertEqual(readings.items.filter { $0.state == .on }.map(\.title), ["Battery Delta"])
         XCTAssertTrue(menu.showsStateColumn)
         XCTAssertTrue(readings.showsStateColumn)
         XCTAssertFalse(readings.autoenablesItems)
@@ -38,8 +41,8 @@ final class J71ShowInMenuBarTests: XCTestCase {
         let preferences = J71FixtureLaunch.makePreferences()
         let router = AppRouter()
         let baseline = preferences.onboarding
-        for (title, mode) in [("Charger", WattDisplayMode.charger), ("Draw", .draw),
-                              ("Components", .components), ("Icon", .iconOnly), ("Delta", .delta)] {
+        for (title, mode) in [("Charger Input", WattDisplayMode.charger), ("System Draw", .draw),
+                              ("Per Component", .components), ("Icon Only", .iconOnly), ("Battery Delta", .delta)] {
             let menu = StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { true })
             try invoke(try item(title, in: submenu(menu)))
             XCTAssertEqual(preferences.displayMode, mode)
@@ -56,15 +59,15 @@ final class J71ShowInMenuBarTests: XCTestCase {
             let router = AppRouter()
             var available = true
             let menu = StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { available })
-            let components = try item("Components", in: submenu(menu))
+            let components = try item("Per Component", in: submenu(menu))
             XCTAssertTrue(components.isEnabled)
             if disablePreference { preferences.componentReadings = false } else { available = false }
             try invoke(components)
             XCTAssertEqual(preferences.displayMode, .delta)
             let rebuilt = StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { available })
             let readings = try submenu(rebuilt)
-            XCTAssertFalse(try item("Components", in: readings).isEnabled)
-            XCTAssertEqual(readings.items.map(\.title), ["Delta", "Charger", "Draw", "Components", "", "Icon", "", "Turn On Helper…"])
+            XCTAssertFalse(try item("Per Component", in: readings).isEnabled)
+            XCTAssertEqual(readings.items.map(\.title), ["Battery Delta", "Charger Input", "System Draw", "Per Component", "", "Icon Only", "", "Turn On Helper…"])
             var routes: [AppDestination] = []
             router.present = { routes.append($0) }
             try invoke(try item("Turn On Helper…", in: readings))
@@ -78,7 +81,7 @@ final class J71ShowInMenuBarTests: XCTestCase {
         session.preferences.onboarding.completed = true
         let menu = StatusItemContextMenu.makeMenu(router: session.router, preferences: session.preferences,
                                                   componentsAvailable: { true })
-        let components = try item("Components", in: submenu(menu))
+        let components = try item("Per Component", in: submenu(menu))
         XCTAssertTrue(components.isEnabled)
         session.preferences.displayMode = .charger
         session.helper.disconnect()
@@ -88,8 +91,8 @@ final class J71ShowInMenuBarTests: XCTestCase {
         let rebuilt = StatusItemContextMenu.makeMenu(router: session.router, preferences: session.preferences,
                                                      componentsAvailable: { true })
         let readings = try submenu(rebuilt)
-        XCTAssertFalse(try item("Components", in: readings).isEnabled)
-        XCTAssertEqual(readings.items.filter { $0.state == .on }.map(\.title), ["Delta"])
+        XCTAssertFalse(try item("Per Component", in: readings).isEnabled)
+        XCTAssertEqual(readings.items.filter { $0.state == .on }.map(\.title), ["Battery Delta"])
         XCTAssertEqual(readings.items.last?.title, "Turn On Helper…")
     }
 

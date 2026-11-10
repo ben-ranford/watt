@@ -51,16 +51,16 @@ enum StatusItemContextMenu {
         }
         readings.showsStateColumn = true
         readings.autoenablesItems = false
-        for (title, mode) in [("Delta", WattDisplayMode.delta), ("Charger", .charger),
-                              ("Draw", .draw), ("Components", .components), ("Icon", .iconOnly)] {
+        for mode in WattDisplayMode.allCases {
             if mode == .iconOnly { readings.addItem(.separator()) }
-            add(title, to: readings) {
+            add(mode.title, to: readings) {
                 guard mode != .components || (!router.settingsHelperSetup.helperSwitchedOff
                     && preferences.componentReadings && componentsAvailable()) else { return }
                 preferences.displayMode = mode
             }
             readings.items.last?.isEnabled = mode != .components || componentsCanBeSelected
             readings.items.last?.state = effectiveMode == mode ? .on : .off
+            readings.items.last?.setAccessibilityLabel(mode.title)
         }
         if router.settingsHelperSetup.helperSwitchedOff || !preferences.componentReadings || !componentsAvailable() {
             readings.addItem(.separator())

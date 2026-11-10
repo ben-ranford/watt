@@ -16,7 +16,7 @@ final class J25SettingsConnectedTests: XCTestCase {
         await session.connect()
         XCTAssertTrue(session.componentsAvailable)
         XCTAssertEqual(session.router.settingsHelperSetup.statusTitle, "On")
-        XCTAssertEqual(session.router.settingsHelperSetup.statusSubtitle, "CPU/GPU estimates appear only when both are available. Display, SSD and Other are unavailable.")
+        XCTAssertEqual(session.router.settingsHelperSetup.statusSubtitle, "Reading CPU and GPU power.")
         XCTAssertNil(session.router.settingsHelperSetup.message)
         XCTAssertEqual(SettingsRootView.componentsSubtitle, "Two fit.")
         XCTAssertEqual(session.preferences.displayMode.rawValue, "Components")
@@ -26,7 +26,8 @@ final class J25SettingsConnectedTests: XCTestCase {
         XCTAssertEqual(restored.displayMode, .components)
         XCTAssertEqual(restored.selectedComponents, ["CPU", "GPU"])
         let submenu = try XCTUnwrap(menu(session).items.first?.submenu)
-        XCTAssertEqual(submenu.items.filter { $0.state == .on }.map(\.title), ["Components"])
+        XCTAssertEqual(submenu.items.filter { $0.state == .on }.map(\.title), ["Per Component"])
+        XCTAssertEqual(submenu.items.filter { $0.state == .on }.map { $0.accessibilityLabel() ?? "" }, ["Per Component"])
         XCTAssertTrue(submenu.items[3].isEnabled)
         session.preferences.selectedComponents = ["GPU"]
         XCTAssertEqual(label(session), "GPU 4.1 W")
