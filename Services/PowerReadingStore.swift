@@ -521,6 +521,23 @@ final class UpdateStore: ObservableObject {
         } catch { persistenceFailure = .persistence; return false }
     }
 
+    /// One helper-update alert per completed app-update receipt. A failed write can retry.
+    @discardableResult
+    func claimHelperFollowUp(_ receipt: OperationReceipt) -> Bool {
+        guard receipt.isValid else { return false }
+        let key = "update.helper-follow-up.v1"
+        do {
+            if let data = try storage.read(key: key),
+               let existing = String(data: data, encoding: .utf8), existing == receipt.id.uuidString {
+                return false
+            }
+            guard let data = receipt.id.uuidString.data(using: .utf8) else { return false }
+            try storage.write(data, key: key)
+            persistenceFailure = nil
+            return true
+        } catch { persistenceFailure = .persistence; return false }
+    }
+
     // Persist a recovery marker BEFORE starting a service; restart never loses receipt ownership.
     func beginDownload(version: String, receipt: OperationReceipt, generation: UUID) -> Bool {
         guard generation == self.generation, state == .available(version: version) else { return false }

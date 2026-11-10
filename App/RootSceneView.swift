@@ -64,6 +64,8 @@ struct SoftwareUpdateContent: View {
             }.padding(20).frame(width: 420)
         } else if case .handoffAccepted = store.state {
             Text("Watt? will close while the update finishes.").padding(20).frame(width: 420)
+        } else if router.isUnattendedInstall, let version = router.downloadVersion {
+            UpdateDownloadingContent(router: router, store: store, version: version)
         } else if router.pendingProtectedReceipt != nil {
             VStack(alignment: .leading, spacing: 16) {
                 Text("An update needs recovery. Resume to verify the installer result and relaunch Watt?.")
