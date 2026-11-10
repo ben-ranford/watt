@@ -230,10 +230,25 @@ final class ProductionUpdateSourceTests: XCTestCase {
     }
     func testRejectsCrossOriginAndInsecureRedirects() async throws {
         let (source, _, _) = try fixture()
-        for target in ["https://other.example.test/release", "http://releases.example.test/release"] {
+        for target in ["https://other.example.test/release", "http://releases.example.test/release",
+                       "https://releases.example.test/release?download=1", "https://releases.example.test/release#sig"] {
             UpdateURLProtocol.configure(.init(status: 302, redirect: URL(string: target)!))
             do { _ = try await source.check(); XCTFail("Must reject redirect") }
             catch { XCTAssertEqual(error as? ServiceFailure, .network) }
+        }
+    }
+    func testDownloaderRejectsQueryPortAndUserinfo() throws {
+        let key = Curve25519.Signing.PrivateKey()
+        let trust = UpdateTrust(identity: "test.watt", currentBuild: 1,
+            hostSystemVersion: OperatingSystemVersion(majorVersion: 15, minorVersion: 0, patchVersion: 0),
+            publicKey: key.publicKey)
+        let artifact = URL(string: "https://releases.example.test/archive")!
+        for raw in ["https://releases.example.test/manifest?x=1",
+                    "https://user:secret@releases.example.test/manifest",
+                    "https://releases.example.test:8443/manifest",
+                    "http://releases.example.test/manifest",
+                    "https://releases.example.test/manifest#frag"] {
+            XCTAssertThrowsError(try ProductionUpdateSource(manifestURL: URL(string: raw)!, artifactURL: artifact, trust: trust), raw)
         }
     }
 }

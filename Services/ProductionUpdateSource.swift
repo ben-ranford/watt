@@ -20,7 +20,10 @@ final class ProductionUpdateSource: UpdateSource {
         self.configuration = configuration; self.deadline = deadline
     }
     fileprivate static func validURL(_ url: URL) -> Bool {
-        url.scheme?.lowercased() == "https" && url.host?.isEmpty == false && url.user == nil && url.password == nil && url.fragment == nil
+        guard url.scheme?.lowercased() == "https", let host = url.host, !host.isEmpty,
+              url.user == nil, url.password == nil, url.fragment == nil, url.query == nil,
+              url.port == nil || url.port == 443 else { return false }
+        return true
     }
     func check() async throws -> SignedUpdate? {
         let result = try await fetch(manifestURL, limit: Self.manifestLimit, allowNoContent: true, progress: nil)
@@ -141,6 +144,7 @@ private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @un
         let candidate = request.url
         let allowed = !done && redirects <= 3 && candidate?.scheme == "https" && candidate?.host?.lowercased() == url.host?.lowercased()
             && (candidate?.port ?? 443) == (url.port ?? 443) && candidate?.user == nil && candidate?.password == nil
+            && candidate?.query == nil && candidate?.fragment == nil
         lock.unlock()
         completionHandler(allowed ? request : nil)
         if !allowed { finish(.failure(ServiceFailure.network)) }
