@@ -41,7 +41,8 @@ class VersionTests(unittest.TestCase):
             release_lib.build_number('0.1.0')
 
     def test_repository_baseline_matches_identity(self) -> None:
-        self.assertEqual(release_lib.marketing_version(ROOT), '1.0.0')
+        version = release_lib.marketing_version(ROOT)
+        encoded = release_lib.build_number(version)
         identity, build = release_lib.load_identity(ROOT)
         self.assertEqual(identity, 'io.github.ben-ranford.watt')
         self.assertEqual(
@@ -51,16 +52,21 @@ class VersionTests(unittest.TestCase):
                 'https://ben-ranford.github.io/watt/updates/Watt.tar',
             ),
         )
-        self.assertEqual(build, 1)
-        self.assertEqual(release_lib.compiled_build(ROOT), 1)
-        self.assertIn(1, release_lib.acceptable_builds('1.0.0', release=False))
-        self.assertEqual(release_lib.acceptable_builds('1.0.0', release=True), {1_000_000})
+        # The tree is either the unreleased 1.0.0 / build 1 baseline or a
+        # release whose build is the encoded marketing version.
+        self.assertIn(build, {1, encoded} if version == '1.0.0' else {encoded})
+        self.assertEqual(release_lib.compiled_build(ROOT), build)
+        self.assertIn(build, release_lib.acceptable_builds(version, release=False))
+        self.assertEqual(release_lib.acceptable_builds(version, release=True), {encoded})
         check = run([sys.executable, 'scripts/sync-release-version.py'])
         self.assertEqual(check.returncode, 0, check.stderr)
         self.assertIn('SKIP: configure-release-identity.py', check.stdout)
         release = run([sys.executable, 'scripts/sync-release-version.py', '--release'])
-        self.assertEqual(release.returncode, 1, release.stdout)
-        self.assertIn('BLOCKED', release.stderr)
+        if build == encoded:
+            self.assertEqual(release.returncode, 0, release.stderr)
+        else:
+            self.assertEqual(release.returncode, 1, release.stdout)
+            self.assertIn('BLOCKED', release.stderr)
 
     def test_write_updates_every_compiled_build_without_changing_identity(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
