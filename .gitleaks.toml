@@ -3,18 +3,8 @@ title = "watt"
 [extend]
 useDefault = true
 
-# Default rules false-positive on Figma file identifiers and design-token prose.
-# The rejected-credential fixture is an intentional negative test, not a live secret.
-[[allowlists]]
-description = "Figma file keys and design-token prose"
-regexTarget = "line"
-regexes = [
-  '''fileKey''',
-  '''key: `[A-Za-z0-9]+`''',
-  '''semantic tokens remain:''',
-]
-
-[[allowlists]]
-description = "Intentional rejected update URL in ReleaseConfigurationTests"
-paths = ['''Tests/WattTests/ReleaseConfigurationTests\.swift''']
-regexes = ['''user:secret@example\.invalid''']
+# The current tree has no gitleaks findings, including
+# Tests/WattTests/ReleaseConfigurationTests.swift (the rejected
+# user:secret@example.invalid URL is not matched by the default rules).
+# Commits before the docs cleanup still contain Figma file-key false
+# positives. Those disappear when history is squashed to one commit.
