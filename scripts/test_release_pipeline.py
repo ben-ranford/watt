@@ -387,6 +387,74 @@ class WorkflowTests(unittest.TestCase):
             },
         )
 
+    def test_release_checkout_uses_the_validated_pull_request_branch(self) -> None:
+        import re
+        import yaml
+        pattern = r'^release-please--branches--main(--components--[A-Za-z0-9._-]+)?$'
+        compiled = re.compile(pattern)
+        self.assertIsNotNone(compiled.fullmatch('release-please--branches--main'))
+        self.assertIsNotNone(compiled.fullmatch('release-please--branches--main--components--Watt'))
+        for rejected in (
+            'main',
+            'release-please--branches--main--components--Watt extra',
+            'release-please--branches--main;touch /tmp/pwned',
+            'release-please--branches--other',
+            'refs/heads/release-please--branches--main--components--Watt',
+        ):
+            self.assertIsNone(compiled.fullmatch(rejected), rejected)
+
+        workflow = yaml.safe_load((ROOT / '.github/workflows/release.yml').read_text())
+        steps = workflow['jobs']['release-please']['steps']
+        opened = "steps.release.outputs.prs_created == 'true' && steps.release.outputs.release_created != 'true'"
+        resolve = next(step for step in steps if step.get('name') == 'Resolve the release pull request branch')
+        checkout = next(step for step in steps if step.get('name') == 'Checkout the release pull request')
+        sync = next(step for step in steps if step.get('name') == 'Sync CFBundleVersion onto the release pull request')
+        self.assertEqual(resolve['id'], 'release-branch')
+        self.assertEqual(resolve['if'], opened)
+        self.assertEqual(checkout['if'], opened)
+        self.assertEqual(sync['if'], opened)
+        self.assertEqual(
+            resolve['env']['RELEASE_PLEASE_BRANCH'],
+            "${{ fromJSON(steps.release.outputs.pr || '{}').headBranchName }}",
+        )
+        self.assertIn(pattern, resolve['run'])
+        self.assertIn('GITHUB_OUTPUT', resolve['run'])
+        self.assertNotIn('${{', resolve['run'])
+        self.assertEqual(checkout['with']['ref'], '${{ steps.release-branch.outputs.branch }}')
+        self.assertNotIn('persist-credentials', checkout.get('with', {}))
+        self.assertEqual(sync['env']['RELEASE_PLEASE_BRANCH'], '${{ steps.release-branch.outputs.branch }}')
+        self.assertEqual(sync['run'], 'bash scripts/sync-release-branch.sh')
+        self.assertNotIn('${{', sync['run'])
+        script = (ROOT / 'scripts' / 'sync-release-branch.sh').read_text()
+        self.assertIn(pattern, script)
+        self.assertIn('git push origin "HEAD:${branch}"', script)
+        self.assertNotIn('HEAD:release-please--branches--main', script)
+
+    def test_sync_release_branch_refuses_unexpected_branches(self) -> None:
+        script = str(ROOT / 'scripts' / 'sync-release-branch.sh')
+        head = subprocess.run(
+            ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+            cwd=ROOT, capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        for name in (
+            'release-please--branches--main',
+            'release-please--branches--main--components--Watt',
+        ):
+            self.assertNotEqual(head, name)
+            accepted = run(['bash', script], env={'RELEASE_PLEASE_BRANCH': name})
+            self.assertEqual(accepted.returncode, 1, accepted.stdout + accepted.stderr)
+            self.assertIn('this checkout', accepted.stderr)
+            self.assertNotIn('unexpected release branch', accepted.stderr)
+        for name in (
+            '',
+            'main',
+            'release-please--branches--main --components--Watt',
+            'release-please--branches--main;touch /tmp/pwned',
+        ):
+            rejected = run(['bash', script], env={'RELEASE_PLEASE_BRANCH': name})
+            self.assertEqual(rejected.returncode, 1, rejected.stdout + rejected.stderr)
+            self.assertIn('unexpected release branch', rejected.stderr)
+
     def test_shell_scripts_parse(self) -> None:
         for name in (
             'release-archive.sh',
