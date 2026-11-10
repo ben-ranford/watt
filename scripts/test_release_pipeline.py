@@ -269,6 +269,26 @@ class ProjectTests(unittest.TestCase):
         self.assertIn('path = Config/Version.xcconfig', project)
         self.assertIn('MARKETING_VERSION = 1.0.0 // x-release-please-version', (ROOT / 'Config/Version.xcconfig').read_text())
 
+    def test_app_info_plist_expands_custom_keys_before_signing(self) -> None:
+        import plistlib
+        app = plistlib.loads((ROOT / 'Resources/App/Info.plist').read_bytes())
+        helper = plistlib.loads((ROOT / 'Resources/Helper/Info.plist').read_bytes())
+        self.assertEqual(app['WATTHelperTrustMode'], '$(WATT_HELPER_TRUST_MODE)')
+        self.assertEqual(helper['WATTHelperTrustMode'], '$(WATT_HELPER_TRUST_MODE)')
+        self.assertEqual(app['WATTSigningTeam'], '$(DEVELOPMENT_TEAM)')
+        self.assertEqual(helper['WATTSigningTeam'], '$(DEVELOPMENT_TEAM)')
+        self.assertEqual(app['WATTUpdateManifestURL'], '$(WATT_UPDATE_MANIFEST_URL)')
+        self.assertEqual(app['WATTUpdateArtifactURL'], '$(WATT_UPDATE_ARTIFACT_URL)')
+        self.assertEqual(app['WATTUpdatePublicKey'], '$(WATT_UPDATE_PUBLIC_KEY)')
+        project = (ROOT / 'Watt.xcodeproj/project.pbxproj').read_text()
+        self.assertNotIn('INFOPLIST_KEY_WATT', project)
+        self.assertEqual(project.count('"INFOPLIST_FILE" = "Resources/App/Info.plist"'), 3)
+        self.assertEqual(project.count('"WATT_UPDATE_MANIFEST_URL" = ""'), 3)
+        self.assertEqual(project.count('"WATT_UPDATE_ARTIFACT_URL" = ""'), 3)
+        self.assertEqual(project.count('"WATT_UPDATE_PUBLIC_KEY" = ""'), 3)
+        self.assertEqual(project.count('"WATT_HELPER_TRUST_MODE" = "protected-installation"'), 4)
+        self.assertEqual(project.count('"WATT_HELPER_TRUST_MODE" = "certificate"'), 2)
+
     def test_show_build_settings_parser_selects_watt(self) -> None:
         text = """Build settings for action build and target WattHelper:
     MARKETING_VERSION = 9.9.9
@@ -532,6 +552,9 @@ class ReadinessTests(unittest.TestCase):
         mismatched = dict(info)
         mismatched['WATTUpdateArtifactURL'] = 'https://updates.example/Watt.tar'
         self.assertTrue(release_readiness.distribution_plist_failures(mismatched, endpoints=(manifest, artifact)))
+        missing_mode = self.info()
+        del missing_mode['WATTHelperTrustMode']
+        self.assertTrue(any('cdhash' in reason for reason in release_readiness.distribution_plist_failures(missing_mode)))
 
     def test_local_mode_still_accepts_a_developer_certificate(self) -> None:
         detail = 'Authority=Developer ID Application: Example (ABCDE12345)\nflags=0x10000(runtime)\n'
@@ -831,12 +854,97 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertNotIn('APPLE_', text)
         self.assertNotIn('developer-id', text)
         self.assertIn('CODE_SIGN_IDENTITY=-', text)
-        self.assertIn('INFOPLIST_KEY_WATTHelperTrustMode=protected-installation', text)
+        self.assertNotIn('INFOPLIST_KEY_WATT', text)
         self.assertIn('WATT_HELPER_TRUST_MODE=protected-installation', text)
-        self.assertIn('INFOPLIST_KEY_WATTUpdateManifestURL=$manifest_url', text)
-        self.assertIn('INFOPLIST_KEY_WATTUpdateArtifactURL=$artifact_url', text)
-        self.assertNotIn('WATT_UPDATE_MANIFEST_URL', text)
-        self.assertNotIn('WATT_UPDATE_ARTIFACT_URL', text)
+        self.assertIn('WATT_UPDATE_MANIFEST_URL=$manifest_url', text)
+        self.assertIn('WATT_UPDATE_ARTIFACT_URL=$artifact_url', text)
+        self.assertIn('WATT_UPDATE_PUBLIC_KEY=$public_key', text)
+        self.assertNotIn('${WATT_UPDATE_MANIFEST_URL', text)
+        self.assertNotIn('${WATT_UPDATE_ARTIFACT_URL', text)
+        self.assertLess(text.index('check_archived_plist.py'), text.index('\nset +e\n'))
+
+
+class ArchivedPlistTests(unittest.TestCase):
+    def test_archived_plist_must_contain_the_settings_xcodebuild_was_given(self) -> None:
+        import plistlib
+        manifest = 'https://updates.example/manifest.json'
+        artifact = 'https://updates.example/Watt.tar'
+        public = base64.b64encode(b'\x11' * 32).decode('ascii')
+        compiled = {
+            'WATTHelperTrustMode': 'protected-installation',
+            'WATTUpdateManifestURL': manifest,
+            'WATTUpdateArtifactURL': artifact,
+            'WATTUpdatePublicKey': public,
+        }
+        self.assertEqual(
+            release_readiness.compiled_release_plist_failures(
+                compiled, manifest_url=manifest, artifact_url=artifact, public_key=public),
+            [],
+        )
+        # The 1.0.0 archive had none of these keys. Preflight then failed softly
+        # and the Pages job skipped the manifest.
+        dropped = release_readiness.compiled_release_plist_failures(
+            {'CFBundleIdentifier': 'io.github.ben-ranford.watt'},
+            manifest_url=manifest, artifact_url=artifact, public_key=public,
+        )
+        self.assertTrue(any('WATTHelperTrustMode' in reason for reason in dropped))
+        self.assertTrue(any('missing WATTUpdateManifestURL' in reason for reason in dropped))
+        self.assertTrue(any('missing WATTUpdateArtifactURL' in reason for reason in dropped))
+        self.assertTrue(any('missing WATTUpdatePublicKey' in reason for reason in dropped))
+        unexpanded = dict(compiled, WATTUpdateManifestURL='$(WATT_UPDATE_MANIFEST_URL)')
+        self.assertTrue(any(
+            'did not expand WATTUpdateManifestURL' in reason
+            for reason in release_readiness.compiled_release_plist_failures(
+                unexpanded, manifest_url=manifest, artifact_url=artifact, public_key=public)
+        ))
+        empty = dict(compiled, WATTUpdateArtifactURL='')
+        self.assertTrue(any(
+            'missing WATTUpdateArtifactURL' in reason
+            for reason in release_readiness.compiled_release_plist_failures(
+                empty, manifest_url=manifest, artifact_url=artifact, public_key='')
+        ))
+        local = {
+            'WATTHelperTrustMode': 'protected-installation',
+            'WATTUpdateManifestURL': '',
+            'WATTUpdateArtifactURL': '',
+            'WATTUpdatePublicKey': '',
+        }
+        self.assertEqual(release_readiness.compiled_release_plist_failures(local), [])
+        certificate = dict(compiled, WATTHelperTrustMode='certificate')
+        self.assertTrue(release_readiness.compiled_release_plist_failures(
+            certificate, manifest_url=manifest, artifact_url=artifact))
+        other_key = base64.b64encode(b'\x22' * 32).decode('ascii')
+        mismatched = dict(compiled, WATTUpdatePublicKey=other_key)
+        self.assertTrue(any(
+            'does not match' in reason
+            for reason in release_readiness.compiled_release_plist_failures(
+                mismatched, manifest_url=manifest, artifact_url=artifact, public_key=public)
+        ))
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            present = root / 'present.plist'
+            missing = root / 'missing.plist'
+            with present.open('wb') as handle:
+                plistlib.dump(compiled, handle)
+            with missing.open('wb') as handle:
+                plistlib.dump({'CFBundleIdentifier': 'io.github.ben-ranford.watt'}, handle)
+            ok = run([
+                sys.executable, 'scripts/check_archived_plist.py', str(present),
+                '--manifest-url', manifest, '--artifact-url', artifact, '--public-key', public,
+            ])
+            self.assertEqual(ok.returncode, 0, ok.stderr)
+            self.assertIn('PASS', ok.stdout)
+            self.assertNotIn(public, ok.stdout + ok.stderr)
+            failed = run([
+                sys.executable, 'scripts/check_archived_plist.py', str(missing),
+                '--manifest-url', manifest, '--artifact-url', artifact, '--public-key', public,
+            ])
+            self.assertEqual(failed.returncode, 1)
+            self.assertIn('BLOCKED', failed.stderr)
+            self.assertIn('missing WATTUpdateManifestURL', failed.stderr)
+            self.assertIn('WATTHelperTrustMode', failed.stderr)
+            self.assertNotIn(manifest, failed.stderr)
+            self.assertNotIn(public, failed.stderr)
 
 
 class PagesPublishTests(unittest.TestCase):
