@@ -305,7 +305,8 @@ Build settings for action build and target WattTests:
             'developer-id',
         ):
             self.assertNotIn(name, text)
-        self.assertIn('HOMEBREW_TAP_TOKEN', text)
+        self.assertIn('HOMEBREW_TAP_DEPLOY_KEY', text)
+        self.assertNotIn('HOMEBREW_TAP_TOKEN', text)
         self.assertIn('WATT_UPDATE_SIGNING_KEY', text)
         self.assertNotIn('WATT_UPDATE_MANIFEST_URL', text)
         self.assertNotIn('WATT_UPDATE_ARTIFACT_URL', text)
@@ -343,6 +344,18 @@ class WorkflowTests(unittest.TestCase):
         )
         self.assertEqual(workflow['jobs']['build']['permissions'], {'contents': 'write'})
         self.assertEqual(workflow['jobs']['build']['runs-on'], 'xcode-27')
+        cask = workflow['jobs']['homebrew-cask']
+        self.assertEqual(cask['permissions'], {'contents': 'read'})
+        self.assertEqual(cask['needs'], ['release-please', 'build'])
+        self.assertEqual(cask['if'], "needs.build.result == 'success'")
+        update = next(step for step in cask['steps'] if step.get('name') == 'Update the Homebrew tap')
+        self.assertEqual(update['env']['HOMEBREW_TAP_DEPLOY_KEY'], '${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}')
+        self.assertNotIn('HOMEBREW_TAP_TOKEN', update['env'])
+        self.assertNotIn('${{', update['run'])
+        delete = next(step for step in cask['steps'] if step.get('name') == 'Delete the Homebrew deploy key')
+        self.assertEqual(delete['if'], 'always()')
+        self.assertIn('homebrew-tap-deploy-key', delete['run'])
+        self.assertNotIn('HOMEBREW_TAP_DEPLOY_KEY', delete['run'])
         pages = workflow['jobs']['pages']
         self.assertEqual(pages['permissions'], {'pages': 'write', 'id-token': 'write'})
         self.assertEqual(pages['environment']['name'], 'github-pages')
@@ -527,9 +540,9 @@ class HomebrewCaskTests(unittest.TestCase):
             )
             self.assertIn('>= :sonoma', text)
 
-    def test_unset_tap_token_skips_without_calling_git(self) -> None:
+    def test_unset_deploy_key_skips_without_calling_git(self) -> None:
         env = os.environ.copy()
-        env.pop('HOMEBREW_TAP_TOKEN', None)
+        env.pop('HOMEBREW_TAP_DEPLOY_KEY', None)
         result = subprocess.run(
             ['bash', 'scripts/update-homebrew-cask.sh'],
             cwd=ROOT,
@@ -538,8 +551,205 @@ class HomebrewCaskTests(unittest.TestCase):
             capture_output=True,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn('HOMEBREW_TAP_TOKEN is unset', result.stdout)
+        self.assertIn('HOMEBREW_TAP_DEPLOY_KEY is unset', result.stdout)
         self.assertIn('Skipping', result.stdout)
+
+    def test_deploy_key_is_not_a_personal_access_token(self) -> None:
+        script = (ROOT / 'scripts/update-homebrew-cask.sh').read_text()
+        notes = (ROOT / 'RELEASING.md').read_text()
+        for text in (script, notes):
+            self.assertNotIn('HOMEBREW_TAP_TOKEN', text)
+        self.assertIn('git@github.com:ben-ranford/homebrew-tap.git', script)
+        self.assertIn('IdentitiesOnly=yes', script)
+        self.assertIn('StrictHostKeyChecking=yes', script)
+        self.assertIn('chmod 0600', script)
+        self.assertIn(
+            'github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl',
+            script,
+        )
+        self.assertNotIn('echo "$HOMEBREW_TAP_DEPLOY_KEY"', script)
+        self.assertNotIn("echo '${HOMEBREW_TAP_DEPLOY_KEY}'", script)
+        self.assertIn('HOMEBREW_TAP_DEPLOY_KEY', notes)
+        self.assertIn('write-access deploy key on `ben-ranford/homebrew-tap` only', notes)
+        self.assertIn('unprotected', notes)
+
+    def test_bad_tag_does_not_print_the_deploy_key(self) -> None:
+        secret = 'watt-deploy-key-sentinel-do-not-print'
+        env = os.environ.copy()
+        env['HOMEBREW_TAP_DEPLOY_KEY'] = secret
+        env['RELEASE_TAG'] = 'not-a-release'
+        env['GITHUB_REPOSITORY'] = 'ben-ranford/watt'
+        env['GITHUB_TOKEN'] = 'unused'
+        result = subprocess.run(
+            ['bash', 'scripts/update-homebrew-cask.sh'],
+            cwd=ROOT,
+            env=env,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn('Refusing release tag.', result.stderr)
+        self.assertNotIn(secret, result.stdout)
+        self.assertNotIn(secret, result.stderr)
+
+    def test_deploy_key_pushes_the_cask_over_ssh_without_printing_the_key(self) -> None:
+        import io
+        import plistlib
+        import zipfile
+
+        secret = 'watt-deploy-key-sentinel-do-not-print'
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bare = root / 'tap.git'
+            seed = root / 'seed'
+            runner_temp = root / 'runner-temp'
+            bin_dir = root / 'bin'
+            runner_temp.mkdir()
+            bin_dir.mkdir()
+            subprocess.run(['git', 'init', '--bare', '-b', 'main', str(bare)], check=True, capture_output=True)
+            subprocess.run(['git', 'init', '-b', 'main', str(seed)], check=True, capture_output=True)
+            subprocess.run(['git', '-C', str(seed), 'config', 'user.email', 'test@example.com'], check=True)
+            subprocess.run(['git', '-C', str(seed), 'config', 'user.name', 'Test'], check=True)
+            (seed / 'README').write_text('tap\n')
+            subprocess.run(['git', '-C', str(seed), 'add', 'README'], check=True)
+            subprocess.run(['git', '-C', str(seed), 'commit', '-m', 'init'], check=True, capture_output=True)
+            subprocess.run(['git', '-C', str(seed), 'remote', 'add', 'origin', str(bare)], check=True)
+            subprocess.run(['git', '-C', str(seed), 'push', 'origin', 'HEAD:main'], check=True, capture_output=True)
+
+            info = {
+                'CFBundleIdentifier': 'io.github.ben-ranford.watt',
+                'CFBundleShortVersionString': '1.2.3',
+                'LSMinimumSystemVersion': '13.0',
+            }
+            buffer = io.BytesIO()
+            with zipfile.ZipFile(buffer, 'w') as archive:
+                archive.writestr('Watt.app/Contents/Info.plist', plistlib.dumps(info))
+            zip_path = root / 'Watt-1.2.3.zip'
+            zip_path.write_bytes(buffer.getvalue())
+            ssh_log = root / 'ssh.log'
+            (bin_dir / 'gh').write_text(
+                '#!/usr/bin/env python3\n'
+                'import os, shutil, sys\n'
+                'from pathlib import Path\n'
+                'args = sys.argv[1:]\n'
+                'if len(args) >= 2 and args[0] == "release" and args[1] == "view":\n'
+                '    print("false")\n'
+                '    raise SystemExit(0)\n'
+                'if len(args) >= 2 and args[0] == "release" and args[1] == "download":\n'
+                '    directory = args[args.index("--dir") + 1]\n'
+                '    pattern = args[args.index("--pattern") + 1]\n'
+                '    shutil.copyfile(os.environ["CASK_ZIP"], Path(directory) / pattern)\n'
+                '    raise SystemExit(0)\n'
+                'sys.stderr.write("unexpected gh invocation\\n")\n'
+                'raise SystemExit(2)\n'
+            )
+            (bin_dir / 'ssh').write_text(
+                '#!/usr/bin/env python3\n'
+                'import os, sys\n'
+                'from pathlib import Path\n'
+                'args = sys.argv[1:]\n'
+                'key = None\n'
+                'known = None\n'
+                'index = 0\n'
+                'while index < len(args):\n'
+                '    if args[index] == "-i" and index + 1 < len(args):\n'
+                '        key = args[index + 1]\n'
+                '        index += 2\n'
+                '        continue\n'
+                '    if args[index] == "-o" and index + 1 < len(args):\n'
+                '        option = args[index + 1]\n'
+                '        if option.startswith("UserKnownHostsFile="):\n'
+                '            known = option.split("=", 1)[1]\n'
+                '        index += 2\n'
+                '        continue\n'
+                '    index += 1\n'
+                'log = Path(os.environ["SSH_LOG"])\n'
+                'with log.open("a") as handle:\n'
+                '    handle.write("INVOKED\\n")\n'
+                '    if os.environ.get("HOMEBREW_TAP_DEPLOY_KEY"):\n'
+                '        handle.write("key_still_in_environment\\n")\n'
+                '    if key is None:\n'
+                '        handle.write("missing identity file\\n")\n'
+                '    else:\n'
+                '        handle.write("key_mode=%o\\n" % (os.stat(key).st_mode & 0o777))\n'
+                '    handle.write("host_ok=%s\\n" % ("git@github.com" in args))\n'
+                '    handle.write("identities=%s\\n" % ("IdentitiesOnly=yes" in args))\n'
+                '    handle.write("strict=%s\\n" % ("StrictHostKeyChecking=yes" in args))\n'
+                '    if known:\n'
+                '        handle.write(Path(known).read_text())\n'
+                'command = args[-1]\n'
+                'bare = os.environ["TAP_BARE"]\n'
+                'if command.startswith("git-upload-pack"):\n'
+                '    os.execvp("git", ["git", "upload-pack", bare])\n'
+                'if command.startswith("git-receive-pack"):\n'
+                '    os.execvp("git", ["git", "receive-pack", bare])\n'
+                'sys.stderr.write("unexpected ssh command\\n")\n'
+                'raise SystemExit(1)\n'
+            )
+            os.chmod(bin_dir / 'gh', 0o755)
+            os.chmod(bin_dir / 'ssh', 0o755)
+            env = os.environ.copy()
+            env.update({
+                'HOMEBREW_TAP_DEPLOY_KEY': secret,
+                'GITHUB_TOKEN': 'unused',
+                'GITHUB_REPOSITORY': 'ben-ranford/watt',
+                'RELEASE_TAG': 'v1.2.3',
+                'SOURCE_REPO': 'ben-ranford/homebrew-tap',
+                'RUNNER_TEMP': str(runner_temp),
+                'CASK_ZIP': str(zip_path),
+                'SSH_LOG': str(ssh_log),
+                'TAP_BARE': str(bare),
+                'PATH': str(bin_dir) + os.pathsep + env.get('PATH', ''),
+            })
+            env.pop('GIT_SSH_COMMAND', None)
+            result = subprocess.run(
+                ['bash', 'scripts/update-homebrew-cask.sh'],
+                cwd=ROOT,
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            combined = result.stdout + result.stderr
+            self.assertNotIn(secret, combined)
+            self.assertIn('Updated ben-ranford/homebrew-tap Casks/watt.rb for 1.2.3.', result.stdout)
+            self.assertFalse((runner_temp / 'homebrew-tap-deploy-key').exists())
+            log_text = ssh_log.read_text()
+            self.assertNotIn(secret, log_text)
+            self.assertNotIn('key_still_in_environment', log_text)
+            self.assertNotIn('missing identity file', log_text)
+            self.assertIn('key_mode=600', log_text)
+            self.assertNotIn('key_mode=644', log_text)
+            self.assertIn('host_ok=True', log_text)
+            self.assertIn('identities=True', log_text)
+            self.assertIn('strict=True', log_text)
+            self.assertIn(
+                'github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl',
+                log_text,
+            )
+            self.assertGreaterEqual(log_text.count('INVOKED'), 2)
+            showed = subprocess.run(
+                ['git', '--git-dir', str(bare), 'log', '-1', '--format=%an%n%ae%n%s'],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                showed.stdout.splitlines(),
+                [
+                    'github-actions[bot]',
+                    '41898282+github-actions[bot]@users.noreply.github.com',
+                    'watt 1.2.3',
+                ],
+            )
+            cask_text = subprocess.run(
+                ['git', '--git-dir', str(bare), 'show', 'main:Casks/watt.rb'],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout
+            self.assertIn('postflight do', cask_text)
+            self.assertIn('com.apple.quarantine', cask_text)
 
     def test_archive_script_has_no_notarisation_path(self) -> None:
         text = (ROOT / 'scripts/release-archive.sh').read_text()

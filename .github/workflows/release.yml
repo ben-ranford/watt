@@ -125,11 +125,16 @@ jobs:
           persist-credentials: false
       - name: Update the Homebrew tap
         env:
-          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          HOMEBREW_TAP_DEPLOY_KEY: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
           SOURCE_REPO: ben-ranford/homebrew-tap
         run: bash scripts/update-homebrew-cask.sh
+      - name: Delete the Homebrew deploy key
+        if: always()
+        run: |
+          set -euo pipefail
+          rm -f "${RUNNER_TEMP}/homebrew-tap-deploy-key"
 
   pages:
     name: Publish update endpoints
