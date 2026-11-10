@@ -6,6 +6,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import re
 import os
 import shutil
 import subprocess
@@ -86,7 +87,12 @@ class VersionTests(unittest.TestCase):
             version = '1.2.3'
             (root / 'version.txt').write_text(version + '\n')
             (root / '.release-please-manifest.json').write_text(json.dumps({'.': version}) + '\n')
-            xcconfig = (root / 'Config/Version.xcconfig').read_text().replace('1.0.0', version, 1)
+            xcconfig = re.sub(
+                r'MARKETING_VERSION = \d+\.\d+\.\d+',
+                f'MARKETING_VERSION = {version}',
+                (root / 'Config/Version.xcconfig').read_text(),
+                count=1,
+            )
             (root / 'Config/Version.xcconfig').write_text(xcconfig)
             result = run([sys.executable, str(ROOT / 'scripts/sync-release-version.py'), '--write', '--root', str(root)])
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -267,7 +273,10 @@ class ProjectTests(unittest.TestCase):
         project = (ROOT / 'Watt.xcodeproj/project.pbxproj').read_text()
         self.assertEqual(project.count('baseConfigurationReference = E7A4C91B2D0F4A6C8B3E1D50'), 3)
         self.assertIn('path = Config/Version.xcconfig', project)
-        self.assertIn('MARKETING_VERSION = 1.0.0 // x-release-please-version', (ROOT / 'Config/Version.xcconfig').read_text())
+        self.assertRegex(
+            (ROOT / 'Config/Version.xcconfig').read_text(),
+            r'MARKETING_VERSION = \d+\.\d+\.\d+ // x-release-please-version',
+        )
 
     def test_app_info_plist_expands_custom_keys_before_signing(self) -> None:
         import plistlib
