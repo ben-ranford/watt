@@ -49,6 +49,14 @@ final class HelperProtocolTests: XCTestCase {
                                                                status: .sourceUnvalidated, capture: oversized)))
     }
 
+    func testPrepareUpdateRequiresReceipt() {
+        XCTAssertFalse(HelperRequest(command: .prepareUpdate, generation: UUID()).isAdmitted)
+        XCTAssertTrue(HelperRequest(command: .prepareUpdate, generation: UUID(), receipt: UUID()).isAdmitted)
+        XCTAssertTrue(HelperRequest(command: .ping, generation: UUID()).isAdmitted)
+        XCTAssertTrue(HelperRequest(command: .sample, generation: UUID()).isAdmitted)
+        XCTAssertTrue(HelperRequest(command: .diagnosticCapture, generation: UUID()).isAdmitted)
+    }
+
     func testFixedCommandMatchesLocalHelp() {
         XCTAssertEqual(FixedPowerSampler.executable, "/usr/bin/powermetrics")
         XCTAssertEqual(FixedPowerSampler.arguments, ["-f", "plist", "-n", "1", "-i", "1000", "-s", "cpu_power,gpu_power"])
