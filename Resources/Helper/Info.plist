@@ -9,7 +9,7 @@
 	<key>CFBundleName</key>
 	<string>WattHelper</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>1000000</string>
 	<key>WATTHelperTrustMode</key>
 	<string>$(WATT_HELPER_TRUST_MODE)</string>
 	<key>WATTSigningTeam</key>
