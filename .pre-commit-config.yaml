@@ -1,0 +1,8 @@
+# Optional. Install with `pre-commit install` after `pip install pre-commit`.
+# The hook uses the open-source gitleaks CLI, not the commercial gitleaks-action.
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+        args: ["--config", ".gitleaks.toml"]
