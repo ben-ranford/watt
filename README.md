@@ -38,6 +38,10 @@ swift test
 
 `scripts/configure-release-identity.py` applies a reviewed bundle identifier and build number. `scripts/verify-release-readiness.sh` checks one built `.app` without publishing it. Administrator installation of the privileged helper is described in `HelperInstaller/README.md`.
 
+## Support
+
+Watt is free and open source. [GitHub Sponsors](https://github.com/sponsors/ben-ranford) is there for anyone who wants to support development.
+
 ## Licence
 
 Watt is released under the [MIT License](LICENSE). Copyright 2026 Benjamin Ranford.
