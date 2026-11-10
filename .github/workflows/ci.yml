@@ -96,96 +96,6 @@ jobs:
           build_configuration Debug
           build_configuration Release
 
-      # The helper-absence check refuses removal when any powermetrics process
-      # exists or when a process cannot be named. Print that table before tests
-      # so a runner-specific refusal is visible in the log.
-      - name: Process table relevant to helper absence
-        run: |
-          set -euo pipefail
-          cat > "${RUNNER_TEMP}/helper-absence-scan.c" << 'EOF'
-          #include <errno.h>
-          #include <stdio.h>
-          #include <stdlib.h>
-          #include <string.h>
-          #include <libproc.h>
-          int main(void) {
-            int estimate = proc_listallpids(NULL, 0);
-            printf("estimate_bytes=%d\n", estimate);
-            if (estimate <= 0) return 0;
-            int cap = estimate / (int)sizeof(pid_t) + 128;
-            pid_t *pids = calloc((size_t)cap, sizeof(pid_t));
-            int count = proc_listallpids(pids, cap * (int)sizeof(pid_t));
-            printf("count_bytes=%d\n", count);
-            int n = count > 0 ? count / (int)sizeof(pid_t) : 0;
-            for (int i = 0; i < n; i++) {
-              pid_t pid = pids[i];
-              if (pid <= 0) continue;
-              char buf[4096];
-              errno = 0;
-              int len = proc_pidpath(pid, buf, sizeof(buf));
-              if (len <= 0) {
-                int saved = errno;
-                char name[64] = {0};
-                int nn = proc_name(pid, name, sizeof(name));
-                printf("unreadable pid=%d errno=%d proc_name=%d name=%s\n", pid, saved, nn, nn > 0 ? name : "?");
-              } else if (strcmp(buf, "/usr/bin/powermetrics") == 0 || strstr(buf, "WattHelper") != NULL) {
-                printf("match pid=%d path=%s\n", pid, buf);
-              }
-            }
-            return 0;
-          }
-          EOF
-          clang -o "${RUNNER_TEMP}/helper-absence-scan" "${RUNNER_TEMP}/helper-absence-scan.c"
-          "${RUNNER_TEMP}/helper-absence-scan"
-          python3 - << 'PY'
-          import os
-          paths = [
-              "/Library/Application Support/Watt/helper-trust.json",
-              "/Library/PrivilegedHelperTools/dev.watt.verification.helper",
-              "/Library/LaunchDaemons/dev.watt.verification.helper.plist",
-          ]
-          for path in paths:
-              try:
-                  st = os.lstat(path)
-                  print(f"lstat exists mode={oct(st.st_mode)} {path}")
-              except OSError as error:
-                  print(f"lstat errno={error.errno} {error.strerror} {path}")
-          PY
-          cat > "${RUNNER_TEMP}/helper-absence.swift" << 'EOF'
-          import Darwin
-          import Foundation
-          let estimate = proc_listallpids(nil, 0)
-          print("swift estimate=\(estimate)")
-          guard estimate > 0, estimate < 32_640 else { print("swift refuse estimate"); exit(0) }
-          let capacity = Int(estimate) + 128
-          var pids = [pid_t](repeating: 0, count: capacity)
-          let count = pids.withUnsafeMutableBytes { proc_listallpids($0.baseAddress, Int32($0.count)) }
-          print("swift count=\(count) capacity=\(capacity)")
-          guard count > 0, count < capacity else { print("swift refuse count"); exit(0) }
-          for pid in pids.prefix(Int(count)) where pid > 0 {
-            var buffer = [CChar](repeating: 0, count: 4096)
-            errno = 0
-            let length = proc_pidpath(pid, &buffer, UInt32(buffer.count))
-            if length <= 0 {
-              let saved = errno
-              let n = proc_name(pid, &buffer, UInt32(buffer.count))
-              let name = n > 0 ? String(cString: buffer) : "?"
-              print("swift unreadable pid=\(pid) errno=\(saved) proc_name=\(n) name=\(name)")
-              if n <= 0 || name == "WattHelper" || name == "powermetrics" || name == "dev.watt.verification.helper" {
-                print("swift refuse name")
-              }
-              continue
-            }
-            let path = String(cString: buffer)
-            let base = URL(fileURLWithPath: path).lastPathComponent
-            if path == "/Library/PrivilegedHelperTools/dev.watt.verification.helper" || path == "/usr/bin/powermetrics" || base == "WattHelper" {
-              print("swift match pid=\(pid) path=\(path)")
-            }
-          }
-          print("swift scan done")
-          EOF
-          swift "${RUNNER_TEMP}/helper-absence.swift"
-
       # Xcode and SwiftPM compile the same tests differently. Several cases are
       # host-injected under xcodebuild and SWIFT_PACKAGE-only under `swift test`.
       # WattUITests drive the menu bar and are not part of this unit-test run.
@@ -207,7 +117,6 @@ jobs:
             "COMPILER_INDEX_STORE_ENABLE=NO"
 
       - name: Unit tests (swift test)
-        if: success() || failure()
         run: |
           set -euo pipefail
           swift test --configuration debug
