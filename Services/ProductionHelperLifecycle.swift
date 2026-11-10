@@ -334,13 +334,19 @@ enum HelperProcessInventory {
             }
             if length <= 0 {
                 // Executables removed/replaced on disk can lack a retrievable path
-                // while their kernel process name remains available.
+                // while their kernel process name remains available. A pid that
+                // exits during the scan is ENOENT on macOS 27, not only ESRCH.
                 if errno == ESRCH { continue }
+                let pathErrno = errno
                 var nameBytes = [CChar](repeating: 0, count: Int(4 * MAXPATHLEN))
                 let nameLength = nameBytes.withUnsafeMutableBytes {
                     proc_name(pid, $0.baseAddress, UInt32($0.count))
                 }
-                guard nameLength > 0, nameLength < nameBytes.count - 1,
+                if nameLength <= 0 {
+                    if errno == ESRCH || errno == ENOENT || pathErrno == ENOENT { continue }
+                    return false
+                }
+                guard nameLength < nameBytes.count - 1,
                       unrelatedName(terminatedUTF8(nameBytes), helperPath: helperPath) else { return false }
                 continue
             }

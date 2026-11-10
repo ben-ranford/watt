@@ -19,9 +19,17 @@ public enum MaintenanceProcessWitness {
             errno = 0
             let length = proc_pidpath(pid, &buffer, UInt32(buffer.count))
             if length <= 0 {
+                // ESRCH is a pid that is already gone. ENOENT is that same race on
+                // macOS 27. A deleted executable can also fail the path lookup while
+                // the kernel name remains, so a failed path still checks the name.
                 if errno == ESRCH { continue }
+                let pathErrno = errno
                 let n = proc_name(pid, &buffer, UInt32(buffer.count))
-                guard n > 0, let end = buffer.firstIndex(of: 0), end > 0,
+                if n <= 0 {
+                    if errno == ESRCH || errno == ENOENT || pathErrno == ENOENT { continue }
+                    return false
+                }
+                guard let end = buffer.firstIndex(of: 0), end > 0,
                       let name = String(bytes: buffer[..<end].map({ UInt8(bitPattern: $0) }), encoding: .utf8),
                       name != "WattHelper", name != "powermetrics", name != HelperIdentity.helperIdentifier else { return false }
                 continue
