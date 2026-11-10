@@ -1,0 +1,179 @@
+name: Release
+
+"on":
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Release config
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check release scripts
+        run: python3 scripts/test_release_pipeline.py
+
+  release-please:
+    name: Release Please
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+      sha: ${{ steps.release.outputs.sha }}
+    steps:
+      - name: Open or tag the release
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+      - name: Checkout the release pull request
+        if: steps.release.outputs.prs_created == 'true' && steps.release.outputs.release_created != 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: release-please--branches--main
+      - name: Sync CFBundleVersion onto the release pull request
+        if: steps.release.outputs.prs_created == 'true' && steps.release.outputs.release_created != 'true'
+        run: bash scripts/sync-release-branch.sh
+
+  build:
+    name: Build and publish
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    # Same image as .github/workflows/ci.yml. macos-latest does not include the
+    # Xcode 27 SDK this project builds with.
+    runs-on: xcode-27
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.release-please.outputs.sha }}
+          persist-credentials: false
+      - name: Select Xcode
+        run: |
+          set -euo pipefail
+          # Match ci.yml: newest Xcode 27 on the image, not the older default symlink.
+          selected=""
+          for app in \
+            /Applications/Xcode_27.2.app \
+            /Applications/Xcode_27.1.app \
+            /Applications/Xcode_27.app \
+            /Applications/Xcode.app
+          do
+            if [[ -d "${app}" ]]; then
+              selected="${app}"
+              break
+            fi
+          done
+          if [[ -z "${selected}" ]]; then
+            echo "error: no Xcode found" >&2
+            exit 1
+          fi
+          sudo xcode-select -s "${selected}"
+          xcodebuild -version
+          swift --version
+      - name: Archive, package, and sign the update manifest
+        env:
+          RELEASE_VERSION: ${{ needs.release-please.outputs.version }}
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
+          OUTPUT_DIR: ${{ runner.temp }}/watt-dist
+          WATT_UPDATE_SIGNING_KEY: ${{ secrets.WATT_UPDATE_SIGNING_KEY }}
+        run: bash scripts/release-archive.sh
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
+          OUTPUT_DIR: ${{ runner.temp }}/watt-dist
+        run: bash scripts/upload-release-assets.sh
+
+  homebrew-cask:
+    name: Update Homebrew cask
+    needs: [release-please, build]
+    if: needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Update the Homebrew tap
+        env:
+          HOMEBREW_TAP_DEPLOY_KEY: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
+          SOURCE_REPO: ben-ranford/homebrew-tap
+        run: bash scripts/update-homebrew-cask.sh
+      - name: Delete the Homebrew deploy key
+        if: always()
+        run: |
+          set -euo pipefail
+          rm -f "${RUNNER_TEMP}/homebrew-tap-deploy-key"
+
+  pages:
+    name: Publish update endpoints
+    needs: [release-please, build]
+    if: needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Fetch the release commit
+        env:
+          RELEASE_SHA: ${{ needs.release-please.outputs.sha }}
+        run: |
+          set -euo pipefail
+          git init source
+          git -C source remote add origin https://github.com/ben-ranford/watt.git
+          git -C source fetch --depth 1 origin "$RELEASE_SHA"
+          git -C source checkout --detach FETCH_HEAD
+      - name: Stage manifest and tar
+        id: stage
+        env:
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
+          PAGES_DIR: site
+          SOURCE_REPO: ben-ranford/watt
+        run: bash source/scripts/publish-pages-update.sh
+      - name: Upload Pages artifact
+        if: steps.stage.outputs.deploy == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: steps.stage.outputs.deploy == 'true'
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

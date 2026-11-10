@@ -1,0 +1,18 @@
+{
+  "packages": {
+    ".": {
+      "package-name": "Watt",
+      "release-type": "simple",
+      "changelog-path": "CHANGELOG.md",
+      "draft": true,
+      "include-component-in-tag": false,
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "Config/Version.xcconfig"
+        }
+      ],
+      "release-as": "1.0.0"
+    }
+  }
+}

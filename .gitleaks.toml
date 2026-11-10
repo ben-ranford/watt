@@ -1,0 +1,10 @@
+title = "watt"
+
+[extend]
+useDefault = true
+
+# The current tree has no gitleaks findings, including
+# Tests/WattTests/ReleaseConfigurationTests.swift (the rejected
+# user:secret@example.invalid URL is not matched by the default rules).
+# Commits before the docs cleanup still contain Figma file-key false
+# positives. Those disappear when history is squashed to one commit.

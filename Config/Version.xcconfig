@@ -1,0 +1,9 @@
+// Marketing version (CFBundleShortVersionString) for every target.
+// Release Please replaces the semver on the next line. Keep the marker on that line.
+MARKETING_VERSION = 1.0.0 // x-release-please-version
+
+// CFBundleVersion is not this setting. It is the positive integer build in
+// Resources/ReleaseIdentity.json, propagated by scripts/sync-release-version.py
+// and checked by scripts/configure-release-identity.py. Released builds use
+// MAJOR * 1000000 + MINOR * 1000 + PATCH. The unreleased tree may stay at the
+// reviewed verification build 1 while marketing version is still 1.0.0.
