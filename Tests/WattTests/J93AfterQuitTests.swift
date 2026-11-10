@@ -10,7 +10,7 @@ final class J93AfterQuitTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndFailClosedSelection() throws {
         let fixture = try ScenarioRegistry.resolve("J9.3")
-        XCTAssertEqual(fixture.story.node, "32:6494")
+        XCTAssertEqual(fixture.story.node, "J9.3")
         XCTAssertEqual(fixture.story.status, "implemented")
         let args = ["--watt-fixture", "J9.3/base"]
         XCTAssertEqual(try FixtureLaunchSelection.parse(args)?.smokeLaunchArguments(), args)

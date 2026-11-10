@@ -1,3 +1,0 @@
-7de9c607b695153a9ec739336b421a60f00af96f7228f44599ac3101760c299b  docs/evidence/J1.6/figma-frame.png
-f55487bc072dfb668d27162967483148eeec0a5a690062c6ed99a66fc82f134b  docs/evidence/J1.6/native-window.png
-a244963bc0124277e2d6b9cec271cdd4de063819b3eb79d83463078eb555e7e2  docs/evidence/J1.6/actual-content.png

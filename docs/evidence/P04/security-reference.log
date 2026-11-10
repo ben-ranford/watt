@@ -1,6 +1,0 @@
-Apple official API reference inspected 2026-09-20:
-https://developer.apple.com/tutorials/data/documentation/security/secstaticcodecheckvalidity(_:_:_:).json
-Summary: static code validation accepts a code object, flags and an optional signing requirement. This API is a future installation-driver obligation, not called by P04.
-CryptoKit official reference inspected:
-https://developer.apple.com/tutorials/data/documentation/cryptokit/curve25519/signing/publickey/isvalidsignature(_:for:).json
-Summary: public-key signature verification supports the detached signed-data fixture checks.

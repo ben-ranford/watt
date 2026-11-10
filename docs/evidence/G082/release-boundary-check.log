@@ -1,3 +1,0 @@
-PASS: former module-resolution diagnostic is absent; fixture-boundary compile errors remain
-PASS: arm64 Release app contains no J13FixtureLaunch, ScenarioRegistry, sampleOnBattery, or sampleChargingHold symbols
-PASS: x86_64 Release app contains no J13FixtureLaunch, ScenarioRegistry, sampleOnBattery, or sampleChargingHold symbols

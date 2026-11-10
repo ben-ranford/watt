@@ -26,7 +26,7 @@ final class J41WelcomeDesktopTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testFixtureRegistryAndIsolation() throws {
         let selection = try ScenarioRegistry.resolve("J4.1", variant: "base")
-        XCTAssertEqual(selection.story.node, "30:2275")
+        XCTAssertEqual(selection.story.node, "J4.1")
         XCTAssertNoThrow(try selection.story.requireRenderTarget())
         XCTAssertEqual(try FixtureLaunchSelection.parse(["Watt", "--watt-fixture", "J4.1/base"])?
             .smokeLaunchArguments(), ["--watt-fixture", "J4.1/base"])

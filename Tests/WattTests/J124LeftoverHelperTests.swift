@@ -18,7 +18,7 @@ final class J124LeftoverHelperTests: XCTestCase {
         XCTAssertNotEqual(alert.buttons[1].keyEquivalent, "\u{1b}")
         XCTAssertNil(alert.accessoryView)
         let fixture = try ScenarioRegistry.resolve("J12.4")
-        XCTAssertEqual(fixture.story.node, "35:5746")
+        XCTAssertEqual(fixture.story.node, "J12.4")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J12.4/base"])
         for value in ["J12.4", "J12.4/dark", "J12.4/base/extra"] {

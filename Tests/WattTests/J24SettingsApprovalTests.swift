@@ -29,7 +29,7 @@ final class J24SettingsApprovalTests: XCTestCase {
         XCTAssertTrue(helper.registeredReceipts.isEmpty)
         XCTAssertEqual(setup.approvals.checkpoint.origins[.settings]?.interested, true)
         let fixture = try ScenarioRegistry.resolve("J2.4")
-        XCTAssertEqual(fixture.story.node, "29:3926")
+        XCTAssertEqual(fixture.story.node, "J2.4")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(),
                        ["--watt-fixture", "J2.4/base"])
         XCTAssertThrowsError(try FixtureLaunchSelection.story(ScenarioRegistry.resolve("J2.4", variant: "dark")).smokeLaunchArguments())

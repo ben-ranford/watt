@@ -67,10 +67,10 @@ struct OnboardingFlowView: View {
     private var routeShell: some View {
         WattWindowScaffold(title: "Onboarding shell") {
             VStack(alignment: .leading, spacing: WattSpacing.md) {
-                Text("The Figma onboarding frames are intentionally tracked as separate stories in SCREEN-BACKLOG.md.")
+                Text("Setup for this step is not available.")
                     .font(WattTypography.body)
                 LabeledContent("Current route", value: preferences.onboarding.checkpoint.label)
-                Text("This phase establishes the scene and typed route only; helper approval and screen transitions are not simulated.")
+                Text("Close the window to leave Watt? running with your current settings.")
                     .font(WattTypography.subheadline)
                     .foregroundStyle(.secondary)
                 HStack {

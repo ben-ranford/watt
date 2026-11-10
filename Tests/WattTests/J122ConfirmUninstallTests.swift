@@ -10,7 +10,7 @@ final class J122ConfirmUninstallTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndReleasePackageGate() throws {
         let fixture = try ScenarioRegistry.resolve("J12.2")
-        XCTAssertEqual(fixture.story.node, "35:5144")
+        XCTAssertEqual(fixture.story.node, "J12.2")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J12.2/base"])
         for value in ["J12.2", "J12.2/", "J12.2/dark", "J12.2//base", "J12.2/base/extra"] {

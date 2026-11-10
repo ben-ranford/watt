@@ -1,9 +1,0 @@
-{
-  "story": "J8.2",
-  "status": "blocked",
-  "visualPass": false,
-  "score": null,
-  "pixel_diff": null,
-  "comparableCapture": false,
-  "reason": "Native capture was blocked: Accessibility trust was unavailable (AXTrusted=false), and no fixture PID-owned compositor window was present. Screen capture preflight was true; no permission was requested. No synthetic or borrowed screenshot is accepted."
-}

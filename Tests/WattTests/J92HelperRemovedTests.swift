@@ -11,7 +11,7 @@ final class J92HelperRemovedTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndFailClosedSelectors() throws {
         let fixture = try ScenarioRegistry.resolve("J9.2")
-        XCTAssertEqual(fixture.story.node, "32:5844")
+        XCTAssertEqual(fixture.story.node, "J9.2")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertNoThrow(try fixture.story.requireRenderTarget())
         let args = ["Watt", "--watt-fixture", "J9.2/base"]

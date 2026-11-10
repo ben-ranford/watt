@@ -27,16 +27,6 @@ final class F05FixtureTests: XCTestCase {
             XCTAssertEqual(fixture.componentIDs, ["cpu", "gpu", "display", "other"])
         }
     }
-    func testBacklogAndPinnedReferenceMatch() throws {
-        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-        let backlog = try String(contentsOf: root.appendingPathComponent("SCREEN-BACKLOG.md"), encoding: .utf8)
-        for story in ScenarioRegistry.stories {
-            let row = try XCTUnwrap(backlog.split(separator: "\n").first { $0.contains("**" + story.id + "**") })
-            XCTAssertTrue(row.contains("[`" + story.node + "`]"))
-            XCTAssertTrue(row.contains(story.state))
-            XCTAssertTrue(row.contains(story.frame))
-        }
-    }
     func testUnknownIDsAndVariantsFail() {
         for id in ["", "C04", "J13.1", "C01/../../", "c01"] {
             XCTAssertThrowsError(try ScenarioRegistry.resolve(id))
@@ -414,9 +404,8 @@ final class C03ContextMenuTests: XCTestCase {
         let nativeItem = NSMenuItem()
         for (surface, expectedWidth) in [(menu, StatusItemContextMenu.referenceMenuWidth),
                                           (submenu, StatusItemContextMenu.referenceReadingsMenuWidth)] {
-            // AppKit owns geometry and typography. The public minimumWidth
-            // property carries the exact Figma component bounds without
-            // replacing native rows or painting custom chrome.
+            // AppKit owns geometry and typography. minimumWidth sets the menu
+            // width without replacing native rows or painting custom chrome.
             XCTAssertEqual(surface.minimumWidth, expectedWidth)
             XCTAssertEqual(surface.font, nativeMenu.font)
             XCTAssertTrue(surface.showsStateColumn)
@@ -583,7 +572,7 @@ final class C041StatusItemTests: XCTestCase {
             XCTAssertNil(WattFixtureLaunchGate.rejection(arguments: ["Watt", "--watt-fixture", selector]))
             #endif
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.1").story.node, "24:390")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.1").story.node, "C04.1")
         for args in [["--watt-fixture=C04.1"], ["--watt-fixture", "C04.1/unknown"],
                      ["--watt-fixture", "C04.1", "--watt-fixture", "C03"]] {
             XCTAssertNotNil(WattFixtureLaunchGate.rejection(arguments: ["Watt"] + args))
@@ -649,7 +638,7 @@ final class C042StatusItemTests: XCTestCase {
             #endif
             XCTAssertFalse(C042FixtureLaunch.captureRequested(arguments: args + ["--watt-c041-capture-directory", "/tmp"]))
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.2").story.node, "24:639")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.2").story.node, "C04.2")
         for sibling in ["C01", "C02", "C03", "C04.1", "C04.3"] {
             XCTAssertFalse(C042FixtureLaunch.matches(arguments: ["--watt-fixture", sibling]))
             XCTAssertFalse(C042FixtureLaunch.captureRequested(arguments: ["--watt-fixture", sibling, "--watt-c042-capture-directory", "/tmp"]))
@@ -736,7 +725,7 @@ final class C043StatusItemTests: XCTestCase {
             #endif
             XCTAssertFalse(C043FixtureLaunch.captureRequested(arguments: args + ["--watt-c041-capture-directory", "/tmp"]))
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.3").story.node, "24:758")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.3").story.node, "C04.3")
         for sibling in ["C01", "C02", "C03", "C04.1", "C04.2"] {
             XCTAssertFalse(C043FixtureLaunch.matches(arguments: ["--watt-fixture", sibling]))
             XCTAssertFalse(C043FixtureLaunch.captureRequested(arguments: ["--watt-fixture", sibling, "--watt-c043-capture-directory", "/tmp"]))
@@ -814,7 +803,7 @@ final class C044StatusItemTests: XCTestCase {
                 XCTAssertFalse(C044FixtureLaunch.captureRequested(arguments: args + [flag, "/tmp"]))
             }
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.4").story.node, "24:877")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.4").story.node, "C04.4")
         for sibling in ["C01", "C02", "C03", "C04.1", "C04.2", "C04.3", "C04.5"] {
             let args = ["Watt", "--watt-fixture", sibling, "--watt-c044-capture-directory", "/tmp"]
             XCTAssertFalse(C044FixtureLaunch.matches(arguments: args))
@@ -926,7 +915,7 @@ final class C045StatusItemTests: XCTestCase {
                 XCTAssertFalse(C045FixtureLaunch.captureRequested(arguments: args + [flag, "/tmp"]))
             }
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.5").story.node, "24:996")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.5").story.node, "C04.5")
         for sibling in ["C01", "C02", "C03", "C04.1", "C04.2", "C04.3", "C04.4"] {
             let args = ["Watt", "--watt-fixture", sibling, "--watt-c045-capture-directory", "/tmp"]
             XCTAssertFalse(C045FixtureLaunch.matches(arguments: args))
@@ -1006,7 +995,7 @@ final class C046StatusItemTests: XCTestCase {
                 XCTAssertFalse(C046FixtureLaunch.captureRequested(arguments: args + [flag, "/tmp"]))
             }
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.6").story.node, "24:1115")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.6").story.node, "C04.6")
         for sibling in ["C01", "C02", "C03", "C04.1", "C04.2", "C04.3", "C04.4", "C04.5"] {
             let args = ["Watt", "--watt-fixture", sibling, "--watt-c046-capture-directory", "/tmp"]
             XCTAssertFalse(C046FixtureLaunch.matches(arguments: args))
@@ -1090,7 +1079,7 @@ final class C047StatusItemTests: XCTestCase {
                 XCTAssertFalse(C047FixtureLaunch.captureRequested(arguments: args + [flag, "/tmp"]))
             }
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.7").story.node, "24:1234")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.7").story.node, "C04.7")
         for sibling in ["C01", "C02", "C03", "C04.1", "C04.2", "C04.3", "C04.4", "C04.5", "C04.6", "C04.8"] {
             let args = ["Watt", "--watt-fixture", sibling, "--watt-c047-capture-directory", "/tmp"]
             XCTAssertFalse(C047FixtureLaunch.matches(arguments: args))
@@ -1162,7 +1151,7 @@ final class C048StatusItemTests: XCTestCase {
                 XCTAssertFalse(C048FixtureLaunch.captureRequested(arguments: args + [flag, "/tmp"]))
             }
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.8").story.node, "24:1353")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.8").story.node, "C04.8")
         for sibling in ["C01", "C02", "C03", "C04.1", "C04.2", "C04.3", "C04.4", "C04.5", "C04.6", "C04.7"] {
             let args = ["Watt", "--watt-fixture", sibling, "--watt-c048-capture-directory", "/tmp"]
             XCTAssertFalse(C048FixtureLaunch.matches(arguments: args))
@@ -1235,7 +1224,7 @@ final class C049StatusItemTests: XCTestCase {
                 XCTAssertFalse(C049FixtureLaunch.captureRequested(arguments: args + [flag, "/tmp"]))
             }
         }
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.9").story.node, "24:1472")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.9").story.node, "C04.9")
         for sibling in ["C01", "C02", "C03", "C04.1", "C04.2", "C04.3", "C04.4", "C04.5", "C04.6", "C04.7", "C04.8"] {
             let args = ["Watt", "--watt-fixture", sibling, "--watt-c049-capture-directory", "/tmp"]
             XCTAssertFalse(C049FixtureLaunch.matches(arguments: args))
@@ -1274,7 +1263,7 @@ final class C0410StatusItemTests: XCTestCase {
         XCTAssertEqual(label.symbolName, "battery.100percent.bolt")
         XCTAssertEqual(C0410FixtureLaunch.itemRect, NSRect(x: 205, y: 5, width: 96, height: 24))
         XCTAssertEqual(C0410FixtureLaunch.captureSize, NSSize(width: 560, height: 44))
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.10").story.node, "24:1591")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.10").story.node, "C04.10")
     }
 
     func testSelectorIsolation() throws {
@@ -1334,7 +1323,7 @@ final class C0411StatusItemTests: XCTestCase {
         XCTAssertEqual(label.symbolName, "battery.100percent.bolt")
         XCTAssertEqual(C0411FixtureLaunch.itemRect, NSRect(x: 205, y: 5, width: 96, height: 24))
         XCTAssertEqual(C0411FixtureLaunch.captureSize, NSSize(width: 560, height: 44))
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.11").story.node, "24:1711")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.11").story.node, "C04.11")
     }
 
     func testSelectorIsolation() throws {
@@ -1393,7 +1382,7 @@ final class C0412StatusItemTests: XCTestCase {
         XCTAssertEqual(label.symbolName, "battery.100percent")
         XCTAssertEqual(C0412FixtureLaunch.itemRect, NSRect(x: 204, y: 5, width: 97, height: 24))
         XCTAssertEqual(C0412FixtureLaunch.captureSize, NSSize(width: 560, height: 44))
-        XCTAssertEqual(try ScenarioRegistry.resolve("C04.12").story.node, "24:1960")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C04.12").story.node, "C04.12")
     }
 
     func testSelectorIsolation() throws {
@@ -1457,7 +1446,7 @@ final class C05SettingsTests: XCTestCase {
         XCTAssertFalse(first.fullyChargedNotification)
         first.showSymbol = false
         XCTAssertTrue(second.showSymbol)
-        XCTAssertEqual(try ScenarioRegistry.resolve("C05").story.node, "25:787")
+        XCTAssertEqual(try ScenarioRegistry.resolve("C05").story.node, "C05")
     }
 
     func testSettingsRoundTripAndMenuBarPrecision() throws {
@@ -1544,7 +1533,7 @@ final class C05SettingsTests: XCTestCase {
 final class J52FixtureTests: XCTestCase {
     func testExactBaseFixtureRegistrationAndLaunch() throws {
         let fixture = try ScenarioRegistry.resolve("J5.2")
-        XCTAssertEqual(fixture.story.node, "30:4028")
+        XCTAssertEqual(fixture.story.node, "J5.2")
         XCTAssertEqual(fixture.story.appearance, "light")
         XCTAssertEqual(fixture.story.expectedScene, "panel")
         XCTAssertEqual(fixture.story.status, "implemented")
@@ -1599,7 +1588,7 @@ final class J52FixtureTests: XCTestCase {
 final class J53FixtureTests: XCTestCase {
     func testExactBaseFixtureRegistrationAndLaunch() throws {
         let fixture = try ScenarioRegistry.resolve("J5.3")
-        XCTAssertEqual(fixture.story.node, "30:4788")
+        XCTAssertEqual(fixture.story.node, "J5.3")
         XCTAssertEqual(fixture.story.appearance, "light")
         XCTAssertEqual(fixture.story.expectedScene, "contextMenu")
         XCTAssertEqual(fixture.story.status, "implemented")

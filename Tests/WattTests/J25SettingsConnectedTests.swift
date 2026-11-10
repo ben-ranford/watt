@@ -148,7 +148,7 @@ final class J25SettingsConnectedTests: XCTestCase {
 
     func testRegistryPinsExactNodeAndRejectsUnsupportedVariants() throws {
         let fixture = try ScenarioRegistry.resolve("J2.5")
-        XCTAssertEqual(fixture.story.node, "29:4590")
+        XCTAssertEqual(fixture.story.node, "J2.5")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J2.5/base"])
         for variant in ["dark", "unknown", "live", "revoked"] {
             XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J2.5/" + variant]))

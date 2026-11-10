@@ -11,7 +11,7 @@ final class J82ReadingsResumeTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactStoryMetadataAndSelector() throws {
         let fixture = try ScenarioRegistry.resolve("J8.2")
-        XCTAssertEqual(fixture.story.node, "32:4456")
+        XCTAssertEqual(fixture.story.node, "J8.2")
         XCTAssertEqual(fixture.story.frame, "8.2 Readings resume automatically (no alert)")
         XCTAssertNil(fixture.story.appearance)
         XCTAssertEqual(fixture.story.expectedScene, "statusItem")

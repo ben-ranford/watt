@@ -1,4 +1,0 @@
-PASS: release-app arm64 excludes fixture-only symbols
-PASS: release-app x86_64 excludes fixture-only symbols
-PASS: release-after arm64 excludes fixture-only symbols
-PASS: release-after x86_64 excludes fixture-only symbols

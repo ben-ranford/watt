@@ -20,9 +20,9 @@ let package = Package(
             exclude: [
                 ".gitignore",
                 "AGENTS.md",
-                "DESIGN.md",
                 "Package.swift",
-                "SCREEN-BACKLOG.md",
+                "README.md",
+                "LICENSE",
                 "Tests",
                 "Resources",
                 "Helper",
@@ -32,7 +32,6 @@ let package = Package(
                 "Maintenance",
                 "MaintenanceShared",
                 "Watt.xcodeproj",
-                "docs",
                 "scripts"
             ],
             sources: ["App", "DesignSystem", "Features", "Models", "Services"]

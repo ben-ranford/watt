@@ -16,7 +16,7 @@ final class J108HelperUpdateTests: XCTestCase {
         XCTAssertEqual(alert.buttons.map(\.keyEquivalent), ["\r", "\u{1b}"])
         XCTAssertNil(alert.window.appearance)
         let fixture = try ScenarioRegistry.resolve("J10.8")
-        XCTAssertEqual(fixture.story.node, "34:6183")
+        XCTAssertEqual(fixture.story.node, "J10.8")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J10.8/base"])
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["Watt", "--watt-fixture", "J10.8/other"]))
     }

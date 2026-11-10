@@ -143,7 +143,7 @@ final class J101CheckForUpdatesTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactReferenceAndFixtureRemainFailClosedWithoutProductionComposition() throws {
         let fixture = try ScenarioRegistry.resolve("J10.1")
-        XCTAssertEqual(fixture.story.node, "34:3836")
+        XCTAssertEqual(fixture.story.node, "J10.1")
         XCTAssertEqual(fixture.story.expectedScene, "contextMenu")
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.1"]))
         let selection = try XCTUnwrap(FixtureLaunchSelection.parse(["--watt-fixture", "J10.1/base"]))

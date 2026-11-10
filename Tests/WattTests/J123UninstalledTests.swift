@@ -9,7 +9,7 @@ final class J123UninstalledTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactEmptyFixture() throws {
         let fixture = try ScenarioRegistry.resolve("J12.3")
-        XCTAssertEqual(fixture.story.node, "35:5599")
+        XCTAssertEqual(fixture.story.node, "J12.3")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J12.3/base"])
         for value in ["J12.3", "J12.3/", "J12.3/dark", "J12.3/base/extra", "J12.3/partial-cleanup"] {

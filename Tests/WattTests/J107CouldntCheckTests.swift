@@ -121,7 +121,7 @@ final class J107CouldntCheckTests: XCTestCase {
     }
     #if DEBUG || SWIFT_PACKAGE
     func testFixtureRegistryAndReleaseBoundary() throws {
-        XCTAssertEqual(try ScenarioRegistry.resolve("J10.7").story.node, "34:6003")
+        XCTAssertEqual(try ScenarioRegistry.resolve("J10.7").story.node, "J10.7")
         XCTAssertEqual(try ScenarioRegistry.resolve("J10.7").story.status, "implemented")
         let selection = try XCTUnwrap(FixtureLaunchSelection.parse(["--watt-fixture", "J10.7/base"]))
         XCTAssertEqual(try selection.smokeLaunchArguments(), ["--watt-fixture", "J10.7/base"])

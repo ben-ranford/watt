@@ -10,7 +10,7 @@ final class J21ComponentsUnavailableTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testFixtureAndVariantsFailClosed() throws {
         let fixture = try ScenarioRegistry.resolve("J2.1")
-        XCTAssertEqual(fixture.story.node, "29:1549")
+        XCTAssertEqual(fixture.story.node, "J2.1")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(),
                        ["--watt-fixture", "J2.1/base"])

@@ -12,7 +12,7 @@ final class J16AllSetTests: XCTestCase {
         XCTAssertEqual(AllSetView.title, "That’s it")
         XCTAssertEqual(AllSetView.message, "Watt? lives in your menu bar. Click it for the detail. Right-click to change the number.")
         let fixture = try ScenarioRegistry.resolve("J1.6")
-        XCTAssertEqual(fixture.story.node, "28:2199")
+        XCTAssertEqual(fixture.story.node, "J1.6")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertEqual(try FixtureLaunchSelection.story(fixture).smokeLaunchArguments(), ["--watt-fixture", "J1.6/base"])
         XCTAssertThrowsError(try ScenarioRegistry.resolve("J1.6", variant: "unavailable"))

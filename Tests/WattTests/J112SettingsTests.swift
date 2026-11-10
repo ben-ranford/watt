@@ -11,7 +11,7 @@ import WattFixtures
 final class J112SettingsTests: XCTestCase {
     func testRegistryAndLaunchContractAreExactBaseOnly() throws {
         let fixture = try ScenarioRegistry.resolve("J11.2")
-        XCTAssertEqual(fixture.story.node, "36:5186")
+        XCTAssertEqual(fixture.story.node, "J11.2")
         XCTAssertEqual(fixture.story.frame, "11.2 Settings — control labels & keyboard")
         XCTAssertEqual(fixture.story.expectedScene, "settings")
         XCTAssertEqual(fixture.story.variants, ["base"])

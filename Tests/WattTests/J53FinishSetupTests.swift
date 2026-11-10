@@ -223,7 +223,7 @@ final class J53FinishSetupTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureRegistrationAndIsolatedPreparation() throws {
         let fixture = try ScenarioRegistry.resolve("J5.3")
-        XCTAssertEqual(fixture.story.node, "30:4788")
+        XCTAssertEqual(fixture.story.node, "J5.3")
         XCTAssertEqual(fixture.story.appearance, "light")
         XCTAssertEqual(fixture.story.variants, ["base"])
         XCTAssertEqual(fixture.story.status, "implemented")

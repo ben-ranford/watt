@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "<stdin>", line 8, in <module>
-  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/xml/etree/ElementTree.py", line 1367, in XML
-    return parser.close()
-           ~~~~~~~~~~~~^^
-xml.etree.ElementTree.ParseError: no element found: line 17, column 14
-Watt.xcodeproj/project.pbxproj: OK

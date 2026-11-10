@@ -1,7 +1,0 @@
-shell syntax: PASS
-Swift 6 typecheck with warnings as errors: PASS
-.build/p03-read-only/P03StatusProbe.app/Contents/Info.plist: OK
-JSON evidence / distinct processes / matching fresh statuses: PASS
-Swift mutation API source scan: PASS (also manually reviewed complete runner/source)
-new script / documentation trailing-whitespace check: PASS
-git diff --check: PASS

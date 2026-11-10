@@ -13,7 +13,7 @@ public struct StoryFixture: Codable, Equatable, Sendable {
     public let navigation: String
     public let expectedScene: String
     public let appearance: String?
-    /// Verbatim F00 record, including export hashes, bounds and unresolved crop metadata.
+    /// Stable scenario identity recorded with each fixture.
     public let referenceJSON: String
     public let variants: [String]
     public let acceptance: String

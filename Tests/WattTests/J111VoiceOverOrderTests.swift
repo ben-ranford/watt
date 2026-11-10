@@ -13,7 +13,7 @@ import WattFixtures
 final class J111VoiceOverOrderTests: XCTestCase {
     func testRegistryAndLaunchContractAreExactBaseOnly() throws {
         let fixture = try ScenarioRegistry.resolve("J11.1")
-        XCTAssertEqual(fixture.story.node, "36:5057")
+        XCTAssertEqual(fixture.story.node, "J11.1")
         XCTAssertEqual(fixture.story.frame, "11.1 Status item + panel — VoiceOver order")
         XCTAssertEqual(fixture.story.expectedScene, "panel")
         XCTAssertEqual(fixture.story.variants, ["base"])

@@ -1,3 +1,0 @@
-bash -n: passed
-shellcheck: passed
-scoped git diff --check: passed

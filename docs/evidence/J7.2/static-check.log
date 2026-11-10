@@ -1,5 +1,0 @@
-docs/evidence/J7.2/reference.png: OK
-.build/xcode/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: no symbols
-J7.2 exact reference digest, shared native label/bridge, fixture isolation and script checks passed
-StatusItemContextMenu, MenuBarRootView, PowerReading and PreferencesStore unchanged from slice baseline
-Debug fixture symbols present; Release fixture symbols, registry and selector strings absent

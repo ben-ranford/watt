@@ -215,7 +215,7 @@ struct UpdateReadyContent: View {
     }
 }
 
-// J10.4: native controls/chrome take precedence over OS-version-specific Figma pixels.
+// Native controls and chrome follow the system, including across OS versions.
 struct UpdateDownloadingContent: View {
     @ObservedObject var router: AppRouter
     @ObservedObject var store: UpdateStore

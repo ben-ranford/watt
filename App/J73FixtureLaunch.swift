@@ -77,7 +77,7 @@ enum J73FixtureLaunch {
                     $0.isVisible && !existing.contains($0.windowNumber)
                 }.map { ["windowNumber": $0.windowNumber, "class": String(describing: type(of: $0))] }
                 let record: [String: Any] = [
-                    "fixture": "J7.3/base", "reference": "31:7102",
+                    "fixture": "J7.3/base",
                     "processIdentifier": ProcessInfo.processInfo.processIdentifier,
                     "settingsWindowNumber": window.windowNumber, "title": window.title,
                     "appearance": window.effectiveAppearance.name.rawValue,

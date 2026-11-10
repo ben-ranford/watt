@@ -1,5 +1,0 @@
-docs/evidence/J7.4/reference.png: OK
-.build/xcode/Build/Products/Debug/Watt.app/Contents/MacOS/__preview.dylib: no symbols
-J7.4 exact reference digest, shared native template icon/accessibility and fixture isolation passed
-All baseline sources outside the nine declared edited files preserved, including broad native/safety guards and J7.1/J7.2 tests
-Debug fixture symbols present; Release fixture symbols, registry and selector strings absent

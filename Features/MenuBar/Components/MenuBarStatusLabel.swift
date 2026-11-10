@@ -125,7 +125,7 @@ struct MenuBarStatusLabel: View {
             }
             return reading.batteryState == .discharging ? "battery.100percent" : "bolt.fill"
         }
-        // Exact Figma charging/full glyph (24:636, 24:874) and battery glyph (24:755).
+        // Charging and full states use the bolt glyph. Discharging uses the battery glyph.
         if isAvailableBatteryDelta && (reading.batteryState == .charging
             || ([BatteryState.full, .chargingHold].contains(reading.batteryState)
                 && reading.capabilities.charger == .available)) {

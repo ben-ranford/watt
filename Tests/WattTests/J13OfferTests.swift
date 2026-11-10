@@ -17,7 +17,7 @@ final class J13OfferTests: XCTestCase {
         XCTAssertEqual(OfferComponentReadingsView.facts.map(\.value), ["CPU/GPU power estimates", "Never", "Any time, in Settings"])
         let selection = try ScenarioRegistry.resolve("J1.3", variant: "base")
         XCTAssertEqual(selection.stableID, "J1.3/base")
-        XCTAssertEqual(selection.story.node, "27:1584")
+        XCTAssertEqual(selection.story.node, "J1.3")
         XCTAssertNoThrow(try selection.story.requireRenderTarget())
     }
     #endif
@@ -147,8 +147,8 @@ final class J13OfferTests: XCTestCase {
         XCTAssertEqual(window.appearance?.name, .aqua)
         XCTAssertNotNil(window.standardWindowButton(.closeButton))
         XCTAssertEqual(window.frame.size, NSSize(width: 480, height: 412))
-        // DESIGN.md leaves grouped Form intrinsic metrics to macOS; allow narrow
-        // OS-owned fitting-size variation without forcing row/form heights.
+        // Grouped Form intrinsic metrics belong to macOS; allow narrow
+        // OS-owned fitting-size variation without forcing row or form heights.
         XCTAssertLessThanOrEqual(window.contentView!.fittingSize.height, 424)
         window.close()
         XCTAssertEqual(preferences.onboarding, initial)

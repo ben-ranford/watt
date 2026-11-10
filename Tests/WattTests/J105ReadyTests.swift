@@ -108,7 +108,7 @@ final class J105ReadyTests: XCTestCase {
     func testFixture() throws {
         let selection = try XCTUnwrap(FixtureLaunchSelection.parse(["--watt-fixture", "J10.5/base"]))
         XCTAssertEqual(try selection.smokeLaunchArguments(), ["--watt-fixture", "J10.5/base"])
-        XCTAssertEqual(try ScenarioRegistry.resolve("J10.5").story.node, "34:5608")
+        XCTAssertEqual(try ScenarioRegistry.resolve("J10.5").story.node, "J10.5")
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.5"]))
         XCTAssertThrowsError(try FixtureLaunchSelection.parse(["--watt-fixture", "J10.5/other"]))
     }

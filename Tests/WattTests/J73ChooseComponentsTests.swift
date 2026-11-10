@@ -188,7 +188,7 @@ final class J73ChooseComponentsTests: XCTestCase {
         let selection = try XCTUnwrap(FixtureLaunchSelection.parse(arguments))
         XCTAssertEqual(try selection.smokeLaunchArguments(), Array(arguments.dropFirst()))
         let story = try ScenarioRegistry.resolve("J7.3").story
-        XCTAssertEqual(story.node, "31:7102")
+        XCTAssertEqual(story.node, "J7.3")
         XCTAssertEqual(story.expectedScene, "settings")
         XCTAssertEqual(story.appearance, "light")
         XCTAssertEqual(story.variants, ["base"])

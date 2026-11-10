@@ -11,7 +11,7 @@ final class J91RemoveHelperTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactFixtureAndFailClosedSelectors() throws {
         let fixture = try ScenarioRegistry.resolve("J9.1")
-        XCTAssertEqual(fixture.story.node, "32:5397")
+        XCTAssertEqual(fixture.story.node, "J9.1")
         XCTAssertEqual(fixture.story.expectedScene, "alert")
         XCTAssertEqual(fixture.story.status, "implemented")
         XCTAssertNoThrow(try fixture.story.requireRenderTarget())

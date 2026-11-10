@@ -1,9 +1,0 @@
-Command line invocation:
-    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Debug -destination platform=macOS -parallel-testing-enabled NO -derivedDataPath build/J111-Debug test-without-building "-only-testing:WattTests/J111VoiceOverOrderTests"
-
---- xcodebuild: WARNING: Using the first of multiple matching destinations:
-{ platform:macOS, arch:arm64, id:00006000-001C25641121801E, name:My Mac }
-{ platform:macOS, arch:x86_64, id:00006000-001C25641121801E, name:My Mac }
-** BUILD INTERRUPTED **
-
-[runner] explicit -parallel-testing-enabled NO stalled after destination selection; no test worker/test case output was emitted.

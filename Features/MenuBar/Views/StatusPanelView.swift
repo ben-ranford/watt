@@ -78,9 +78,9 @@ struct StatusPanelModel {
     var summaryLabel: String { hasNoReading ? NoReadingPresentation.title : isDesktop ? "System draw status" : "Battery status" }
     var showsComponents: Bool { includesComponents && !setupIncomplete && !hasNoReading && !hasOptimisedChargingHold && !hasFullOnAdapter && !hasInsufficientCharger }
     /// Compact states contain only the three-row power table. Let the native
-    /// Form report its content height instead of constraining it to the old
-    /// fixed Figma frame, which made the Form's scroll container compete with
-    /// the rows for vertical space.
+    /// Form report its content height instead of constraining it to a fixed
+    /// frame, which made the Form's scroll container compete with the rows
+    /// for vertical space.
     var usesIntrinsicPowerTableHeight: Bool {
         !setupIncomplete && !isDesktop && (hasNoReading || !showsComponents)
     }
@@ -379,7 +379,7 @@ enum SetupPromptPresentation {
 }
 
 
-// SF Pro's filled warning-triangle glyph in node 29:9749 maps to this native SF Symbol.
+// The filled warning triangle maps to this native SF Symbol.
 enum HelperOffPresentation {
     static let title = "Helper is off"
     static let subtitle = "Showing Delta until it’s back."
