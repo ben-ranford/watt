@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Render Casks/watt.rb for ben-ranford/homebrew-tap.
 
-The cask installs the GitHub Release zip. It does not strip the quarantine
-attribute: current Homebrew rejects --no-quarantine, and Gatekeeper stays on.
-The caveats tell the user how to approve the first launch.
+The cask installs the GitHub Release zip. A postflight block removes the
+quarantine attribute with xattr. Homebrew rejects --no-quarantine, so the
+cask does not use that flag. Direct zip and disk-image downloads still need
+the Finder Open step; that text stays in the README, not in the cask caveats.
 """
 
 from __future__ import annotations
@@ -29,9 +30,8 @@ MACOS_CASK_SYMBOL = {
 }
 
 CAVEATS = """\
-Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launch.
-In Finder, Control-click Watt and choose Open, then choose Open.
-If macOS still blocks it, open System Settings → Privacy & Security and choose Open Anyway.
+Watt is ad-hoc signed and is not notarised.
+This cask removes the quarantine attribute so Gatekeeper does not block the first launch.
 """
 
 
@@ -81,6 +81,10 @@ def render_cask(*, version: str, sha256: str, bundle_id: str, minimum_system_ver
   app "Watt.app"
 
   auto_updates true
+
+  postflight do
+    system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{{appdir}}/Watt.app"]
+  end
 
   zap trash: [
     {trash},

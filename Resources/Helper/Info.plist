@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0"><dict>
-<key>CFBundleIdentifier</key><string>dev.watt.verification.helper</string>
-<key>CFBundleName</key><string>WattHelper</string>
-<key>CFBundleExecutable</key><string>WattHelper</string>
-<key>CFBundleVersion</key><string>1</string>
-<key>WATTSigningTeam</key><string>$(DEVELOPMENT_TEAM)</string>
-<key>WATTHelperTrustMode</key><string>$(WATT_HELPER_TRUST_MODE)</string>
-</dict></plist>
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>WattHelper</string>
+	<key>CFBundleIdentifier</key>
+	<string>io.github.ben-ranford.watt.helper</string>
+	<key>CFBundleName</key>
+	<string>WattHelper</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>WATTHelperTrustMode</key>
+	<string>$(WATT_HELPER_TRUST_MODE)</string>
+	<key>WATTSigningTeam</key>
+	<string>$(DEVELOPMENT_TEAM)</string>
+</dict>
+</plist>

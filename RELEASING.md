@@ -7,7 +7,7 @@ Releases are cut from `main` by [Release Please](https://github.com/googleapis/r
 The manifest starts at **1.0.0**.
 
 - There are no git tags.
-- `Resources/ReleaseIdentity.json` is the reviewed local identity: `dev.watt.verification`, build `1`.
+- `Resources/ReleaseIdentity.json` is the reviewed release config: bundle id `io.github.ben-ranford.watt`, build `1`, and the GitHub Pages update URLs.
 - The settings screen falls back to `1.0` when `CFBundleShortVersionString` is missing, and Xcode's marketing version was unset. `Config/Version.xcconfig` now sets it to `1.0.0`.
 - `bootstrap-sha` in `release-please-config.json` is `e66b12fb2b4b705ee3610c102374efc2f0cf3706`, the commit before this pipeline. Older history is not replayed into the first changelog.
 
@@ -30,7 +30,7 @@ MAJOR * 1000000 + MINOR * 1000 + PATCH
 | 1.1.0 | 1001000 |
 | 1.2.3 | 1002003 |
 
-Minor and patch must stay below 1000. `1.0.0` / build `1` remains valid only on the unreleased tree. A tagged release must use the encoded build, which is greater than `1`, so an existing verification install can still move forward.
+Minor and patch must stay below 1000. `1.0.0` / build `1` remains valid only on the unreleased tree. A tagged release must use the encoded build, which is greater than `1`. The app has not shipped, so nothing migrates from the old `dev.watt.verification` id.
 
 `scripts/configure-release-identity.py` (check mode, no `--write`) runs on the macOS runner and must pass before the archive is uploaded. Use that script's `--input` and `--write` yourself when you change the bundle identifier. Do not point it at a file that contains a private key.
 
@@ -41,7 +41,8 @@ Minor and patch must stay below 1000. `1.0.0` / build `1` remains valid only on 
 1. **Release Please** opens or updates one pull request, branch `release-please--branches--main`. When that pull request is merged it creates a **draft** GitHub Release and tag `vX.Y.Z`.
 2. While the pull request is open, the same job syncs `CFBundleVersion` onto that branch. Wait until that job is green before merging, so the tag contains the encoded build.
 3. **Build and publish** checks out the release commit on `xcode-27` (the same runner and Xcode 27 selection as CI), runs `xcodebuild -showBuildSettings`, archives the `Watt` scheme in the Release configuration with an ad-hoc signature, and uploads artifacts. A successful upload marks the release as published. A failed build leaves the draft in place; delete that draft if you are not going to retry it.
-4. **Homebrew cask**, only after that publish, downloads the published zip, hashes it, and commits `Casks/watt.rb` to `main` on `ben-ranford/homebrew-tap`. The tap's formula bumps already land that way, as `github-actions[bot]` commits. If `HOMEBREW_TAP_TOKEN` is unset, the job prints a notice and exits successfully. It does not update the tap from a draft.
+4. **Homebrew cask**, only after that publish, downloads the published zip, hashes it, and commits `Casks/watt.rb` to `main` on `ben-ranford/homebrew-tap`. The rendered cask removes the quarantine attribute in `postflight`. The tap's formula bumps already land that way, as `github-actions[bot]` commits. If `HOMEBREW_TAP_TOKEN` is unset, the job prints a notice and exits successfully. It does not update the tap from a draft.
+5. **GitHub Pages**, only after that publish, downloads `Watt-X.Y.Z-update-manifest.json` and `Watt-X.Y.Z.tar` from the same release and deploys both as `updates/manifest.json` and `updates/Watt.tar`. One `actions/upload-pages-artifact` plus one `actions/deploy-pages` replaces the site, so the manifest and the tar change together. If the signed manifest is absent, the job skips the deploy and exits successfully. The job's token has `pages: write` and `id-token: write`, and it uses the `github-pages` environment. In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions**. Do not add a custom domain.
 
 The `test` job has `contents: read`. Release Please adds `contents`, `pull-requests`, and `issues` write so it can open the pull request and tag. The build job has only `contents: write`. Third-party actions are pinned to commit SHAs. Release names and tags are passed to scripts through the environment and checked against `vMAJOR.MINOR.PATCH` before they are used.
 
@@ -62,15 +63,20 @@ In the repository settings, enable **Allow GitHub Actions to create and approve 
 
 The manifest is `SignedUpdate`: base64 `payload` and base64 `signature`. The payload is the compact JSON `UpdateManifest` (`identity`, `build`, `sha256`, `minimumSystemVersion`) in `JSONEncoder`'s default layout. The signature is Ed25519 over those exact payload bytes.
 
-`distribution-preflight` fails while the bundle identifier is still `dev.watt.verification`, or while the update URL and public key are absent. The job still uploads the app and the preflight log. It does **not** upload an update manifest in that case, even if the signing key secret is set. Publishing a manifest for an unprovisioned identity would give the updater nothing it can accept.
+`distribution-preflight` fails while the bundle identifier starts with `dev.watt.verification`, while the compiled update URLs differ from `Resources/ReleaseIdentity.json`, or while the Ed25519 public key is absent. The job still uploads the app and the preflight log. It does **not** upload an update manifest in that case, and the Pages job does not deploy. Publishing a manifest the installed app cannot accept would give the updater nothing it can use.
 
 ## Updater endpoints
 
-`WATTUpdateManifestURL` and `WATTUpdateArtifactURL` are compiled into the app from secrets. Both must be `https`, with no user, password, query, or fragment. `ProductionUpdateSource` allows a few redirects only when the host stays the same.
+`WATTUpdateManifestURL` and `WATTUpdateArtifactURL` are compiled into the app from `Resources/ReleaseIdentity.json`. Both must be `https`, with no user, password, query, or fragment. `ProductionUpdateSource` allows a few redirects only when the host stays the same.
 
-GitHub's `releases/download` URLs redirect to `release-assets.githubusercontent.com`. The updater rejects that redirect. Put the manifest and the tar on one host you control and keep those two URLs stable: the copy of Watt that is already installed keeps fetching the URLs it was built with. After each release, copy the new manifest bytes and the new tar bytes to those URLs. The versioned GitHub Release files are the source you copy from.
+The stable URLs are:
 
-The public key embedded as `WATTUpdatePublicKey` is derived from `WATT_UPDATE_SIGNING_KEY`. Existing administrator installations still need that same 32-byte key through the installer's separate `provisionReleaseKey` path. The workflow does not install or rotate a protected generation.
+- `https://ben-ranford.github.io/watt/updates/manifest.json`
+- `https://ben-ranford.github.io/watt/updates/Watt.tar`
+
+`ben-ranford.github.io` serves that host directly. There is no custom domain, so these URLs do not redirect to another host. GitHub's `releases/download` URLs redirect to `release-assets.githubusercontent.com`, which the updater rejects, so the Pages copies are what the app fetches. The versioned GitHub Release files are the bytes the workflow copies. A release without `WATT_UPDATE_SIGNING_KEY` still archives. Preflight then fails because `WATTUpdatePublicKey` is missing, and no manifest is signed or deployed.
+
+The public key embedded as `WATTUpdatePublicKey` is derived from `WATT_UPDATE_SIGNING_KEY`. Existing administrator installations still need that same 32-byte key through the installer's separate `provisionReleaseKey` path. The workflow does not install or rotate a protected generation. The uncompressed `Watt.tar` for this app is the ustar of `Watt.app`. The source tree, one icon, and the system Swift runtime put that well under GitHub's 100 MiB file limit. The Pages job refuses a tar above that limit instead of choosing another host.
 
 ## Signing
 
@@ -88,16 +94,14 @@ Create these in **Settings → Secrets and variables → Actions**. None of thes
 
 | Secret | Contents |
 | --- | --- |
-| `WATT_UPDATE_SIGNING_KEY` | Base64 of an Ed25519 PKCS#8 PEM. This is the only copy the workflow needs. |
-| `WATT_UPDATE_MANIFEST_URL` | Stable HTTPS URL of the signed manifest. |
-| `WATT_UPDATE_ARTIFACT_URL` | Stable HTTPS URL of the ustar tar. |
+| `WATT_UPDATE_SIGNING_KEY` | Base64 of an Ed25519 PKCS#8 PEM. This is the only update secret. |
 
 ```sh
 openssl genpkey -algorithm ED25519 -out watt-update.pem
 base64 -i watt-update.pem | tr -d '\n'
 ```
 
-Keep `watt-update.pem` offline. The workflow derives the public key and can print it into the built app; it never writes the private key into the repository or the release log. Set both URLs together with the key. URLs without the key fail the build. The key without the URLs skips embedding and, because preflight then fails, skips the manifest.
+Keep `watt-update.pem` offline. The workflow derives the public key and can print it into the built app; it never writes the private key into the repository or the release log. The manifest and tar URLs are not secrets. Delete `WATT_UPDATE_MANIFEST_URL` and `WATT_UPDATE_ARTIFACT_URL` if they were added earlier. Without the signing key the archive still builds, distribution preflight fails cleanly, and Pages is left unchanged.
 
 ### Homebrew tap
 
@@ -110,17 +114,18 @@ The token pushes `Casks/watt.rb` to that repository's `main` branch. Leave it un
 ## First release
 
 1. Merge this change. A squash title starting with `ci:` does not open a release by itself.
-2. Remove any Apple signing or notarization secrets. Add the update secrets when you want a manifest, and add `HOMEBREW_TAP_TOKEN` when you want the cask commit. An ad-hoc archive does not need either.
-3. When you want the first tag to be exactly `v1.0.0`, add `"release-as": "1.0.0"` to the `.` package in `release-please-config.json` and push to `main`. Release Please opens a pull request that should also contain `chore: sync CFBundleVersion to the release marketing version` (build `1000000`). Merge that pull request, then delete `release-as` before the next release. Leaving `release-as` in the file pins every later release to the same version.
-4. If you skip `release-as`, the next `fix:` on `main` proposes `1.0.1` and the next `feat:` proposes `1.1.0`.
-5. After the macOS job publishes the release, read `distribution-preflight.txt`. It stays blocked until you replace `dev.watt.verification` with the production bundle identifier and the update secrets are present.
-6. If preflight passed, copy `Watt-X.Y.Z-update-manifest.json` to `WATT_UPDATE_MANIFEST_URL` and `Watt-X.Y.Z.tar` to `WATT_UPDATE_ARTIFACT_URL`.
+2. Make the repository public before the first release. The Pages job clones the release commit and downloads the release assets without a contents token, and `ben-ranford.github.io` only serves a public project site.
+3. In **Settings → Pages → Build and deployment**, set **Source** to **GitHub Actions**. Leave the custom domain empty. That creates the `github-pages` environment the deploy job uses.
+4. Remove any Apple signing or notarization secrets, and remove `WATT_UPDATE_MANIFEST_URL` and `WATT_UPDATE_ARTIFACT_URL` if they exist. Add `WATT_UPDATE_SIGNING_KEY` when you want a signed manifest. Add `HOMEBREW_TAP_TOKEN` when you want the cask commit. An ad-hoc archive does not need either secret; without the signing key, preflight fails and Pages is not updated.
+5. When you want the first tag to be exactly `v1.0.0`, add `"release-as": "1.0.0"` to the `.` package in `release-please-config.json` and push to `main`. Release Please opens a pull request that should also contain `chore: sync CFBundleVersion to the release marketing version` (build `1000000`). Merge that pull request, then delete `release-as` before the next release. Leaving `release-as` in the file pins every later release to the same version.
+6. If you skip `release-as`, the next `fix:` on `main` proposes `1.0.1` and the next `feat:` proposes `1.1.0`.
+7. After the macOS job publishes the release, read `distribution-preflight.txt`. With the signing key set, preflight passes for `io.github.ben-ranford.watt` and the Pages job publishes both update files. The installed app then fetches the stable URLs above.
 
 ## Decisions still open
 
-- The production bundle identifier is still `dev.watt.verification`. Distribution preflight is written to refuse that prefix, so the first archives will not publish an update manifest until it changes. The Homebrew cask reads the identifier from the published zip and uses it in the zap paths.
-- Where the stable manifest and tar are hosted. GitHub Release asset URLs are not usable as `WATTUpdate*URL`. The cask does use the Release zip; that is a separate download from the updater.
-- Zip and disk image are both attached for people installing by hand. The updater reads only the tar. The cask uses the zip. Drop either hand-install download later if you do not want it; keep the tar.
+- The production bundle identifier is `io.github.ben-ranford.watt`. Distribution preflight still rejects a bundle id that starts with `dev.watt.verification`.
+- The stable manifest and tar are hosted on GitHub Pages at the two URLs above. Releases stay ad-hoc signed. Developer ID and notarization are not the release path.
+- Zip and disk image are both attached for people installing by hand. The updater reads only the tar. The cask uses the zip and clears quarantine itself. Drop either hand-install download later if you do not want it; keep the tar.
 
 ## What was checked here
 

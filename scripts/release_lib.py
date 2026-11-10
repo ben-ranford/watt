@@ -6,9 +6,10 @@ that semver so the integer keeps increasing:
 
     MAJOR * 1_000_000 + MINOR * 1_000 + PATCH
 
-Minor and patch must stay below 1000. The unreleased verification identity
-(marketing 1.0.0, build 1 in Resources/ReleaseIdentity.json) is the only
-exception, and only for check mode.
+Minor and patch must stay below 1000. The unreleased tree may keep
+marketing 1.0.0 with build 1. A published release uses the encoded build.
+Distribution preflight still rejects bundle identifiers that start with
+dev.watt.verification.
 """
 
 from __future__ import annotations
@@ -125,11 +126,44 @@ def marketing_version(root: Path) -> str:
     return version
 
 
+RELEASE_CONFIG_KEYS = frozenset({'appIdentifier', 'build', 'updateManifestURL', 'updateArtifactURL'})
+
+
+def parse_release_config(data: object) -> dict[str, str | int]:
+    if not isinstance(data, dict) or set(data) != RELEASE_CONFIG_KEYS:
+        raise ReleaseError(
+            'ReleaseIdentity.json must contain only appIdentifier, build, updateManifestURL, and updateArtifactURL'
+        )
+    identity = data['appIdentifier']
+    manifest = data['updateManifestURL']
+    artifact = data['updateArtifactURL']
+    if not isinstance(identity, str) or not isinstance(manifest, str) or not isinstance(artifact, str):
+        raise ReleaseError('release identity fields must be strings')
+    return {
+        'appIdentifier': validate_identity(identity),
+        'build': validate_build(data['build']),
+        'updateManifestURL': validate_update_url(manifest, 'updateManifestURL'),
+        'updateArtifactURL': validate_update_url(artifact, 'updateArtifactURL'),
+    }
+
+
+def dump_release_config(config: dict[str, str | int]) -> str:
+    normalized = parse_release_config(config)
+    return json.dumps(normalized, sort_keys=True, separators=(',', ':')) + '\n'
+
+
+def load_release_config(root: Path) -> dict[str, str | int]:
+    return parse_release_config(json.loads((root / 'Resources/ReleaseIdentity.json').read_text()))
+
+
 def load_identity(root: Path) -> tuple[str, int]:
-    data = json.loads((root / 'Resources/ReleaseIdentity.json').read_text())
-    if set(data) != {'appIdentifier', 'build'}:
-        raise ReleaseError('ReleaseIdentity.json must contain only appIdentifier and build')
-    return validate_identity(data['appIdentifier']), validate_build(data['build'])
+    config = load_release_config(root)
+    return str(config['appIdentifier']), int(config['build'])
+
+
+def load_update_endpoints(root: Path) -> tuple[str, str]:
+    config = load_release_config(root)
+    return str(config['updateManifestURL']), str(config['updateArtifactURL'])
 
 
 def project_build_numbers(text: str) -> list[str]:
@@ -154,12 +188,14 @@ def compiled_build(root: Path) -> int:
 
 def write_identity_build(root: Path, build: int) -> bool:
     """Point every compiled build number at `build`. Return whether anything changed."""
-    identity, _current = load_identity(root)
+    config = load_release_config(root)
+    identity = str(config['appIdentifier'])
     validate_build(build)
     changed = False
+    config['build'] = build
 
     identity_path = root / 'Resources/ReleaseIdentity.json'
-    identity_text = json.dumps({'appIdentifier': identity, 'build': build}, sort_keys=True, separators=(',', ':')) + '\n'
+    identity_text = dump_release_config(config)
     changed |= _replace(identity_path, identity_text)
 
     swift_path = root / 'HelperShared/HelperXPC.swift'

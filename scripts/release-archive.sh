@@ -115,8 +115,10 @@ if [[ "$embed_update" == true ]]; then
   settings+=(
     "INFOPLIST_KEY_WATTUpdateManifestURL=$manifest_url"
     "INFOPLIST_KEY_WATTUpdateArtifactURL=$artifact_url"
-    "INFOPLIST_KEY_WATTUpdatePublicKey=$public_key"
   )
+fi
+if [[ "$signing_key_present" == true ]]; then
+  settings+=("INFOPLIST_KEY_WATTUpdatePublicKey=$public_key")
 fi
 
 echo "Archiving Watt."

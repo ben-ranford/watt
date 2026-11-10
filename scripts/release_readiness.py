@@ -15,8 +15,12 @@ PLACEHOLDER_PREFIX = 'dev.watt.verification'
 PROTECTED_TRUST = 'protected-installation'
 
 
-def distribution_plist_failures(info: dict) -> list[str]:
-    """Extra Info.plist rules for a published release. Empty means pass."""
+def distribution_plist_failures(info: dict, endpoints: tuple[str, str] | None = None) -> list[str]:
+    """Extra Info.plist rules for a published release. Empty means pass.
+
+    `endpoints` is `(manifest URL, artifact URL)` from ReleaseIdentity.json.
+    When it is set, the compiled URLs must match those bytes.
+    """
     failures: list[str] = []
 
     def require(value: bool, reason: str) -> None:
@@ -48,6 +52,10 @@ def distribution_plist_failures(info: dict) -> list[str]:
             and '$' not in value,
             'configured HTTPS endpoint required: ' + key,
         )
+    if endpoints is not None:
+        expected = {'WATTUpdateManifestURL': endpoints[0], 'WATTUpdateArtifactURL': endpoints[1]}
+        for key, want in expected.items():
+            require(info.get(key) == want, 'compiled endpoint must match ReleaseIdentity.json: ' + key)
     try:
         key = base64.b64decode(info.get('WATTUpdatePublicKey', ''), validate=True)
     except (ValueError, TypeError):

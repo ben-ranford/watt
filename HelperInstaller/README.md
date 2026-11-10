@@ -10,7 +10,7 @@ The bundled application must contain `Watt`, `WattHelper`, and `WattMaintenance`
 2. An administrator invokes `WattHelperInstaller --bootstrap-reviewed --source /absolute/path/Watt.app --approval <digest>`. For a newer build, use `--rotate-reviewed` with a freshly reviewed preflight digest.
 3. Open the exact application path printed by the installer as the ordinary user. The installer never runs the GUI as root.
 
-Preflight does not write protected paths. Installation re-copies inputs into root-controlled staging and checks the approved bytes again. It installs the app under `/Library/Application Support/Watt/generations/<installation UUID>-<generation>/Watt.app`, the helper at `/Library/PrivilegedHelperTools/dev.watt.verification.helper`, and its launchd plist at `/Library/LaunchDaemons/dev.watt.verification.helper.plist`. Public hash pins are root-owned `helper-trust.json`; the mutation journal and lock are private. Ancestors must be protected directories, and symlinks are refused.
+Preflight does not write protected paths. Installation re-copies inputs into root-controlled staging and checks the approved bytes again. It installs the app under `/Library/Application Support/Watt/generations/<installation UUID>-<generation>/Watt.app`, the helper at `/Library/PrivilegedHelperTools/io.github.ben-ranford.watt.helper`, and its launchd plist at `/Library/LaunchDaemons/io.github.ben-ranford.watt.helper.plist`. Public hash pins are root-owned `helper-trust.json`; the mutation journal and lock are private. Ancestors must be protected directories, and symlinks are refused.
 
 Old application generations remain available during rotation. One public generation becomes active only after corresponding app/helper bytes are verified and placed. A crash leaves a private journal; a stale app cannot authenticate against the new exact helper pins.
 
@@ -19,11 +19,11 @@ Old application generations remain available during rotation. One public generat
 An administrator can provision an explicit release public key independently of local helper bootstrap:
 
 ```
-WattHelperInstaller --provision-release-key --installation <UUID> --identity dev.watt.verification --public-key <base64 Ed25519 public key>
+WattHelperInstaller --provision-release-key --installation <UUID> --identity io.github.ben-ranford.watt --public-key <base64 Ed25519 public key>
 WattHelperInstaller --rotate-release --installation <UUID> --manifest /absolute/path/manifest.json --archive /absolute/path/release.tar
 ```
 
-The first command refuses to overwrite an existing release trust configuration. The second stages both supplied files before verifying the detached signature, identity, strictly newer build, minimum OS, archive digest, bounded USTAR structure, and actual signed bundle contents. It then performs the same administrator-owned generation rotation. No private signing key is installed or accepted. No production public key or endpoint is supplied by the repository.
+The first command refuses to overwrite an existing release trust configuration. The second stages both supplied files before verifying the detached signature, identity, strictly newer build, minimum OS, archive digest, bounded USTAR structure, and actual signed bundle contents. It then performs the same administrator-owned generation rotation. No private signing key is installed or accepted. The release public key stays out of the repository. The update URLs are committed in `Resources/ReleaseIdentity.json`.
 
 ## Removal and recovery
 
