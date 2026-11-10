@@ -96,7 +96,8 @@ settings=(
   CODE_SIGNING_ALLOWED=YES
   CODE_SIGNING_REQUIRED=YES
   ENABLE_HARDENED_RUNTIME=YES
-  INFOPLIST_KEY_WATTHelperTrustMode=protected-installation
+  # Custom keys. Xcode drops unknown INFOPLIST_KEY_* settings. Resources/App/Info.plist
+  # and Resources/Helper/Info.plist expand this before code signing.
   WATT_HELPER_TRUST_MODE=protected-installation
 )
 
@@ -113,12 +114,12 @@ if [[ "$embed_update" == true ]]; then
     *[[:space:]]*) echo "Refusing update URL." >&2; exit 1 ;;
   esac
   settings+=(
-    "INFOPLIST_KEY_WATTUpdateManifestURL=$manifest_url"
-    "INFOPLIST_KEY_WATTUpdateArtifactURL=$artifact_url"
+    "WATT_UPDATE_MANIFEST_URL=$manifest_url"
+    "WATT_UPDATE_ARTIFACT_URL=$artifact_url"
   )
 fi
 if [[ "$signing_key_present" == true ]]; then
-  settings+=("INFOPLIST_KEY_WATTUpdatePublicKey=$public_key")
+  settings+=("WATT_UPDATE_PUBLIC_KEY=$public_key")
 fi
 
 echo "Archiving Watt."
@@ -155,6 +156,14 @@ esac
 case "$minimum" in
   *[!0-9.]*) echo "Refusing minimum system version." >&2; exit 1 ;;
 esac
+
+# The signed archive must already contain the settings passed above. Distribution
+# preflight failure is non-fatal when the signing key is absent; a dropped plist
+# key is not, because that is what skipped the 1.0.0 manifest.
+python3 scripts/check_archived_plist.py "$app/Contents/Info.plist" \
+  --manifest-url "$manifest_url" \
+  --artifact-url "$artifact_url" \
+  --public-key "$public_key"
 
 archive=$output/Watt-$version.tar
 rm -f "$archive"

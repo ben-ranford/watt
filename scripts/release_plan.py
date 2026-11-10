@@ -84,10 +84,10 @@ def build_plan(
     embed_update = manifest_url != '' and artifact_url != ''
     if embed_update:
         messages.append(
-            'Update endpoints from Resources/ReleaseIdentity.json will be compiled into the app. The updater refuses cross-host redirects, so these URLs must serve the bytes directly.'
+            'Update endpoints from Resources/ReleaseIdentity.json will be compiled into the app as WATT_UPDATE_MANIFEST_URL and WATT_UPDATE_ARTIFACT_URL. The updater refuses cross-host redirects, so these URLs must serve the bytes directly.'
         )
     if key_present:
-        messages.append('WATTUpdatePublicKey will be derived from WATT_UPDATE_SIGNING_KEY.')
+        messages.append('WATT_UPDATE_PUBLIC_KEY will be derived from WATT_UPDATE_SIGNING_KEY and compiled into the app.')
     else:
         messages.append(
             'WATT_UPDATE_SIGNING_KEY is absent. The archive still builds. Distribution preflight fails without the public key, and no manifest is published.'

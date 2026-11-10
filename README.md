@@ -40,7 +40,7 @@ Releases are ad-hoc signed and are not notarised. A root helper supplies Apple's
 
 The helper's sampler runs one fixed command, `/usr/bin/powermetrics` with `-f plist -n 1 -i 1000 -s cpu_power,gpu_power`. It does not accept an executable, arguments, or paths from the app. CPU and GPU estimates appear only when both are available. Display, SSD, and Other are unavailable. Battery delta, charger input, and system draw come from IOKit power sources and do not need the helper.
 
-Release builds set `WATTHelperTrustMode` to `protected-installation`. The helper's XPC requirement is the installed app's cdhash. It does not trust every ad-hoc signature that carries the bundle identifier. A missing or stale pin rejects the caller. It is not replaced with a team requirement or an identifier-only requirement. After an update, that pin changes only when the administrator installer has checked the Ed25519 manifest and the archive SHA-256, or through the reviewed helper-update flow. Both restart the helper with the new record. Certificate trust is the local Apple Development configuration. Distribution preflight rejects it.
+Release builds set `WATTHelperTrustMode` to `protected-installation` by expanding `$(WATT_HELPER_TRUST_MODE)` in the app and helper Info.plist before signing. The local Apple Development configuration sets that build setting to `certificate`. The app selects certificate trust only when the compiled value is exactly `certificate`. The helper's XPC requirement is the installed app's cdhash. It does not trust every ad-hoc signature that carries the bundle identifier. A missing or stale pin rejects the caller. It is not replaced with a team requirement or an identifier-only requirement. After an update, that pin changes only when the administrator installer has checked the Ed25519 manifest and the archive SHA-256, or through the reviewed helper-update flow. Both restart the helper with the new record. Certificate trust is the local Apple Development configuration. Distribution preflight rejects it.
 
 Administrator commands, protected paths, and recovery are in [HelperInstaller/README.md](HelperInstaller/README.md).
 
@@ -52,7 +52,7 @@ The Homebrew cask removes `com.apple.quarantine` from the installed `Watt.app` a
 
 ### Update verification
 
-The app reads two HTTPS URLs compiled from `Resources/ReleaseIdentity.json`:
+The app reads two HTTPS URLs from its Info.plist. Release builds fill `$(WATT_UPDATE_MANIFEST_URL)` and `$(WATT_UPDATE_ARTIFACT_URL)` from `Resources/ReleaseIdentity.json`:
 
 - `https://ben-ranford.github.io/watt/updates/manifest.json`
 - `https://ben-ranford.github.io/watt/updates/Watt.tar`

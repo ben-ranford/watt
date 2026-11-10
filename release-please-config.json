@@ -11,8 +11,7 @@
           "type": "generic",
           "path": "Config/Version.xcconfig"
         }
-      ],
-      "release-as": "1.0.0"
+      ]
     }
   }
 }
