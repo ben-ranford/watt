@@ -68,6 +68,19 @@ try:
         detail = run(['/usr/bin/codesign', '-dv', str(binary)])
         require('Identifier=' + expected + '\n' in detail, 'code identifier mismatch: ' + name)
         require('Signature=adhoc' in detail or 'Authority=' in detail, 'missing code identity: ' + name)
+        require('runtime' in detail, 'hardened runtime required: ' + name)
+        entitlement_result = subprocess.run(
+            ['/usr/bin/codesign', '-d', '--entitlements', ':-', str(binary)],
+            capture_output=True, text=True)
+        entitlements = entitlement_result.stdout + entitlement_result.stderr
+        require(entitlement_result.returncode == 0, 'unable to read entitlements: ' + name)
+        require('com.apple.security.cs.disable-library-validation' not in entitlements,
+                'library validation must stay on: ' + name)
+        require('com.apple.security.app-sandbox' not in entitlements,
+                'app sandbox stays off; /Library trust reads and sibling tools are outside a container: ' + name)
+        if args.mode == 'distribution-preflight' or name != 'Watt':
+            require('com.apple.security.get-task-allow' not in entitlements,
+                    'debugger entitlement must not ship: ' + name)
         if trust_mode == 'certificate':
             require('TeamIdentifier=' + signing_team + '\n' in detail and 'Authority=' in detail,
                     'certificate mode requires configured Apple team signature: ' + name)

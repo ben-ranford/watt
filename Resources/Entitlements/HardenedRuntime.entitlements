@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!--
+  Hardened runtime with no extra entitlements.
+  App Sandbox is intentionally off. Watt reads root-owned trust files under
+  /Library and launches sibling maintenance tools outside an app container.
+  Do not add get-task-allow or disable-library-validation to this file.
+-->
+<dict>
+</dict>
+</plist>
