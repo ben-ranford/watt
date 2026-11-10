@@ -273,6 +273,9 @@ private func itemExists(_ path: String) -> Bool {
     let app = generationRoot.appendingPathComponent("Watt.app")
     let tree = try stage(source, at: app)
     let candidate = try inventory(app, tree: tree)
+    // The staged bytes were already hashed. Dropping quarantine does not change
+    // those cdhashes, and it lets the replaced ad-hoc app launch under Gatekeeper.
+    try QuarantineAttribute.clear(at: app)
     guard try candidate.approval == approval else { throw InstallerError.approvalMismatch }
     guard previous == nil || candidate.build > previous!.build else { throw InstallerError.refused }
     let record = try ProtectedHelperRecord(installationID: installation, generation: generation, build: candidate.build,

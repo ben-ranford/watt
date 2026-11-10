@@ -28,9 +28,11 @@ struct ProductionUpdateComposition {
             stagingDirectory: directory.appendingPathComponent("update-staging", isDirectory: true),
             applicationOwnerUID: record == nil ? geteuid() : 0, witness: AuthenticatedUpdateProcessWitness(),
             requiresAdministrator: { _, _ in
-                // GitHub installations are rotated as one protected app/helper generation by
-                // the fixed administrator installer. No in-process replacement or repinning.
-                true
+                // A protected installation is rotated by the administrator installer.
+                // That path re-verifies the Ed25519 manifest and archive sha256, then
+                // restarts the helper with the new cdhash. An ordinary ad-hoc app
+                // with no helper record replaces its own bundle in place.
+                record != nil
             })
         let source = try ProductionUpdateSource(manifestURL: configuration.manifestURL,
             artifactURL: configuration.artifactURL, trust: configuration.trust)

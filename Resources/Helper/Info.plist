@@ -6,4 +6,5 @@
 <key>CFBundleExecutable</key><string>WattHelper</string>
 <key>CFBundleVersion</key><string>1</string>
 <key>WATTSigningTeam</key><string>$(DEVELOPMENT_TEAM)</string>
+<key>WATTHelperTrustMode</key><string>$(WATT_HELPER_TRUST_MODE)</string>
 </dict></plist>

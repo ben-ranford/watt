@@ -7,6 +7,20 @@ Watt? is a native macOS menu-bar app. It shows what your Mac is drawing or charg
 - macOS 13 or later
 - Xcode with the macOS SDK
 
+## Install
+
+Download `Watt-X.Y.Z.zip` or `Watt-X.Y.Z.dmg` from the GitHub Releases page and move Watt into Applications.
+
+Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launch. In Finder, Control-click Watt and choose Open, then choose Open. If macOS still blocks it, open System Settings → Privacy & Security and choose Open Anyway.
+
+After a release has published the cask, Homebrew is the other install path:
+
+```sh
+brew install ben-ranford/tap/watt
+```
+
+The cask downloads the same GitHub Release zip. Homebrew leaves Gatekeeper's quarantine attribute in place, so the first launch uses the same approval. Watt then updates itself; `brew upgrade` does not replace it.
+
 ## Build and test
 
 From the repository root:

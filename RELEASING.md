@@ -40,7 +40,8 @@ Minor and patch must stay below 1000. `1.0.0` / build `1` remains valid only on 
 
 1. **Release Please** opens or updates one pull request, branch `release-please--branches--main`. When that pull request is merged it creates a **draft** GitHub Release and tag `vX.Y.Z`.
 2. While the pull request is open, the same job syncs `CFBundleVersion` onto that branch. Wait until that job is green before merging, so the tag contains the encoded build.
-3. **Build and publish** checks out the release commit on `xcode-27` (the same runner and Xcode 27 selection as CI), runs `xcodebuild -showBuildSettings`, archives the `Watt` scheme in the Release configuration, exports the app, and uploads artifacts. A successful upload marks the release as published. A failed build leaves the draft in place; delete that draft if you are not going to retry it.
+3. **Build and publish** checks out the release commit on `xcode-27` (the same runner and Xcode 27 selection as CI), runs `xcodebuild -showBuildSettings`, archives the `Watt` scheme in the Release configuration with an ad-hoc signature, and uploads artifacts. A successful upload marks the release as published. A failed build leaves the draft in place; delete that draft if you are not going to retry it.
+4. **Homebrew cask**, only after that publish, downloads the published zip, hashes it, and commits `Casks/watt.rb` to `main` on `ben-ranford/homebrew-tap`. The tap's formula bumps already land that way, as `github-actions[bot]` commits. If `HOMEBREW_TAP_TOKEN` is unset, the job prints a notice and exits successfully. It does not update the tap from a draft.
 
 The `test` job has `contents: read`. Release Please adds `contents`, `pull-requests`, and `issues` write so it can open the pull request and tag. The build job has only `contents: write`. Third-party actions are pinned to commit SHAs. Release names and tags are passed to scripts through the environment and checked against `vMAJOR.MINOR.PATCH` before they are used.
 
@@ -71,37 +72,17 @@ GitHub's `releases/download` URLs redirect to `release-assets.githubusercontent.
 
 The public key embedded as `WATTUpdatePublicKey` is derived from `WATT_UPDATE_SIGNING_KEY`. Existing administrator installations still need that same 32-byte key through the installer's separate `provisionReleaseKey` path. The workflow does not install or rotate a protected generation.
 
+## Signing
+
+Releases are ad-hoc signed (`CODE_SIGN_IDENTITY=-`) with the hardened runtime. They are not Developer ID signed and they are not notarised. The archive job packages `Watt.xcarchive/Products/Applications/Watt.app` after `codesign --verify`. There is no export or notary step.
+
+The privileged helper does not trust "any ad-hoc caller with this bundle id". Release builds set `WATTHelperTrustMode` to `protected-installation`, and the helper's XPC requirement is the installed app's cdhash. After an update, that pin changes only when the administrator installer has checked the Ed25519 manifest and the archive sha256, or through the existing reviewed helper-update flow. Both restart the helper with the new record. A missing record does not fall back to a team requirement or an identifier-only requirement.
+
+If `APPLE_CERTIFICATE_P12_BASE64`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_TEAM_ID`, or any `APPLE_NOTARY_*` secret is still set, the archive job fails until those secrets are removed.
+
 ## Secrets
 
-Create these in **Settings → Secrets and variables → Actions**. Leave a set unset to skip that step. Setting only part of a set fails the build. None of these values belong in the repository.
-
-### Developer ID signing
-
-All three, or none. When they are absent the log says the archive is using the project's ad-hoc identity and notarization is skipped.
-
-| Secret | Contents |
-| --- | --- |
-| `APPLE_CERTIFICATE_P12_BASE64` | Developer ID Application certificate and private key, exported from Keychain Access as a `.p12`, then base64-encoded with no line breaks. |
-| `APPLE_CERTIFICATE_PASSWORD` | Password for that `.p12`. |
-| `APPLE_TEAM_ID` | 10-character Team ID from the Apple Developer membership page. |
-
-```sh
-base64 -i DeveloperID.p12 | tr -d '\n'
-```
-
-The temporary keychain password is generated in the job and the keychain is deleted at the end. There is no provisioning-profile secret: the project has no entitlements file. If export later demands a profile, that is a separate change.
-
-### Notarization
-
-All three, or none. Notarization also requires the Developer ID secrets. The job submits the app, staples it, then builds the tar, zip, and disk image from the stapled app and notarizes the disk image too.
-
-| Secret | Contents |
-| --- | --- |
-| `APPLE_NOTARY_KEY_ID` | App Store Connect API key id (10 characters). |
-| `APPLE_NOTARY_ISSUER_ID` | Issuer UUID shown on the App Store Connect API keys page. |
-| `APPLE_NOTARY_KEY_P8_BASE64` | The `.p8` key, base64-encoded. Apple only lets you download it once. |
-
-The API key needs a role that can submit to notarization. Store the `.p8` outside the repository.
+Create these in **Settings → Secrets and variables → Actions**. None of these values belong in the repository.
 
 ### Update manifest
 
@@ -118,10 +99,18 @@ base64 -i watt-update.pem | tr -d '\n'
 
 Keep `watt-update.pem` offline. The workflow derives the public key and can print it into the built app; it never writes the private key into the repository or the release log. Set both URLs together with the key. URLs without the key fail the build. The key without the URLs skips embedding and, because preflight then fails, skips the manifest.
 
+### Homebrew tap
+
+| Secret | Contents |
+| --- | --- |
+| `HOMEBREW_TAP_TOKEN` | Fine-grained personal access token for `ben-ranford/homebrew-tap` only. Contents: Read and write. Pull requests are not required. |
+
+The token pushes `Casks/watt.rb` to that repository's `main` branch. Leave it unset to skip the tap update. Do not grant it access to this repository or to any other repository. If `main` on the tap has a ruleset, the token's user must be allowed to push.
+
 ## First release
 
 1. Merge this change. A squash title starting with `ci:` does not open a release by itself.
-2. Add the secrets you have. Ad-hoc archives work with no secrets. Signed manifests and Developer ID builds wait until the matching secrets exist.
+2. Remove any Apple signing or notarization secrets. Add the update secrets when you want a manifest, and add `HOMEBREW_TAP_TOKEN` when you want the cask commit. An ad-hoc archive does not need either.
 3. When you want the first tag to be exactly `v1.0.0`, add `"release-as": "1.0.0"` to the `.` package in `release-please-config.json` and push to `main`. Release Please opens a pull request that should also contain `chore: sync CFBundleVersion to the release marketing version` (build `1000000`). Merge that pull request, then delete `release-as` before the next release. Leaving `release-as` in the file pins every later release to the same version.
 4. If you skip `release-as`, the next `fix:` on `main` proposes `1.0.1` and the next `feat:` proposes `1.1.0`.
 5. After the macOS job publishes the release, read `distribution-preflight.txt`. It stays blocked until you replace `dev.watt.verification` with the production bundle identifier and the update secrets are present.
@@ -129,14 +118,12 @@ Keep `watt-update.pem` offline. The workflow derives the public key and can prin
 
 ## Decisions still open
 
-- The production bundle identifier is still `dev.watt.verification`. Distribution preflight is written to refuse that prefix.
-- Where the stable manifest and tar are hosted. GitHub Release asset URLs are not usable as `WATTUpdate*URL`.
-- Whether the first public build should wait for a Developer ID certificate. Without the Apple secrets the published app is ad-hoc, which matches the current local release route and is not a notarized download.
-- The Apple Team ID, certificate, and App Store Connect API key are the owner's. This repository does not invent them.
-- Zip and disk image are both attached for people installing by hand. The updater reads only the tar. Drop either download later if you do not want it; keep the tar.
+- The production bundle identifier is still `dev.watt.verification`. Distribution preflight is written to refuse that prefix, so the first archives will not publish an update manifest until it changes. The Homebrew cask reads the identifier from the published zip and uses it in the zap paths.
+- Where the stable manifest and tar are hosted. GitHub Release asset URLs are not usable as `WATTUpdate*URL`. The cask does use the Release zip; that is a separate download from the updater.
+- Zip and disk image are both attached for people installing by hand. The updater reads only the tar. The cask uses the zip. Drop either hand-install download later if you do not want it; keep the tar.
 
 ## What was checked here
 
 `python3 scripts/test_release_pipeline.py` covers the version encoding, the manifest byte layout, an OpenSSL Ed25519 sign/verify round trip, secret-plan failures, and the workflow shape. `bash -n` parses the shell scripts. `actionlint` checks the workflow when it is installed.
 
-This agent ran on Linux. It did not run `xcodebuild`, `codesign`, `notarytool`, or `hdiutil`, and it did not execute `scripts/configure-release-identity.py` or `scripts/verify-release-readiness.py`, because those need `/usr/bin/plutil` and a Mac. The archive job runs `xcodebuild -showBuildSettings` and checks that the `Watt` target resolves `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` before it archives.
+The archive job runs `xcodebuild -showBuildSettings` and checks that the `Watt` target resolves `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` before it archives. It then signs ad hoc. It does not call `notarytool`.

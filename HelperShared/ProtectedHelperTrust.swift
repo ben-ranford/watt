@@ -182,6 +182,53 @@ public enum ExactCodeIdentity {
     }
 }
 
+/// Release builds use `protected-installation`. Certificate mode is the separate
+/// Apple Development configuration. An unknown value fails closed.
+public enum HelperTrustMode: Equatable, Sendable {
+    case protectedInstallation
+    case certificate
+
+    public init?(plistValue: String?) {
+        switch plistValue {
+        case nil, "protected-installation": self = .protectedInstallation
+        case "certificate": self = .certificate
+        default: return nil
+        }
+    }
+}
+
+public enum QuarantineAttribute {
+    public static let name = "com.apple.quarantine"
+
+    /// Remove Gatekeeper's quarantine attribute from a verified bundle.
+    /// Symlinks are rejected. Other extended attributes are left in place.
+    /// Clearing this attribute does not change a cdhash.
+    public static func clear(at root: URL) throws {
+        guard root.isFileURL, root.path.hasPrefix("/") else { throw ProtectedTrustError.unsafePath }
+        var remaining = 10_000
+        try clearNode(root, remaining: &remaining)
+    }
+
+    private static func clearNode(_ url: URL, remaining: inout Int) throws {
+        remaining -= 1
+        guard remaining >= 0 else { throw ProtectedTrustError.unsafePath }
+        var info = stat()
+        guard lstat(url.path, &info) == 0 else { throw ProtectedTrustError.unsafePath }
+        let kind = info.st_mode & S_IFMT
+        guard kind == S_IFREG || kind == S_IFDIR else { throw ProtectedTrustError.unsafePath }
+        if removexattr(url.path, name, XATTR_NOFOLLOW) != 0, errno != ENOATTR {
+            throw ProtectedTrustError.unsafePath
+        }
+        guard kind == S_IFDIR else { return }
+        guard let names = try? FileManager.default.contentsOfDirectory(atPath: url.path) else {
+            throw ProtectedTrustError.unsafePath
+        }
+        for child in names where child != "." && child != ".." {
+            try clearNode(url.appendingPathComponent(child), remaining: &remaining)
+        }
+    }
+}
+
 public enum HelperTrustPolicy: Sendable {
     case certificate(HelperSigningPolicy)
     case protectedInstallation(ProtectedHelperRecord)
@@ -204,20 +251,33 @@ public enum HelperTrustPolicy: Sendable {
         case .protectedInstallation: return try ExactCodeIdentity.verify(at: url, requirement: helper ? helperRequirement : appRequirement)
         }
     }
+    /// Release helpers pin the root-owned cdhash record. A missing record does not
+    /// fall back to a team requirement or to any caller with the same identifier.
     public static func configuredHelperProcess() throws -> Self {
-        if FileManager.default.fileExists(atPath: ProtectedHelperRecord.publicURL.path) {
+        var code: SecCode?
+        guard SecCodeCopySelf([], &code) == errSecSuccess, let code else { throw ProtectedTrustError.invalidCode }
+        var staticCode: SecStaticCode?
+        guard SecCodeCopyStaticCode(code, [], &staticCode) == errSecSuccess, let staticCode else { throw ProtectedTrustError.invalidCode }
+        var information: CFDictionary?
+        guard SecCodeCopySigningInformation(staticCode, SecCSFlags(rawValue: kSecCSSigningInformation), &information) == errSecSuccess,
+              let fields = information as? [String: Any],
+              let plist = fields[kSecCodeInfoPList as String] as? [String: Any],
+              let mode = HelperTrustMode(plistValue: plist["WATTHelperTrustMode"] as? String) else {
+            throw ProtectedTrustError.invalidCode
+        }
+        switch mode {
+        case .certificate:
+            return .certificate(try HelperSigningPolicy.configuredHelperProcess())
+        case .protectedInstallation:
             let record = try ProtectedHelperRecord.read()
-            var code: SecCode?
             var requirement: SecRequirement?
             let policy = Self.protectedInstallation(record)
-            guard SecCodeCopySelf([], &code) == errSecSuccess, let code,
-                  SecRequirementCreateWithString(try policy.helperRequirement as CFString, [], &requirement) == errSecSuccess,
+            guard SecRequirementCreateWithString(try policy.helperRequirement as CFString, [], &requirement) == errSecSuccess,
                   let requirement, SecCodeCheckValidity(code, SecCSFlags(rawValue: kSecCSStrictValidate), requirement) == errSecSuccess else {
                 throw ProtectedTrustError.invalidCode
             }
             return policy
         }
-        return .certificate(try HelperSigningPolicy.configuredHelperProcess())
     }
 }
 

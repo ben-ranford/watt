@@ -7,7 +7,6 @@ import base64
 import hashlib
 import json
 import os
-import plistlib
 import shutil
 import subprocess
 import sys
@@ -19,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 import release_lib
 import release_plan
+import release_readiness
+import render_homebrew_cask
 
 
 def run(arguments: list[str], *, env: dict[str, str] | None = None, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -156,22 +157,28 @@ class ManifestTests(unittest.TestCase):
 
 
 class PlanTests(unittest.TestCase):
-    def test_absent_secrets_skip_signing_and_manifest(self) -> None:
+    def test_absent_secrets_archive_ad_hoc_without_a_manifest(self) -> None:
         plan = release_plan.build_plan({'RELEASE_VERSION': '1.2.3', 'RELEASE_TAG': 'v1.2.3'}, require_release=True)
         self.assertEqual(plan['errors'], [])
         self.assertEqual(plan['code_signing'], 'ad-hoc')
-        self.assertFalse(plan['notarize'])
+        self.assertNotIn('notarize', plan)
         self.assertFalse(plan['signing_key_present'])
         self.assertFalse(plan['embed_update'])
         self.assertTrue(any('ad-hoc' in message for message in plan['messages']))
+        self.assertFalse(any('fallback' in message.lower() for message in plan['messages']))
 
-    def test_partial_and_invalid_secrets_fail_closed(self) -> None:
+    def test_apple_signing_secrets_are_rejected(self) -> None:
         partial = release_plan.build_plan(
             {'RELEASE_VERSION': '1.2.3', 'RELEASE_TAG': 'v1.2.3', 'APPLE_TEAM_ID': 'ABCDE12345'},
             require_release=True,
         )
         self.assertTrue(partial['errors'])
-        self.assertNotIn('ABCDE12345', json.dumps(partial['errors']))
+        encoded = json.dumps(partial['errors'])
+        self.assertNotIn('ABCDE12345', encoded)
+        self.assertIn('APPLE_TEAM_ID', encoded)
+        self.assertEqual(partial['code_signing'], 'ad-hoc')
+
+    def test_partial_and_invalid_secrets_fail_closed(self) -> None:
         urls = release_plan.build_plan(
             {
                 'RELEASE_VERSION': '1.2.3',
@@ -196,17 +203,11 @@ class PlanTests(unittest.TestCase):
         mismatch = release_plan.build_plan({'RELEASE_VERSION': '1.2.3', 'RELEASE_TAG': 'v9.9.9'}, require_release=True)
         self.assertTrue(mismatch['errors'])
 
-    def test_complete_signing_plan_omits_secret_material(self) -> None:
+    def test_complete_update_plan_omits_secret_material(self) -> None:
         plan = release_plan.build_plan(
             {
                 'RELEASE_VERSION': '1.2.3',
                 'RELEASE_TAG': 'v1.2.3',
-                'APPLE_CERTIFICATE_P12_BASE64': 'Y2VydA==',
-                'APPLE_CERTIFICATE_PASSWORD': 'secret-password',
-                'APPLE_TEAM_ID': 'ABCDE12345',
-                'APPLE_NOTARY_KEY_ID': 'KEYID12345',
-                'APPLE_NOTARY_ISSUER_ID': '00000000-0000-0000-0000-000000000000',
-                'APPLE_NOTARY_KEY_P8_BASE64': 'cDhrZXk=',
                 'WATT_UPDATE_SIGNING_KEY': 'cGVt',
                 'WATT_UPDATE_MANIFEST_URL': 'https://updates.example/manifest.json',
                 'WATT_UPDATE_ARTIFACT_URL': 'https://updates.example:443/Watt.tar',
@@ -214,13 +215,28 @@ class PlanTests(unittest.TestCase):
             require_release=True,
         )
         self.assertEqual(plan['errors'], [])
-        self.assertEqual(plan['code_signing'], 'developer-id')
-        self.assertTrue(plan['notarize'])
+        self.assertEqual(plan['code_signing'], 'ad-hoc')
         self.assertTrue(plan['embed_update'])
         encoded = json.dumps(plan)
-        self.assertNotIn('secret-password', encoded)
-        self.assertNotIn('Y2VydA==', encoded)
-        self.assertNotIn('cDhrZXk=', encoded)
+        self.assertNotIn('cGVt', encoded)
+        apple = release_plan.build_plan(
+            {
+                'RELEASE_VERSION': '1.2.3',
+                'RELEASE_TAG': 'v1.2.3',
+                'APPLE_CERTIFICATE_P12_BASE64': 'Y2VydA==',
+                'APPLE_CERTIFICATE_PASSWORD': 'secret-password',
+                'APPLE_NOTARY_KEY_P8_BASE64': 'cDhrZXk=',
+                'WATT_UPDATE_SIGNING_KEY': 'cGVt',
+                'WATT_UPDATE_MANIFEST_URL': 'https://updates.example/manifest.json',
+                'WATT_UPDATE_ARTIFACT_URL': 'https://updates.example/Watt.tar',
+            },
+            require_release=True,
+        )
+        self.assertTrue(apple['errors'])
+        rejected = json.dumps(apple)
+        self.assertNotIn('secret-password', rejected)
+        self.assertNotIn('Y2VydA==', rejected)
+        self.assertNotIn('cDhrZXk=', rejected)
 
 
 class ProjectTests(unittest.TestCase):
@@ -259,21 +275,21 @@ Build settings for action build and target WattTests:
             ])
             self.assertEqual(mismatch.returncode, 1)
 
-    def test_export_options_do_not_embed_a_certificate(self) -> None:
-        with tempfile.TemporaryDirectory() as temporary:
-            directory = Path(temporary)
-            signed = directory / 'signed.plist'
-            adhoc = directory / 'adhoc.plist'
-            release_lib.write_export_options('developer-id', 'ABCDE12345', signed)
-            release_lib.write_export_options('ad-hoc', '', adhoc)
-            with signed.open('rb') as handle:
-                signed_plist = plistlib.load(handle)
-            with adhoc.open('rb') as handle:
-                adhoc_plist = plistlib.load(handle)
-            self.assertEqual(signed_plist['method'], 'developer-id')
-            self.assertEqual(signed_plist['teamID'], 'ABCDE12345')
-            self.assertEqual(adhoc_plist['signingCertificate'], '-')
-            self.assertNotIn('provisioningProfiles', signed_plist)
+    def test_workflow_does_not_read_apple_signing_secrets(self) -> None:
+        text = (ROOT / '.github/workflows/release.yml').read_text()
+        for name in (
+            'APPLE_CERTIFICATE_P12_BASE64',
+            'APPLE_CERTIFICATE_PASSWORD',
+            'APPLE_TEAM_ID',
+            'APPLE_NOTARY_KEY_ID',
+            'APPLE_NOTARY_ISSUER_ID',
+            'APPLE_NOTARY_KEY_P8_BASE64',
+            'notarytool',
+            'developer-id',
+        ):
+            self.assertNotIn(name, text)
+        self.assertIn('HOMEBREW_TAP_TOKEN', text)
+        self.assertIn('WATT_UPDATE_SIGNING_KEY', text)
 
     def test_update_urls_match_the_updater_rules(self) -> None:
         self.assertEqual(
@@ -334,9 +350,152 @@ class WorkflowTests(unittest.TestCase):
         )
 
     def test_shell_scripts_parse(self) -> None:
-        for name in ('release-archive.sh', 'sync-release-branch.sh', 'upload-release-assets.sh'):
+        for name in ('release-archive.sh', 'sync-release-branch.sh', 'upload-release-assets.sh', 'update-homebrew-cask.sh'):
             result = subprocess.run(['bash', '-n', str(ROOT / 'scripts' / name)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
+
+
+class ReadinessTests(unittest.TestCase):
+    def info(self) -> dict[str, str]:
+        return {
+            'CFBundleIdentifier': 'com.example.watt',
+            'WATTHelperTrustMode': 'protected-installation',
+            'WATTUpdateManifestURL': 'https://updates.example/manifest.json',
+            'WATTUpdateArtifactURL': 'https://updates.example/Watt.tar',
+            'WATTUpdatePublicKey': base64.b64encode(b'\x11' * 32).decode('ascii'),
+        }
+
+    def test_distribution_accepts_ad_hoc_cdhash_without_a_team_or_ticket(self) -> None:
+        self.assertEqual(release_readiness.distribution_plist_failures(self.info()), [])
+        detail = 'Identifier=com.example.watt\nSignature=adhoc\nTeamIdentifier=not set\nCodeDirectory v=20400 flags=0x10000(runtime)\n'
+        requirement = 'designated => identifier "com.example.watt" and cdhash H"00112233445566778899aabbccddeeff00112233"\n'
+        self.assertEqual(
+            release_readiness.codesign_identity_failures(detail, requirement, 'Watt', distribution=True),
+            [],
+        )
+        self.assertEqual(
+            release_readiness.entitlement_failures('', 'Watt', distribution=True, main_app=True),
+            [],
+        )
+
+    def test_distribution_rejects_developer_id_certificate_mode_and_weak_requirements(self) -> None:
+        certificate = self.info()
+        certificate['WATTHelperTrustMode'] = 'certificate'
+        certificate['WATTSigningTeam'] = 'ABCDE12345'
+        reasons = release_readiness.distribution_plist_failures(certificate)
+        self.assertTrue(any('cdhash' in reason for reason in reasons))
+        self.assertFalse(any('team' in reason.lower() for reason in reasons))
+        placeholder = self.info()
+        placeholder['CFBundleIdentifier'] = 'dev.watt.verification'
+        self.assertTrue(release_readiness.distribution_plist_failures(placeholder))
+        missing_key = self.info()
+        del missing_key['WATTUpdatePublicKey']
+        self.assertTrue(any('public key' in reason for reason in release_readiness.distribution_plist_failures(missing_key)))
+        developer_id = 'Authority=Developer ID Application: Example (ABCDE12345)\nSignature=adhoc\nflags=0x10000(runtime)\n'
+        requirement = 'designated => identifier "com.example.watt" and cdhash H"00112233445566778899aabbccddeeff00112233"\n'
+        self.assertTrue(release_readiness.codesign_identity_failures(developer_id, requirement, 'Watt', distribution=True))
+        no_hash = 'Signature=adhoc\nflags=0x10000(runtime)\n'
+        anchor = 'designated => anchor apple generic and identifier "com.example.watt"\n'
+        self.assertTrue(release_readiness.codesign_identity_failures(no_hash, anchor, 'Watt', distribution=True))
+        self.assertTrue(release_readiness.codesign_identity_failures(
+            'Signature=adhoc\n', requirement, 'Watt', distribution=True))
+        self.assertTrue(release_readiness.entitlement_failures(
+            'com.apple.security.cs.disable-library-validation', 'Watt', distribution=True, main_app=True))
+        self.assertTrue(release_readiness.entitlement_failures(
+            'com.apple.security.get-task-allow', 'Watt', distribution=True, main_app=True))
+
+    def test_local_mode_still_accepts_a_developer_certificate(self) -> None:
+        detail = 'Authority=Developer ID Application: Example (ABCDE12345)\nflags=0x10000(runtime)\n'
+        requirement = 'designated => anchor apple generic and identifier "com.example.watt"\n'
+        self.assertEqual(
+            release_readiness.codesign_identity_failures(detail, requirement, 'Watt', distribution=False),
+            [],
+        )
+
+
+class HomebrewCaskTests(unittest.TestCase):
+    def test_rendered_cask_uses_the_release_zip_and_gatekeeper_caveats(self) -> None:
+        text = render_homebrew_cask.render_cask(
+            version='1.2.3',
+            sha256='ab' * 32,
+            bundle_id='com.example.watt',
+            minimum_system_version='13.0',
+        )
+        self.assertIn('cask "watt" do', text)
+        self.assertIn('version "1.2.3"', text)
+        self.assertIn('sha256 "' + ('ab' * 32) + '"', text)
+        self.assertIn('releases/download/v#{version}/Watt-#{version}.zip', text)
+        self.assertIn('depends_on macos: ">= :ventura"', text)
+        self.assertIn('auto_updates true', text)
+        self.assertIn('app "Watt.app"', text)
+        self.assertIn('"~/Library/Application Support/Watt"', text)
+        self.assertIn('"~/Library/Preferences/com.example.watt.plist"', text)
+        self.assertIn('"/Library/Application Support/Watt"', text)
+        self.assertIn('"/Library/Application Support/Watt-maintenance-result.json"', text)
+        self.assertIn('"/Library/LaunchDaemons/com.example.watt.helper.plist"', text)
+        self.assertIn('"/Library/PrivilegedHelperTools/com.example.watt.helper"', text)
+        self.assertIn('launchctl: "com.example.watt.helper"', text)
+        self.assertIn('Control-click Watt and choose Open', text)
+        self.assertIn('System Settings → Privacy & Security and choose Open Anyway', text)
+        self.assertNotIn('no-quarantine', text)
+        self.assertNotIn('no_quarantine', text)
+        self.assertNotIn('xattr', text)
+        self.assertNotIn('notarytool', text)
+        self.assertIn('not notarised', text)
+        with self.assertRaises(release_lib.ReleaseError):
+            render_homebrew_cask.render_cask(
+                version='1.2.3', sha256='AB' * 32, bundle_id='com.example.watt', minimum_system_version='13.0')
+        with self.assertRaises(release_lib.ReleaseError):
+            render_homebrew_cask.macos_dependency('27.0')
+
+    def test_zip_metadata_reads_the_app_plist(self) -> None:
+        import io
+        import plistlib
+        import zipfile
+        info = {
+            'CFBundleIdentifier': 'com.example.watt',
+            'CFBundleShortVersionString': '1.2.3',
+            'LSMinimumSystemVersion': '14.0',
+        }
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w') as archive:
+            archive.writestr('Watt.app/Contents/Info.plist', plistlib.dumps(info))
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'Watt-1.2.3.zip'
+            path.write_bytes(buffer.getvalue())
+            read = render_homebrew_cask.zip_app_info(path)
+            self.assertEqual(read['marketing'], '1.2.3')
+            self.assertEqual(read['identity'], 'com.example.watt')
+            text = render_homebrew_cask.render_cask(
+                version=str(read['marketing']),
+                sha256=render_homebrew_cask.sha256_file(path),
+                bundle_id=str(read['identity']),
+                minimum_system_version=str(read['minimum']),
+            )
+            self.assertIn('>= :sonoma', text)
+
+    def test_unset_tap_token_skips_without_calling_git(self) -> None:
+        env = os.environ.copy()
+        env.pop('HOMEBREW_TAP_TOKEN', None)
+        result = subprocess.run(
+            ['bash', 'scripts/update-homebrew-cask.sh'],
+            cwd=ROOT,
+            env=env,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('HOMEBREW_TAP_TOKEN is unset', result.stdout)
+        self.assertIn('Skipping', result.stdout)
+
+    def test_archive_script_has_no_notarisation_path(self) -> None:
+        text = (ROOT / 'scripts/release-archive.sh').read_text()
+        self.assertNotIn('notarytool', text)
+        self.assertNotIn('APPLE_', text)
+        self.assertNotIn('developer-id', text)
+        self.assertIn('CODE_SIGN_IDENTITY=-', text)
+        self.assertIn('INFOPLIST_KEY_WATTHelperTrustMode=protected-installation', text)
+        self.assertIn('WATT_HELPER_TRUST_MODE=protected-installation', text)
 
 
 if __name__ == '__main__':

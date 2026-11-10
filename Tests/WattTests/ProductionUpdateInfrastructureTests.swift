@@ -254,6 +254,18 @@ final class ProductionUpdateSourceTests: XCTestCase {
 }
 
 @MainActor
+private struct QuarantineMarkingValidator: ProductionUpdateCodeValidator {
+    func verify(bundle: URL) throws -> VerifiedUpdateBundle {
+        let identity = try FixtureUpdateValidator().verify(bundle: bundle)
+        let marker = Array("0083;00000000;WattTest;".utf8)
+        let wrote = marker.withUnsafeBytes { buffer in
+            setxattr(bundle.path, QuarantineAttribute.name, buffer.baseAddress, buffer.count, 0, XATTR_NOFOLLOW)
+        }
+        guard wrote == 0 else { throw ServiceFailure.persistence }
+        return identity
+    }
+}
+@MainActor
 private struct FixtureUpdateValidator: ProductionUpdateCodeValidator {
     func verify(bundle: URL) throws -> VerifiedUpdateBundle {
         let data = try Data(contentsOf: bundle.appendingPathComponent("identity.json"))
@@ -410,6 +422,32 @@ final class ProductionUpdateInstallationDriverTests: XCTestCase {
         let witness = FixtureUpdateWitness()
         let driver = try ProductionUpdateInstallationDriver(application: app, stagingDirectory: parent.appendingPathComponent("staging"), validator: FixtureUpdateValidator(), witness: witness, requiresAdministrator: { _, _ in admin })
         return (driver, OperationReceipt(createdAt: Date()), manifest, bytes, app, witness)
+    }
+    func testVerifiedReplacementClearsQuarantineAfterTheDigestCheck() throws {
+        let parent = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: parent) }
+        let app = parent.appendingPathComponent("Watt.app")
+        try FileManager.default.createDirectory(at: app, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
+        let original = VerifiedUpdateBundle(identifier: "test.watt", build: 1, minimumSystemVersion: "13.0", codeHash: Data(repeating: 1, count: 20))
+        try JSONEncoder().encode(original).write(to: app.appendingPathComponent("identity.json"))
+        let replacement = VerifiedUpdateBundle(identifier: "test.watt", build: 2, minimumSystemVersion: "13.0", codeHash: Data(repeating: 2, count: 20))
+        let bytes = testUSTAR([("Watt.app/", Data(), 53), ("Watt.app/identity.json", try JSONEncoder().encode(replacement), 48)])
+        let manifest = UpdateManifest(identity: "test.watt", build: 2, sha256: Data(SHA256.hash(data: bytes)), minimumSystemVersion: "13.0")
+        let marker = Array("0083;00000000;WattTest;".utf8)
+        XCTAssertEqual(marker.withUnsafeBytes { setxattr(app.path, QuarantineAttribute.name, $0.baseAddress, $0.count, 0, XATTR_NOFOLLOW) }, 0)
+        let witness = FixtureUpdateWitness()
+        let driver = try ProductionUpdateInstallationDriver(application: app, stagingDirectory: parent.appendingPathComponent("staging"),
+            validator: QuarantineMarkingValidator(), witness: witness, requiresAdministrator: { _, _ in false })
+        let receipt = OperationReceipt(createdAt: Date())
+        XCTAssertThrowsError(try driver.stage(Data("bad".utf8), manifest: manifest, receipt: receipt))
+        XCTAssertGreaterThanOrEqual(getxattr(app.path, QuarantineAttribute.name, nil, 0, 0, XATTR_NOFOLLOW), 0)
+        try driver.stage(bytes, manifest: manifest, receipt: receipt)
+        try driver.replace(manifest: manifest, receipt: receipt)
+        // placement() verifies again, and this fixture's validator re-applies the attribute.
+        // The replacement itself must already be clear before that second read.
+        XCTAssertLessThan(getxattr(app.path, QuarantineAttribute.name, nil, 0, 0, XATTR_NOFOLLOW), 0)
+        XCTAssertTrue(try driver.placement(manifest: manifest, receipt: receipt) == .replacement)
+        try driver.launch(manifest: manifest, receipt: receipt)
+        XCTAssertLessThan(getxattr(app.path, QuarantineAttribute.name, nil, 0, 0, XATTR_NOFOLLOW), 0)
     }
     func testStageReplaceActualWitnessAndRollback() throws {
         let parent = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: parent) }
