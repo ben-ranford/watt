@@ -13,7 +13,7 @@ enum StatusItemContextMenu {
     static func makeMenu(
         router: AppRouter, preferences: PreferencesStore,
         componentsAvailable: @escaping () -> Bool = { false },
-        onAbout: @escaping () -> Void = { NSApplication.shared.orderFrontStandardAboutPanel(nil) },
+        onAbout: @escaping () -> Void = { AboutPanel.show() },
         onQuit: @escaping () -> Void = { NSApplication.shared.terminate(nil) }
     ) -> NSMenu {
         let presentationID = router.beginMenuSetupPresentation()
