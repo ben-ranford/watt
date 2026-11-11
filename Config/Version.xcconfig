@@ -1,6 +1,6 @@
 // Marketing version (CFBundleShortVersionString) for every target.
 // Release Please replaces the semver on the next line. Keep the marker on that line.
-MARKETING_VERSION = 1.1.0 // x-release-please-version
+MARKETING_VERSION = 1.2.0 // x-release-please-version
 
 // CFBundleVersion is not this setting. It is the positive integer build in
 // Resources/ReleaseIdentity.json, propagated by scripts/sync-release-version.py
