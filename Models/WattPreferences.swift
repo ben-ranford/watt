@@ -125,6 +125,11 @@ private struct StoredPreferences: Codable {
     var componentReadings = true
     var chargerNotification = true
     var fullyChargedNotification = false
+    // Optional so a preferences file written before these thresholds still decodes.
+    var lowBatteryNotification: Bool? = nil
+    var lowBatteryPercentage: Int? = nil
+    var insufficientChargerMinutes: Int? = nil
+    var fullyChargedPercentage: Int? = nil
     var openAtLogin = false
     var checkForUpdatesAutomatically = true
     var selectedComponents = ["CPU", "GPU"]
@@ -144,6 +149,10 @@ final class PreferencesStore: ObservableObject {
     @Published var componentReadings = true { didSet { save() } }
     @Published var chargerNotification = true { didSet { save() } }
     @Published var fullyChargedNotification = false { didSet { save() } }
+    @Published var lowBatteryNotification = false { didSet { save() } }
+    @Published private var storedLowBatteryPercentage = Self.defaultLowBatteryPercentage
+    @Published private var storedInsufficientChargerMinutes = Self.defaultInsufficientChargerMinutes
+    @Published private var storedFullyChargedPercentage = Self.defaultFullyChargedPercentage
     @Published var openAtLogin = false { didSet { save() } }
     @Published var checkForUpdatesAutomatically = true { didSet { save() } }
     @Published var onboarding = OnboardingState() { didSet { save() } }
@@ -168,6 +177,54 @@ final class PreferencesStore: ObservableObject {
     static func validSelection(_ ids: [String]) -> Bool {
         ids.count <= 2 && Set(ids.map { $0.lowercased() }).count == ids.count
             && ids.allSatisfy { !$0.isEmpty && $0 == $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+    }
+
+    static let defaultInsufficientChargerMinutes = 5
+    static let defaultFullyChargedPercentage = 100
+    static let defaultLowBatteryPercentage = 20
+    static let insufficientChargerMinuteChoices = [1, 2, 5, 10, 15]
+    static let fullyChargedPercentageChoices = [80, 90, 95, 100]
+    static let lowBatteryPercentageChoices = [10, 15, 20, 25, 30]
+
+    static func isValidInsufficientChargerMinutes(_ minutes: Int) -> Bool { (1...60).contains(minutes) }
+    static func isValidFullyChargedPercentage(_ percentage: Int) -> Bool { (1...100).contains(percentage) }
+    static func isValidLowBatteryPercentage(_ percentage: Int) -> Bool { (1...99).contains(percentage) }
+
+    static func chargerDurationLabel(minutes: Int) -> String {
+        minutes == 1 ? "1 minute" : "\(minutes) minutes"
+    }
+
+    private static func accepted(_ value: Int?, fallback: Int, isValid: (Int) -> Bool) -> Int {
+        guard let value, isValid(value) else { return fallback }
+        return value
+    }
+
+    var lowBatteryPercentage: Int {
+        get { storedLowBatteryPercentage }
+        set { assign(newValue, isValid: Self.isValidLowBatteryPercentage, store: { storedLowBatteryPercentage = $0 }, write: { $0.lowBatteryPercentage = $1 }) }
+    }
+    var insufficientChargerMinutes: Int {
+        get { storedInsufficientChargerMinutes }
+        set { assign(newValue, isValid: Self.isValidInsufficientChargerMinutes, store: { storedInsufficientChargerMinutes = $0 }, write: { $0.insufficientChargerMinutes = $1 }) }
+    }
+    var fullyChargedPercentage: Int {
+        get { storedFullyChargedPercentage }
+        set { assign(newValue, isValid: Self.isValidFullyChargedPercentage, store: { storedFullyChargedPercentage = $0 }, write: { $0.fullyChargedPercentage = $1 }) }
+    }
+    var insufficientChargerDuration: TimeInterval { TimeInterval(insufficientChargerMinutes * 60) }
+
+    /// Persist the candidate before publishing. A rejected value leaves the previous setting in place.
+    private func assign(_ value: Int, isValid: (Int) -> Bool, store: (Int) -> Void, write: (inout StoredPreferences, Int) -> Void) {
+        guard isValid(value) else {
+            persistenceFailure = .invalidData
+            return
+        }
+        if !loading {
+            var candidate = snapshot
+            write(&candidate, value)
+            guard persist(candidate) else { return }
+        }
+        store(value)
     }
 
     static func seconds(for updateInterval: String) -> TimeInterval {
@@ -208,6 +265,10 @@ final class PreferencesStore: ObservableObject {
             displayMode = p.displayMode; showSymbol = p.showSymbol; updateInterval = p.updateInterval
             smoothReadings = p.smoothReadings; componentReadings = p.componentReadings
             chargerNotification = p.chargerNotification; fullyChargedNotification = p.fullyChargedNotification
+            lowBatteryNotification = p.lowBatteryNotification ?? false
+            lowBatteryPercentage = Self.accepted(p.lowBatteryPercentage, fallback: Self.defaultLowBatteryPercentage, isValid: Self.isValidLowBatteryPercentage)
+            insufficientChargerMinutes = Self.accepted(p.insufficientChargerMinutes, fallback: Self.defaultInsufficientChargerMinutes, isValid: Self.isValidInsufficientChargerMinutes)
+            fullyChargedPercentage = Self.accepted(p.fullyChargedPercentage, fallback: Self.defaultFullyChargedPercentage, isValid: Self.isValidFullyChargedPercentage)
             openAtLogin = p.openAtLogin; checkForUpdatesAutomatically = p.checkForUpdatesAutomatically
             selectedComponents = p.selectedComponents; onboarding = p.onboarding
         } catch { persistenceFailure = .persistence }
@@ -238,6 +299,8 @@ final class PreferencesStore: ObservableObject {
         StoredPreferences(precision: precision, displayMode: displayMode, showSymbol: showSymbol, updateInterval: updateInterval,
                                   smoothReadings: smoothReadings, componentReadings: componentReadings,
                                   chargerNotification: chargerNotification, fullyChargedNotification: fullyChargedNotification,
+                                  lowBatteryNotification: lowBatteryNotification, lowBatteryPercentage: lowBatteryPercentage,
+                                  insufficientChargerMinutes: insufficientChargerMinutes, fullyChargedPercentage: fullyChargedPercentage,
                                   openAtLogin: openAtLogin, checkForUpdatesAutomatically: checkForUpdatesAutomatically,
                                   selectedComponents: selectedComponents, onboarding: onboarding)
     }

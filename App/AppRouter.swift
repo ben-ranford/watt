@@ -609,6 +609,27 @@ final class AppRouter: ObservableObject {
     var cancelOnboardingApproval: () -> Void = {}
     // Observed runtime authorization, never persisted as user preference or inferred from delivery.
     @Published var notificationAuthorization: NotificationAuthorization?
+    /// Production installs SystemNotificationBridge. Tests and fixtures leave both nil.
+    var notificationBridge: (any NotificationBridge)?
+    var powerNotificationEffects: PowerNotificationEffects?
+    private var didAttemptAutomaticNotificationAuthorization = false
+
+    /// `automatic` prompts at most once per launch, and only while the system choice is still not determined.
+    /// Turning a notification on always asks, which is how a denied choice can be re-read after System Settings changes.
+    func authorizeNotifications(automatic: Bool) async {
+        guard let notificationBridge else { return }
+        if automatic {
+            guard !didAttemptAutomaticNotificationAuthorization else { return }
+            guard await notificationBridge.authorization() == .notDetermined else { return }
+            didAttemptAutomaticNotificationAuthorization = true
+        }
+        switch await notificationBridge.requestAuthorization() {
+        case .success(let authorization):
+            notificationAuthorization = authorization
+        case .failure:
+            notificationAuthorization = await notificationBridge.authorization()
+        }
+    }
     var statusPanelPresented = false {
         didSet { if !statusPanelPresented { panelSetupPresentationID = nil } }
     }

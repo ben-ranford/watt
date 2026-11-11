@@ -1673,6 +1673,7 @@ final class P03NotificationLoginTests: XCTestCase {
                     let preferences = PreferencesStore()
                     preferences.fullyChargedNotification = enabled
                     preferences.chargerNotification = enabled
+                    preferences.lowBatteryNotification = enabled
                     let driver = P03NotificationDriver()
                     driver.current = permission
                     let effects = PowerNotificationEffects(bridge: SystemNotificationBridge(driver: driver), preferences: preferences)
@@ -1685,6 +1686,7 @@ final class P03NotificationLoginTests: XCTestCase {
                     XCTAssertEqual(driver.requests, 0)
                     XCTAssertEqual(preferences.fullyChargedNotification, enabled)
                     XCTAssertEqual(preferences.chargerNotification, enabled)
+                    XCTAssertEqual(preferences.lowBatteryNotification, enabled)
                     XCTAssertFalse(preferences.onboarding.helperOptIn)
                 }
             }
