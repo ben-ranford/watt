@@ -90,14 +90,24 @@ jobs:
                 exit 1
               fi
             fi
-            xcodebuild build \
-              -project Watt.xcodeproj \
-              -scheme Watt \
-              -configuration "${configuration}" \
-              -destination "generic/platform=macOS" \
-              -derivedDataPath DerivedData \
-              "${sign[@]}" \
-              "${update_settings[@]}"
+            if [[ ${#update_settings[@]} -gt 0 ]]; then
+              xcodebuild build \
+                -project Watt.xcodeproj \
+                -scheme Watt \
+                -configuration "${configuration}" \
+                -destination "generic/platform=macOS" \
+                -derivedDataPath DerivedData \
+                "${sign[@]}" \
+                "${update_settings[@]}"
+            else
+              xcodebuild build \
+                -project Watt.xcodeproj \
+                -scheme Watt \
+                -configuration "${configuration}" \
+                -destination "generic/platform=macOS" \
+                -derivedDataPath DerivedData \
+                "${sign[@]}"
+            fi
             local products="DerivedData/Build/Products/${configuration}"
             test -x "${products}/Watt.app/Contents/MacOS/Watt"
             test -x "${products}/WattHelper"
