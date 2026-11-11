@@ -1,4 +1,5 @@
 import CryptoKit
+import Foundation
 import XCTest
 @testable import Watt
 
@@ -265,7 +266,8 @@ final class P04UpdaterTests: XCTestCase {
         rig.source.release = SignedUpdate(payload: rig.source.release!.payload, signature: Data(repeating: 0, count: 64))
         expect(await rig.adapter.check(), .untrustedIdentity)
         try rig.release(identity: "other.app"); expect(await rig.adapter.check(), .untrustedIdentity)
-        try rig.release(build: 1); expect(await rig.adapter.check(), .incompatibleVersion)
+        try rig.release(build: 1)
+        guard case .success(nil) = await rig.adapter.check() else { return XCTFail("the installed build is up to date") }
         try rig.release(build: 0); expect(await rig.adapter.check(), .incompatibleVersion)
         XCTAssertEqual(rig.driver.replacementCount, 0)
     }
@@ -420,7 +422,7 @@ final class P04UpdaterTests: XCTestCase {
     @MainActor func testCompletedBuildCannotBeOfferedAgainAndNewBinaryCanRecover() async throws {
         let rig = try Rig(); _ = try await rig.install()
         _ = await rig.adapter.relaunch(receipt: rig.receipt)
-        expect(await rig.adapter.check(), .incompatibleVersion)
+        guard case .success(nil) = await rig.adapter.check() else { return XCTFail("a completed build is not offered again") }
         let newTrust = UpdateTrust(identity: "test.watt", currentBuild: 2, hostSystemVersion: rig.host, publicKey: rig.key.publicKey)
         let newProcess = UpdateAdapter(source: rig.source, driver: rig.driver, storage: rig.storage, trust: newTrust)
         expect(await newProcess.recover(receipt: rig.receipt), state: .completed(rig.receipt))
@@ -486,6 +488,54 @@ final class P04UpdaterTests: XCTestCase {
         XCTAssertTrue(rig.driver.staged.isEmpty)
         rig.restart(); expect(await rig.adapter.install(receipt: rig.receipt), .denied)
         guard case .success = await rig.adapter.discard(receipt: rig.receipt) else { return XCTFail() }
+    }
+
+    /// The published manifest for 1.0.1. Same build is up to date; a lower build is offered.
+    @MainActor func testLiveManifestIsUpToDateAtBuild1000001AndOfferedBelowIt() async throws {
+        let manifestURL = URL(string: "https://ben-ranford.github.io/watt/updates/manifest.json")!
+        var request = URLRequest(url: manifestURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 20)
+        request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
+        let (bytes, response) = try await URLSession.shared.data(for: request)
+        let http = try XCTUnwrap(response as? HTTPURLResponse)
+        XCTAssertEqual(http.statusCode, 200)
+        let signed = try JSONDecoder().decode(SignedUpdate.self, from: bytes)
+        let keyURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Resources/UpdatePublicKey.txt")
+        let keyText = try String(contentsOf: keyURL, encoding: .utf8)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let keyBytes = try XCTUnwrap(Data(base64Encoded: keyText))
+        let publicKey = try Curve25519.Signing.PublicKey(rawRepresentation: keyBytes)
+        let host = OperatingSystemVersion(majorVersion: 14, minorVersion: 0, patchVersion: 0)
+        let manifest = try UpdateTrust(
+            identity: "io.github.ben-ranford.watt", currentBuild: 1_000_001,
+            hostSystemVersion: host, publicKey: publicKey
+        ).authenticate(signed)
+        XCTAssertEqual(manifest.identity, "io.github.ben-ranford.watt")
+        XCTAssertEqual(manifest.build, 1_000_001)
+        XCTAssertEqual(manifest.minimumSystemVersion, "13.0")
+        XCTAssertNil(manifest.notes)
+        XCTAssertEqual(manifest.sha256.base64EncodedString(), "ewWtypFxPPn9PTIah3z9HnB6kpzvweKCAok6SX0CVMk=")
+
+        func checker(currentBuild: UInt64) -> UpdateAdapter {
+            let source = P04Source()
+            source.release = signed
+            let trust = UpdateTrust(
+                identity: "io.github.ben-ranford.watt", currentBuild: currentBuild,
+                hostSystemVersion: host, publicKey: publicKey
+            )
+            return UpdateAdapter(source: source, driver: P04Installation(), storage: InMemoryStorage(), trust: trust)
+        }
+        let current = checker(currentBuild: 1_000_001)
+        guard case .success(nil) = await current.check() else {
+            return XCTFail("build 1000001 must be up to date, state \(current.state)")
+        }
+        XCTAssertEqual(current.state, .idle)
+        let older = checker(currentBuild: 1_000_000)
+        guard case .success("1000001") = await older.check() else {
+            return XCTFail("a lower build must be offered 1000001, state \(older.state)")
+        }
+        XCTAssertEqual(older.state, .available(version: "1000001"))
     }
 
 }

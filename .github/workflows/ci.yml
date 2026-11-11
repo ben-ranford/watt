@@ -159,6 +159,10 @@ jobs:
       # Pull-request runs only. This is a workflow artifact for a local Mac
       # install, not a GitHub Release or a Pages publish. The Release app was
       # already ad-hoc signed by the build step (CODE_SIGN_IDENTITY=-).
+      # The Release configuration keeps ENABLE_TESTABILITY, so Xcode adds
+      # com.apple.security.get-task-allow to this artifact on purpose and it
+      # can be attached in a debugger. scripts/release-archive.sh sets
+      # ENABLE_TESTABILITY=NO for a published build, which does not carry it.
       - name: Zip the Release app
         if: github.event_name == 'pull_request'
         run: |

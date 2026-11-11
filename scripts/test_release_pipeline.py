@@ -401,6 +401,8 @@ Build settings for action build and target Watt:
     MARKETING_VERSION = 1.2.3
     CURRENT_PROJECT_VERSION = 1002003
     PRODUCT_BUNDLE_IDENTIFIER = dev.watt.example
+    ENABLE_TESTABILITY = NO
+    CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO
 Build settings for action build and target WattTests:
     MARKETING_VERSION = 1.2.3
     CURRENT_PROJECT_VERSION = 4
@@ -421,6 +423,14 @@ Build settings for action build and target WattTests:
                 '--marketing', '1.2.3', '--build', '1',
             ])
             self.assertEqual(mismatch.returncode, 1)
+            debuggable = text.replace('ENABLE_TESTABILITY = NO', 'ENABLE_TESTABILITY = YES')
+            log.write_text(debuggable)
+            injected = run([
+                sys.executable, 'scripts/check_xcode_settings.py', str(log),
+                '--marketing', '1.2.3', '--build', '1002003',
+            ])
+            self.assertEqual(injected.returncode, 1)
+            self.assertIn('get-task-allow', injected.stderr)
 
     def test_workflow_does_not_read_apple_signing_secrets(self) -> None:
         text = (ROOT / '.github/workflows/release.yml').read_text()
@@ -959,6 +969,16 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertNotIn('APPLE_', text)
         self.assertNotIn('developer-id', text)
         self.assertIn('CODE_SIGN_IDENTITY=-', text)
+        self.assertEqual(text.count('ENABLE_TESTABILITY=NO'), 2)
+        self.assertEqual(text.count('CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO'), 2)
+        hardened = (ROOT / 'Resources/Entitlements/HardenedRuntime.entitlements').read_text()
+        self.assertNotIn('<key>com.apple.security.get-task-allow</key>', hardened)
+        release_config = (ROOT / 'Watt.xcodeproj/project.pbxproj').read_text()
+        self.assertIn(
+            '"CODE_SIGN_ENTITLEMENTS" = "Resources/Entitlements/HardenedRuntime.entitlements"',
+            release_config,
+        )
+        self.assertNotIn('WattDebug.entitlements"; "name" = "Release"', release_config)
         self.assertNotIn('INFOPLIST_KEY_WATT', text)
         self.assertIn('WATT_HELPER_TRUST_MODE=protected-installation', text)
         self.assertIn('WATT_UPDATE_MANIFEST_URL=$manifest_url', text)

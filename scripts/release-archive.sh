@@ -86,7 +86,10 @@ python3 scripts/check_app_icon.py
 
 echo "Checking resolved Xcode settings before archive."
 xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release \
-  -destination 'generic/platform=macOS' -showBuildSettings > "$workdir/settings.txt"
+  -destination 'generic/platform=macOS' -showBuildSettings \
+  ENABLE_TESTABILITY=NO \
+  CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
+  > "$workdir/settings.txt"
 python3 scripts/check_xcode_settings.py "$workdir/settings.txt" --marketing "$version" --build "$identity_build"
 
 echo "Archiving with an ad-hoc signature. This release is not Developer ID signed or notarised."
@@ -99,6 +102,10 @@ settings=(
   CODE_SIGNING_ALLOWED=YES
   CODE_SIGNING_REQUIRED=YES
   ENABLE_HARDENED_RUNTIME=YES
+  # Release config keeps ENABLE_TESTABILITY so a pull-request artifact can be
+  # debugged. That injects get-task-allow. A published archive must not.
+  ENABLE_TESTABILITY=NO
+  CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO
   # Custom keys. Xcode drops unknown INFOPLIST_KEY_* settings. Resources/App/Info.plist
   # and Resources/Helper/Info.plist expand this before code signing.
   WATT_HELPER_TRUST_MODE=protected-installation

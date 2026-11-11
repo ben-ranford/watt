@@ -32,8 +32,11 @@ final class ProductionUpdateSource: UpdateSource {
             let release = try JSONDecoder().decode(SignedUpdate.self, from: bytes)
             _ = try trust.authenticate(release)
             return release
-        } catch let error as ServiceFailure { throw error }
-        catch { throw ServiceFailure.invalidData }
+        } catch {
+            let reason = error as? ServiceFailure ?? .invalidData
+            UpdateDiagnostics.record(error, as: reason, during: "manifest")
+            throw reason
+        }
     }
     func download(_ release: SignedUpdate) async throws -> Data {
         try await download(release, progress: { _ in })
@@ -147,7 +150,10 @@ private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @un
             && candidate?.query == nil && candidate?.fragment == nil
         lock.unlock()
         completionHandler(allowed ? request : nil)
-        if !allowed { finish(.failure(ServiceFailure.network)) }
+        if !allowed {
+            UpdateDiagnostics.record(UpdateResponseRejection(status: response.statusCode), as: .invalidData, during: "redirect")
+            finish(.failure(ServiceFailure.invalidData))
+        }
     }
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse,
                     completionHandler: @escaping @Sendable (URLSession.ResponseDisposition) -> Void) {
@@ -158,7 +164,10 @@ private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @un
               http.statusCode == 200 || (allowNoContent && http.statusCode == 204),
               http.value(forHTTPHeaderField: "Content-Encoding").map({ $0.lowercased() == "identity" }) ?? true,
               response.expectedContentLength <= Int64(limit) else {
-            lock.unlock(); completionHandler(.cancel); finish(.failure(ServiceFailure.network)); return
+            let status = (response as? HTTPURLResponse)?.statusCode ?? -1
+            lock.unlock(); completionHandler(.cancel)
+            UpdateDiagnostics.record(UpdateResponseRejection(status: status), as: .invalidData, during: "response")
+            finish(.failure(ServiceFailure.invalidData)); return
         }
         expected = response.expectedContentLength; noContent = http.statusCode == 204; responseAccepted = true
         lock.unlock(); completionHandler(.allow)
@@ -179,10 +188,13 @@ private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @un
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         lock.lock()
         let accepted = responseAccepted, noContent = self.noContent, bytes = self.bytes, expected = self.expected
+        let alreadyDone = done
         lock.unlock()
+        if alreadyDone { return }
         if let error {
-            let code = (error as NSError).code
-            finish(.failure(code == NSURLErrorTimedOut ? ServiceFailure.timedOut : ServiceFailure.network))
+            let reason = UpdateFailureClassification.transport(error)
+            UpdateDiagnostics.record(error, as: reason, during: "transfer")
+            finish(.failure(reason))
         } else if !accepted || (expected >= 0 && !noContent && expected != bytes.count) {
             finish(.failure(ServiceFailure.invalidData))
         } else { finish(.success(noContent ? nil : bytes)) }
