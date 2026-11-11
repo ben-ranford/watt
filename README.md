@@ -81,7 +81,7 @@ See also [RELEASING.md](RELEASING.md) for how a release is signed and published,
 
 ### Dependencies
 
-Watt requires macOS 13.0 or later. The deployment target, the Swift package, and the release check all use that minimum (`LSMinimumSystemVersion` `13.0`, Homebrew `>= :ventura`).
+Watt requires macOS 13.0 or later. The deployment target, the Swift package, and the release check all use that minimum (`LSMinimumSystemVersion` `13.0`, Homebrew `depends_on macos: :ventura`).
 
 Building from source needs Xcode with the macOS SDK. Continuous integration runs on the Xcode 27 image because `WattTests` references `NSMenuItem.preferredImageVisibility`, which the macOS 27 SDK declares. Running the installed app does not require Xcode.
 
@@ -93,7 +93,7 @@ The cask `watt` is published from [ben-ranford/homebrew-tap](https://github.com/
 brew install --cask ben-ranford/tap/watt
 ```
 
-The cask downloads `Watt-X.Y.Z.zip` from GitHub Releases, installs `Watt.app`, and removes the quarantine attribute in `postflight`. It sets `auto_updates true`, so Homebrew leaves upgrades to Watt. `brew upgrade` does not replace the app unless you pass `--greedy`.
+The cask downloads `Watt-X.Y.Z.zip` from GitHub Releases, installs `Watt.app`, and removes the quarantine attribute in `postflight_steps`. It sets `auto_updates true`, so Homebrew leaves upgrades to Watt. `brew upgrade` does not replace the app unless you pass `--greedy`.
 
 ### Download
 

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Render Casks/watt.rb for ben-ranford/homebrew-tap.
 
-The cask installs the GitHub Release zip. A postflight block removes the
-quarantine attribute with xattr. Homebrew rejects --no-quarantine, so the
-cask does not use that flag. Direct zip and disk-image downloads still need
-the Finder Open step; that text stays in the README, not in the cask caveats.
+The cask installs the GitHub Release zip. A postflight_steps block removes the
+quarantine attribute with xattr. Homebrew rejects --no-quarantine and the
+legacy postflight Ruby block, so the cask uses neither. The macOS requirement
+is a symbol (`depends_on macos: :ventura`), which already means that release
+or newer. Direct zip and disk-image downloads still need the Finder Open step;
+that text stays in the README, not in the cask caveats.
 """
 
 from __future__ import annotations
@@ -43,19 +45,19 @@ def macos_dependency(minimum_system_version: str) -> str:
         raise release_lib.ReleaseError(
             'no Homebrew macOS symbol for minimum system version ' + minimum_system_version
         )
-    return '>= :' + symbol
+    return ':' + symbol
 
 
 def zap_lines(bundle_id: str) -> list[str]:
     identity = release_lib.validate_identity(bundle_id)
     helper = identity + '.helper'
     return [
-        '"~/Library/Application Support/Watt"',
-        '"~/Library/Preferences/' + identity + '.plist"',
         '"/Library/Application Support/Watt"',
         '"/Library/Application Support/Watt-maintenance-result.json"',
         '"/Library/LaunchDaemons/' + helper + '.plist"',
         '"/Library/PrivilegedHelperTools/' + helper + '"',
+        '"~/Library/Application Support/Watt"',
+        '"~/Library/Preferences/' + identity + '.plist"',
     ]
 
 
@@ -64,32 +66,33 @@ def render_cask(*, version: str, sha256: str, bundle_id: str, minimum_system_ver
     if len(sha256) != 64 or any(char not in '0123456789abcdef' for char in sha256):
         raise release_lib.ReleaseError('sha256 must be 64 lowercase hex characters')
     dependency = macos_dependency(minimum_system_version)
-    trash = ',\n    '.join(zap_lines(bundle_id))
+    trash = ',\n        '.join(zap_lines(bundle_id))
     helper = release_lib.validate_identity(bundle_id) + '.helper'
     caveats = '\n'.join('    ' + line if line else '' for line in CAVEATS.splitlines())
+    # {{appdir}} is a Homebrew install-step token, not Ruby interpolation.
+    # An f-string needs four braces to emit one pair.
     return f"""cask "watt" do
   version "{version}"
   sha256 "{sha256}"
 
   url "https://github.com/ben-ranford/watt/releases/download/v#{{version}}/Watt-#{{version}}.zip"
   name "Watt?"
-  desc "Menu-bar app that shows Mac power draw in watts"
+  desc "Menu bar power draw monitor"
   homepage "https://github.com/ben-ranford/watt"
 
-  depends_on macos: "{dependency}"
+  auto_updates true
+  depends_on macos: {dependency}
 
   app "Watt.app"
 
-  auto_updates true
-
-  postflight do
-    system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{{appdir}}/Watt.app"]
+  postflight_steps do
+    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{{{appdir}}}}/Watt.app"]
   end
 
-  zap trash: [
-    {trash},
-  ],
-    launchctl: "{helper}"
+  zap launchctl: "{helper}",
+      trash:     [
+        {trash},
+      ]
 
   caveats <<~EOS
 {caveats}
