@@ -133,7 +133,7 @@ jobs:
         run: |
           set -euo pipefail
           export WATT_RESULT_BUNDLE="${RUNNER_TEMP}/WattTests.xcresult"
-          export WATT_SCREENSHOT_DIR="${GITHUB_WORKSPACE}/.site-screenshots"
+          export WATT_SCREENSHOT_DIR="${RUNNER_TEMP}/site-screenshots"
           mkdir -p "${WATT_SCREENSHOT_DIR}"
           bash scripts/retry_on_timeout.sh 600 1 -- \
             xcodebuild test \
@@ -161,9 +161,10 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: site-screenshots
-          path: .site-screenshots
+          path: ${{ runner.temp }}/site-screenshots
           retention-days: 7
           if-no-files-found: warn
+          include-hidden-files: true
 
       - name: Unit tests (swift test)
         run: |
