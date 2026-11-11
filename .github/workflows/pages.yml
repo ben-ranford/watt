@@ -1,0 +1,70 @@
+name: Pages site
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+
+# Read-only except the deploy job, which publishes the landing page.
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Pages artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build the Pages artifact
+        run: bash scripts/check-pages-artifact.sh
+
+  deploy:
+    name: Publish site
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Fetch the live updates before copying the page. A failure here stops
+      # the job, so a docs change cannot replace the site with an empty updates/.
+      - name: Preserve published updates
+        env:
+          PAGES_DIR: site
+          PAGES_UPDATES_BASE: https://ben-ranford.github.io/watt/updates
+        run: bash scripts/preserve-pages-updates.sh
+      - name: Stage the landing page
+        env:
+          PAGES_SOURCE: .
+          PAGES_DIR: site
+        run: bash scripts/stage-pages-site.sh
+      - name: Check the Pages artifact
+        env:
+          PAGES_DIR: site
+          PAGES_REQUIRE_UPDATES: "true"
+        run: bash scripts/verify-pages-artifact.sh
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
