@@ -37,6 +37,9 @@ struct WattApp: App {
         if J125FixtureLaunch.requested || J124FixtureLaunch.requested || (J121FixtureLaunch.requested || J122FixtureLaunch.requested || J113FixtureLaunch.requested) || J108FixtureLaunch.requested || J107FixtureLaunch.requested || J106FixtureLaunch.requested || J105FixtureLaunch.requested || J104FixtureLaunch.requested || J103FixtureLaunch.requested || J102FixtureLaunch.requested || J93FixtureLaunch.requested || J92FixtureLaunch.requested || J91FixtureLaunch.requested || J83FixtureLaunch.requested || J112FixtureLaunch.requested || J82FixtureLaunch.requested || J81FixtureLaunch.requested || J74FixtureLaunch.requested || J73FixtureLaunch.requested || J72FixtureLaunch.requested || J71FixtureLaunch.requested || J65FixtureLaunch.requested || J64FixtureLaunch.requested || J63FixtureLaunch.requested || J62FixtureLaunch.requested || J61FixtureLaunch.requested || J111FixtureLaunch.requested || J53FixtureLaunch.requested || J52FixtureLaunch.requested || J51FixtureLaunch.requested || J43FixtureLaunch.requested || J42FixtureLaunch.requested || J41FixtureLaunch.requested || J33FixtureLaunch.requested || J32FixtureLaunch.requested || J31FixtureLaunch.requested || J25FixtureLaunch.requested || J24FixtureLaunch.requested || J23FixtureLaunch.requested || J22FixtureLaunch.requested || J21FixtureLaunch.requested || J18FixtureLaunch.requested || J17FixtureLaunch.requested || J16FixtureLaunch.requested || J15FixtureLaunch.requested || J14FixtureLaunch.requested || J13FixtureLaunch.requested || J12FixtureLaunch.requested || J11FixtureLaunch.requested || C05FixtureLaunch.requested || C01FixtureLaunch.requested || C02FixtureLaunch.requested || C03FixtureLaunch.requested || C041FixtureLaunch.requested || C042FixtureLaunch.requested || C043FixtureLaunch.requested || C044FixtureLaunch.requested || C045FixtureLaunch.requested || C046FixtureLaunch.requested || C047FixtureLaunch.requested || C048FixtureLaunch.requested || C049FixtureLaunch.requested || C0410FixtureLaunch.requested || C0411FixtureLaunch.requested || C0412FixtureLaunch.requested {
             let appRouter = AppRouter()
             appRouter.onUninstalled = { NSApplication.shared.terminate(nil) }
+            AboutPanel.presentWhatsNew = { [weak appRouter] in
+                appRouter?.showInstalledReleaseNotes()
+            }
             _router = StateObject(wrappedValue: appRouter)
             let fixturePowerStore = (J121FixtureLaunch.requested || J122FixtureLaunch.requested || J113FixtureLaunch.requested)
                 ? J121FixtureLaunch.makeStore()
@@ -248,14 +251,21 @@ struct WattApp: App {
         // that deterministic fixture state without composing an updater into
         // the real app, which remains fail-closed until a trusted P04 service
         // is configured.
+        let updateStorage = UserDefaultsStorage(defaults: .standard)
         let appRouter = C03FixtureLaunch.requested
-            ? AppRouter(updateService: FakeUpdateService())
+            ? AppRouter(updateService: FakeUpdateService(), whatsNewStorage: updateStorage)
             : AppRouter(updateService: productionUpdate?.adapter,
-                updates: UpdateStore(storage: UserDefaultsStorage(defaults: .standard)), updateConfigurationFailure: updateFailure)
+                updates: UpdateStore(storage: updateStorage), updateConfigurationFailure: updateFailure,
+                whatsNewStorage: updateStorage)
         #else
+        let updateStorage = UserDefaultsStorage(defaults: .standard)
         let appRouter = AppRouter(updateService: productionUpdate?.adapter,
-            updates: UpdateStore(storage: UserDefaultsStorage(defaults: .standard)), updateConfigurationFailure: updateFailure)
+            updates: UpdateStore(storage: updateStorage), updateConfigurationFailure: updateFailure,
+            whatsNewStorage: updateStorage)
         #endif
+        AboutPanel.presentWhatsNew = { [weak appRouter] in
+            appRouter?.showInstalledReleaseNotes()
+        }
         if let update = productionUpdate {
             appRouter.configureUpdateInstallation(adapter: update.adapter)
             Task {
@@ -515,6 +525,12 @@ struct WattApp: App {
                 .environmentObject(preferences)
                 .frame(minWidth: 360, idealWidth: 420, minHeight: 180)
         }
+
+        Window("What’s New", id: "whats-new") {
+            WhatsNewScene()
+                .environmentObject(router)
+        }
+        .windowResizability(.contentSize)
 
         Settings {
             SettingsRootView(menuBarExcerpt: settingsMenuBarExcerpt,
@@ -1400,6 +1416,10 @@ private final class WattFallbackStatusItem: NSObject {
                     .environmentObject(self.router)
                     .environmentObject(self.powerStore)
                     .environmentObject(self.preferences))
+            case .whatsNew:
+                guard let self else { return }
+                self.showFallbackWindow(title: "What’s New", fitContent: true, content: WhatsNewScene()
+                    .environmentObject(self.router))
             }
         }
 
@@ -1624,6 +1644,9 @@ private struct StatusItemAdapter: NSViewRepresentable {
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 case .update:
                     openWindow(id: "update")
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+                case .whatsNew:
+                    openWindow(id: "whats-new")
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 }
             }

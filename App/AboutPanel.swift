@@ -14,6 +14,16 @@ enum AppLinks {
 @MainActor
 enum AboutPanel {
     static let sponsorTitle = "Sponsor"
+    static let whatsNewTitle = "What’s New"
+    /// Not an https URL. The about panel handles it inside the app.
+    static let whatsNewLink: URL = {
+        guard let url = URL(string: "watt:whats-new") else {
+            preconditionFailure("What’s New URL is invalid")
+        }
+        return url
+    }()
+    /// Set by the app so the credit can open the signed notes for this version.
+    static var presentWhatsNew: () -> Void = {}
 
     static func show() {
         NSApplication.shared.orderFrontStandardAboutPanel(options: [
@@ -27,16 +37,24 @@ enum AboutPanel {
 
     /// Centered Sponsor credit. The about panel draws it under the version.
     static func credits() -> NSAttributedString {
-        let text = NSMutableAttributedString(string: sponsorTitle)
-        let range = NSRange(location: 0, length: (sponsorTitle as NSString).length)
-        text.addAttribute(.link, value: AppLinks.githubSponsors, range: range)
+        let text = NSMutableAttributedString()
+        appendCredit(whatsNewTitle, link: whatsNewLink, to: text)
+        text.append(NSAttributedString(string: "\n"))
+        appendCredit(sponsorTitle, link: AppLinks.githubSponsors, to: text)
+        return text
+    }
+
+    private static func appendCredit(_ title: String, link: URL, to text: NSMutableAttributedString) {
+        let start = text.length
+        text.append(NSAttributedString(string: title))
+        let range = NSRange(location: start, length: (title as NSString).length)
+        text.addAttribute(.link, value: link, range: range)
         text.addAttribute(.font, value: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize), range: range)
         text.addAttribute(.foregroundColor, value: NSColor.linkColor, range: range)
         text.addAttribute(.underlineStyle, value: NSNumber(value: NSUnderlineStyle.single.rawValue), range: range)
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
         text.addAttribute(.paragraphStyle, value: paragraph, range: range)
-        return text
     }
 
     /// Opens the sponsors page when the credit’s link is the configured URL.
@@ -47,8 +65,12 @@ enum AboutPanel {
 
     @discardableResult
     static func handleLinkClick(_ link: Any, open: @MainActor (URL) -> Bool) -> Bool {
-        guard let url = url(from: link),
-              url.absoluteString == AppLinks.githubSponsors.absoluteString else { return false }
+        guard let url = url(from: link) else { return false }
+        if url.absoluteString == whatsNewLink.absoluteString {
+            presentWhatsNew()
+            return true
+        }
+        guard url.absoluteString == AppLinks.githubSponsors.absoluteString else { return false }
         return open(AppLinks.githubSponsors)
     }
 

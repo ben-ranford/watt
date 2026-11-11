@@ -195,6 +195,7 @@ if [[ "$preflight" -eq 0 && "$signing_key_present" == true ]]; then
     --minimum-system-version "$minimum" \
     --changelog "$root/CHANGELOG.md" \
     --marketing-version "$version" \
+    --rollout "$root/Resources/ReleaseRollout.json" \
     --output "$output/Watt-$version-update-manifest.json"
   echo "Signed update manifest from the ustar artifact sha256."
 elif [[ "$signing_key_present" == true ]]; then

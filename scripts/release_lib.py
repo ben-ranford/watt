@@ -21,6 +21,8 @@ import plistlib
 import re
 from pathlib import Path
 
+import rollout_manifest
+
 VERSION_RE = re.compile(r'^([1-9][0-9]*|0)\.([0-9]+)\.([0-9]+)$')
 TAG_RE = re.compile(r'^v([1-9][0-9]*|0)\.([0-9]+)\.([0-9]+)$')
 IDENTITY_RE = re.compile(r'^[A-Za-z][A-Za-z0-9-]*(?:\.[A-Za-z0-9-]+)+$')
@@ -309,15 +311,33 @@ def changelog_notes(text: str, version: str) -> str:
     return limit_notes(body)
 
 
-def manifest_payload(identity: str, build: int, digest: bytes, minimum: str, notes: str | None = None) -> bytes:
+def marketing_from_build(build: int) -> str:
+    """Marketing version encoded as MAJOR * 1000000 + MINOR * 1000 + PATCH."""
+    number = validate_build(build)
+    if number < 1_000_000:
+        raise ReleaseError('build is not an encoded marketing version')
+    version = f'{number // 1_000_000}.{(number // 1_000) % 1_000}.{number % 1_000}'
+    parse_version(version)
+    return version
+
+
+def manifest_payload(
+    identity: str,
+    build: int,
+    digest: bytes,
+    minimum: str,
+    notes: str | None = None,
+    rollout: dict | None = None,
+) -> bytes:
     """Bytes matching JSONEncoder().encode(UpdateManifest) with default strategies.
 
-    `notes` is omitted when absent so a manifest signed before that field still
-    decodes. When present, the field is part of these exact signed bytes.
+    `notes` and `rollout` are omitted when absent so a manifest signed before
+    either field still decodes. When present, each field is part of these exact
+    signed bytes, in that order, after the original four keys.
     """
     if len(digest) != 32:
         raise ReleaseError('sha256 must be 32 bytes')
-    body: dict[str, str | int] = {
+    body: dict[str, str | int | dict] = {
         'identity': validate_identity(identity),
         'build': validate_build(build),
         'sha256': base64.b64encode(digest).decode('ascii'),
@@ -325,6 +345,11 @@ def manifest_payload(identity: str, build: int, digest: bytes, minimum: str, not
     }
     if notes is not None:
         body['notes'] = validate_notes(notes)
+    if rollout is not None:
+        try:
+            body['rollout'] = rollout_manifest.canonical(rollout)
+        except rollout_manifest.RolloutError as error:
+            raise ReleaseError(str(error)) from error
     return json.dumps(body, separators=(',', ':'), ensure_ascii=True).encode('ascii')
 
 

@@ -41,7 +41,7 @@ Minor and patch must stay below 1000. `1.0.0` / build `1` remains valid only on 
 1. **Release Please** opens or updates one pull request. The job reads `headBranchName` from that action's `pr` output and checks it out. The accepted names are `release-please--branches--main` and `release-please--branches--main--components--<component>`. The branch component is `component`, or package name `Watt` when `component` is unset, which produces `release-please--branches--main--components--Watt`. `include-component-in-tag` stays false so the tag remains `vX.Y.Z`. Anything else is refused. When that pull request is merged, Release Please creates a **draft** GitHub Release and tag `vX.Y.Z`.
 2. While the pull request is open, the same job syncs `CFBundleVersion` onto that branch and pushes the commit there. Wait until that job is green before merging, so the tag contains the encoded build.
 3. **Build and publish** checks out the release commit on `xcode-27` (the same runner and Xcode 27 selection as CI), runs `xcodebuild -showBuildSettings`, archives the `Watt` scheme in the Release configuration with an ad-hoc signature, and uploads artifacts. A successful upload marks the release as published. A failed build leaves the draft in place; delete that draft if you are not going to retry it.
-4. **Homebrew cask**, only after that publish, downloads the published zip, hashes it, and commits `Casks/watt.rb` to `main` on `ben-ranford/homebrew-tap`. The rendered cask removes the quarantine attribute in `postflight_steps`. The tap's formula bumps already land that way, as `github-actions[bot]` commits. The job clones and pushes that commit over SSH with a write-access deploy key. If `HOMEBREW_TAP_DEPLOY_KEY` is unset, the job prints a notice and exits successfully. It does not update the tap from a draft.
+4. **Homebrew cask**, only after that publish, downloads the published zip, hashes it, and commits `Casks/watt.rb` to `main` on `ben-ranford/homebrew-tap` when the signed rollout is already complete. A staged release leaves the cask on the last fully rolled-out version until `.github/workflows/rollout.yml` reaches 100% or the release is critical. The rendered cask removes the quarantine attribute in `postflight_steps`. The tap's formula bumps already land that way, as `github-actions[bot]` commits. The job clones and pushes that commit over SSH with a write-access deploy key. If `HOMEBREW_TAP_DEPLOY_KEY` is unset, the job prints a notice and exits successfully. It does not update the tap from a draft. A release with no signed manifest still updates the cask, because there is no rollout to wait for.
 5. **GitHub Pages**, only after that publish, downloads `Watt-X.Y.Z-update-manifest.json` and `Watt-X.Y.Z.tar` from the same release and stages them as `updates/manifest.json` and `updates/Watt.tar`. It then copies the landing page from that commit (`docs/index.html` and the files beside it) into the same directory. `scripts/stage-pages-site.sh` does not remove `updates/`. `scripts/verify-pages-artifact.sh` requires `index.html` and both update files before `actions/upload-pages-artifact` and `actions/deploy-pages` run. One deploy replaces the site, so the manifest, the tar, and the landing page change together. If the signed manifest is absent, the job skips the deploy and exits successfully, and the live site, including `updates/`, stays as it is. The job's token has `pages: write` and `id-token: write`, and it uses the `github-pages` environment. In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions**. Do not add a custom domain.
 
 A push to `main` that does not publish a release still updates the landing page. `.github/workflows/pages.yml` downloads the files already at `https://ben-ranford.github.io/watt/updates/`, checks that they are a signed document and an uncompressed ustar, and copies the landing page in beside them. It deploys only after the same artifact check sees both paths. Anything other than those two HTTP 200 responses fails the job before upload, so a docs-only change cannot replace `/updates/` with an empty directory. The docs deploy and the release deploy share the `pages` concurrency group with `cancel-in-progress: false`, so one cannot replace the site while the other is still deploying. Pull requests run the artifact check and do not deploy.
@@ -63,7 +63,7 @@ In the repository settings, enable **Allow GitHub Actions to create and approve 
 | `distribution-preflight.txt` | Result of `scripts/verify-release-readiness.sh distribution-preflight`. |
 | `Watt-X.Y.Z-update-manifest.json` | Signed updater document. Present only when preflight passed and `WATT_UPDATE_SIGNING_KEY` is set. |
 
-The manifest is `SignedUpdate`: base64 `payload` and base64 `signature`. The payload is the compact JSON `UpdateManifest` (`identity`, `build`, `sha256`, `minimumSystemVersion`, and `notes` when that release has changelog text). `notes` is the body of the matching `CHANGELOG.md` section and is omitted when absent, so a manifest signed before this field still verifies. The signature is Ed25519 over those exact payload bytes, including `notes` when the field is present.
+The manifest is `SignedUpdate`: base64 `payload` and base64 `signature`. The payload is the compact JSON `UpdateManifest` (`identity`, `build`, `sha256`, `minimumSystemVersion`, `notes` when that release has changelog text, and `rollout` when the release is staged). `notes` is the body of the matching `CHANGELOG.md` section. `notes` and `rollout` are omitted when absent, so a manifest signed before either field still verifies. The signature is Ed25519 over those exact payload bytes. Older clients verify that signature and ignore `rollout`; they do not reject the manifest. They also do not stage, so they install as soon as they see the build. Clients that understand `rollout` are the ones that follow the schedule.
 
 `distribution-preflight` fails while the bundle identifier starts with `dev.watt.verification`, while the compiled update URLs differ from `Resources/ReleaseIdentity.json`, or while the Ed25519 public key is absent. The job still uploads the app and the preflight log. It does **not** upload an update manifest in that case, and the Pages job does not deploy. Publishing a manifest the installed app cannot accept would give the updater nothing it can use.
 
@@ -122,6 +122,50 @@ The key pushes `Casks/watt.rb` to that repository's `main` branch over SSH (`git
 5. When you want the first tag to be exactly `v1.0.0`, add `"release-as": "1.0.0"` to the `.` package in `release-please-config.json` and push to `main`. Release Please opens a pull request that should also contain `chore: sync CFBundleVersion to the release marketing version` (build `1000000`). Merge that pull request, then delete `release-as` before the next release. Leaving `release-as` in the file pins every later release to the same version.
 6. If you skip `release-as`, the next `fix:` on `main` proposes `1.0.1` and the next `feat:` proposes `1.1.0`.
 7. After the macOS job publishes the release, read `distribution-preflight.txt`. With the signing key set, preflight passes for `io.github.ben-ranford.watt` and the Pages job publishes both update files. The installed app then fetches the stable URLs above.
+
+## Staged rollout
+
+`Resources/ReleaseRollout.json` is the schedule signed into a new manifest. The default is not critical, with one step per day:
+
+| Elapsed | Cohort |
+| --- | --- |
+| 0–24 hours | 1% |
+| 1 day | 2% |
+| 2 days | 5% |
+| 3 days | 10% |
+| 4 days | 20% |
+| 5 days | 50% |
+| 6 days and after | 100% |
+
+`basis` is the unix time of signing. The whole object sits inside the signed payload (`basis`, `interval`, `steps`, `paused`, `percent`, `critical`, `halted`), so a changed schedule or a changed pause fails verification. Each install stores one random bucket from 0 through 99 in its update journal (`updater.rollout-bucket.v1`). The bucket never leaves the Mac. An automatic check offers the build when the bucket is below the current cohort. A check before `basis` offers it to nobody.
+
+**Check for Updates** in the menu and **Check for Updates Now** in Settings are manual checks. They skip a running or paused schedule. They do not skip a halted release.
+
+`critical: true` skips the schedule for every check, including automatic ones. Set that in `Resources/ReleaseRollout.json` before the release is tagged, and set it back to `false` before the next release so the next one is staged again. `workflow_dispatch` can also mark an already published release critical.
+
+`paused: true` freezes `percent`. The clock does not advance the cohort. A manual check can still opt in. `halted: true` offers the build to nobody, including a manual check, and the cask does not move.
+
+`.github/workflows/rollout.yml` uses the same `pages` concurrency group as the other deploys, with `cancel-in-progress: false`. It downloads the live manifest and `Watt.tar` first. If either is missing or not a signed ustar, it does not deploy, so a rollout run cannot replace `/updates/` with an empty directory. The first time neither file exists, the run exits without deploying. A daily run at 06:17 UTC re-signs `percent` when the schedule has moved and the rollout is not paused or halted. Clients do not wait for that run; they read the schedule themselves. The run is what updates the signed snapshot and what moves the cask once the last step is due.
+
+Maintainer actions, from a checkout of `main`:
+
+```sh
+gh workflow run Rollout --ref main -f action=pause
+gh workflow run Rollout --ref main -f action=pause -f percent=2
+gh workflow run Rollout --ref main -f action=halt
+gh workflow run Rollout --ref main -f action=resume
+gh workflow run Rollout --ref main -f action=advance
+gh workflow run Rollout --ref main -f action=finish
+gh workflow run Rollout --ref main -f action=critical
+```
+
+`pause` with no percent freezes the cohort the schedule has reached. `percent` is 0 through 100 and is only read for `pause`. `halt` is how you stop a bad rollout: nobody is offered the build until you `resume`, `advance`, `finish`, or mark it `critical`. `advance` moves to the next step now. `finish` opens the build to every install and then updates the cask. `critical` does the same and also skips staging for this build. Each of those re-signs the manifest with `WATT_UPDATE_SIGNING_KEY` and publishes it through the Pages deploy. The tar is the one already on the site. The workflow refuses to sign a manifest whose sha256 does not match that tar, or a manifest this key did not already sign.
+
+The Homebrew cask cannot be staged. It stays on the last complete version until the signed rollout is at 100% or the release is critical, and it moves immediately when there is no rollout block. The cask has `auto_updates true`, so `brew upgrade` does not replace Watt unless someone passes `--greedy`. Shipping the cask at the start of a staged release would still give every new `brew install` and every greedy upgrade the new build at once. Holding it until the rollout is finished keeps that pointer on a version the app is no longer withholding. A critical release moves the app and the cask together.
+
+## What’s New
+
+After an update, the first launch of the new version shows the signed release notes once, in a small window. The app records that the window appeared as soon as it is on screen. Quitting or crashing without pressing Done does not show it again. A fresh install does not show it, and neither does a later launch of the same version. The notes for the running version stay available from the About panel’s **What’s New** credit. That text is the signed `notes` field, checked again from the update journal. If the signature does not verify, the automatic window stays closed.
 
 ## Decisions still open
 

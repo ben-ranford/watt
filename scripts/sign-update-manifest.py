@@ -6,19 +6,24 @@ It is read from the environment, never from argv. The payload bytes match
 JSONEncoder().encode(UpdateManifest), and the output matches SignedUpdate.
 Pass --changelog and --marketing-version to include that release's notes in
 the signed payload. Omitting them leaves the notes field out.
+Pass --rollout to embed Resources/ReleaseRollout.json. Omitting it leaves the
+rollout field out, which is what older manifests and older clients expect.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import release_lib
+import rollout_manifest
 
 
 def _pem_from_env(directory: Path) -> Path:
@@ -75,6 +80,8 @@ def main() -> None:
     parser.add_argument('--minimum-system-version')
     parser.add_argument('--changelog', type=Path, help='CHANGELOG.md whose section is signed into the manifest')
     parser.add_argument('--marketing-version', help='release whose changelog section is signed, for example 1.2.3')
+    parser.add_argument('--rollout', type=Path, help='ReleaseRollout.json embedded in the signed payload')
+    parser.add_argument('--rollout-basis', type=int, help='unix seconds the rollout schedule starts; default is now')
     parser.add_argument('--output', type=Path, help='SignedUpdate JSON path')
     args = parser.parse_args()
     if args.public_key_out is None and args.output is None:
@@ -83,6 +90,8 @@ def main() -> None:
         parser.error('--output requires --archive, --identity, --build, and --minimum-system-version')
     if (args.changelog is None) != (args.marketing_version is None):
         parser.error('--changelog and --marketing-version are used together')
+    if args.rollout_basis is not None and args.rollout is None:
+        parser.error('--rollout-basis requires --rollout')
     try:
         with tempfile.TemporaryDirectory(prefix='watt-update-sign-') as temporary:
             directory = Path(temporary)
@@ -95,8 +104,13 @@ def main() -> None:
                 notes = None
                 if args.changelog is not None:
                     notes = release_lib.changelog_notes(args.changelog.read_text(encoding='utf-8'), args.marketing_version)
+                rollout = None
+                if args.rollout is not None:
+                    basis = int(time.time()) if args.rollout_basis is None else args.rollout_basis
+                    spec = json.loads(args.rollout.read_text(encoding='utf-8'))
+                    rollout = rollout_manifest.initial_rollout(spec, basis)
                 payload = release_lib.manifest_payload(
-                    args.identity, int(args.build), digest, args.minimum_system_version, notes
+                    args.identity, int(args.build), digest, args.minimum_system_version, notes, rollout
                 )
                 signature = sign_payload(pem, payload, directory)
                 args.output.write_bytes(release_lib.signed_update_document(payload, signature) + b'\n')
