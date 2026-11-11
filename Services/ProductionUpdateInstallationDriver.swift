@@ -16,14 +16,19 @@ struct VerifiedUpdateBundle: Codable, Equatable, Sendable {
     let codeHash: Data
 }
 
-protocol ProductionUpdateCodeValidator: Sendable {
+@MainActor
+protocol ProductionUpdateCodeValidator {
     func verify(bundle: URL) throws -> VerifiedUpdateBundle
 }
 
 /// Validates the sealed bundle and its actual ad-hoc or certificate-backed code identity.
 /// No certificate/identifier fallback is used when code validation fails.
 struct SecurityUpdateCodeValidator: ProductionUpdateCodeValidator {
-    func verify(bundle: URL, home: String = NSHomeDirectory()) throws -> VerifiedUpdateBundle {
+    func verify(bundle: URL) throws -> VerifiedUpdateBundle {
+        try verify(bundle: bundle, home: NSHomeDirectory())
+    }
+
+    func verify(bundle: URL, home: String) throws -> VerifiedUpdateBundle {
         if LaunchPathPolicy.isPrivacyProtected(bundle, home: home) { throw ServiceFailure.untrustedIdentity }
         var code: SecStaticCode?
         guard SecStaticCodeCreateWithPath(bundle as CFURL, [], &code) == errSecSuccess, let code,
@@ -41,46 +46,6 @@ struct SecurityUpdateCodeValidator: ProductionUpdateCodeValidator {
               version.utf8.allSatisfy({ (48...57).contains($0) }), let build = UInt64(version), build > 0,
               let minimum = plist["LSMinimumSystemVersion"] as? String else { throw ServiceFailure.untrustedIdentity }
         return VerifiedUpdateBundle(identifier: identifier, build: build, minimumSystemVersion: minimum, codeHash: hash)
-    }
-}
-
-/// Same bundle walk the installation driver uses before it will trust a running app.
-/// Not actor-isolated: launch calls it off the main thread, and update operations call it later.
-enum RunningBundleCheck {
-    static func verify(url: URL, owner: uid_t, validator: (URL) throws -> VerifiedUpdateBundle) throws -> VerifiedUpdateBundle {
-        if LaunchPathPolicy.isPrivacyProtected(url) { throw ServiceFailure.untrustedIdentity }
-        let fd = try BoundedUSTAR.openDirectory(url)
-        defer { close(fd) }
-        var before = stat(), after = stat()
-        guard fstat(fd, &before) == 0, before.st_uid == owner, before.st_mode & 0o022 == 0 else {
-            throw ServiceFailure.untrustedIdentity
-        }
-        try rejectLinks(url, owner: owner)
-        let identity = try validator(url)
-        let current = try BoundedUSTAR.openDirectory(url)
-        defer { close(current) }
-        guard fstat(current, &after) == 0, before.st_dev == after.st_dev, before.st_ino == after.st_ino else {
-            throw ServiceFailure.untrustedIdentity
-        }
-        return identity
-    }
-
-    private static func rejectLinks(_ url: URL, owner: uid_t) throws {
-        if LaunchPathPolicy.isPrivacyProtected(url) { throw ServiceFailure.untrustedIdentity }
-        guard let files = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil) else { throw ServiceFailure.invalidData }
-        var count = 0, total: Int64 = 0
-        for case let file as URL in files {
-            if LaunchPathPolicy.isPrivacyProtected(file) { throw ServiceFailure.untrustedIdentity }
-            var info = stat()
-            guard lstat(file.path, &info) == 0, info.st_uid == owner, info.st_mode & 0o022 == 0,
-                  info.st_mode & S_IFMT == S_IFDIR || (info.st_mode & S_IFMT == S_IFREG && info.st_nlink == 1) else { throw ServiceFailure.untrustedIdentity }
-            count += 1
-            guard count <= BoundedUSTAR.maximumEntries, info.st_size >= 0,
-                  info.st_size <= BoundedUSTAR.maximumBytes, total <= Int64(BoundedUSTAR.maximumBytes) - info.st_size else {
-                throw ServiceFailure.invalidData
-            }
-            total += info.st_size
-        }
     }
 }
 
@@ -119,25 +84,6 @@ final class ProductionUpdateInstallationDriver: UpdateInstallationDriver {
         storage = try AtomicMaintenanceStorage(directory: stagingDirectory)
         _ = try verified(application)
     }
-
-    /// Adopts a staging lock and a bundle identity that were already checked off the main thread.
-    /// `stage` and `replace` still run `SecStaticCode` again. This does not open the bundle.
-    init(application: URL, adoptingStaging lock: HeldLock, verified identity: VerifiedUpdateBundle,
-         applicationOwnerUID: uid_t, witness: any ProductionUpdateProcessWitness,
-         requiresAdministrator: @escaping @MainActor (UpdateManifest, OperationReceipt) throws -> Bool) throws {
-        guard application.isFileURL, application.pathExtension == "app",
-              !application.path.hasPrefix(lock.directory.path + "/"),
-              !lock.directory.path.hasPrefix(application.path + "/") else { throw ServiceFailure.invalidData }
-        guard identity.codeHash.count == 20, identity.build > 0, !identity.identifier.isEmpty,
-              !identity.minimumSystemVersion.isEmpty else { throw ServiceFailure.untrustedIdentity }
-        self.application = application
-        root = lock.directory
-        self.applicationOwnerUID = applicationOwnerUID
-        validator = SecurityUpdateCodeValidator()
-        self.witness = witness
-        self.requiresAdministrator = requiresAdministrator
-        storage = AtomicMaintenanceStorage(adopting: lock)
-    }
     private func key(_ receipt: OperationReceipt) -> String { "transaction-" + receipt.id.uuidString }
     private func directory(_ receipt: OperationReceipt) -> URL { root.appendingPathComponent(receipt.id.uuidString, isDirectory: true) }
     private func candidate(_ receipt: OperationReceipt) -> URL {
@@ -152,8 +98,36 @@ final class ProductionUpdateInstallationDriver: UpdateInstallationDriver {
     }
     private func save(_ record: Record) throws { try storage.write(JSONEncoder().encode(record), key: key(record.receipt)) }
     private func verified(_ url: URL) throws -> VerifiedUpdateBundle {
-        try RunningBundleCheck.verify(url: url, owner: url == application ? applicationOwnerUID : geteuid()) {
-            try validator.verify(bundle: $0)
+        if LaunchPathPolicy.isPrivacyProtected(url) { throw ServiceFailure.untrustedIdentity }
+        let fd = try BoundedUSTAR.openDirectory(url)
+        defer { close(fd) }
+        var before = stat(), after = stat()
+        guard fstat(fd, &before) == 0, before.st_uid == (url == application ? applicationOwnerUID : geteuid()), before.st_mode & 0o022 == 0 else {
+            throw ServiceFailure.untrustedIdentity
+        }
+        try rejectLinks(url)
+        let identity = try validator.verify(bundle: url)
+        let current = try BoundedUSTAR.openDirectory(url)
+        defer { close(current) }
+        guard fstat(current, &after) == 0, before.st_dev == after.st_dev, before.st_ino == after.st_ino else {
+            throw ServiceFailure.untrustedIdentity
+        }
+        return identity
+    }
+    private func rejectLinks(_ url: URL) throws {
+        if LaunchPathPolicy.isPrivacyProtected(url) { throw ServiceFailure.untrustedIdentity }
+        guard let files = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil) else { throw ServiceFailure.invalidData }
+        var count = 0, total: Int64 = 0
+        for case let file as URL in files {
+            var info = stat()
+            guard lstat(file.path, &info) == 0, info.st_uid == (url == application ? applicationOwnerUID : geteuid()), info.st_mode & 0o022 == 0,
+                  info.st_mode & S_IFMT == S_IFDIR || (info.st_mode & S_IFMT == S_IFREG && info.st_nlink == 1) else { throw ServiceFailure.untrustedIdentity }
+            count += 1
+            guard count <= BoundedUSTAR.maximumEntries, info.st_size >= 0,
+                  info.st_size <= BoundedUSTAR.maximumBytes, total <= Int64(BoundedUSTAR.maximumBytes) - info.st_size else {
+                throw ServiceFailure.invalidData
+            }
+            total += info.st_size
         }
     }
     func stage(_ bytes: Data, manifest: UpdateManifest, receipt: OperationReceipt) throws {

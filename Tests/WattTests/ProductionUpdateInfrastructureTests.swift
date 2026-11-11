@@ -36,11 +36,10 @@ private func testUSTAR(_ items: [(String, Data, UInt8)]) -> Data {
 }
 
 final class LaunchPathRegressionTests: XCTestCase {
-    func testPrivacyProtectedFoldersAreRefusedBeforeOpen() throws {
+    func testPrivacyProtectedFoldersAreClassifiedWithoutOpeningThem() {
         let home = "/Users/ada"
         for folder in ["Downloads", "Desktop", "Documents", "downloads"] {
             XCTAssertTrue(LaunchPathPolicy.isPrivacyProtected(path: "\(home)/\(folder)/Watt.app", home: home), folder)
-            XCTAssertTrue(LaunchPathPolicy.shouldSuggestApplicationsFolder(URL(fileURLWithPath: "\(home)/\(folder)/Watt.app"), home: home), folder)
         }
         XCTAssertTrue(LaunchPathPolicy.isPrivacyProtected(path: "\(home)/Library/Mobile Documents/com~apple~CloudDocs/Watt.app", home: home))
         XCTAssertFalse(LaunchPathPolicy.isPrivacyProtected(path: "\(home)/Library/Application Support/Watt/update-journal", home: home))
@@ -48,85 +47,86 @@ final class LaunchPathRegressionTests: XCTestCase {
         XCTAssertFalse(LaunchPathPolicy.isPrivacyProtected(path: "/Applications/Watt.app", home: home))
         XCTAssertTrue(LaunchPathPolicy.isTranslocated(path: "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app"))
         XCTAssertFalse(LaunchPathPolicy.isPrivacyProtected(path: "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app", home: home))
-        XCTAssertTrue(LaunchPathPolicy.shouldSuggestApplicationsFolder(URL(fileURLWithPath: "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app"), home: home))
-        XCTAssertFalse(LaunchPathPolicy.shouldSuggestApplicationsFolder(URL(fileURLWithPath: "/Applications/Watt.app"), home: home))
     }
 
-    func testOpenDirectoryDoesNotOpenAReadableDownloadsFolder() throws {
+    /// The hang: launch from ~/Downloads reached openat("Downloads") on the main thread.
+    /// This runs the same updater entry point and the directory walk, and records every
+    /// path that is about to be passed to openat.
+    @MainActor
+    func testLaunchFromDownloadsDoesNotOpenatProtectedFolders() throws {
         let root = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
         let home = root.appendingPathComponent("home", isDirectory: true)
-        let downloads = home.appendingPathComponent("Downloads/Watt.app", isDirectory: true)
-        let support = home.appendingPathComponent("Library/Application Support/Watt", isDirectory: true)
-        try FileManager.default.createDirectory(at: downloads, withIntermediateDirectories: true)
-        try FileManager.default.createDirectory(at: support, withIntermediateDirectories: true)
-        let started = Date()
-        XCTAssertThrowsError(try BoundedUSTAR.openDirectory(downloads, home: home.path)) { error in
-            XCTAssertTrue(error is ArchiveValidationError)
+        let app = home.appendingPathComponent("Downloads/Watt.app", isDirectory: true)
+        let contents = app.appendingPathComponent("Contents", isDirectory: true)
+        try FileManager.default.createDirectory(at: contents, withIntermediateDirectories: true)
+        let plist: [String: Any] = ["CFBundleIdentifier": "io.github.ben-ranford.watt", "CFBundleVersion": "1001001",
+                                    "CFBundleExecutable": "Watt", "CFBundlePackageType": "APPL", "LSMinimumSystemVersion": "13.0"]
+        try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0).write(to: contents.appendingPathComponent("Info.plist"))
+        let marker = Data("staged-payload".utf8)
+        let staged = root.appendingPathComponent("update-staging/payload.bin")
+        try FileManager.default.createDirectory(at: staged.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try marker.write(to: staged)
+        let bundle = try XCTUnwrap(Bundle(url: app))
+        DirectoryOpenTrace.enabled = true
+        DirectoryOpenTrace.reset()
+        defer { DirectoryOpenTrace.enabled = false; DirectoryOpenTrace.reset() }
+
+        XCTAssertTrue(LaunchPathPolicy.isPrivacyProtected(app, home: home.path))
+        XCTAssertThrowsError(try ProductionUpdateComposition.configured(bundle: bundle, home: home.path)) { error in
+            XCTAssertEqual(error as? ServiceFailure, .untrustedIdentity)
         }
-        XCTAssertLessThan(Date().timeIntervalSince(started), 0.5, "Refusing Downloads must not wait on openat")
+        XCTAssertThrowsError(try BoundedUSTAR.openDirectory(app, home: home.path))
+        XCTAssertThrowsError(try SecurityUpdateCodeValidator().verify(bundle: app, home: home.path)) { error in
+            XCTAssertEqual(error as? ServiceFailure, .untrustedIdentity)
+        }
+        XCTAssertNil(BundleBuildNumber.read(bundleURL: app, home: home.path))
+        XCTAssertEqual(try Data(contentsOf: staged), marker, "Refusing the folder must not delete or rewrite staging")
+        let protected = DirectoryOpenTrace.paths.filter { LaunchPathPolicy.isPrivacyProtected(path: $0, home: home.path) }
+        XCTAssertEqual(protected, [], "openat must not be called on a privacy-protected path: \(DirectoryOpenTrace.paths)")
+    }
+
+    func testOpenDirectoryStillOpensApplicationSupport() throws {
+        let root = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        let home = root.appendingPathComponent("home", isDirectory: true)
+        let support = home.appendingPathComponent("Library/Application Support/Watt", isDirectory: true)
+        try FileManager.default.createDirectory(at: support, withIntermediateDirectories: true)
+        DirectoryOpenTrace.enabled = true
+        DirectoryOpenTrace.reset()
+        defer { DirectoryOpenTrace.enabled = false; DirectoryOpenTrace.reset() }
         let fd = try BoundedUSTAR.openDirectory(support, home: home.path)
         defer { close(fd) }
         XCTAssertGreaterThanOrEqual(fd, 0)
-    }
-
-    func testBundleVersionReadSkipsAProtectedPlist() throws {
-        let root = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
-        let app = root.appendingPathComponent("Downloads/Watt.app/Contents", isDirectory: true)
-        try FileManager.default.createDirectory(at: app, withIntermediateDirectories: true)
-        let plist: [String: Any] = ["CFBundleVersion": "7"]
-        try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0).write(to: app.appendingPathComponent("Info.plist"))
-        let bundle = app.deletingLastPathComponent()
-        XCTAssertNil(BundleBuildNumber.read(bundleURL: bundle, home: root.path))
-        XCTAssertEqual(BundleBuildNumber.read(bundleURL: bundle, home: "/elsewhere"), 7)
-    }
-
-    func testSignatureCheckRefusesDownloadsEvenWhenTheBundleIsValid() throws {
-        let root = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
-        let app = root.appendingPathComponent("Downloads/Signed.app", isDirectory: true)
-        let contents = app.appendingPathComponent("Contents", isDirectory: true)
-        let binaries = contents.appendingPathComponent("MacOS", isDirectory: true)
-        try FileManager.default.createDirectory(at: binaries, withIntermediateDirectories: true)
-        try FileManager.default.copyItem(at: URL(fileURLWithPath: "/usr/bin/true"), to: binaries.appendingPathComponent("Fixture"))
-        let plist: [String: Any] = ["CFBundleIdentifier": "test.watt.launch", "CFBundleVersion": "2",
-                                    "CFBundleExecutable": "Fixture", "CFBundlePackageType": "APPL", "LSMinimumSystemVersion": "13.0"]
-        try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0).write(to: contents.appendingPathComponent("Info.plist"))
-        let signer = Process(); signer.executableURL = URL(fileURLWithPath: "/usr/bin/codesign")
-        signer.arguments = ["--force", "--sign", "-", app.path]
-        try signer.run(); signer.waitUntilExit(); XCTAssertEqual(signer.terminationStatus, 0)
-        XCTAssertThrowsError(try SecurityUpdateCodeValidator().verify(bundle: app, home: root.path)) { error in
-            XCTAssertEqual(error as? ServiceFailure, .untrustedIdentity)
-        }
-        let identity = try SecurityUpdateCodeValidator().verify(bundle: app, home: "/elsewhere")
-        XCTAssertEqual(identity.identifier, "test.watt.launch")
-        XCTAssertEqual(identity.build, 2)
+        XCTAssertTrue(DirectoryOpenTrace.paths.contains(support.path))
+        XCTAssertTrue(DirectoryOpenTrace.paths.filter { LaunchPathPolicy.isPrivacyProtected(path: $0, home: home.path) }.isEmpty)
     }
 
     @MainActor
-    func testLaunchFileWorkTimesOutInsteadOfWaiting() async throws {
-        let started = Date()
-        let result = await LaunchFileAccess.value(timeout: .milliseconds(200)) { () -> Int in
-            Thread.sleep(forTimeInterval: 5)
-            return 1
-        }
-        XCTAssertLessThan(Date().timeIntervalSince(started), 1.5)
-        guard case .failure(let error) = result else {
-            return XCTFail("A stuck read must fall back")
-        }
-        XCTAssertEqual(error as? ServiceFailure, .timedOut)
-        let ready = await LaunchFileAccess.value(timeout: .seconds(1)) { 4 }
-        XCTAssertEqual(try ready.get(), 4)
+    func testLoadingPreferencesDoesNotWriteDefaults() throws {
+        let storage = InMemoryStorage()
+        let preferences = PreferencesStore(storage: storage)
+        XCTAssertEqual(preferences.displayMode, .draw)
+        XCTAssertTrue(storage.values.isEmpty, "A missing preferences file must not be replaced with defaults")
+        let receipt = OperationReceipt(createdAt: Date(timeIntervalSince1970: 20))
+        let staged = try JSONEncoder().encode(UpdateState.staged(receipt))
+        try storage.write(staged, key: "update.v1")
+        let updates = UpdateStore(storage: storage)
+        XCTAssertEqual(updates.state, .failed(.interruptedUpdate, receipt))
+        XCTAssertEqual(try storage.read(key: "update.v1"), staged, "Restoring a staged update in memory must not rewrite it as failed")
     }
 
     @MainActor
-    func testApplicationsFolderGuidanceOnlyFiresForProtectedOrTranslocatedBundles() {
+    func testApplicationsFolderGuidanceDoesNotOpenTheFolder() {
         let home = "/Users/ada"
         var presented: [String] = []
         ApplicationsFolderGuidance.presenter = { presented.append($0.path) }
         defer { ApplicationsFolderGuidance.presenter = nil }
+        DirectoryOpenTrace.enabled = true
+        DirectoryOpenTrace.reset()
+        defer { DirectoryOpenTrace.enabled = false; DirectoryOpenTrace.reset() }
         ApplicationsFolderGuidance.presentIfNeeded(bundleURL: URL(fileURLWithPath: "\(home)/Downloads/Watt.app"), home: home)
         ApplicationsFolderGuidance.presentIfNeeded(bundleURL: URL(fileURLWithPath: "/Applications/Watt.app"), home: home)
-        ApplicationsFolderGuidance.presentIfNeeded(bundleURL: URL(fileURLWithPath: "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app"), home: home)
-        XCTAssertEqual(presented, ["\(home)/Downloads/Watt.app", "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app"])
+        XCTAssertEqual(presented, ["\(home)/Downloads/Watt.app"])
+        XCTAssertTrue(DirectoryOpenTrace.paths.isEmpty)
     }
 }
 

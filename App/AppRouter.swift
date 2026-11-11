@@ -158,8 +158,8 @@ final class AppRouter: ObservableObject {
     private var helperObservation: AnyCancellable?
 
     let updates: UpdateStore
-    private var updateService: (any UpdateService)?
-    private(set) var updateConfigurationFailure: ServiceFailure?
+    private let updateService: (any UpdateService)?
+    let updateConfigurationFailure: ServiceFailure?
     private var updateCheck: Task<Void, Never>?
     private var automaticUpdateCoordinator: AutomaticUpdateCoordinator?
     private var unattendedInstallReceipt: OperationReceipt?
@@ -562,20 +562,6 @@ final class AppRouter: ObservableObject {
         }
     }
 
-    /// Attaches an updater that finished its file checks off the main thread.
-    func adoptUpdateService(_ service: any UpdateService) {
-        updateService = service
-        updateConfigurationFailure = nil
-        objectWillChange.send()
-    }
-
-    /// Fail closed. Check for Updates stays disabled. No signature check is skipped.
-    func adoptUpdateFailure(_ failure: ServiceFailure) {
-        updateService = nil
-        updateConfigurationFailure = failure
-        objectWillChange.send()
-    }
-
     /// Async adapter replies must retain the original presentation token, not infer authority from a route.
     func receiveOnboardingApprovalFailure(_ reason: ServiceFailure, token: ApprovalToken,
                                           preferences: PreferencesStore) {
@@ -679,7 +665,6 @@ final class AppRouter: ObservableObject {
     }
 
     func launch(preferences: PreferencesStore) {
-        guard preferences.launchFilesReady else { return }
         notePresentationReady()
         guard !launched else { return }
         launched = true

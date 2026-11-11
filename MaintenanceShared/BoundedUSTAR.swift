@@ -6,6 +6,15 @@ import WattHelperShared
 
 public enum ArchiveValidationError: Error { case invalidArchive, unsafeDestination, ioFailure }
 
+/// Records directory walks that are about to call `openat`. Tests enable this to prove a
+/// Downloads launch never enters a privacy-protected folder. Production leaves it off.
+public enum DirectoryOpenTrace {
+    public static var enabled = false
+    public static var paths: [String] = []
+    public static func reset() { paths.removeAll(keepingCapacity: false) }
+    static func note(_ path: String) { if enabled { paths.append(path) } }
+}
+
 /// The single release archive profile. The entire immutable input is checked before extraction.
 public struct BoundedUSTAR: Sendable {
     public static let maximumBytes = 256 * 1024 * 1024
@@ -186,6 +195,7 @@ public struct BoundedUSTAR: Sendable {
                 if LaunchPathPolicy.isPrivacyProtected(path: nextPath, home: home) {
                     throw ArchiveValidationError.unsafeDestination
                 }
+                DirectoryOpenTrace.note(nextPath)
                 let next = openat(fd, String(component), O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
                 guard next >= 0 else { throw ArchiveValidationError.unsafeDestination }
                 close(fd); fd = next

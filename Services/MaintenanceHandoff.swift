@@ -7,81 +7,6 @@ import WattMaintenanceShared
 import WattHelperShared
 #endif
 
-private struct RemovalInputs: Sendable {
-    var identityDirectory: URL
-    var record: ProtectedHelperRecord?
-    var helperAbsent: Bool
-}
-
-private enum RemovalLaunchRoute: Sendable { case protectedGeneration, certificate, ordinary }
-
-private struct RemovalSnapshot: Sendable {
-    var installationID: UUID
-    var generation: UInt64
-    var companion: URL
-    var hash: Data
-    var protected: Bool
-    var route: RemovalLaunchRoute
-}
-
-/// File work for uninstall identity. Not actor-isolated, so launch can run it off the main thread.
-/// The writer lock is the same `LOCK_EX | LOCK_NB` lock the journal uses, and it is released
-/// before this function returns. Signature checks are the production `SecStaticCode` checks.
-private enum RemovalFiles {
-    static func prepare(application: URL, certificateMode: Bool, signingTeam: String?, helperConnected: Bool,
-                        inputs: RemovalInputs) throws -> RemovalSnapshot {
-        if LaunchPathPolicy.isPrivacyProtected(application) { throw ServiceFailure.untrustedIdentity }
-        let identity = try SecurityUpdateCodeValidator().verify(bundle: application)
-        guard identity.identifier == HelperIdentity.appIdentifier, String(identity.build) == HelperIdentity.build else {
-            throw ServiceFailure.untrustedIdentity
-        }
-        let companion = application.appendingPathComponent("Contents/MacOS/WattMaintenance")
-        if LaunchPathPolicy.isPrivacyProtected(companion) { throw ServiceFailure.untrustedIdentity }
-        let record = inputs.record
-        let hashes: [Data]
-        let route: RemovalLaunchRoute
-        if let record {
-            guard record.applicationURL == application else { throw ServiceFailure.untrustedIdentity }
-            _ = try ExactCodeIdentity.verify(at: application,
-                requirement: ExactCodeIdentity.requirement(hashes: record.appHashes, identifier: identity.identifier))
-            hashes = record.maintenanceHashes
-            route = .protectedGeneration
-        } else if certificateMode {
-            guard helperConnected else { throw ServiceFailure.unknownStatus }
-            guard let signingTeam else { throw HelperSigningError.missingTeam }
-            let policy = try HelperSigningPolicy(team: signingTeam)
-            try policy.verifyExecutable(at: application, helper: false)
-            _ = try ExactCodeIdentity.verify(at: companion, requirement: "anchor apple generic and identifier \"\(identity.identifier).maintenance\" and certificate leaf[subject.OU] = \"\(policy.team)\"")
-            hashes = try ExactCodeIdentity.allHashes(at: companion, identifier: identity.identifier + ".maintenance")
-            route = .certificate
-        } else {
-            guard inputs.helperAbsent else { throw ServiceFailure.unknownStatus }
-            hashes = try ExactCodeIdentity.allHashes(at: companion, identifier: identity.identifier + ".maintenance")
-            route = .ordinary
-        }
-        let hash = try ExactCodeIdentity.verify(at: companion,
-            requirement: ExactCodeIdentity.requirement(hashes: hashes, identifier: identity.identifier + ".maintenance"))
-        let installationID: UUID
-        if let record { installationID = record.installationID }
-        else { installationID = try loadOrCreateInstallationID(directory: inputs.identityDirectory) }
-        return RemovalSnapshot(installationID: installationID, generation: record?.generation ?? 1, companion: companion,
-                               hash: hash, protected: record != nil, route: route)
-    }
-
-    private static func loadOrCreateInstallationID(directory: URL) throws -> UUID {
-        try FileManager.default.createDirectory(at: directory.deletingLastPathComponent(),
-            withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
-        let lock = try HeldLock.acquire(directory: directory)
-        defer { lock.release() }
-        if let saved = try lock.read(key: "installation.v1", maximumBytes: 1024 * 1024) {
-            return try JSONDecoder().decode(UUID.self, from: saved)
-        }
-        let installationID = UUID()
-        try lock.write(JSONEncoder().encode(installationID), key: "installation.v1", maximumBytes: 1024 * 1024)
-        return installationID
-    }
-}
-
 /// The app can authenticate its fixed bundled companion independently of persisted receipts.
 /// Protected mutation remains an administrator requirement; this handshake grants no effects.
 @MainActor
@@ -240,51 +165,49 @@ final class ProductionRemovalComposition: UninstallCoordinator {
                            environment fixture: Environment? = nil) throws -> ProductionRemovalComposition {
         let application = bundle.bundleURL
         if LaunchPathPolicy.isPrivacyProtected(application) { throw ServiceFailure.untrustedIdentity }
+        let identity = try SecurityUpdateCodeValidator().verify(bundle: application)
+        guard identity.identifier == HelperIdentity.appIdentifier, String(identity.build) == HelperIdentity.build else {
+            throw ServiceFailure.untrustedIdentity
+        }
         let support = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/Watt")
         let environment = fixture ?? Environment(identityDirectory: support.appendingPathComponent("uninstall-identity"),
             protectedRecord: { try MaintenanceRemovalPlan.readProtectedRecord(application: $0) },
             helperAbsent: { try MaintenanceRemovalPlan.fixedHelperAbsent() })
-        let certificateMode = bundle.object(forInfoDictionaryKey: "WATTHelperTrustMode") as? String == "certificate"
+        let companion = application.appendingPathComponent("Contents/MacOS/WattMaintenance")
         let record = try environment.protectedRecord(application)
-        let absent = record == nil && !certificateMode ? try environment.helperAbsent() : true
-        let snapshot = try RemovalFiles.prepare(application: application,
-            certificateMode: certificateMode,
-            signingTeam: bundle.object(forInfoDictionaryKey: "WATTSigningTeam") as? String,
-            helperConnected: helper != nil,
-            inputs: RemovalInputs(identityDirectory: environment.identityDirectory, record: record, helperAbsent: absent))
-        return try assemble(snapshot, helper: helper, helperAbsent: environment.helperAbsent)
-    }
-
-    /// Launch path. Bundle signature checks and the uninstall-identity lock run off the main thread.
-    static func configuredOffMain(bundle: Bundle = .main, helper: (any HelperService)?) async throws -> ProductionRemovalComposition {
-        let application = bundle.bundleURL
-        if LaunchPathPolicy.isPrivacyProtected(application) { throw ServiceFailure.untrustedIdentity }
-        let certificateMode = bundle.object(forInfoDictionaryKey: "WATTHelperTrustMode") as? String == "certificate"
-        let signingTeam = bundle.object(forInfoDictionaryKey: "WATTSigningTeam") as? String
-        let helperConnected = helper != nil
-        let snapshot = try await LaunchFileAccess.require {
-            let support = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/Watt")
-            let record = try MaintenanceRemovalPlan.readProtectedRecord(application: application)
-            let absent = record == nil && !certificateMode ? try MaintenanceRemovalPlan.fixedHelperAbsent() : true
-            return try RemovalFiles.prepare(application: application, certificateMode: certificateMode, signingTeam: signingTeam,
-                helperConnected: helperConnected,
-                inputs: RemovalInputs(identityDirectory: support.appendingPathComponent("uninstall-identity"),
-                                      record: record, helperAbsent: absent))
-        }
-        return try assemble(snapshot, helper: helper, helperAbsent: { try MaintenanceRemovalPlan.fixedHelperAbsent() })
-    }
-
-    private static func assemble(_ snapshot: RemovalSnapshot, helper: (any HelperService)?,
-                                 helperAbsent: @escaping @MainActor () throws -> Bool) throws -> ProductionRemovalComposition {
+        let hashes: [Data]
         let route: Route
-        switch snapshot.route {
-        case .protectedGeneration: route = .protectedGeneration
-        case .certificate: route = .certificate
-        case .ordinary: route = .ordinary
+        if let record {
+            guard record.applicationURL == application else { throw ServiceFailure.untrustedIdentity }
+            _ = try ExactCodeIdentity.verify(at: application,
+                requirement: ExactCodeIdentity.requirement(hashes: record.appHashes, identifier: identity.identifier))
+            hashes = record.maintenanceHashes; route = .protectedGeneration
+        } else if bundle.object(forInfoDictionaryKey: "WATTHelperTrustMode") as? String == "certificate" {
+            guard helper != nil else { throw ServiceFailure.unknownStatus }
+            let policy = try HelperSigningPolicy.configured(bundle: bundle)
+            try policy.verifyExecutable(at: application, helper: false)
+            _ = try ExactCodeIdentity.verify(at: companion, requirement: "anchor apple generic and identifier \"\(identity.identifier).maintenance\" and certificate leaf[subject.OU] = \"\(policy.team)\"")
+            hashes = try ExactCodeIdentity.allHashes(at: companion, identifier: identity.identifier + ".maintenance")
+            route = .certificate
+        } else {
+            guard try environment.helperAbsent() else { throw ServiceFailure.unknownStatus }
+            hashes = try ExactCodeIdentity.allHashes(at: companion, identifier: identity.identifier + ".maintenance")
+            route = .ordinary
         }
-        let result = try ProductionRemovalComposition(installationID: snapshot.installationID, generation: snapshot.generation,
-            helper: helper, protectedInstallation: snapshot.protected, companion: snapshot.companion, companionHash: snapshot.hash,
-            helperAbsent: helperAbsent)
+        let hash = try ExactCodeIdentity.verify(at: companion,
+            requirement: ExactCodeIdentity.requirement(hashes: hashes, identifier: identity.identifier + ".maintenance"))
+        let installationID: UUID
+        if let record { installationID = record.installationID }
+        else {
+            try FileManager.default.createDirectory(at: environment.identityDirectory.deletingLastPathComponent(),
+                withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
+            let storage = try AtomicMaintenanceStorage(directory: environment.identityDirectory)
+            if let saved = try storage.read(key: "installation.v1") { installationID = try JSONDecoder().decode(UUID.self, from: saved) }
+            else { installationID = UUID(); try storage.write(JSONEncoder().encode(installationID), key: "installation.v1") }
+        }
+        let result = try ProductionRemovalComposition(installationID: installationID, generation: record?.generation ?? 1,
+            helper: helper, protectedInstallation: record != nil, companion: companion, companionHash: hash,
+            helperAbsent: environment.helperAbsent)
         result.route = route
         return result
     }

@@ -14,10 +14,7 @@ enum UpdateLaunchAcknowledgementService {
         let parent = try MaintenanceProcessWitness.observe(pid: getppid())
         guard parent.uid == geteuid(), parent.pid > 1 else { throw ServiceFailure.untrustedIdentity }
         let request = try UpdateLaunchRequest.decode(MaintenanceChannel.read(from: STDIN_FILENO))
-        let bundleURL = bundle.bundleURL
-        let actual = try LaunchFileAccess.blockingValue {
-            try SecurityUpdateCodeValidator().verify(bundle: bundleURL)
-        }
+        let actual = try SecurityUpdateCodeValidator().verify(bundle: bundle.bundleURL)
         guard actual.identifier == request.identity, actual.build == request.build,
               actual.minimumSystemVersion == request.minimumSystemVersion,
               try MaintenanceProcessWitness.matches(parent) else { throw ServiceFailure.untrustedIdentity }

@@ -96,39 +96,6 @@ final class InMemoryStorage: PreferenceStorage {
 }
 
 // Explicit injection only: no implicit .standard domain, including previews and tests.
-/// Launch reads these keys off the main thread, then serves them from memory.
-/// A key that was not in that read falls through to `UserDefaults` later, so a
-/// follow-up claim is not treated as missing just because launch did not ask for it.
-@MainActor
-final class PrimedUserDefaults: PreferenceStorage {
-    static let launchKeys = ["preferences.v1", "update.v1", "update.automatic-install.v1", "update.helper-follow-up.v1"]
-    private let defaults: UserDefaults
-    private var values: [String: Data] = [:]
-    private var written = Set<String>()
-    private var prefetched = Set<String>()
-    private var primed = false
-    init(defaults: UserDefaults) { self.defaults = defaults }
-    func prime(keys: [String], values incoming: [String: Data]) {
-        var next = incoming
-        for key in written {
-            if let kept = values[key] { next[key] = kept }
-        }
-        values = next
-        prefetched = Set(keys)
-        primed = true
-    }
-    func read(key: String) throws -> Data? {
-        if let value = values[key] { return value }
-        if prefetched.contains(key) || !primed { return nil }
-        return defaults.data(forKey: key)
-    }
-    func write(_ data: Data, key: String) throws {
-        values[key] = data
-        written.insert(key)
-        defaults.set(data, forKey: key)
-    }
-}
-
 @MainActor
 final class UserDefaultsStorage: PreferenceStorage {
     private let defaults: UserDefaults
@@ -179,10 +146,6 @@ private struct StoredPreferences: Codable {
 final class PreferencesStore: ObservableObject {
     private let storage: any PreferenceStorage
     private var loading = true
-    private var userEdited = false
-    /// Production launch sets this false until preferences have been read off the main thread.
-    /// Tests and fixtures load immediately, so they stay ready.
-    private(set) var launchFilesReady = true
     @Published private(set) var persistenceFailure: ServiceFailure?
     @Published var displayMode: WattDisplayMode = .draw { didSet { save() } }
     @Published var precision: WattPrecision = .decimal { didSet { save() } }
@@ -297,31 +260,11 @@ final class PreferencesStore: ObservableObject {
         selectedComponents = next
         return selectedComponents == next && persistenceFailure == nil
     }
-    init(storage: (any PreferenceStorage)? = nil, load: Bool = true) {
+    init(storage: (any PreferenceStorage)? = nil) {
         self.storage = storage ?? InMemoryStorage()
-        guard load else {
-            launchFilesReady = false
-            loading = false
-            return
-        }
         defer { loading = false }
-        loadPreferences()
-    }
-
-    /// Applies bytes already read from disk. Does nothing after the user has edited a setting.
-    func reloadFromStorage() {
-        guard !userEdited else {
-            launchFilesReady = true
-            return
-        }
-        loading = true
-        defer { loading = false; launchFilesReady = true }
-        loadPreferences()
-    }
-
-    private func loadPreferences() {
         do {
-            guard let data = try storage.read(key: "preferences.v1") else { return }
+            guard let data = try self.storage.read(key: "preferences.v1") else { return }
             let p = try JSONDecoder().decode(StoredPreferences.self, from: data)
             guard Self.validSelection(p.selectedComponents) else { throw ServiceFailure.invalidData }
             precision = p.precision ?? .decimal
@@ -369,7 +312,6 @@ final class PreferencesStore: ObservableObject {
     }
 
     private func persist(_ p: StoredPreferences) -> Bool {
-        userEdited = true
         do {
             try storage.write(JSONEncoder().encode(p), key: "preferences.v1")
             persistenceFailure = nil
