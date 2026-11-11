@@ -1366,8 +1366,19 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertIn('-maximum-test-execution-time-allowance 120', test)
         self.assertIn('bash scripts/retry_on_timeout.sh 600 1 --', test)
         self.assertIn('swift test --configuration debug', steps['Unit tests (swift test)'])
+        self.assertIn('ditto -c -k --keepParent', steps['Zip the Release app'])
+        self.assertIn('codesign --verify --verbose=2', steps['Zip the Release app'])
         for run in steps.values():
             self.assertNotIn('${{', run)
+        packaged = next(step for step in job['steps'] if step.get('name') == 'Zip the Release app')
+        uploaded = next(step for step in job['steps'] if step.get('name') == 'Upload the Release app')
+        self.assertEqual(packaged['if'], "github.event_name == 'pull_request'")
+        self.assertEqual(uploaded['if'], "github.event_name == 'pull_request'")
+        self.assertRegex(uploaded['uses'], r'actions/upload-artifact@[0-9a-f]{40}( # .+)?$')
+        self.assertEqual(uploaded['with']['name'], 'Watt-app-pr')
+        self.assertEqual(uploaded['with']['retention-days'], 7)
+        self.assertEqual(uploaded['with']['if-no-files-found'], 'error')
+        self.assertTrue(str(uploaded['with']['path']).endswith('Watt.app.zip'))
 
     def test_watchdog_retries_only_a_timeout(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

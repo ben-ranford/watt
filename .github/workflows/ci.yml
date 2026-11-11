@@ -134,3 +134,27 @@ jobs:
         run: |
           set -euo pipefail
           swift test --configuration debug
+
+      # Pull-request runs only. This is a workflow artifact for a local Mac
+      # install, not a GitHub Release or a Pages publish. The Release app was
+      # already ad-hoc signed by the build step (CODE_SIGN_IDENTITY=-).
+      - name: Zip the Release app
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          app="${GITHUB_WORKSPACE}/DerivedData/Build/Products/Release/Watt.app"
+          test -d "${app}"
+          test -x "${app}/Contents/MacOS/Watt"
+          codesign --verify --verbose=2 "${app}"
+          mkdir -p "${RUNNER_TEMP}/watt-app-pr"
+          ditto -c -k --keepParent "${app}" "${RUNNER_TEMP}/watt-app-pr/Watt.app.zip"
+
+      - name: Upload the Release app
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: Watt-app-pr
+          path: ${{ runner.temp }}/watt-app-pr/Watt.app.zip
+          retention-days: 7
+          if-no-files-found: error
+          compression-level: 0

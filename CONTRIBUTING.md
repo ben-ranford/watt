@@ -42,7 +42,7 @@ These checks run on every pull request, including every pull request into `main`
 
 | Check | Workflow | What it runs |
 | --- | --- | --- |
-| `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test` |
+| `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. A pull request also uploads the ad-hoc Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. |
 | `Release config` | Release | `python3 scripts/test_release_pipeline.py` |
 | `gitleaks` | Secret scan | Working-tree secret scan. The same scanner is the optional pre-commit hook in `.pre-commit-config.yaml`. |
 | `Conventional commit` | PR title | The pull request title matches the types above |
