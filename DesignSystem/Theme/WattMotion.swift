@@ -162,11 +162,13 @@ private struct WattObserveSurfaceModifier: ViewModifier {
 
     @ViewBuilder
     func body(content: Content) -> some View {
+        let binding = $visible
         if suppressed {
             content
         } else {
             content.background(WattSurfaceProbe { value in
-                if visible.wrappedValue != value { visible.wrappedValue = value }
+                guard binding.wrappedValue != value else { return }
+                binding.wrappedValue = value
             })
         }
     }
