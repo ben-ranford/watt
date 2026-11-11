@@ -298,21 +298,16 @@ struct SettingsRootView: View {
                 Toggle("Check for updates automatically", isOn: $preferences.checkForUpdatesAutomatically)
                     .accessibilityIdentifier("settings.automaticUpdates")
                 LabeledContent {
-                    VStack(alignment: .trailing, spacing: WattSpacing.xxs) {
-                        Button("Check for Updates Now") { router.checkForUpdatesNow() }
-                            .disabled(!router.canCheckForUpdates)
-                            .wattControlLabel("Check for Updates Now")
-                            .accessibilityIdentifier("settings.checkForUpdatesNow")
-                        if let reason = router.updateUnavailableReason {
-                            Text(reason)
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.trailing)
-                                .accessibilityIdentifier("settings.updateUnavailable")
-                        }
-                    }
+                    Button("Check for Updates Now") { router.checkForUpdatesNow() }
+                        .disabled(!router.canCheckForUpdates)
+                        .wattControlLabel("Check for Updates Now")
+                        .accessibilityIdentifier("settings.checkForUpdatesNow")
                 } label: {
                     Text("Check for Updates")
+                    if let reason = router.updateUnavailableReason {
+                        Text(reason)
+                            .accessibilityIdentifier("settings.updateUnavailable")
+                    }
                 }
             }
             LabeledContent {
