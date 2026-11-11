@@ -1,8 +1,10 @@
 import AppKit
 import CryptoKit
 import XCTest
-import WattMaintenanceShared
 @testable import Watt
+#if SWIFT_PACKAGE
+import WattMaintenanceShared
+#endif
 
 @MainActor
 final class UpdateHandoffTests: XCTestCase {
