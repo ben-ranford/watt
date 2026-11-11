@@ -35,6 +35,7 @@ enum HelperBundleInstall {
         return nil
     }
 
+    @MainActor
     static func install(installer: URL, source: URL, rotate: Bool,
                         run: @escaping (Command) async -> Result<String, ServiceFailure> = Self.run) async -> ServiceFailure? {
         let preflight = await run(preflight(installer: installer, source: source))
