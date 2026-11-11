@@ -137,7 +137,8 @@ final class NotificationThresholdTests: XCTestCase {
         let hidden = StatusPanelModel(reading: store.statusReading,
                                        insufficientChargerMinimumDuration: preferences.insufficientChargerDuration)
         XCTAssertEqual(hidden.state, .standard)
-        XCTAssertEqual(await effects.handleInsufficientCharger(store: store), .failed(.invalidData))
+        let blocked = await effects.handleInsufficientCharger(store: store)
+        XCTAssertEqual(blocked, .failed(.invalidData))
         XCTAssertEqual(driver.identifiers.count, 1)
     }
 
@@ -183,9 +184,12 @@ final class NotificationThresholdTests: XCTestCase {
                                      clock: FakeWattClock(now: timestamp))
         let full = PowerReadingStore(currentReading: battery(percentage: 100, state: .full, watts: 0),
                                       clock: FakeWattClock(now: timestamp))
-        XCTAssertEqual(await effects.handleLowBattery(store: low), .openNotificationSettings)
-        XCTAssertEqual(await effects.handleFullyCharged(store: full), .openNotificationSettings)
-        XCTAssertEqual(await effects.handle(.lowBattery, episodeID: "again"), .openNotificationSettings)
+        let lowEffect = await effects.handleLowBattery(store: low)
+        let fullEffect = await effects.handleFullyCharged(store: full)
+        let direct = await effects.handle(.lowBattery, episodeID: "again")
+        XCTAssertEqual(lowEffect, .openNotificationSettings)
+        XCTAssertEqual(fullEffect, .openNotificationSettings)
+        XCTAssertEqual(direct, .openNotificationSettings)
         XCTAssertTrue(driver.identifiers.isEmpty)
         XCTAssertEqual(driver.requests, 0)
         XCTAssertEqual(SettingsRootView.notificationsUnavailable,
@@ -214,29 +218,36 @@ final class NotificationThresholdTests: XCTestCase {
         let effects = PowerNotificationEffects(bridge: SystemNotificationBridge(driver: driver), preferences: preferences)
         let clock = FakeWattClock(now: timestamp)
         let store = PowerReadingStore(currentReading: battery(percentage: 18, state: .discharging, watts: -11), clock: clock)
-        XCTAssertEqual(await effects.handleLowBattery(store: store), .accepted)
-        XCTAssertEqual(await effects.handleLowBattery(store: store), .duplicate)
+        let firstLow = await effects.handleLowBattery(store: store)
+        let repeatedLow = await effects.handleLowBattery(store: store)
+        XCTAssertEqual(firstLow, .accepted)
+        XCTAssertEqual(repeatedLow, .duplicate)
         XCTAssertEqual(driver.identifiers, ["watt.low-battery.1"])
         XCTAssertEqual(driver.titles, ["Low battery"])
         XCTAssertEqual(driver.bodies, ["Your battery is at 18%."])
 
         clock.advance(by: 2)
         XCTAssertTrue(store.accept(battery(percentage: 40, state: .charging, watts: 22, at: clock.now), generation: store.generation))
-        XCTAssertNil(await effects.handleLowBattery(store: store))
+        let cleared = await effects.handleLowBattery(store: store)
+        XCTAssertNil(cleared)
         clock.advance(by: 2)
         XCTAssertTrue(store.accept(battery(percentage: 16, state: .discharging, watts: -9, at: clock.now), generation: store.generation))
-        XCTAssertEqual(await effects.handleLowBattery(store: store), .accepted)
+        let nextLow = await effects.handleLowBattery(store: store)
+        XCTAssertEqual(nextLow, .accepted)
         XCTAssertEqual(driver.identifiers, ["watt.low-battery.1", "watt.low-battery.2"])
 
         preferences.fullyChargedPercentage = 90
         clock.advance(by: 2)
         XCTAssertTrue(store.accept(battery(percentage: 90, state: .charging, watts: 25, at: clock.now), generation: store.generation))
-        XCTAssertEqual(await effects.handleFullyCharged(store: store), .accepted)
-        XCTAssertEqual(await effects.handleFullyCharged(store: store), .duplicate)
+        let firstFull = await effects.handleFullyCharged(store: store)
+        let repeatedFull = await effects.handleFullyCharged(store: store)
+        XCTAssertEqual(firstFull, .accepted)
+        XCTAssertEqual(repeatedFull, .duplicate)
         XCTAssertEqual(driver.identifiers.last, "watt.fully-charged.1")
         XCTAssertEqual(driver.titles.last, "Battery reached 90%")
         XCTAssertEqual(driver.bodies.last, "Your battery has reached 90%.")
-        XCTAssertNil(await effects.handleLowBattery(store: store))
+        let lowWhileCharging = await effects.handleLowBattery(store: store)
+        XCTAssertNil(lowWhileCharging)
         XCTAssertEqual(driver.identifiers.filter { $0.hasPrefix("watt.low-battery") }.count, 2)
     }
 
@@ -247,10 +258,13 @@ final class NotificationThresholdTests: XCTestCase {
         let effects = PowerNotificationEffects(bridge: SystemNotificationBridge(driver: driver), preferences: preferences)
         let store = PowerReadingStore(currentReading: battery(percentage: 10, state: .discharging, watts: -8),
                                        clock: FakeWattClock(now: timestamp))
-        XCTAssertEqual(await effects.handleLowBattery(store: store), .preferenceOff)
+        let off = await effects.handleLowBattery(store: store)
+        XCTAssertEqual(off, .preferenceOff)
         preferences.lowBatteryNotification = true
-        XCTAssertEqual(await effects.evaluate(store: store), [.accepted])
-        XCTAssertEqual(await effects.evaluate(store: store), [.duplicate])
+        let firstPass = await effects.evaluate(store: store)
+        let secondPass = await effects.evaluate(store: store)
+        XCTAssertEqual(firstPass, [.accepted])
+        XCTAssertEqual(secondPass, [.duplicate])
         XCTAssertEqual(driver.identifiers, ["watt.low-battery.1"])
     }
 
