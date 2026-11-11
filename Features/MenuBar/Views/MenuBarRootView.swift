@@ -32,6 +32,11 @@ struct MenuBarRootView: View {
                         includesComponents: includesComponents,
                         setupIncomplete: SetupPromptPresentation.canPresent(expectedSetup),
                         setupSaveFailed: preferences.persistenceFailure != nil,
+                        helperInstallOffered: router.settingsHelperSetup.canInstallHelper,
+                        onInstallHelper: {
+                            Task { await router.settingsHelperSetup.installFromInterface() }
+                            return
+                        },
                         onContinueSetup: {
             router.continuePanelSetup(preferences: preferences, expected: expectedSetup,
                                       presentationID: presentationID)

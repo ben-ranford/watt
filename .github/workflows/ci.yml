@@ -80,13 +80,34 @@ jobs:
           )
           build_configuration() {
             local configuration="$1"
-            xcodebuild build \
-              -project Watt.xcodeproj \
-              -scheme Watt \
-              -configuration "${configuration}" \
-              -destination "generic/platform=macOS" \
-              -derivedDataPath DerivedData \
-              "${sign[@]}"
+            local -a update_settings=()
+            if [[ "${configuration}" == "Release" ]]; then
+              while IFS= read -r setting; do
+                update_settings+=("${setting}")
+              done < <(python3 scripts/print_release_update_settings.py)
+              if [[ ${#update_settings[@]} -ne 3 ]]; then
+                echo "Release update settings were not loaded." >&2
+                exit 1
+              fi
+            fi
+            if [[ ${#update_settings[@]} -gt 0 ]]; then
+              xcodebuild build \
+                -project Watt.xcodeproj \
+                -scheme Watt \
+                -configuration "${configuration}" \
+                -destination "generic/platform=macOS" \
+                -derivedDataPath DerivedData \
+                "${sign[@]}" \
+                "${update_settings[@]}"
+            else
+              xcodebuild build \
+                -project Watt.xcodeproj \
+                -scheme Watt \
+                -configuration "${configuration}" \
+                -destination "generic/platform=macOS" \
+                -derivedDataPath DerivedData \
+                "${sign[@]}"
+            fi
             local products="DerivedData/Build/Products/${configuration}"
             test -x "${products}/Watt.app/Contents/MacOS/Watt"
             test -x "${products}/WattHelper"
@@ -134,3 +155,32 @@ jobs:
         run: |
           set -euo pipefail
           swift test --configuration debug
+
+      # Pull-request runs only. This is a workflow artifact for a local Mac
+      # install, not a GitHub Release or a Pages publish. The Release app was
+      # already ad-hoc signed by the build step (CODE_SIGN_IDENTITY=-).
+      # The Release configuration keeps ENABLE_TESTABILITY, so Xcode adds
+      # com.apple.security.get-task-allow to this artifact on purpose and it
+      # can be attached in a debugger. scripts/release-archive.sh sets
+      # ENABLE_TESTABILITY=NO for a published build, which does not carry it.
+      - name: Zip the Release app
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          app="${GITHUB_WORKSPACE}/DerivedData/Build/Products/Release/Watt.app"
+          test -d "${app}"
+          test -x "${app}/Contents/MacOS/Watt"
+          codesign --verify --verbose=2 "${app}"
+          python3 scripts/print_release_update_settings.py --check-plist "${app}/Contents/Info.plist"
+          mkdir -p "${RUNNER_TEMP}/watt-app-pr"
+          ditto -c -k --keepParent "${app}" "${RUNNER_TEMP}/watt-app-pr/Watt.app.zip"
+
+      - name: Upload the Release app
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: Watt-app-pr
+          path: ${{ runner.temp }}/watt-app-pr/Watt.app.zip
+          retention-days: 7
+          if-no-files-found: error
+          compression-level: 0

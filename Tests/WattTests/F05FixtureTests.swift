@@ -343,7 +343,7 @@ final class C03ContextMenuTests: XCTestCase {
         let submenu = try XCTUnwrap(menu.items.first?.submenu)
         XCTAssertEqual(submenu.items.map { $0.isSeparatorItem ? "|" : $0.title },
                        ["Battery Delta", "Charger Input", "System Draw", "Per Component", "|", "Icon Only"])
-        XCTAssertEqual(submenu.items.map(\.state), [.on, .off, .off, .off, .off, .off])
+        XCTAssertEqual(submenu.items.map(\.state), [.off, .off, .on, .off, .off, .off])
         XCTAssertTrue(submenu.items.allSatisfy { $0.keyEquivalent.isEmpty })
         XCTAssertFalse(menu.items.contains { $0.title == "Finish Setup…" })
     }
@@ -586,6 +586,7 @@ final class C041StatusItemTests: XCTestCase {
 final class C042StatusItemTests: XCTestCase {
     func testOnBatteryContractAndPinnedClock() throws {
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let store = C042FixtureLaunch.makeStore()
         try store.currentReading.validate()
         XCTAssertEqual(store.currentReading, .sampleOnBattery)
@@ -667,6 +668,7 @@ final class C042StatusItemTests: XCTestCase {
 final class C043StatusItemTests: XCTestCase {
     func testChargedOnAdapterContractAndPinnedClock() throws {
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let store = C043FixtureLaunch.makeStore()
         try store.currentReading.validate()
         XCTAssertEqual(store.currentReading.batteryState, .full)
@@ -1125,7 +1127,7 @@ final class C048StatusItemTests: XCTestCase {
             XCTAssertNil(fallback.text)
             XCTAssertEqual(fallback.symbolName, reading == .unavailable ? "bolt.fill" : "battery.100percent")
         }
-        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .delta)
+        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .draw)
     }
 
     func testExactSelectorsAndCaptureIsolation() throws {
@@ -1191,6 +1193,7 @@ final class C049StatusItemTests: XCTestCase {
         XCTAssertEqual(first.currentReading.freshness, .unavailable)
         XCTAssertNil(first.currentReading.watts)
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let label = MenuBarStatusLabel(reading: first.currentReading, preferences: preferences)
         XCTAssertEqual(label.text, "− − W")
         XCTAssertEqual(label.symbolName, "bolt.fill")
@@ -1198,7 +1201,7 @@ final class C049StatusItemTests: XCTestCase {
         XCTAssertEqual(label.accessibilityReading, "No reading yet")
         preferences.displayMode = .iconOnly
         XCTAssertNil(label.text)
-        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .delta)
+        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .draw)
         XCTAssertEqual(second.currentReading, .unavailable)
     }
     func testExactSelectorsAndCaptureIsolation() throws {
@@ -1258,6 +1261,7 @@ final class C0410StatusItemTests: XCTestCase {
         let store = C0410FixtureLaunch.makeStore()
         XCTAssertEqual(store.currentReading, PowerReadingStore.preview.currentReading)
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let label = MenuBarStatusLabel(reading: store.currentReading, preferences: preferences)
         XCTAssertEqual(label.text, "+42.1 W")
         XCTAssertEqual(label.symbolName, "battery.100percent.bolt")
@@ -1318,6 +1322,7 @@ final class C0411StatusItemTests: XCTestCase {
         let store = C0411FixtureLaunch.makeStore()
         XCTAssertEqual(store.currentReading, PowerReadingStore.preview.currentReading)
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let label = MenuBarStatusLabel(reading: store.currentReading, preferences: preferences)
         XCTAssertEqual(label.text, "+42.1 W")
         XCTAssertEqual(label.symbolName, "battery.100percent.bolt")
@@ -1366,7 +1371,7 @@ final class C0411StatusItemTests: XCTestCase {
         XCTAssertEqual(first.currentReading, second.currentReading)
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.displayMode = .charger
-        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .delta)
+        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .draw)
         XCTAssertEqual(C0411FixtureLaunch.captureSize, C041FixtureLaunch.captureSize)
     }
 }
@@ -1377,6 +1382,7 @@ final class C0412StatusItemTests: XCTestCase {
         let store = C0412FixtureLaunch.makeStore()
         XCTAssertEqual(store.currentReading, C042FixtureLaunch.makeStore().currentReading)
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let label = MenuBarStatusLabel(reading: store.currentReading, preferences: preferences)
         XCTAssertEqual(label.text, "−18.4 W")
         XCTAssertEqual(label.symbolName, "battery.100percent")
@@ -1425,7 +1431,7 @@ final class C0412StatusItemTests: XCTestCase {
         XCTAssertEqual(first.currentReading, second.currentReading)
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.displayMode = .charger
-        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .delta)
+        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .draw)
         XCTAssertEqual(C0412FixtureLaunch.captureSize, C041FixtureLaunch.captureSize)
     }
 }
@@ -1437,12 +1443,13 @@ final class C05SettingsTests: XCTestCase {
     func testBaseFixtureDefaultsAndIsolation() throws {
         let first = C05FixtureLaunch.makePreferences()
         let second = C05FixtureLaunch.makePreferences()
-        XCTAssertEqual(first.displayMode, .delta)
+        XCTAssertEqual(first.displayMode, .draw)
         XCTAssertEqual(first.precision, .decimal)
         XCTAssertEqual(first.selectedComponents, ["CPU", "GPU"])
         XCTAssertEqual(first.updateInterval, "Every 2 seconds")
         XCTAssertTrue(first.showSymbol && first.smoothReadings && first.componentReadings)
-        XCTAssertTrue(first.chargerNotification && first.openAtLogin && first.checkForUpdatesAutomatically)
+        XCTAssertTrue(first.chargerNotification && first.checkForUpdatesAutomatically)
+        XCTAssertFalse(first.openAtLogin)
         XCTAssertFalse(first.fullyChargedNotification)
         first.showSymbol = false
         XCTAssertTrue(second.showSymbol)
@@ -1452,6 +1459,7 @@ final class C05SettingsTests: XCTestCase {
     func testSettingsRoundTripAndMenuBarPrecision() throws {
         let storage = InMemoryStorage()
         let preferences = PreferencesStore(storage: storage)
+        preferences.displayMode = .delta
         preferences.precision = .whole
         preferences.showSymbol = false
         preferences.smoothReadings = false
@@ -1561,15 +1569,15 @@ final class J52FixtureTests: XCTestCase {
         let restored = PreferencesStore(storage: storage)
         XCTAssertEqual(restored.onboarding.checkpoint, .runningDefaults)
         XCTAssertFalse(restored.onboarding.completed)
-        XCTAssertEqual(restored.displayMode, .delta)
+        XCTAssertEqual(restored.displayMode, .draw)
         XCTAssertEqual(restored.precision, .decimal)
         XCTAssertFalse(restored.componentReadings)
         XCTAssertNil(restored.persistenceFailure)
         let other = PreferencesStore(storage: InMemoryStorage())
         J52FixtureLaunch.prepare(preferences: other)
-        preferences.displayMode = .draw
+        preferences.displayMode = .charger
         preferences.onboarding.checkpoint = .picker
-        XCTAssertEqual(other.displayMode, .delta)
+        XCTAssertEqual(other.displayMode, .draw)
         XCTAssertEqual(other.onboarding.checkpoint, .runningDefaults)
         let store = PowerReadingStore.preview
         XCTAssertEqual(store.currentReading, .sampleCharging)
@@ -1578,7 +1586,7 @@ final class J52FixtureTests: XCTestCase {
         XCTAssertEqual(model.system, "22.9 W")
         XCTAssertEqual(model.battery, "+42.1 W")
         XCTAssertEqual(model.subtitle, "64% · full in about 38 min")
-        XCTAssertEqual(MenuBarStatusLabel(reading: store.currentReading, preferences: restored).text, "+42.1 W")
+        XCTAssertEqual(MenuBarStatusLabel(reading: store.currentReading, preferences: restored).text, "22.9 W")
     }
 }
 #endif
@@ -1616,20 +1624,20 @@ final class J53FixtureTests: XCTestCase {
         let restored = PreferencesStore(storage: storage)
         XCTAssertEqual(restored.onboarding.checkpoint, .runningDefaults)
         XCTAssertFalse(restored.onboarding.completed)
-        XCTAssertEqual(restored.displayMode, .delta)
+        XCTAssertEqual(restored.displayMode, .draw)
         XCTAssertEqual(restored.precision, .decimal)
         XCTAssertFalse(restored.componentReadings)
         XCTAssertNil(restored.persistenceFailure)
         let other = PreferencesStore(storage: InMemoryStorage())
         J53FixtureLaunch.prepare(preferences: other)
-        preferences.displayMode = .draw
+        preferences.displayMode = .charger
         preferences.onboarding.checkpoint = .picker
-        XCTAssertEqual(other.displayMode, .delta)
+        XCTAssertEqual(other.displayMode, .draw)
         XCTAssertEqual(other.onboarding.checkpoint, .runningDefaults)
         let store = PowerReadingStore.preview
         XCTAssertEqual(store.currentReading, .sampleCharging)
         XCTAssertEqual(store.freshness(maximumAge: 0), .fresh)
-        XCTAssertEqual(MenuBarStatusLabel(reading: store.currentReading, preferences: restored).text, "+42.1 W")
+        XCTAssertEqual(MenuBarStatusLabel(reading: store.currentReading, preferences: restored).text, "22.9 W")
     }
 }
 #endif

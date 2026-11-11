@@ -30,6 +30,13 @@ def main() -> None:
                 + ' CURRENT_PROJECT_VERSION='
                 + build
             )
+        # ENABLE_TESTABILITY injects com.apple.security.get-task-allow at code-sign time
+        # even when the entitlements file is empty. Published archives pass NO.
+        if settings.get('ENABLE_TESTABILITY') != 'NO' or settings.get('CODE_SIGN_INJECT_BASE_ENTITLEMENTS') != 'NO':
+            raise release_lib.ReleaseError(
+                'release archive must set ENABLE_TESTABILITY=NO and '
+                'CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO so get-task-allow is not signed in'
+            )
         print('PASS: xcodebuild settings match', args.marketing, expected_build)
     except (release_lib.ReleaseError, OSError) as error:
         print('BLOCKED: ' + str(error), file=sys.stderr)

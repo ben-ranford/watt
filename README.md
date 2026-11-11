@@ -40,6 +40,8 @@ Releases are ad-hoc signed and are not notarised. A root helper supplies Apple's
 
 The helper's sampler runs one fixed command, `/usr/bin/powermetrics` with `-f plist -n 1 -i 1000 -s cpu_power,gpu_power`. It does not accept an executable, arguments, or paths from the app. CPU and GPU estimates appear only when both are available. Display, SSD, and Other are unavailable. Battery delta, charger input, and system draw come from IOKit power sources and do not need the helper.
 
+A fresh install does not register the helper by itself. Setup and Settings offer **Install Helper…**, which runs the bundled `WattHelperInstaller` and asks for an administrator password. Release builds are ad-hoc signed. `SMAppService` daemon registration does not write the exact code-hash pins the helper requires, and it is not a reliable way to install a root daemon from an ad-hoc app, so the app does not use it for this path. The installer still checks the preflight digest against the staged bytes before it writes anything. Homebrew does not install the helper during `brew install`; the cask only places `Watt.app` in Applications.
+
 Release builds set `WATTHelperTrustMode` to `protected-installation` by expanding `$(WATT_HELPER_TRUST_MODE)` in the app and helper Info.plist before signing. The local Apple Development configuration sets that build setting to `certificate`. The app selects certificate trust only when the compiled value is exactly `certificate`. The helper's XPC requirement is the installed app's cdhash. It does not trust every ad-hoc signature that carries the bundle identifier. A missing or stale pin rejects the caller. It is not replaced with a team requirement or an identifier-only requirement. After an update, that pin changes only when the administrator installer has checked the Ed25519 manifest and the archive SHA-256, or through the reviewed helper-update flow. Both restart the helper with the new record. Certificate trust is the local Apple Development configuration. Distribution preflight rejects it.
 
 Administrator commands, protected paths, and recovery are in [HelperInstaller/README.md](HelperInstaller/README.md).
@@ -101,7 +103,7 @@ Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launc
 
 ### Updating
 
-**Check for Updates…** is in the secondary-click menu. Automatic checks start on, and Settings can turn them off. The app downloads the signed manifest and `Watt.tar` described under [Update verification](#update-verification). With no privileged-helper record, it replaces its own bundle. With a helper record, the administrator installer rotates that installation after it checks the same manifest and archive digest, then restarts the helper. The ready window says Watt? quits, updates, and comes back to the menu bar, in about 5 seconds.
+**Check for Updates…** is in the secondary-click menu, and **Check for Updates Now** is in Settings. Both use the signed-manifest updater. Automatic checks start on, and Settings can turn them off. Up to date and couldn’t-check results use the existing update window. The app downloads the signed manifest and `Watt.tar` described under [Update verification](#update-verification). With no privileged-helper record, it replaces its own bundle. With a helper record, the administrator installer rotates that installation after it checks the same manifest and archive digest, then restarts the helper. The ready window says Watt? quits, updates, and comes back to the menu bar, in about 5 seconds.
 
 ## Usage
 
@@ -113,10 +115,10 @@ open -a Watt
 
 Watt? has no Dock icon. Click the menu-bar item for the power panel. Secondary-click it for the menu:
 
-- **Show in Menu Bar** chooses Battery Delta (the default), Charger Input, System Draw, Per Component, or Icon Only. Per Component stays off until the helper is approved and both CPU and GPU estimates are available. Icon Only keeps the item in place when the menu bar is full.
+- **Show in Menu Bar** chooses System Draw (the default for a new install), Battery Delta, Charger Input, Per Component, or Icon Only. System Draw is the useful number on a Mac that is plugged in and holding its charge, which is the usual first-run state; Battery Delta stays one menu away. Per Component stays off until the helper is approved and both CPU and GPU estimates are available. Icon Only keeps the item in place when the menu bar is full.
 - **Open Watt?** opens the panel. **Settings…** (Command-,) opens settings. **About Watt?**, **Check for Updates…**, and **Quit Watt?** (Command-Q) are on the same menu.
 
-Settings can set the reading, whether a symbol is shown, precision (`42 W`, `42.1 W`, or `42.10 W`), the update interval (every second, every 2 seconds, or every 5 seconds), and smooth readings. Smooth readings average the last 5 seconds. Notifications cover a charger that cannot keep up for 5 minutes, and a full charge. Open at login is available from the same window. Component readings, when the helper is connected, are CPU and GPU only.
+Settings can set the reading, whether a symbol is shown, precision (`42 W`, `42.1 W`, or `42.10 W`), the update interval (every second, every 2 seconds, or every 5 seconds), and smooth readings. Smooth readings average the last 5 seconds. Notifications cover a charger that cannot keep up for 5 minutes, and a full charge. Open at login is off until you turn it on, in setup or in Settings. Component readings, when the helper is connected, are CPU and GPU only. An idle battery flow on AC, including a held charge, shows as `0.0 W` with the panel title Not charging. It is not a missing reading.
 
 ## Build
 

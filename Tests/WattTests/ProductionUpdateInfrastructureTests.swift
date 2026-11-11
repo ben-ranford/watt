@@ -228,13 +228,29 @@ final class ProductionUpdateSourceTests: XCTestCase {
         do { _ = try await source.download(release); XCTFail("Must authenticate bytes") }
         catch { XCTAssertEqual(error as? ServiceFailure, .invalidData) }
     }
+    func testOnlyConnectivityURLErrorsAreOffline() {
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.notConnectedToInternet)), .network)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.networkConnectionLost)), .network)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.cannotConnectToHost)), .network)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.cannotFindHost)), .network)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.dnsLookupFailed)), .network)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.dataNotAllowed)), .network)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.timedOut)), .timedOut)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.cancelled)), .cancelled)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.badServerResponse)), .invalidData)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.cannotParseResponse)), .invalidData)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.secureConnectionFailed)), .invalidData)
+        XCTAssertEqual(UpdateFailureClassification.transport(URLError(.appTransportSecurityRequiresSecureConnection)), .invalidData)
+        struct Other: Error {}
+        XCTAssertEqual(UpdateFailureClassification.transport(Other()), .invalidData)
+    }
     func testRejectsCrossOriginAndInsecureRedirects() async throws {
         let (source, _, _) = try fixture()
         for target in ["https://other.example.test/release", "http://releases.example.test/release",
                        "https://releases.example.test/release?download=1", "https://releases.example.test/release#sig"] {
             UpdateURLProtocol.configure(.init(status: 302, redirect: URL(string: target)!))
             do { _ = try await source.check(); XCTFail("Must reject redirect") }
-            catch { XCTAssertEqual(error as? ServiceFailure, .network) }
+            catch { XCTAssertEqual(error as? ServiceFailure, .invalidData) }
         }
     }
     func testDownloaderRejectsQueryPortAndUserinfo() throws {

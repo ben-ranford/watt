@@ -313,6 +313,46 @@ struct WattApp: App {
             service?.connectionLost()
             appPowerStore?.invalidateComponents()
         }
+        if productionHelper == nil, !Self.isHarnessLaunch,
+           appRouter.settingsHelperSetup.unavailableReason == .installationRequired {
+            let installer = Bundle.main.bundleURL.appendingPathComponent("Contents/MacOS/WattHelperInstaller")
+            if FileManager.default.isExecutableFile(atPath: installer.path) {
+                appRouter.settingsHelperSetup.installHelper = { [weak appRouter, weak appPowerStore] in
+                    guard let appRouter else { return .unknownStatus }
+                    let source = Bundle.main.bundleURL
+                    let rotate = FileManager.default.fileExists(atPath: ProtectedHelperRecord.publicURL.path)
+                    if let failure = await HelperBundleInstall.install(installer: installer, source: source, rotate: rotate) {
+                        return failure
+                    }
+                    let helper: ProductionHelperComposition
+                    do { helper = try ProductionHelperComposition.adoptInstalled() }
+                    catch { return (error as? ServiceFailure) ?? .untrustedIdentity }
+                    appRouter.helperChangedAfterUpdate = helper.hasPendingUpdate
+                    appRouter.settingsHelperSetup.service = helper.service
+                    appRouter.settingsHelperSetup.configureRepair(receipt: helper.updateReceipt, pending: helper.hasPendingUpdate)
+                    appRouter.settingsHelperSetup.captureDiagnostic = {
+                        await HelperDiagnosticExport.present(transport: helper.transport)
+                    }
+                    let previousRemoval = appRouter.removeFromSettings
+                    var helperRemovalReceipt: OperationReceipt?
+                    appRouter.removeFromSettings = { target in
+                        guard target == .helper else { return await previousRemoval(target) }
+                        let receipt = helperRemovalReceipt ?? helper.removalReceipt()
+                        helperRemovalReceipt = receipt
+                        let result = await helper.service.remove(receipt: receipt)
+                        if case .verifiedAbsent = result { helperRemovalReceipt = nil }
+                        return result
+                    }
+                    appPowerStore?.attachComponentTelemetry(ProductionHelperTelemetry(transport: helper.transport))
+                    helper.transport.onInvalidated = { [weak appPowerStore, weak service = helper.service] in
+                        service?.connectionLost()
+                        appPowerStore?.invalidateComponents()
+                    }
+                    await appRouter.settingsHelperSetup.refreshStatus()
+                    return nil
+                }
+            }
+        }
         let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
@@ -1307,7 +1347,7 @@ private final class WattFallbackStatusItem: NSObject {
                                             .environmentObject(self.preferences))
             case .onboarding:
                 guard let self else { return }
-                self.showFallbackWindow(title: "Watt? Setup", content: OnboardingFlowView()
+                self.showFallbackWindow(title: "Watt? Setup", fitContent: true, content: OnboardingFlowView()
                     .environmentObject(self.router)
                     .environmentObject(self.powerStore)
                     .environmentObject(self.preferences))
@@ -1376,13 +1416,19 @@ private final class WattFallbackStatusItem: NSObject {
         let popover = panel ?? NSPopover()
         popover.behavior = .transient
         popover.animates = false
-        popover.contentViewController = NSHostingController(rootView:
+        let host = NSHostingController(rootView:
             MenuBarRootView()
                 .environmentObject(router)
                 .environmentObject(powerStore)
                 .environmentObject(preferences))
+        popover.contentViewController = host
         panel = popover
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        host.view.layoutSubtreeIfNeeded()
+        let fitted = host.view.fittingSize
+        if fitted.height > 1 {
+            popover.contentSize = NSSize(width: max(fitted.width, WattSpacing.panelWidth), height: fitted.height)
+        }
         router.statusPanelPresented = true
     }
 
@@ -1433,13 +1479,24 @@ private final class WattFallbackStatusItem: NSObject {
 
     private func showFallbackWindow<Content: View>(title: String,
                                                    size: NSSize = NSSize(width: 420, height: 560),
+                                                   fitContent: Bool = false,
                                                    content: Content) {
-        let window = NSWindow(contentRect: NSRect(origin: .zero, size: size),
+        let host = NSHostingView(rootView: content)
+        let resolved: NSSize
+        if fitContent {
+            let fitted = host.fittingSize
+            let height = fitted.height > 1 ? fitted.height + 28 : 460
+            resolved = NSSize(width: max(fitted.width, WattSpacing.onboardingWidth), height: height)
+        } else {
+            resolved = size
+        }
+        let window = NSWindow(contentRect: NSRect(origin: .zero, size: resolved),
                               styleMask: [.titled, .closable, .miniaturizable],
                               backing: .buffered, defer: false)
         window.title = title
+        if fitContent { window.identifier = NSUserInterfaceItemIdentifier("watt.onboarding") }
         window.isReleasedWhenClosed = false
-        window.contentView = NSHostingView(rootView: content)
+        window.contentView = host
         window.center()
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
@@ -2575,7 +2632,7 @@ enum J16FixtureLaunch {
                 guard let png = bitmap.representation(using: .png, properties: [:]) else { throw ServiceFailure.invalidData }
                 try png.write(to: directory.appendingPathComponent("actual-content.png"))
                 let metadata: [String: Any] = [
-                    "title": AllSetView.title, "body": AllSetView.message, "openAtLogin": true,
+                    "title": AllSetView.title, "body": AllSetView.message, "openAtLogin": false,
                     "fixture": "J1.6/base", "appearance": "aqua", "locale": "en_US", "width": Int(view.bounds.width), "height": Int(view.bounds.height),
                     "capture": "NSView.cacheDisplay; actual app-owned all-set content; native titlebar not assessed",
                     "storage": "fresh InMemoryStorage; allSet checkpoint; Delta selected; fixed preview telemetry; no live services",
@@ -3420,7 +3477,7 @@ enum J52FixtureLaunch {
     }
 
     static func prepare(preferences: PreferencesStore) {
-        preferences.displayMode = .delta
+        preferences.displayMode = .draw
         preferences.precision = .decimal
         preferences.componentReadings = false
         preferences.onboarding = .init(checkpoint: .runningDefaults, completed: false)
@@ -3446,7 +3503,7 @@ enum J53FixtureLaunch {
     }
 
     static func prepare(preferences: PreferencesStore) {
-        preferences.displayMode = .delta
+        preferences.displayMode = .draw
         preferences.precision = .decimal
         preferences.componentReadings = false
         preferences.onboarding = .init(checkpoint: .runningDefaults, completed: false)

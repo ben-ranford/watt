@@ -1,5 +1,6 @@
 import CryptoKit
 import Foundation
+import os
 
 // P04: detached release signature binds identity, build, minimum OS, notes and exact bytes.
 // `notes` is optional so a manifest signed before this field still decodes. When the
@@ -270,13 +271,17 @@ final class UpdateAdapter: UpdateService {
         try Task.checkCancellation()
     }
 
-    private func verifyNewer(_ manifest: UpdateManifest) throws {
+    /// True only when the signed build is newer than this binary and every completed install.
+    /// The same build, or an older one, is a successful check with nothing to install.
+    private func isNewer(_ manifest: UpdateManifest) throws -> Bool {
         try trust.requireCompatible(manifest)
         let completed = try journal().filter { $0.phase == .completed }
         let builds = try completed.map { try trust.authenticate($0.release).build }
-        guard manifest.build > max(trust.currentBuild, builds.max() ?? 0) else {
-            throw ServiceFailure.incompatibleVersion
-        }
+        return manifest.build > max(trust.currentBuild, builds.max() ?? 0)
+    }
+
+    private func verifyNewer(_ manifest: UpdateManifest) throws {
+        guard try isNewer(manifest) else { throw ServiceFailure.incompatibleVersion }
     }
 
     func check() async -> ServiceOutcome<String?> {
@@ -291,10 +296,14 @@ final class UpdateAdapter: UpdateService {
             try Task.checkCancellation()
             guard let release else { state = .idle; return .success(nil) }
             let manifest = try trust.authenticate(release)
-            try verifyNewer(manifest)
+            guard try isNewer(manifest) else { state = .idle; return .success(nil) }
             offer = release; state = .available(version: String(manifest.build))
             return .success(String(manifest.build))
-        } catch { state = .failed(error as? ServiceFailure ?? .network, nil); return failure(error) }
+        } catch {
+            let reason = error as? ServiceFailure ?? (error is CancellationError ? ServiceFailure.cancelled : .invalidData)
+            UpdateDiagnostics.record(error, as: reason, during: "check")
+            return failure(error)
+        }
     }
 
     /// Notes from the current offer. Re-checks the signature so the text cannot drift from the payload.
@@ -456,5 +465,46 @@ final class UpdateAdapter: UpdateService {
             state = .idle
             return .success(receipt)
         } catch { return failure(error, receipt: receipt) }
+    }
+}
+
+/// Connectivity is a small set of URLError codes. A response, redirect, TLS, or decode
+/// failure reached a server or a policy check, so it is not "no connection".
+enum UpdateFailureClassification {
+    static func transport(_ error: Error) -> ServiceFailure {
+        let ns = error as NSError
+        guard ns.domain == NSURLErrorDomain else { return .invalidData }
+        switch ns.code {
+        case NSURLErrorTimedOut:
+            return .timedOut
+        case NSURLErrorNotConnectedToInternet,
+             NSURLErrorNetworkConnectionLost,
+             NSURLErrorCannotConnectToHost,
+             NSURLErrorCannotFindHost,
+             NSURLErrorDNSLookupFailed,
+             NSURLErrorInternationalRoamingOff,
+             NSURLErrorCallIsActive,
+             NSURLErrorDataNotAllowed:
+            return .network
+        case NSURLErrorCancelled:
+            return .cancelled
+        default:
+            return .invalidData
+        }
+    }
+}
+
+struct UpdateResponseRejection: LocalizedError, Sendable {
+    let status: Int
+    var errorDescription: String? { "HTTP \(status)" }
+}
+
+enum UpdateDiagnostics {
+    private static let log = Logger(subsystem: "io.github.ben-ranford.watt", category: "updates")
+
+    static func record(_ error: Error, as reason: ServiceFailure, during context: String) {
+        let ns = error as NSError
+        let detail = "update \(context) classified \(reason.rawValue) domain \(ns.domain) code \(ns.code) \(ns.localizedDescription)"
+        log.error("\(detail, privacy: .public)")
     }
 }

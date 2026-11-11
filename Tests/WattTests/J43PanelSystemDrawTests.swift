@@ -118,7 +118,7 @@ final class J43PanelSystemDrawTests: XCTestCase {
         XCTAssertEqual(J43FixtureLaunch.makeStore().currentReading, J43FixtureLaunch.reading)
         let unrelated = PreferencesStore(storage: InMemoryStorage())
         J43FixtureLaunch.prepare(preferences: PreferencesStore(storage: InMemoryStorage()))
-        XCTAssertEqual(unrelated.displayMode, .delta)
+        XCTAssertEqual(unrelated.displayMode, .draw)
         XCTAssertFalse(unrelated.onboarding.completed)
     }
     #endif

@@ -53,7 +53,7 @@ final class PowerReadingStore: ObservableObject {
     }
     @Published private(set) var componentFailure: ServiceFailure?
     @Published private(set) var componentEstimate: ComponentEstimatePair?
-    private let componentTelemetry: (any ComponentTelemetryService)?
+    private var componentTelemetry: (any ComponentTelemetryService)?
     private var componentRequest: UUID?
     private var componentReceivedUptime: TimeInterval?
     private var componentInitialAge: TimeInterval = 0
@@ -155,8 +155,19 @@ final class PowerReadingStore: ObservableObject {
         _ = await components
     }
 
+    /// A helper installed after launch starts component sampling without replacing the system sampler.
+    func attachComponentTelemetry(_ service: any ComponentTelemetryService) {
+        guard componentTelemetry == nil else { return }
+        componentTelemetry = service
+        componentFailure = nil
+        Task { await runComponentSampling() }
+    }
+
+    private var componentSamplerRunning = false
     private func runComponentSampling() async {
-        guard componentTelemetry != nil else { return }
+        guard componentTelemetry != nil, !componentSamplerRunning else { return }
+        componentSamplerRunning = true
+        defer { componentSamplerRunning = false }
         while !Task.isCancelled {
             let started = clock.uptime
             await refreshComponents()

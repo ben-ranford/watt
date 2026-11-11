@@ -81,8 +81,16 @@ struct StatusPanelModel {
     /// Form report its content height instead of constraining it to a fixed
     /// frame, which made the Form's scroll container compete with the rows
     /// for vertical space.
+    /// The tall panel frame reserves rows for a full component list. An
+    /// unavailable placeholder is one row, so the popover should hug that content.
+    var showsUnavailableComponents: Bool {
+        showsComponents && components.isEmpty && !componentsOff
+    }
+    var componentsNeedInstall: Bool = false
+    var unavailableComponentsValue: String { componentsNeedInstall ? "Install" : "—" }
+    var unavailableComponentsSubtitle: String { componentsNeedInstall ? "Helper not installed" : "Unavailable" }
     var usesIntrinsicPowerTableHeight: Bool {
-        !setupIncomplete && !isDesktop && (hasNoReading || !showsComponents)
+        !setupIncomplete && !isDesktop && (hasNoReading || !showsComponents || showsUnavailableComponents)
     }
     var panelHeight: CGFloat? {
         if setupIncomplete { return setupSaveFailed ? WattSpacing.setupPanelErrorHeight : WattSpacing.setupPanelHeight }
@@ -119,7 +127,9 @@ struct StatusPanelModel {
         case .full: return "Fully Charged"
         case .chargingHold: return "Charging Paused"
         case .noBattery: return "No Battery"
-        case .unknown: return "Power"
+        case .unknown:
+            if reading.watts == 0, reading.capabilities.battery == .available { return "Not charging" }
+            return "Power"
         }
     }
     var accessibilitySummary: String {
@@ -161,7 +171,9 @@ struct StatusPanelModel {
         }
         if showsComponents {
             rows += components.isEmpty
-                ? [StatusPanelAccessibilityRow(label: "Components", value: "—", subtitle: "Unavailable")]
+                ? [StatusPanelAccessibilityRow(label: "Components",
+                    value: componentsNeedInstall ? unavailableComponentsSubtitle : unavailableComponentsValue,
+                    subtitle: componentsNeedInstall ? nil : unavailableComponentsSubtitle)]
                 : components.map { StatusPanelAccessibilityRow(label: $0.name, value: PowerFormatter.watts($0.watts, signed: false)) }
         }
         return rows
@@ -194,13 +206,15 @@ struct StatusPanelView: View {
     var includesComponents = true
     var setupIncomplete = false
     var setupSaveFailed = false
+    var helperInstallOffered = false
+    var onInstallHelper: () -> Void = {}
     var onContinueSetup: () -> Void = {}
     var onRetry: () -> Void = {}
     var isRetrying = false
     let onSettings: () -> Void
     let onQuit: () -> Void
     private var accessibilityPrefix: String { setupIncomplete ? "J5.2" : model.hasNoReading ? "J8.1" : model.hasInsufficientCharger ? "J6.4" : model.hasFullOnAdapter ? "J6.3" : model.hasOptimisedChargingHold ? "J6.2" : !includesComponents ? (reading.batteryState == .discharging ? "J6.5" : "J6.1") : model.isDesktop ? "J4.3" : reading.batteryState == .discharging ? "C02" : "C01" }
-    private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed) }
+    private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed, componentsNeedInstall: helperInstallOffered) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: WattSpacing.md) {
@@ -216,6 +230,7 @@ struct StatusPanelView: View {
                             Spacer()
                             Button(SetupPromptPresentation.action, action: onContinueSetup)
                                 .buttonStyle(.borderedProminent)
+                                .wattControlLabel(SetupPromptPresentation.action)
                                 .accessibilityIdentifier("J5.2.continue")
                         }
                         if setupSaveFailed {
@@ -262,6 +277,7 @@ struct StatusPanelView: View {
                         Button(NoReadingPresentation.retryAction, action: onRetry)
                             .buttonStyle(.bordered)
                             .disabled(isRetrying)
+                            .wattControlLabel(NoReadingPresentation.retryAction)
                             .accessibilityIdentifier("J8.1.retry")
                     }
                 } else if !model.isDesktop {
@@ -281,6 +297,7 @@ struct StatusPanelView: View {
                             LabeledContent {
                                 Button(HelperOffPresentation.action, action: onSettings)
                                     .buttonStyle(.bordered)
+                                    .wattControlLabel(HelperOffPresentation.action)
                                     .accessibilityIdentifier("J3.2.fix")
                             } label: {
                                 VStack(alignment: .leading, spacing: WattSpacing.xxs) {
@@ -295,6 +312,7 @@ struct StatusPanelView: View {
                             LabeledContent {
                                 Button("Turn On…", action: onSettings)
                                     .buttonStyle(.bordered)
+                                    .wattControlLabel("Turn On…")
                                     .accessibilityIdentifier("J2.2.turnOn")
                             } label: {
                                 VStack(alignment: .leading, spacing: WattSpacing.xxs) {
@@ -305,8 +323,22 @@ struct StatusPanelView: View {
                                         .fixedSize(horizontal: false, vertical: true)
                                 }
                             }
+                        } else if model.components.isEmpty && model.componentsNeedInstall {
+                            LabeledContent {
+                                Button("Install Helper…") { onInstallHelper() }
+                                    .buttonStyle(.bordered)
+                                    .wattControlLabel("Install Helper…")
+                                    .accessibilityIdentifier("panel.helper.install")
+                            } label: {
+                                VStack(alignment: .leading, spacing: WattSpacing.xxs) {
+                                    Text("Components")
+                                    Text(model.unavailableComponentsSubtitle)
+                                        .font(WattTypography.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
                         } else if model.components.isEmpty {
-                            row("Components", value: "—", subtitle: "Unavailable")
+                            row("Components", value: model.unavailableComponentsValue, subtitle: model.unavailableComponentsSubtitle)
                         } else {
                             ForEach(model.components) { component in
                                 row(component.name, value: PowerFormatter.watts(component.watts, signed: false))
@@ -333,10 +365,12 @@ struct StatusPanelView: View {
             HStack {
                 Button("Settings…", action: onSettings)
                     .keyboardShortcut(",", modifiers: .command)
+                    .wattControlLabel("Settings…")
                     .accessibilityIdentifier("\(accessibilityPrefix).settings")
                 Spacer()
                 Button("Quit Watt?", action: onQuit)
                     .keyboardShortcut("q", modifiers: .command)
+                    .wattControlLabel("Quit Watt?")
                     .accessibilityIdentifier("\(accessibilityPrefix).quit")
             }
             .buttonStyle(.borderless)

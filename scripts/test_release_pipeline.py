@@ -401,6 +401,8 @@ Build settings for action build and target Watt:
     MARKETING_VERSION = 1.2.3
     CURRENT_PROJECT_VERSION = 1002003
     PRODUCT_BUNDLE_IDENTIFIER = dev.watt.example
+    ENABLE_TESTABILITY = NO
+    CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO
 Build settings for action build and target WattTests:
     MARKETING_VERSION = 1.2.3
     CURRENT_PROJECT_VERSION = 4
@@ -421,6 +423,14 @@ Build settings for action build and target WattTests:
                 '--marketing', '1.2.3', '--build', '1',
             ])
             self.assertEqual(mismatch.returncode, 1)
+            debuggable = text.replace('ENABLE_TESTABILITY = NO', 'ENABLE_TESTABILITY = YES')
+            log.write_text(debuggable)
+            injected = run([
+                sys.executable, 'scripts/check_xcode_settings.py', str(log),
+                '--marketing', '1.2.3', '--build', '1002003',
+            ])
+            self.assertEqual(injected.returncode, 1)
+            self.assertIn('get-task-allow', injected.stderr)
 
     def test_workflow_does_not_read_apple_signing_secrets(self) -> None:
         text = (ROOT / '.github/workflows/release.yml').read_text()
@@ -959,6 +969,16 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertNotIn('APPLE_', text)
         self.assertNotIn('developer-id', text)
         self.assertIn('CODE_SIGN_IDENTITY=-', text)
+        self.assertEqual(text.count('ENABLE_TESTABILITY=NO'), 2)
+        self.assertEqual(text.count('CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO'), 2)
+        hardened = (ROOT / 'Resources/Entitlements/HardenedRuntime.entitlements').read_text()
+        self.assertNotIn('<key>com.apple.security.get-task-allow</key>', hardened)
+        release_config = (ROOT / 'Watt.xcodeproj/project.pbxproj').read_text()
+        self.assertIn(
+            '"CODE_SIGN_ENTITLEMENTS" = "Resources/Entitlements/HardenedRuntime.entitlements"',
+            release_config,
+        )
+        self.assertNotIn('WattDebug.entitlements"; "name" = "Release"', release_config)
         self.assertNotIn('INFOPLIST_KEY_WATT', text)
         self.assertIn('WATT_HELPER_TRUST_MODE=protected-installation', text)
         self.assertIn('WATT_UPDATE_MANIFEST_URL=$manifest_url', text)
@@ -1366,8 +1386,37 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertIn('-maximum-test-execution-time-allowance 120', test)
         self.assertIn('bash scripts/retry_on_timeout.sh 600 1 --', test)
         self.assertIn('swift test --configuration debug', steps['Unit tests (swift test)'])
+        self.assertIn('ditto -c -k --keepParent', steps['Zip the Release app'])
+        self.assertIn('codesign --verify --verbose=2', steps['Zip the Release app'])
+        self.assertIn('print_release_update_settings.py --check-plist', steps['Zip the Release app'])
+        release_build = steps['Build Debug and Release']
+        self.assertIn('python3 scripts/print_release_update_settings.py', release_build)
+        self.assertIn('[[ "${configuration}" == "Release" ]]', release_build)
         for run in steps.values():
             self.assertNotIn('${{', run)
+        packaged = next(step for step in job['steps'] if step.get('name') == 'Zip the Release app')
+        uploaded = next(step for step in job['steps'] if step.get('name') == 'Upload the Release app')
+        self.assertEqual(packaged['if'], "github.event_name == 'pull_request'")
+        self.assertEqual(uploaded['if'], "github.event_name == 'pull_request'")
+        self.assertRegex(uploaded['uses'], r'actions/upload-artifact@[0-9a-f]{40}( # .+)?$')
+        self.assertEqual(uploaded['with']['name'], 'Watt-app-pr')
+        self.assertEqual(uploaded['with']['retention-days'], 7)
+        self.assertEqual(uploaded['with']['if-no-files-found'], 'error')
+        self.assertTrue(str(uploaded['with']['path']).endswith('Watt.app.zip'))
+
+    def test_release_update_settings_match_public_config(self) -> None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            'print_release_update_settings', ROOT / 'scripts/print_release_update_settings.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        printed = dict(module.settings())
+        config = json.loads((ROOT / 'Resources/ReleaseIdentity.json').read_text())
+        key = (ROOT / 'Resources/UpdatePublicKey.txt').read_text().strip()
+        self.assertEqual(printed['WATT_UPDATE_MANIFEST_URL'], config['updateManifestURL'])
+        self.assertEqual(printed['WATT_UPDATE_ARTIFACT_URL'], config['updateArtifactURL'])
+        self.assertEqual(printed['WATT_UPDATE_PUBLIC_KEY'], key)
+        self.assertEqual(len(base64.b64decode(key, validate=True)), 32)
 
     def test_watchdog_retries_only_a_timeout(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

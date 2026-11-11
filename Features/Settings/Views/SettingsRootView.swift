@@ -34,7 +34,7 @@ enum HelperUnavailableReason: Equatable {
         case .configurationFailed:
             return "Watt? Helper could not be configured. Relaunch Watt? or reinstall a complete build."
         case .installationRequired:
-            return "Install Watt? Helper with the administrator installer, then launch the installed app. No Apple certificate is required."
+            return "Watt? Helper isn’t installed."
         }
     }
 }
@@ -297,6 +297,18 @@ struct SettingsRootView: View {
             if !confirmUninstallExcerpt {
                 Toggle("Check for updates automatically", isOn: $preferences.checkForUpdatesAutomatically)
                     .accessibilityIdentifier("settings.automaticUpdates")
+                LabeledContent {
+                    Button("Check for Updates Now") { router.checkForUpdatesNow() }
+                        .disabled(!router.canCheckForUpdates)
+                        .wattControlLabel("Check for Updates Now")
+                        .accessibilityIdentifier("settings.checkForUpdatesNow")
+                } label: {
+                    Text("Check for Updates")
+                    if let reason = router.updateUnavailableReason {
+                        Text(reason)
+                            .accessibilityIdentifier("settings.updateUnavailable")
+                    }
+                }
             }
             LabeledContent {
                 Button("Uninstall…", role: .destructive) {
@@ -370,7 +382,12 @@ struct SettingsHelperRows: View {
                         .disabled(removing || setup.isLoading)
                         .accessibilityIdentifier("settings.helper.repair")
                 }
-                if setup.canRemoveHelper {
+                if setup.canInstallHelper {
+                    Button("Install Helper…") { Task { await setup.installFromInterface() } }
+                        .disabled(removing || setup.isInstalling)
+                        .wattControlLabel("Install Helper…")
+                        .accessibilityIdentifier("settings.helper.install")
+                } else if setup.canRemoveHelper {
                     Button("Remove…", action: remove)
                         .buttonStyle(.bordered)
                         .disabled(removing || setup.isLoading)
@@ -402,7 +419,7 @@ struct SettingsHelperRows: View {
                 Button("Export Helper Diagnostic…") { Task { await captureDiagnostic() } }
                     .accessibilityIdentifier("settings.helper.diagnostic")
             }
-            if setup.isLoading { ProgressView().accessibilityLabel("Checking helper") }
+            if setup.isLoading || setup.isInstalling { ProgressView().accessibilityLabel("Checking helper") }
             if let message = setup.message { Text(message).accessibilityIdentifier("settings.helper.result") }
             if setup.state == .denied {
                 Button("Open System Settings") { router.openApprovalSettings() }
@@ -494,6 +511,7 @@ final class SettingsHelperSetup: ObservableObject {
     let approvals: HelperApprovalStore
     @Published var service: (any HelperService)? {
         didSet {
+            installResult = nil
             attempt = UUID()
             activeToken = nil
             approvals.close(.settings)
@@ -520,6 +538,25 @@ final class SettingsHelperSetup: ObservableObject {
         self.service = service
         self.approvals = approvals ?? HelperApprovalStore()
         observeLifecycle()
+    }
+    var installHelper: (() async -> ServiceFailure?)?
+    @Published private(set) var isInstalling = false
+    @Published var installResult: String?
+    var canInstallHelper: Bool {
+        installHelper != nil && service == nil && !helperOn && unavailableReason == .installationRequired
+    }
+    func installFromInterface() async -> ServiceFailure? {
+        guard canInstallHelper, !isInstalling, let installHelper else { return .unknownStatus }
+        isInstalling = true
+        installResult = nil
+        let failure = await installHelper()
+        isInstalling = false
+        if let failure {
+            installResult = failure == .cancelled
+                ? "Helper installation was cancelled."
+                : "Couldn’t install the helper. Try again."
+        }
+        return failure
     }
     var captureDiagnostic: (() async -> Void)?
     private var repairReceipt: (() -> OperationReceipt)?
@@ -556,7 +593,9 @@ final class SettingsHelperSetup: ObservableObject {
     @Published var unavailableReason: HelperUnavailableReason = .missingBundle
     var helperServiceAvailable: Bool { service != nil || helperOn }
     var statusTitle: String {
-        guard helperServiceAvailable else { return "Unavailable" }
+        guard helperServiceAvailable else {
+            return unavailableReason == .installationRequired ? "Not installed" : "Unavailable"
+        }
         return state == .requiresApproval ? SettingsHelperRows.pendingStatus : helperOn ? "On" : "Off"
     }
     var statusSubtitle: String {
@@ -659,10 +698,9 @@ final class SettingsHelperSetup: ObservableObject {
         }
     }
     var message: String? {
+        if let installResult { return installResult }
         switch state {
-        case .notDetermined: return !helperServiceAvailable
-            ? unavailableReason.message
-            : nil
+        case .notDetermined: return nil
         case .loading: return "Checking helper…"
         case .requiresApproval: return nil // The status row owns pending copy; no duplicate footer.
         case .denied: return "Helper access is denied. Allow Watt? Helper in System Settings, then retry."

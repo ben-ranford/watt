@@ -118,14 +118,14 @@ enum WattPrecision: String, CaseIterable, Codable, Sendable {
 
 private struct StoredPreferences: Codable {
     var precision: WattPrecision? = nil
-    var displayMode: WattDisplayMode = .delta
+    var displayMode: WattDisplayMode = .draw
     var showSymbol = true
     var updateInterval = "Every 2 seconds"
     var smoothReadings = true
     var componentReadings = true
     var chargerNotification = true
     var fullyChargedNotification = false
-    var openAtLogin = true
+    var openAtLogin = false
     var checkForUpdatesAutomatically = true
     var selectedComponents = ["CPU", "GPU"]
     var onboarding = OnboardingState()
@@ -136,7 +136,7 @@ final class PreferencesStore: ObservableObject {
     private let storage: any PreferenceStorage
     private var loading = true
     @Published private(set) var persistenceFailure: ServiceFailure?
-    @Published var displayMode: WattDisplayMode = .delta { didSet { save() } }
+    @Published var displayMode: WattDisplayMode = .draw { didSet { save() } }
     @Published var precision: WattPrecision = .decimal { didSet { save() } }
     @Published var showSymbol = true { didSet { save() } }
     @Published var updateInterval = "Every 2 seconds" { didSet { save() } }
@@ -144,7 +144,7 @@ final class PreferencesStore: ObservableObject {
     @Published var componentReadings = true { didSet { save() } }
     @Published var chargerNotification = true { didSet { save() } }
     @Published var fullyChargedNotification = false { didSet { save() } }
-    @Published var openAtLogin = true { didSet { save() } }
+    @Published var openAtLogin = false { didSet { save() } }
     @Published var checkForUpdatesAutomatically = true { didSet { save() } }
     @Published var onboarding = OnboardingState() { didSet { save() } }
     @Published private var validatedComponents = ["CPU", "GPU"]

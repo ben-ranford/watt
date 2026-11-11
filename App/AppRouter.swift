@@ -174,6 +174,11 @@ final class AppRouter: ObservableObject {
     var canScheduleAutomaticChecks: Bool {
         updateService != nil && updateConfigurationFailure == nil
     }
+    /// Shown under the disabled Check for Updates button. A configured updater stays quiet.
+    var updateUnavailableReason: String? {
+        guard updateService == nil || updateConfigurationFailure != nil else { return nil }
+        return "Updates aren’t configured in this build."
+    }
     @Published private(set) var updateOfferIntent: UpdateOfferIntent?
     /// Notes from the signed manifest for the offer currently on screen.
     @Published private(set) var offeredUpdateNotes: OfferedUpdateNotes?
@@ -770,13 +775,26 @@ final class AppRouter: ObservableObject {
         showUpdate()
     }
 
+    /// Settings and other live controls. The right-click item still has to match
+    /// the menu that created it; a retained item is not a fresh user intent.
+    @discardableResult
+    func checkForUpdatesNow() -> Bool {
+        guard canCheckForUpdates, updateService != nil else { return false }
+        menuSetupPresentationID = nil
+        return beginUpdateCheck()
+    }
+
     /// Synchronous admission prevents two native actions from scheduling duplicate checks.
     /// A retained item from a closed/replaced menu is not a fresh user intent.
     @discardableResult
     func checkForUpdatesFromMenu(presentationID: UUID) -> Bool {
-        guard presentationID == menuSetupPresentationID,
-              canCheckForUpdates, let updateService else { return false }
-        menuSetupPresentationID = nil
+        guard presentationID == menuSetupPresentationID else { return false }
+        return checkForUpdatesNow()
+    }
+
+    @discardableResult
+    private func beginUpdateCheck() -> Bool {
+        guard canCheckForUpdates, let updateService else { return false }
         guard updates.accept(.checking, generation: updates.generation) else { return false }
         let generation = updates.renewGeneration()
         updateOfferIntent = nil

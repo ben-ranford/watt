@@ -72,7 +72,7 @@ final class J63FullOnAdapterTests: XCTestCase {
         XCTAssertEqual(legacy.subtitle, "100%")
         XCTAssertEqual(legacy.headlineValue, "0.0 W")
         XCTAssertTrue(legacy.showsComponents)
-        XCTAssertEqual(legacy.panelHeight, 473)
+        XCTAssertNil(legacy.panelHeight)
         let hold = StatusPanelModel(reading: .sampleChargingHold)
         XCTAssertEqual(hold.state, .optimisedChargingHold(percentage: 80))
         XCTAssertEqual(hold.title, "Holding at 80%")

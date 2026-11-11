@@ -76,7 +76,7 @@ final class J16AllSetTests: XCTestCase {
     func testLoginPreferenceAndPriorNavigationRemainIndependent() {
         let storage = InMemoryStorage()
         let preferences = PreferencesStore(storage: storage)
-        XCTAssertTrue(preferences.openAtLogin)
+        XCTAssertFalse(preferences.openAtLogin)
         preferences.openAtLogin = false
         preferences.onboarding.checkpoint = .preview
         ComponentPreviewView.advance(preferences: preferences)

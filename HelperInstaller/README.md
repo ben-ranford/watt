@@ -6,6 +6,8 @@ The bundled application must contain `Watt`, `WattHelper`, and `WattMaintenance`
 
 ## Reviewed local installation
 
+The app’s **Install Helper…** button, in setup and in Settings, runs this tool. It preflights as the current user, then asks for an administrator password and runs `--bootstrap-reviewed` with that digest. Release builds are ad-hoc signed. Registering the bundled launch daemon with `SMAppService` does not write these code-hash pins, so the app does not use that API to install the helper. The Homebrew cask only copies `Watt.app`; it does not bootstrap the helper.
+
 1. Run `WattHelperInstaller --preflight --source /absolute/path/Watt.app` as the ordinary user. Inspect the returned hashes and whole-tree approval digest for the intended local build.
 2. An administrator invokes `WattHelperInstaller --bootstrap-reviewed --source /absolute/path/Watt.app --approval <digest>`. For a newer build, use `--rotate-reviewed` with a freshly reviewed preflight digest.
 3. Open the exact application path printed by the installer as the ordinary user. The installer never runs the GUI as root.

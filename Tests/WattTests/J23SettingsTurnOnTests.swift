@@ -50,7 +50,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
         await setup.turnOn(preferences: prefs)
         XCTAssertEqual(setup.state, .notDetermined)
         XCTAssertFalse(prefs.componentReadings)
-        XCTAssertEqual(setup.message, HelperUnavailableReason.missingBundle.message)
+        XCTAssertNil(setup.message)
     }
     func testRequiresApprovalIsNotSuccessAndRetryReconciles() async {
         let service = FakeHelperService(); service.status = .pending
@@ -143,7 +143,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
         XCTAssertFalse(setup.canTurnOn)
         XCTAssertEqual(setup.actionTitle, "Unavailable")
         XCTAssertEqual(setup.statusTitle, "Unavailable")
-        XCTAssertEqual(setup.message, HelperUnavailableReason.missingBundle.message)
+        XCTAssertNil(setup.message)
         XCTAssertTrue(prefs.componentReadings) // Persisted intent is not silently rewritten.
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"), encoding: .utf8)
@@ -343,7 +343,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
             XCTAssertFalse(setup.helperOn)
             XCTAssertEqual(setup.statusTitle, "Unavailable")
             XCTAssertEqual(setup.statusSubtitle, reason.message)
-            XCTAssertEqual(setup.message, reason.message)
+            XCTAssertNil(setup.message, "The status row already shows the explanation")
             XCTAssertTrue(OfferComponentReadingsView.unavailableMessage(for: reason).contains(reason.message))
             XCTAssertFalse(reason.message.contains("private diagnostic"))
         }

@@ -15,7 +15,12 @@ final class J107CouldntCheckTests: XCTestCase {
         _ = NSApplication.shared
         let alert = CouldntCheckAlert.make()
         XCTAssertEqual(alert.messageText, "Couldn’t check for updates")
-        XCTAssertEqual(alert.informativeText, "No connection right now. Watt? checks again later on its own.")
+        XCTAssertEqual(alert.informativeText, CouldntCheckAlert.offlineMessage)
+        let unverified = CouldntCheckAlert.make(reason: .untrustedIdentity)
+        XCTAssertEqual(unverified.informativeText, "The update couldn’t be verified.")
+        XCTAssertNotEqual(CouldntCheckAlert.message(for: .invalidData), CouldntCheckAlert.offlineMessage)
+        XCTAssertNotEqual(CouldntCheckAlert.message(for: .incompatibleVersion), CouldntCheckAlert.offlineMessage)
+        XCTAssertEqual(CouldntCheckAlert.message(for: .timedOut), CouldntCheckAlert.offlineMessage)
         XCTAssertEqual(alert.buttons.map(\.title), ["Try Again", "OK"])
         XCTAssertEqual(alert.buttons.first?.keyEquivalent, "\r")
         XCTAssertNotNil(alert.icon)

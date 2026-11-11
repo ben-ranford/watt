@@ -369,12 +369,26 @@ enum UpToDateAlert {
 /// No custom icon, material, appearance or geometry: this is the macOS alert component.
 enum CouldntCheckAlert {
     static let title = "Couldn’t check for updates"
-    static let message = "No connection right now. Watt? checks again later on its own."
-    @MainActor static func make() -> NSAlert {
+    static let offlineMessage = "No connection right now. Watt? checks again later on its own."
+    static func message(for reason: ServiceFailure) -> String {
+        switch reason {
+        case .network, .timedOut, .disconnected:
+            return offlineMessage
+        case .untrustedIdentity:
+            return "The update couldn’t be verified."
+        case .invalidData:
+            return "The update information couldn’t be read."
+        case .incompatibleVersion:
+            return "This Mac can’t run the published update."
+        default:
+            return "Watt? couldn’t finish the update check."
+        }
+    }
+    @MainActor static func make(reason: ServiceFailure = .network) -> NSAlert {
         let alert = NSAlert()
         alert.alertStyle = .informational
         alert.messageText = title
-        alert.informativeText = message
+        alert.informativeText = message(for: reason)
         alert.addButton(withTitle: "Try Again")
         alert.addButton(withTitle: "OK")
         return alert
@@ -396,7 +410,7 @@ private struct CouldntCheckPresentation: NSViewRepresentable {
             guard router.couldntCheckPresented, router.checkFailurePresentation == token,
                   let window = view.window, window.isVisible else { return }
             window.orderOut(nil)
-            let response = CouldntCheckAlert.make().runModal()
+            let response = CouldntCheckAlert.make(reason: token.reason).runModal()
             guard router.couldntCheckPresented, router.checkFailurePresentation == token else { return }
             if response == .alertFirstButtonReturn {
                 // Restore the host even on a failed persistence write, so retry remains possible.

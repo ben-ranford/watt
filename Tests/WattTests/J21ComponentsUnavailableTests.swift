@@ -35,14 +35,14 @@ final class J21ComponentsUnavailableTests: XCTestCase {
         XCTAssertEqual(sub.items.map { $0.isSeparatorItem ? "|" : $0.title },
                        ["Battery Delta", "Charger Input", "System Draw", "Per Component", "|", "Icon Only", "|", "Turn On Helper…"])
         XCTAssertFalse(sub.items[3].isEnabled)
-        XCTAssertEqual(sub.items.filter { $0.state == .on }.map(\.title), ["Battery Delta"])
+        XCTAssertEqual(sub.items.filter { $0.state == .on }.map(\.title), ["System Draw"])
         XCTAssertTrue((menu.items + sub.items).allSatisfy { $0.view == nil && $0.image == nil })
         XCTAssertEqual(menu.items[3].keyEquivalent, ",")
         XCTAssertEqual(menu.items[8].keyEquivalent, "q")
         XCTAssertEqual(menu.items[3].keyEquivalentModifierMask, .command)
         XCTAssertEqual(menu.items[8].keyEquivalentModifierMask, .command)
         XCTAssertTrue(menu.items[6].isEnabled)
-        XCTAssertEqual(MenuBarStatusLabel(reading: .sampleCharging, preferences: prefs).text, "+42.1 W")
+        XCTAssertEqual(MenuBarStatusLabel(reading: .sampleCharging, preferences: prefs).text, "22.9 W")
     }
 
     func testUnavailableSelectionCannotMutatePersistedChoice() throws {
@@ -54,7 +54,7 @@ final class J21ComponentsUnavailableTests: XCTestCase {
         let sub = try XCTUnwrap(menu.item(withTitle: "Show in Menu Bar")?.submenu)
         available = false // Capability loss while a menu is open must fail closed.
         try invoke("Per Component", in: sub)
-        XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .delta)
+        XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .draw)
         try invoke("Charger Input", in: sub)
         XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .charger)
         prefs.displayMode = .components
@@ -79,7 +79,7 @@ final class J21ComponentsUnavailableTests: XCTestCase {
         try invoke("Turn On Helper…", in: sub)
         XCTAssertEqual(destinations, [.settings])
         XCTAssertFalse(prefs.componentReadings)
-        XCTAssertEqual(prefs.displayMode, .delta)
+        XCTAssertEqual(prefs.displayMode, .draw)
         prefs.componentReadings = true
         let enabled = StatusItemContextMenu.makeMenu(router: router, preferences: prefs,
                                                      componentsAvailable: { true })
