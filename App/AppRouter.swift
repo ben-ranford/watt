@@ -279,7 +279,25 @@ final class AppRouter: ObservableObject {
         let generation: UUID
         let receipt: OperationReceipt
     }
+    struct ReadyInstallFailure: Equatable {
+        let id: UUID
+        let message: String
+        init(message: String) {
+            id = UUID()
+            self.message = message
+        }
+    }
     @Published private(set) var readyIntent: ReadyIntent?
+    @Published private(set) var readyInstallFailure: ReadyInstallFailure?
+
+    static func readyInstallFailureMessage(_ reason: ServiceFailure) -> String {
+        switch reason {
+        case .timedOut:
+            return "The update didn’t start in time. Try again."
+        default:
+            return "Couldn’t finish installing. Try again."
+        }
+    }
     private var installReady: ((OperationReceipt) async -> ServiceOutcome<UpdateState>)?
     @Published private(set) var pendingProtectedReceipt: OperationReceipt?
     @Published private(set) var resumingProtectedUpdate = false
@@ -287,16 +305,23 @@ final class AppRouter: ObservableObject {
     func recoverUpdateStartup(adapter: UpdateAdapter) async {
         let pending = await adapter.recoverProtectedStartup()
         let next = adapter.state
-        guard updates.restoreVerifiedTransaction(next) else { return }
-        if case .completed(let receipt) = next {
-            downloadVersion = nil
-            pendingProtectedReceipt = nil
-            noteHelperFollowUp(receipt)
+        if updates.restoreVerifiedTransaction(next) {
+            if case .completed(let receipt) = next {
+                downloadVersion = nil
+                pendingProtectedReceipt = nil
+                noteHelperFollowUp(receipt)
+                return
+            }
+            if let item = pending.first {
+                pendingProtectedReceipt = item.receipt
+                downloadVersion = item.version
+            }
             return
         }
-        if let item = pending.first {
-            pendingProtectedReceipt = item.receipt
-            downloadVersion = item.version
+        // The previous process quit after persisting completion. This process
+        // is the one that should offer the helper follow-up.
+        if case .completed(let receipt) = updates.state {
+            noteHelperFollowUp(receipt)
         }
     }
 
@@ -316,8 +341,21 @@ final class AppRouter: ObservableObject {
         if case .handoffAccepted = next { onMaintenanceHandoff() }
     }
 
+    func configureUpdateInstallation(_ perform: @escaping (OperationReceipt) async -> ServiceOutcome<UpdateState>) {
+        installReady = perform
+    }
+
     func configureUpdateInstallation(adapter: UpdateAdapter) {
-        installReady = { receipt in
+        configureUpdateInstallation { receipt in
+            let recovered = await adapter.recover(receipt: receipt)
+            switch recovered {
+            case .success(.completed), .success(.handoffAccepted):
+                return recovered
+            case .success(.awaitingRelaunch):
+                return await adapter.relaunch(receipt: receipt)
+            default:
+                break
+            }
             do { try adapter.confirmInstall(receipt: receipt) }
             catch { return .failure(error as? ServiceFailure ?? .invalidData) }
             let installed = await adapter.install(receipt: receipt)
@@ -355,30 +393,77 @@ final class AppRouter: ObservableObject {
               readyPresentation == presentation, updates.generation == generation,
               downloadVersion == version, readyReceipt == receipt,
               updates.checkpointStaged(receipt, generation: generation) else { return false }
+        readyInstallFailure = nil
         readyIntent = ReadyIntent(action: action, version: version, generation: generation, receipt: receipt)
         readyPresentation = nil
         updates.renewGeneration()
         if action == .installAndRelaunch, let installReady {
             let token = updates.generation
+            let presentationToken = presentation
             Task { [weak self] in
                 let outcome = await installReady(receipt)
-                guard let self, self.updates.generation == token else { return }
-                let next: UpdateState
+                guard let self else { return }
+                guard self.updates.generation == token else {
+                    // A superseded attempt must not leave Install and Relaunch disabled.
+                    if case .installAndRelaunch = self.readyIntent?.action {
+                        self.readyIntent = nil
+                        self.readyPresentation = presentationToken
+                        self.readyInstallFailure = ReadyInstallFailure(message: Self.readyInstallFailureMessage(.cancelled))
+                        self.present(.softwareUpdate)
+                    }
+                    return
+                }
                 switch outcome {
-                case .success(let value): next = value
-                case .failure(.adminRequired): next = .adminRequired(receipt)
-                case .failure(let reason): next = .failed(reason, receipt)
+                case .success(let value):
+                    switch value {
+                    case .completed, .handoffAccepted:
+                        self.finishLaunchedUpdate(value, receipt: receipt, generation: token)
+                    case .adminRequired:
+                        _ = self.updates.accept(.adminRequired(receipt), generation: token)
+                        self.readyIntent = nil
+                        self.present(.softwareUpdate)
+                    default:
+                        self.failReadyInstall(.invalidData, receipt: receipt, generation: token, presentation: presentationToken)
+                    }
+                case .failure(let reason):
+                    self.failReadyInstall(reason, receipt: receipt, generation: token, presentation: presentationToken)
                 }
-                // Only the configured adapter can provide transaction progress.
-                if case .awaitingRelaunch = next {
-                    _ = self.updates.accept(.installing(receipt), generation: token)
-                }
-                _ = self.updates.accept(next, generation: token)
-                if case .handoffAccepted = next { self.onMaintenanceHandoff(); return }
-                self.present(.softwareUpdate)
             }
         }
         return true
+    }
+
+    /// The replacement process is already running. Record that, then quit.
+    /// A failed write still quits: leaving this process up is the stuck-handoff bug.
+    func finishLaunchedUpdate(_ next: UpdateState, receipt: OperationReceipt, generation: UUID) {
+        switch next {
+        case .completed(let completed) where completed == receipt:
+            _ = updates.accept(.installing(receipt), generation: generation)
+            _ = updates.accept(.awaitingRelaunch(receipt), generation: generation)
+            _ = updates.accept(.completed(receipt), generation: generation)
+        case .handoffAccepted(let accepted) where accepted == receipt:
+            _ = updates.accept(.handoffAccepted(receipt), generation: generation)
+        default:
+            return
+        }
+        readyInstallFailure = nil
+        onMaintenanceHandoff()
+    }
+
+    private func failReadyInstall(_ reason: ServiceFailure, receipt: OperationReceipt, generation: UUID, presentation: UUID) {
+        if reason == .adminRequired {
+            _ = updates.accept(.adminRequired(receipt), generation: generation)
+            readyIntent = nil
+            readyInstallFailure = nil
+            present(.softwareUpdate)
+            return
+        }
+        // Stay on Ready to install with the buttons enabled. Moving to .failed
+        // hides those buttons and leaves a download-stopped screen.
+        readyIntent = nil
+        readyPresentation = presentation
+        readyInstallFailure = ReadyInstallFailure(message: Self.readyInstallFailureMessage(reason))
+        present(.softwareUpdate)
     }
 
     @Published private(set) var downloadVersion: String?
@@ -740,14 +825,8 @@ final class AppRouter: ObservableObject {
         case .awaitingRelaunch:
             _ = updates.accept(.installing(receipt), generation: generation)
             _ = updates.accept(next, generation: generation)
-        case .completed:
-            _ = updates.accept(.installing(receipt), generation: generation)
-            _ = updates.accept(.awaitingRelaunch(receipt), generation: generation)
-            _ = updates.accept(next, generation: generation)
-            noteHelperFollowUp(receipt)
-        case .handoffAccepted:
-            _ = updates.accept(next, generation: generation)
-            onMaintenanceHandoff()
+        case .completed, .handoffAccepted:
+            finishLaunchedUpdate(next, receipt: receipt, generation: generation)
         case .adminRequired:
             _ = updates.accept(next, generation: generation)
         case .failed:

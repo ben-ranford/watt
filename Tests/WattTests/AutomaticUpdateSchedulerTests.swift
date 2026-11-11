@@ -273,9 +273,10 @@ final class AutomaticUpdateSchedulerTests: XCTestCase {
         XCTAssertEqual(rig.driver.stageCount, 1)
         XCTAssertEqual(changed.router.updates.state, .completed(try XCTUnwrap(changed.router.updates.downloadReceipt)))
         XCTAssertEqual(changed.routes.filter { $0 == .softwareUpdate }.count, 1)
-        XCTAssertEqual(changed.routes.filter { $0 == .update }.count, 1)
+        XCTAssertTrue(changed.relaunchQuit)
+        XCTAssertEqual(changed.routes.filter { $0 == .update }.count, 0)
         changed.router.notePresentationReady()
-        XCTAssertEqual(changed.routes.filter { $0 == .update }.count, 1)
+        XCTAssertEqual(changed.routes.filter { $0 == .update }.count, 0)
 
         let sameStore = AppRouter(updateService: rig.adapter, updates: UpdateStore(storage: changed.storage))
         var repeated: [AppDestination] = []
@@ -283,7 +284,7 @@ final class AutomaticUpdateSchedulerTests: XCTestCase {
         sameStore.helperChangedAfterUpdate = { true }
         await sameStore.recoverUpdateStartup(adapter: rig.adapter)
         sameStore.notePresentationReady()
-        XCTAssertTrue(repeated.isEmpty)
+        XCTAssertEqual(repeated, [.update])
     }
 
     func testOptedInInstallStaysQuietWhenTheHelperDidNotChangeAndCanAlertOnALaterLaunch() async throws {
@@ -337,6 +338,7 @@ final class AutomaticUpdateSchedulerTests: XCTestCase {
     private func installAutomatically(rig: UpdateRig, helperChanged: Bool) async throws -> Harness {
         let harness = Harness(service: rig.service, timing: timing(), automaticInstall: true)
         harness.router.configureUpdateInstallation(adapter: rig.adapter)
+        harness.router.onMaintenanceHandoff = { [weak harness] in harness?.relaunchQuit = true }
         harness.router.helperChangedAfterUpdate = { helperChanged }
         harness.router.notePresentationReady()
         harness.coordinator.start()
@@ -362,6 +364,7 @@ private final class Harness {
     let scheduler: ManualUpdateScheduler
     let coordinator: AutomaticUpdateCoordinator
     var routes: [AppDestination] = []
+    var relaunchQuit = false
 
     init(service: any UpdateService, timing: AutomaticUpdateTiming, checksEnabled: Bool = true,
          automaticInstall: Bool = false, jitter: any UpdateJitter = FixedJitter(values: [0.5])) {
