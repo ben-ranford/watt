@@ -325,7 +325,7 @@ struct WattApp: App {
                         return failure
                     }
                     let helper: ProductionHelperComposition
-                    do { helper = try ProductionHelperComposition.configured() }
+                    do { helper = try ProductionHelperComposition.adoptInstalled() }
                     catch { return (error as? ServiceFailure) ?? .untrustedIdentity }
                     appRouter.helperChangedAfterUpdate = helper.hasPendingUpdate
                     appRouter.settingsHelperSetup.service = helper.service

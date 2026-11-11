@@ -586,6 +586,7 @@ final class C041StatusItemTests: XCTestCase {
 final class C042StatusItemTests: XCTestCase {
     func testOnBatteryContractAndPinnedClock() throws {
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let store = C042FixtureLaunch.makeStore()
         try store.currentReading.validate()
         XCTAssertEqual(store.currentReading, .sampleOnBattery)
@@ -667,6 +668,7 @@ final class C042StatusItemTests: XCTestCase {
 final class C043StatusItemTests: XCTestCase {
     func testChargedOnAdapterContractAndPinnedClock() throws {
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let store = C043FixtureLaunch.makeStore()
         try store.currentReading.validate()
         XCTAssertEqual(store.currentReading.batteryState, .full)
@@ -1380,6 +1382,7 @@ final class C0412StatusItemTests: XCTestCase {
         let store = C0412FixtureLaunch.makeStore()
         XCTAssertEqual(store.currentReading, C042FixtureLaunch.makeStore().currentReading)
         let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.displayMode = .delta
         let label = MenuBarStatusLabel(reading: store.currentReading, preferences: preferences)
         XCTAssertEqual(label.text, "−18.4 W")
         XCTAssertEqual(label.symbolName, "battery.100percent")

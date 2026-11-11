@@ -303,6 +303,11 @@ struct ProductionHelperComposition {
                     removalReceipt: { driver.removalReceipt() }, updateReceipt: { driver.updateReceipt() },
                     hasPendingUpdate: { driver.journal?.action == .update && driver.journal?.phase != .complete })
     }
+
+    /// A helper installed after launch needs its own composition. Startup still uses one `configured()` result.
+    static func adoptInstalled(bundle: Bundle = .main) throws -> Self {
+        try configured(bundle: bundle)
+    }
 }
 
 
