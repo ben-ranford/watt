@@ -9,10 +9,27 @@ public enum ArchiveValidationError: Error { case invalidArchive, unsafeDestinati
 /// Records directory walks that are about to call `openat`. Tests enable this to prove a
 /// Downloads launch never enters a privacy-protected folder. Production leaves it off.
 public enum DirectoryOpenTrace {
-    public static var enabled = false
-    public static var paths: [String] = []
-    public static func reset() { paths.removeAll(keepingCapacity: false) }
-    static func note(_ path: String) { if enabled { paths.append(path) } }
+    private final class State: @unchecked Sendable {
+        let lock = NSLock()
+        var enabled = false
+        var paths: [String] = []
+    }
+    private static let state = State()
+    public static var enabled: Bool {
+        get { state.lock.lock(); defer { state.lock.unlock() }; return state.enabled }
+        set { state.lock.lock(); state.enabled = newValue; state.lock.unlock() }
+    }
+    public static var paths: [String] {
+        state.lock.lock(); defer { state.lock.unlock() }; return state.paths
+    }
+    public static func reset() {
+        state.lock.lock(); state.paths.removeAll(keepingCapacity: false); state.lock.unlock()
+    }
+    static func note(_ path: String) {
+        state.lock.lock()
+        if state.enabled { state.paths.append(path) }
+        state.lock.unlock()
+    }
 }
 
 /// The single release archive profile. The entire immutable input is checked before extraction.
