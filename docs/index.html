@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#121214" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Watt? — menu-bar power in watts</title>
+  <link rel="canonical" href="https://ben-ranford.github.io/watt/">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta property="og:title" content="Watt?">
+  <meta property="og:description" content="Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ben-ranford.github.io/watt/">
+  <meta property="og:image" content="https://ben-ranford.github.io/watt/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Watt? app icon and the line: Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Watt?">
+  <meta name="twitter:description" content="Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <meta name="twitter:image" content="https://ben-ranford.github.io/watt/social-preview.png">
+  <meta name="twitter:image:alt" content="Watt? app icon and the line: Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="wrap">
+    <header>
+      <img src="icon.png" width="512" height="512" alt="">
+      <div>
+        <p class="eyebrow">macOS menu bar</p>
+        <h1>Watt?</h1>
+      </div>
+    </header>
+    <main id="content">
+      <p class="pitch">Native macOS menu-bar app that shows live charger, system and battery power in watts.</p>
+
+      <section aria-labelledby="install-heading">
+        <h2 id="install-heading">Install</h2>
+        <p class="label" id="brew-label">Homebrew</p>
+        <pre tabindex="0" aria-labelledby="brew-label"><code>brew install --cask ben-ranford/tap/watt</code></pre>
+        <p><a class="download" href="https://github.com/ben-ranford/watt/releases/latest">Download from GitHub Releases</a></p>
+        <h3>First launch from a download</h3>
+        <p class="note">Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launch of a zip or disk image. In Finder, Control-click Watt and choose Open, then choose Open. If macOS still blocks it, open System Settings → Privacy &amp; Security and choose Open Anyway.</p>
+        <p class="note">The Homebrew cask removes <code>com.apple.quarantine</code> from the installed Watt.app after install, so that first-launch block does not apply to a cask install.</p>
+      </section>
+
+      <section aria-labelledby="shots-heading">
+        <h2 id="shots-heading">What it looks like</h2>
+        <p class="note">Menu bar, panel, and Settings, in light and dark. Rendered from the SwiftUI views with sample power readings.</p>
+        <div class="shots">
+          <figure class="shot menu">
+            <img src="screenshots/menu-bar-light.png" width="224" height="56" alt="Menu bar status item in light appearance showing a bolt and 22.9 W.">
+            <figcaption>Menu bar, light. System draw, 22.9 W.</figcaption>
+          </figure>
+          <figure class="shot menu">
+            <img src="screenshots/menu-bar-dark.png" width="224" height="56" alt="Menu bar status item in dark appearance showing a bolt and 22.9 W.">
+            <figcaption>Menu bar, dark. System draw, 22.9 W.</figcaption>
+          </figure>
+          <figure class="shot panel">
+            <img src="screenshots/panel-light.png" width="640" height="946" alt="Power panel in light appearance. Charging at plus 42.1 watts, 64 percent, full in about 38 minutes. Charger input 65.0 watts from a 96 watt USB-C charger, system draw 22.9 watts, battery plus 42.1 watts, CPU estimate 9.8 watts, GPU estimate 4.1 watts.">
+            <figcaption>Panel, light.</figcaption>
+          </figure>
+          <figure class="shot panel">
+            <img src="screenshots/panel-dark.png" width="640" height="946" alt="Power panel in dark appearance with the same charging sample: plus 42.1 watts into the battery, 65.0 watts from the charger, and 22.9 watts of system draw.">
+            <figcaption>Panel, dark.</figcaption>
+          </figure>
+          <figure class="shot settings">
+            <img src="screenshots/settings-light.png" width="1160" height="2120" alt="Watt Settings in light appearance. Menu bar is set to System Draw. Notifications include charger duration, fully charged at, low battery, and low battery at.">
+            <figcaption>Settings, light.</figcaption>
+          </figure>
+          <figure class="shot settings">
+            <img src="screenshots/settings-dark.png" width="1160" height="2120" alt="Watt Settings in dark appearance, including charger duration, fully charged at, low battery, and low battery at.">
+            <figcaption>Settings, dark.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section aria-labelledby="features-heading">
+        <h2 id="features-heading">Features</h2>
+        <ul>
+          <li>A menu-bar status item for the reading you pick: system draw, battery delta, charger input, per component, or the icon alone.</li>
+          <li>A panel with charger input, system draw, and battery power.</li>
+          <li>CPU and GPU estimates when you install the helper and macOS has approved it.</li>
+          <li>Precision, update interval, and smooth readings. Smooth readings average the last 5 seconds.</li>
+          <li>Notifications when the charger cannot keep up (5 minutes by default), when the battery is full (100% by default), and for a low battery (20% by default, off until you turn it on). Settings changes the duration and both percentages.</li>
+          <li>Updates are accepted only after the Ed25519 signature and the archive digest check out.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="compare-heading">
+        <h2 id="compare-heading">What it is, and what it is not</h2>
+        <div class="columns">
+          <div>
+            <h3>Watt is</h3>
+            <ul>
+              <li>A native macOS menu-bar app, written in SwiftUI. It has no Dock icon.</li>
+              <li>A live view of charger input, system draw, and battery power, in watts. It needs macOS 13 or later.</li>
+              <li>Optional CPU and GPU estimates from Apple’s powermetrics, through a root helper you choose to install.</li>
+              <li>Free software. The <a href="https://github.com/ben-ranford/watt">source</a> is published under the <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a>.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Watt is not</h3>
+            <ul>
+              <li>A full component breakdown. Display, SSD, and Other are not provided. The menu bar shows at most two components, and only CPU and GPU.</li>
+              <li>Developer ID signed or notarised. Gatekeeper blocks the first launch of a zip or disk image. A Homebrew install does not have that block.</li>
+              <li>A battery-health, charge-limit, or fan-control utility.</li>
+              <li>A package that installs the helper for you. <code>brew install</code> places Watt.app in Applications. The helper is a separate step in the app.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p><a href="https://github.com/ben-ranford/watt">Source</a> · <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a></p>
+    </footer>
+  </div>
+</body>
+</html>
