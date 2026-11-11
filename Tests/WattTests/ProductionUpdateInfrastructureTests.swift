@@ -67,21 +67,25 @@ final class LaunchPathRegressionTests: XCTestCase {
         try FileManager.default.createDirectory(at: staged.deletingLastPathComponent(), withIntermediateDirectories: true)
         try marker.write(to: staged)
         let bundle = try XCTUnwrap(Bundle(url: app))
+        // Bundle may rewrite /private/tmp. Classify against the URL launch will actually see.
+        let resolved = bundle.bundleURL
+        let resolvedHome = resolved.deletingLastPathComponent().deletingLastPathComponent().path
+        XCTAssertEqual(resolved.deletingLastPathComponent().lastPathComponent.lowercased(), "downloads")
         DirectoryOpenTrace.enabled = true
         DirectoryOpenTrace.reset()
         defer { DirectoryOpenTrace.enabled = false; DirectoryOpenTrace.reset() }
 
-        XCTAssertTrue(LaunchPathPolicy.isPrivacyProtected(app, home: home.path))
-        XCTAssertThrowsError(try ProductionUpdateComposition.configured(bundle: bundle, home: home.path)) { error in
+        XCTAssertTrue(LaunchPathPolicy.isPrivacyProtected(resolved, home: resolvedHome))
+        XCTAssertThrowsError(try ProductionUpdateComposition.configured(bundle: bundle, home: resolvedHome)) { error in
             XCTAssertEqual(error as? ServiceFailure, .untrustedIdentity)
         }
-        XCTAssertThrowsError(try BoundedUSTAR.openDirectory(app, home: home.path))
-        XCTAssertThrowsError(try SecurityUpdateCodeValidator().verify(bundle: app, home: home.path)) { error in
+        XCTAssertThrowsError(try BoundedUSTAR.openDirectory(resolved, home: resolvedHome))
+        XCTAssertThrowsError(try SecurityUpdateCodeValidator().verify(bundle: resolved, home: resolvedHome)) { error in
             XCTAssertEqual(error as? ServiceFailure, .untrustedIdentity)
         }
-        XCTAssertNil(BundleBuildNumber.read(bundleURL: app, home: home.path))
+        XCTAssertNil(BundleBuildNumber.read(bundleURL: resolved, home: resolvedHome))
         XCTAssertEqual(try Data(contentsOf: staged), marker, "Refusing the folder must not delete or rewrite staging")
-        let protected = DirectoryOpenTrace.paths.filter { LaunchPathPolicy.isPrivacyProtected(path: $0, home: home.path) }
+        let protected = DirectoryOpenTrace.paths.filter { LaunchPathPolicy.isPrivacyProtected(path: $0, home: resolvedHome) }
         XCTAssertEqual(protected, [], "openat must not be called on a privacy-protected path: \(DirectoryOpenTrace.paths)")
     }
 
