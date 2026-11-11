@@ -86,6 +86,9 @@ struct StatusPanelModel {
     var showsUnavailableComponents: Bool {
         showsComponents && components.isEmpty && !componentsOff
     }
+    var componentsNeedInstall: Bool = false
+    var unavailableComponentsValue: String { componentsNeedInstall ? "Install" : "—" }
+    var unavailableComponentsSubtitle: String { componentsNeedInstall ? "Helper not installed" : "Unavailable" }
     var usesIntrinsicPowerTableHeight: Bool {
         !setupIncomplete && !isDesktop && (hasNoReading || !showsComponents || showsUnavailableComponents)
     }
@@ -168,7 +171,9 @@ struct StatusPanelModel {
         }
         if showsComponents {
             rows += components.isEmpty
-                ? [StatusPanelAccessibilityRow(label: "Components", value: "—", subtitle: "Unavailable")]
+                ? [StatusPanelAccessibilityRow(label: "Components",
+                    value: componentsNeedInstall ? unavailableComponentsSubtitle : unavailableComponentsValue,
+                    subtitle: componentsNeedInstall ? nil : unavailableComponentsSubtitle)]
                 : components.map { StatusPanelAccessibilityRow(label: $0.name, value: PowerFormatter.watts($0.watts, signed: false)) }
         }
         return rows
@@ -201,13 +206,15 @@ struct StatusPanelView: View {
     var includesComponents = true
     var setupIncomplete = false
     var setupSaveFailed = false
+    var helperInstallOffered = false
+    var onInstallHelper: () -> Void = {}
     var onContinueSetup: () -> Void = {}
     var onRetry: () -> Void = {}
     var isRetrying = false
     let onSettings: () -> Void
     let onQuit: () -> Void
     private var accessibilityPrefix: String { setupIncomplete ? "J5.2" : model.hasNoReading ? "J8.1" : model.hasInsufficientCharger ? "J6.4" : model.hasFullOnAdapter ? "J6.3" : model.hasOptimisedChargingHold ? "J6.2" : !includesComponents ? (reading.batteryState == .discharging ? "J6.5" : "J6.1") : model.isDesktop ? "J4.3" : reading.batteryState == .discharging ? "C02" : "C01" }
-    private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed) }
+    private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed, componentsNeedInstall: helperInstallOffered) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: WattSpacing.md) {
@@ -316,8 +323,22 @@ struct StatusPanelView: View {
                                         .fixedSize(horizontal: false, vertical: true)
                                 }
                             }
+                        } else if model.components.isEmpty && model.componentsNeedInstall {
+                            LabeledContent {
+                                Button("Install Helper…") { onInstallHelper() }
+                                    .buttonStyle(.bordered)
+                                    .wattControlLabel("Install Helper…")
+                                    .accessibilityIdentifier("panel.helper.install")
+                            } label: {
+                                VStack(alignment: .leading, spacing: WattSpacing.xxs) {
+                                    Text("Components")
+                                    Text(model.unavailableComponentsSubtitle)
+                                        .font(WattTypography.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
                         } else if model.components.isEmpty {
-                            row("Components", value: "—", subtitle: "Unavailable")
+                            row("Components", value: model.unavailableComponentsValue, subtitle: model.unavailableComponentsSubtitle)
                         } else {
                             ForEach(model.components) { component in
                                 row(component.name, value: PowerFormatter.watts(component.watts, signed: false))

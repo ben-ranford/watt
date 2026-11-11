@@ -297,11 +297,22 @@ struct SettingsRootView: View {
             if !confirmUninstallExcerpt {
                 Toggle("Check for updates automatically", isOn: $preferences.checkForUpdatesAutomatically)
                     .accessibilityIdentifier("settings.automaticUpdates")
-                LabeledContent("Check for Updates") {
-                    Button("Check for Updates Now") { router.checkForUpdatesNow() }
-                        .disabled(!router.canCheckForUpdates)
-                        .wattControlLabel("Check for Updates Now")
-                        .accessibilityIdentifier("settings.checkForUpdatesNow")
+                LabeledContent {
+                    VStack(alignment: .trailing, spacing: WattSpacing.xxs) {
+                        Button("Check for Updates Now") { router.checkForUpdatesNow() }
+                            .disabled(!router.canCheckForUpdates)
+                            .wattControlLabel("Check for Updates Now")
+                            .accessibilityIdentifier("settings.checkForUpdatesNow")
+                        if let reason = router.updateUnavailableReason {
+                            Text(reason)
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.trailing)
+                                .accessibilityIdentifier("settings.updateUnavailable")
+                        }
+                    }
+                } label: {
+                    Text("Check for Updates")
                 }
             }
             LabeledContent {
@@ -381,13 +392,12 @@ struct SettingsHelperRows: View {
                         .disabled(removing || setup.isInstalling)
                         .wattControlLabel("Install Helper…")
                         .accessibilityIdentifier("settings.helper.install")
-                }
-                if setup.canRemoveHelper {
+                } else if setup.canRemoveHelper {
                     Button("Remove…", action: remove)
                         .buttonStyle(.bordered)
                         .disabled(removing || setup.isLoading)
                         .accessibilityIdentifier("settings.helper.remove")
-                } else if !setup.helperServiceAvailable && !setup.canInstallHelper {
+                } else if !setup.helperServiceAvailable {
                     Text(setup.actionTitle)
                         .foregroundStyle(.secondary)
                         .accessibilityIdentifier("settings.helper.turnOn")

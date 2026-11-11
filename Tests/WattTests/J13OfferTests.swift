@@ -147,9 +147,11 @@ final class J13OfferTests: XCTestCase {
         XCTAssertEqual(window.appearance?.name, .aqua)
         XCTAssertNotNil(window.standardWindowButton(.closeButton))
         XCTAssertEqual(window.frame.size, NSSize(width: 480, height: 412))
-        // Grouped Form intrinsic metrics belong to macOS; allow narrow
-        // OS-owned fitting-size variation without forcing row or form heights.
-        XCTAssertLessThanOrEqual(window.contentView!.fittingSize.height, 424)
+        // The grouped form must report its rows. A short fitting size is what
+        // clipped the facts behind the buttons in the production setup window.
+        let fittedHeight = window.contentView!.fittingSize.height
+        XCTAssertGreaterThan(fittedHeight, 400)
+        XCTAssertLessThan(fittedHeight, 720)
         window.close()
         XCTAssertEqual(preferences.onboarding, initial)
     }

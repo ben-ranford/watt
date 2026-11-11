@@ -1368,6 +1368,10 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertIn('swift test --configuration debug', steps['Unit tests (swift test)'])
         self.assertIn('ditto -c -k --keepParent', steps['Zip the Release app'])
         self.assertIn('codesign --verify --verbose=2', steps['Zip the Release app'])
+        self.assertIn('print_release_update_settings.py --check-plist', steps['Zip the Release app'])
+        release_build = steps['Build Debug and Release']
+        self.assertIn('python3 scripts/print_release_update_settings.py', release_build)
+        self.assertIn('[[ "${configuration}" == "Release" ]]', release_build)
         for run in steps.values():
             self.assertNotIn('${{', run)
         packaged = next(step for step in job['steps'] if step.get('name') == 'Zip the Release app')
@@ -1379,6 +1383,20 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertEqual(uploaded['with']['retention-days'], 7)
         self.assertEqual(uploaded['with']['if-no-files-found'], 'error')
         self.assertTrue(str(uploaded['with']['path']).endswith('Watt.app.zip'))
+
+    def test_release_update_settings_match_public_config(self) -> None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            'print_release_update_settings', ROOT / 'scripts/print_release_update_settings.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        printed = dict(module.settings())
+        config = json.loads((ROOT / 'Resources/ReleaseIdentity.json').read_text())
+        key = (ROOT / 'Resources/UpdatePublicKey.txt').read_text().strip()
+        self.assertEqual(printed['WATT_UPDATE_MANIFEST_URL'], config['updateManifestURL'])
+        self.assertEqual(printed['WATT_UPDATE_ARTIFACT_URL'], config['updateArtifactURL'])
+        self.assertEqual(printed['WATT_UPDATE_PUBLIC_KEY'], key)
+        self.assertEqual(len(base64.b64decode(key, validate=True)), 32)
 
     def test_watchdog_retries_only_a_timeout(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

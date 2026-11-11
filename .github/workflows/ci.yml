@@ -80,13 +80,24 @@ jobs:
           )
           build_configuration() {
             local configuration="$1"
+            local -a update_settings=()
+            if [[ "${configuration}" == "Release" ]]; then
+              while IFS= read -r setting; do
+                update_settings+=("${setting}")
+              done < <(python3 scripts/print_release_update_settings.py)
+              if [[ ${#update_settings[@]} -ne 3 ]]; then
+                echo "Release update settings were not loaded." >&2
+                exit 1
+              fi
+            fi
             xcodebuild build \
               -project Watt.xcodeproj \
               -scheme Watt \
               -configuration "${configuration}" \
               -destination "generic/platform=macOS" \
               -derivedDataPath DerivedData \
-              "${sign[@]}"
+              "${sign[@]}" \
+              "${update_settings[@]}"
             local products="DerivedData/Build/Products/${configuration}"
             test -x "${products}/Watt.app/Contents/MacOS/Watt"
             test -x "${products}/WattHelper"
@@ -146,6 +157,7 @@ jobs:
           test -d "${app}"
           test -x "${app}/Contents/MacOS/Watt"
           codesign --verify --verbose=2 "${app}"
+          python3 scripts/print_release_update_settings.py --check-plist "${app}/Contents/Info.plist"
           mkdir -p "${RUNNER_TEMP}/watt-app-pr"
           ditto -c -k --keepParent "${app}" "${RUNNER_TEMP}/watt-app-pr/Watt.app.zip"
 

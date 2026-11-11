@@ -174,6 +174,11 @@ final class AppRouter: ObservableObject {
     var canScheduleAutomaticChecks: Bool {
         updateService != nil && updateConfigurationFailure == nil
     }
+    /// Shown under the disabled Check for Updates button. A configured updater stays quiet.
+    var updateUnavailableReason: String? {
+        guard updateService == nil || updateConfigurationFailure != nil else { return nil }
+        return "Updates aren’t configured in this build."
+    }
     @Published private(set) var updateOfferIntent: UpdateOfferIntent?
     /// Notes from the signed manifest for the offer currently on screen.
     @Published private(set) var offeredUpdateNotes: OfferedUpdateNotes?

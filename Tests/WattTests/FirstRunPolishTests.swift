@@ -93,6 +93,30 @@ final class FirstRunPolishTests: XCTestCase {
         XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
     }
 
+    func testInstallActionDoesNotAlsoOfferUnavailable() {
+        let setup = SettingsHelperSetup()
+        setup.unavailableReason = .installationRequired
+        setup.installHelper = { nil }
+        XCTAssertTrue(setup.canInstallHelper)
+        XCTAssertFalse(setup.helperServiceAvailable)
+        XCTAssertEqual(setup.actionTitle, "Unavailable")
+        let panel = StatusPanelModel(reading: .sampleChargedOnAdapter, componentsNeedInstall: true)
+        XCTAssertEqual(panel.unavailableComponentsSubtitle, "Helper not installed")
+        XCTAssertEqual(panel.accessibilityRows.last?.subtitle, nil)
+        XCTAssertEqual(panel.accessibilityRows.last?.value, "Helper not installed")
+        let plain = StatusPanelModel(reading: .sampleChargedOnAdapter)
+        XCTAssertEqual(plain.unavailableComponentsSubtitle, "Unavailable")
+    }
+
+    func testUnconfiguredUpdaterExplainsTheDisabledCheck() {
+        let missing = AppRouter()
+        XCTAssertFalse(missing.canCheckForUpdates)
+        XCTAssertEqual(missing.updateUnavailableReason, "Updates aren’t configured in this build.")
+        let configured = AppRouter(updateService: FakeUpdateService(), updates: UpdateStore(storage: InMemoryStorage()))
+        XCTAssertNil(configured.updateUnavailableReason)
+        XCTAssertTrue(configured.canCheckForUpdates)
+    }
+
     func testReviewedInstallCommandUsesThePreflightDigest() async {
         let installer = URL(fileURLWithPath: "/Applications/Watt.app/Contents/MacOS/WattHelperInstaller")
         let source = URL(fileURLWithPath: "/Applications/Watt.app")

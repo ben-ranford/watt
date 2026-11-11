@@ -409,6 +409,8 @@ struct OfferComponentReadingsView: View {
                 }
             }
             .formStyle(.grouped)
+            .scrollDisabled(true)
+            .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, WattSpacing.md)
             .accessibilityIdentifier("onboarding.helper.facts")
             HStack {
@@ -441,6 +443,7 @@ struct OfferComponentReadingsView: View {
             .padding(.horizontal, 32)
         }
         .padding(.vertical, 24)
+        .fixedSize(horizontal: false, vertical: true)
         .frame(width: WattSpacing.onboardingWidth)
     }
 
