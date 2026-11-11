@@ -163,7 +163,7 @@ struct UpdateAvailableContent: View {
     }
 }
 
-private struct ReleaseNotesBlock: View {
+struct ReleaseNotesBlock: View {
     let notes: String?
 
     var body: some View {

@@ -7,4 +7,5 @@ enum AppDestination: Hashable {
     case settings
     case softwareUpdate
     case update
+    case whatsNew
 }

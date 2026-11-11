@@ -287,8 +287,12 @@ protocol HelperService {
 @MainActor
 protocol UpdateService {
     func check() async -> ServiceOutcome<String?>
+    /// Automatic checks are the default. A manual check bypasses a staged rollout.
+    func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?>
     /// Notes carried in the signed manifest for `version`. Nil when that manifest has none.
     func releaseNotes(for version: String) -> String?
+    /// Notes from a signed journal entry for the build that is running. Nil when there is none.
+    func releaseNotesForInstalledBuild(_ build: UInt64) -> String?
     func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState>
     func download(version: String, receipt: OperationReceipt,
                   progress: @escaping @MainActor (UpdateDownloadProgress) -> Void) async -> ServiceOutcome<UpdateState>
@@ -311,7 +315,11 @@ struct UpdateDownloadProgress: Equatable, Sendable {
 }
 
 extension UpdateService {
+    func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?> {
+        await check()
+    }
     func releaseNotes(for version: String) -> String? { nil }
+    func releaseNotesForInstalledBuild(_ build: UInt64) -> String? { nil }
     func download(version: String, receipt: OperationReceipt,
                   progress: @escaping @MainActor (UpdateDownloadProgress) -> Void) async -> ServiceOutcome<UpdateState> {
         await download(version: version, receipt: receipt)

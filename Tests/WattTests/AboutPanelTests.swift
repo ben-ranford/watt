@@ -37,18 +37,32 @@ final class AboutPanelTests: XCTestCase {
 
     func testCreditsAreACenteredSponsorLink() {
         let credits = AboutPanel.credits()
-        XCTAssertEqual(credits.string, AboutPanel.sponsorTitle)
+        XCTAssertEqual(credits.string, "\(AboutPanel.whatsNewTitle)\n\(AboutPanel.sponsorTitle)")
         let range = NSRange(location: 0, length: credits.length)
-        var link: URL?
-        var centered = false
+        var links: [URL] = []
+        var centered = true
         credits.enumerateAttribute(.link, in: range) { value, _, _ in
-            link = value as? URL
+            if let url = value as? URL { links.append(url) }
         }
         credits.enumerateAttribute(.paragraphStyle, in: range) { value, _, _ in
-            centered = (value as? NSParagraphStyle)?.alignment == .center
+            if (value as? NSParagraphStyle)?.alignment != .center { centered = false }
         }
-        XCTAssertEqual(link, AppLinks.githubSponsors)
+        XCTAssertEqual(links, [AboutPanel.whatsNewLink, AppLinks.githubSponsors])
         XCTAssertTrue(centered)
+    }
+
+    func testWhatsNewCreditOpensInsideTheApp() {
+        var opened: [URL] = []
+        var presented = 0
+        let previous = AboutPanel.presentWhatsNew
+        AboutPanel.presentWhatsNew = { presented += 1 }
+        defer { AboutPanel.presentWhatsNew = previous }
+        XCTAssertTrue(AboutPanel.handleLinkClick(AboutPanel.whatsNewLink, open: { url in
+            opened.append(url)
+            return true
+        }))
+        XCTAssertEqual(presented, 1)
+        XCTAssertTrue(opened.isEmpty)
     }
 
     func testSponsorClickOpensTheConfiguredURLWithTheGivenOpener() {

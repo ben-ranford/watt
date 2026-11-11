@@ -16,6 +16,7 @@ final class SiteScreenshotTests: XCTestCase {
     private let menuBarSize = CGSize(width: 112, height: 28)
     private let panelSize = CGSize(width: WattSpacing.panelWidth, height: WattSpacing.panelHeight)
     private let settingsSize = CGSize(width: WattSpacing.settingsWidth, height: WattSpacing.settingsContentHeight)
+    private let whatsNewSize = CGSize(width: 520, height: 360)
 
     func testRendersCommittedSiteScreenshots() throws {
         let reading = siteReading()
@@ -49,6 +50,7 @@ final class SiteScreenshotTests: XCTestCase {
                 .environmentObject(router)
                 .environmentObject(PowerReadingStore.preview)
             rendered["settings-\(name)"] = try snapshot(settings, size: settingsSize, scheme: scheme, appearance: appearance)
+            rendered["whats-new-\(name)"] = try snapshot(whatsNewSample(), size: whatsNewSize, scheme: scheme, appearance: appearance)
         }
 
         for (name, data) in rendered.sorted(by: { $0.key < $1.key }) {
@@ -60,7 +62,12 @@ final class SiteScreenshotTests: XCTestCase {
 
         #if !SWIFT_PACKAGE
         let committed = committedDirectory()
-        for name in rendered.keys.sorted() {
+        let committedNames = [
+            "menu-bar-light", "menu-bar-dark",
+            "panel-light", "panel-dark",
+            "settings-light", "settings-dark",
+        ]
+        for name in committedNames {
             let url = committed.appendingPathComponent(name + ".png")
             XCTAssertTrue(FileManager.default.fileExists(atPath: url.path),
                           "Missing \(url.path). Copy \(export.path)/\(name).png here after the macOS render.")
@@ -69,6 +76,15 @@ final class SiteScreenshotTests: XCTestCase {
                            "\(name).png does not match the SwiftUI render in \(export.path)")
         }
         #endif
+    }
+
+    private func whatsNewSample() -> WhatsNewView {
+        WhatsNewView(
+            version: "1.3.0",
+            notes: "### Changes\n\n* Updates roll out gradually\n* What’s New appears once after you update",
+            recordAppearance: {},
+            onClose: {}
+        )
     }
 
     private func siteReading() -> PowerReading {
@@ -106,6 +122,9 @@ final class SiteScreenshotTests: XCTestCase {
             preferences.displayMode = .draw
             return try snapshot(MenuBarStatusLabel(reading: reading, preferences: preferences),
                                 size: menuBarSize, scheme: scheme, appearance: appearance)
+        }
+        if name.hasPrefix("whats-new") {
+            return try snapshot(whatsNewSample(), size: whatsNewSize, scheme: scheme, appearance: appearance)
         }
         if name.hasPrefix("panel") {
             return try snapshot(
