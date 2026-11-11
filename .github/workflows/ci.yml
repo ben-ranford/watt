@@ -133,6 +133,8 @@ jobs:
         run: |
           set -euo pipefail
           export WATT_RESULT_BUNDLE="${RUNNER_TEMP}/WattTests.xcresult"
+          export WATT_SCREENSHOT_DIR="${GITHUB_WORKSPACE}/.site-screenshots"
+          mkdir -p "${WATT_SCREENSHOT_DIR}"
           bash scripts/retry_on_timeout.sh 600 1 -- \
             xcodebuild test \
             -project Watt.xcodeproj \
@@ -150,6 +152,18 @@ jobs:
             "AD_HOC_CODE_SIGNING_ALLOWED=YES" \
             "CODE_SIGNING_ALLOWED=YES" \
             "COMPILER_INDEX_STORE_ENABLE=NO"
+
+      # SiteScreenshotTests writes here before it compares docs/screenshots.
+      # always() keeps the render when the comparison fails, so the PNGs can
+      # be committed. A missing directory does not fail this step.
+      - name: Upload site screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: site-screenshots
+          path: .site-screenshots
+          retention-days: 7
+          if-no-files-found: warn
 
       - name: Unit tests (swift test)
         run: |

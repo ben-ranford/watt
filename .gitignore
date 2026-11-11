@@ -32,6 +32,7 @@ AuthKey_*.p8
 xcuserdata/
 *.xcscmblueprint
 DerivedData/
+.site-screenshots/
 .DS_Store
 Resources/ReleaseIdentity.local.json
 *.local.json

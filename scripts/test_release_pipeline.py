@@ -602,6 +602,10 @@ class WorkflowTests(unittest.TestCase):
             'upload-release-assets.sh',
             'update-homebrew-cask.sh',
             'publish-pages-update.sh',
+            'stage-pages-site.sh',
+            'verify-pages-artifact.sh',
+            'preserve-pages-updates.sh',
+            'check-pages-artifact.sh',
             'retry_on_timeout.sh',
         ):
             result = subprocess.run(['bash', '-n', str(ROOT / 'scripts' / name)], capture_output=True, text=True)
@@ -1326,6 +1330,311 @@ class PagesPublishTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn('GitHub Pages file limit', result.stderr)
 
+    def test_update_staging_keeps_an_existing_landing_page(self) -> None:
+        manifest = b'{"payload":"e30=","signature":"YQ=="}'
+        archive = self._ustar()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            site = root / 'site'
+            site.mkdir()
+            (site / 'index.html').write_text('<!DOCTYPE html><title>Watt?</title>', encoding='utf-8')
+            result = run(
+                ['bash', 'scripts/publish-pages-update.sh'],
+                env={
+                    'RELEASE_TAG': 'v1.2.3',
+                    'RELEASE_ASSET_BASE': self._serve({
+                        'Watt-1.2.3-update-manifest.json': manifest,
+                        'Watt-1.2.3.tar': archive,
+                    }),
+                    'PAGES_DIR': str(site),
+                },
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('Watt?', (site / 'index.html').read_text(encoding='utf-8'))
+            self.assertEqual((site / 'updates/manifest.json').read_bytes(), manifest)
+            self.assertEqual((site / 'updates/Watt.tar').read_bytes(), archive)
+
+
+class PagesSiteTests(unittest.TestCase):
+    def _png(self, width: int, height: int, rgb: tuple[int, int, int] = (20, 20, 22)) -> bytes:
+        import struct
+        import zlib
+
+        def chunk(tag: bytes, data: bytes) -> bytes:
+            return struct.pack('>I', len(data)) + tag + data + struct.pack('>I', zlib.crc32(tag + data) & 0xFFFFFFFF)
+
+        raw = b''.join(b'\x00' + bytes(rgb) * width for _ in range(height))
+        return (
+            b'\x89PNG\r\n\x1a\n'
+            + chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 2, 0, 0, 0))
+            + chunk(b'IDAT', zlib.compress(raw, 9))
+            + chunk(b'IEND', b'')
+        )
+
+    def _site(self, root: Path) -> None:
+        docs = root / 'docs'
+        shots = docs / 'screenshots'
+        shots.mkdir(parents=True)
+        (docs / 'index.html').write_text('<!DOCTYPE html><title>Watt?</title><p>Native macOS menu-bar app that shows live charger, system and battery power in watts.</p>', encoding='utf-8')
+        (docs / 'site.css').write_text('body { color: #111; }\n', encoding='utf-8')
+        (docs / 'icon.png').write_bytes(self._png(8, 8))
+        (docs / 'social-preview.png').write_bytes(self._png(1280, 640))
+        for name in (
+            'menu-bar-light.png', 'menu-bar-dark.png',
+            'panel-light.png', 'panel-dark.png',
+            'settings-light.png', 'settings-dark.png',
+        ):
+            (shots / name).write_bytes(self._png(4, 4, (30, 30, 32)))
+
+    def _ustar(self) -> bytes:
+        import io
+        import tarfile
+
+        buffer = io.BytesIO()
+        with tarfile.open(fileobj=buffer, mode='w', format=tarfile.USTAR_FORMAT) as archive:
+            payload = b'watt-app'
+            info = tarfile.TarInfo('Watt.app/Contents/Info.plist')
+            info.size = len(payload)
+            archive.addfile(info, io.BytesIO(payload))
+        return buffer.getvalue()
+
+    def test_landing_page_copy_keeps_update_bytes(self) -> None:
+        manifest = b'{"payload":"e30=","signature":"YQ=="}'
+        archive = self._ustar()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self._site(root)
+            dest = root / 'out'
+            updates = dest / 'updates'
+            updates.mkdir(parents=True)
+            (updates / 'manifest.json').write_bytes(manifest)
+            (updates / 'Watt.tar').write_bytes(archive)
+            staged = run(
+                ['bash', 'scripts/stage-pages-site.sh'],
+                env={'PAGES_SOURCE': str(root), 'PAGES_DIR': str(dest)},
+            )
+            self.assertEqual(staged.returncode, 0, staged.stderr)
+            self.assertEqual((updates / 'manifest.json').read_bytes(), manifest)
+            self.assertEqual((updates / 'Watt.tar').read_bytes(), archive)
+            self.assertTrue((dest / 'index.html').is_file())
+            checked = run(
+                ['bash', 'scripts/verify-pages-artifact.sh'],
+                env={'PAGES_DIR': str(dest), 'PAGES_REQUIRE_UPDATES': 'true'},
+            )
+            self.assertEqual(checked.returncode, 0, checked.stderr)
+            self.assertIn('landing page', checked.stdout)
+
+    def test_site_source_cannot_carry_an_updates_directory(self) -> None:
+        manifest = b'{"payload":"e30=","signature":"YQ=="}'
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self._site(root)
+            (root / 'docs/updates').mkdir()
+            (root / 'docs/updates/manifest.json').write_bytes(b'{"payload":"bm8=","signature":"bm8="}')
+            dest = root / 'out'
+            (dest / 'updates').mkdir(parents=True)
+            (dest / 'updates/manifest.json').write_bytes(manifest)
+            result = run(
+                ['bash', 'scripts/stage-pages-site.sh'],
+                env={'PAGES_SOURCE': str(root), 'PAGES_DIR': str(dest)},
+            )
+            self.assertEqual(result.returncode, 1, result.stdout)
+            self.assertIn('docs/updates', result.stderr)
+            self.assertEqual((dest / 'updates/manifest.json').read_bytes(), manifest)
+            self.assertFalse((dest / 'index.html').exists())
+
+    def test_verify_rejects_an_artifact_without_updates(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self._site(root)
+            dest = root / 'out'
+            staged = run(
+                ['bash', 'scripts/stage-pages-site.sh'],
+                env={'PAGES_SOURCE': str(root), 'PAGES_DIR': str(dest)},
+            )
+            self.assertEqual(staged.returncode, 0, staged.stderr)
+            missing = run(
+                ['bash', 'scripts/verify-pages-artifact.sh'],
+                env={'PAGES_DIR': str(dest), 'PAGES_REQUIRE_UPDATES': 'true'},
+            )
+            self.assertEqual(missing.returncode, 1)
+            self.assertIn('updates/manifest.json', missing.stderr)
+
+    def test_preserve_copies_published_updates_and_refuses_to_drop_them(self) -> None:
+        manifest = b'{"payload":"e30=","signature":"YQ=="}'
+        archive = self._ustar()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+
+            import threading
+            from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+            files: dict[str, bytes | None] = {
+                'manifest.json': manifest,
+                'Watt.tar': archive,
+            }
+
+            class Handler(BaseHTTPRequestHandler):
+                def do_GET(self) -> None:  # noqa: N802
+                    body = files.get(self.path.rsplit('/', 1)[-1])
+                    if body is None:
+                        self.send_response(404)
+                        self.end_headers()
+                        return
+                    self.send_response(200)
+                    self.send_header('Content-Length', str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+
+                def log_message(self, _format: str, *_args: object) -> None:
+                    return
+
+            server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            self.addCleanup(server.shutdown)
+            self.addCleanup(server.server_close)
+            base = f'http://127.0.0.1:{server.server_port}/updates'
+            dest = root / 'site'
+            output = root / 'output'
+            preserved = run(
+                ['bash', 'scripts/preserve-pages-updates.sh'],
+                env={
+                    'PAGES_DIR': str(dest),
+                    'PAGES_UPDATES_BASE': base,
+                    'GITHUB_OUTPUT': str(output),
+                },
+            )
+            self.assertEqual(preserved.returncode, 0, preserved.stderr)
+            self.assertEqual((dest / 'updates/manifest.json').read_bytes(), manifest)
+            self.assertEqual((dest / 'updates/Watt.tar').read_bytes(), archive)
+            self.assertIn('updates=preserved', output.read_text(encoding='utf-8'))
+
+            files.clear()
+            seeded = root / 'seeded'
+            (seeded / 'updates').mkdir(parents=True)
+            (seeded / 'updates/manifest.json').write_bytes(manifest)
+            (seeded / 'updates/Watt.tar').write_bytes(archive)
+            refused = run(
+                ['bash', 'scripts/preserve-pages-updates.sh'],
+                env={'PAGES_DIR': str(seeded), 'PAGES_UPDATES_BASE': base},
+            )
+            self.assertEqual(refused.returncode, 1, refused.stdout)
+            self.assertIn('Refusing to deploy without the published updates', refused.stderr)
+            self.assertEqual((seeded / 'updates/manifest.json').read_bytes(), manifest)
+            self.assertEqual((seeded / 'updates/Watt.tar').read_bytes(), archive)
+
+            files['manifest.json'] = b'<html>not a manifest</html>'
+            files['Watt.tar'] = archive
+            invalid = run(
+                ['bash', 'scripts/preserve-pages-updates.sh'],
+                env={'PAGES_DIR': str(root / 'invalid'), 'PAGES_UPDATES_BASE': base},
+            )
+            self.assertEqual(invalid.returncode, 1)
+            self.assertFalse((root / 'invalid/updates').exists())
+
+    def test_repository_pages_artifact_contains_the_landing_page_and_updates(self) -> None:
+        result = run(['bash', 'scripts/check-pages-artifact.sh'])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('PASS: landing page and updates/', result.stdout)
+
+    def test_landing_page_has_no_trackers_and_matches_the_readme(self) -> None:
+        import struct
+        html = (ROOT / 'docs/index.html').read_text(encoding='utf-8')
+        css = (ROOT / 'docs/site.css').read_text(encoding='utf-8')
+        lowered = html.lower()
+        for token in (
+            '<script', 'googleapis', 'googletagmanager', 'google-analytics',
+            'plausible', 'gtag', 'cdn.jsdelivr', 'unpkg.com', 'fonts.google',
+        ):
+            self.assertNotIn(token, lowered, token)
+        self.assertNotIn('http://', lowered)
+        self.assertNotIn('@import', css.lower())
+        self.assertNotIn('url(http', css.lower())
+        pitch = 'Native macOS menu-bar app that shows live charger, system and battery power in watts.'
+        self.assertIn(pitch, html)
+        self.assertIn('brew install --cask ben-ranford/tap/watt', html)
+        self.assertIn('https://github.com/ben-ranford/watt/releases/latest', html)
+        self.assertIn('Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launch of a zip or disk image.', html)
+        self.assertIn('Control-click Watt and choose Open, then choose Open.', html)
+        self.assertIn('com.apple.quarantine', html)
+        self.assertIn('https://github.com/ben-ranford/watt/blob/main/LICENSE', html)
+        self.assertIn('https://github.com/ben-ranford/watt"', html)
+        self.assertIn('og:image', html)
+        self.assertIn('content="1280"', html)
+        self.assertIn('content="640"', html)
+        self.assertIn('summary_large_image', html)
+        for name in (
+            'menu-bar-light.png', 'menu-bar-dark.png',
+            'panel-light.png', 'panel-dark.png',
+            'settings-light.png', 'settings-dark.png',
+        ):
+            self.assertIn(f'screenshots/{name}', html)
+            self.assertTrue((ROOT / 'docs/screenshots' / name).is_file(), name)
+        preview = (ROOT / 'docs/social-preview.png').read_bytes()
+        self.assertEqual(preview[:8], b'\x89PNG\r\n\x1a\n')
+        self.assertEqual(struct.unpack('>II', preview[16:24]), (1280, 640))
+        icon = ROOT / 'Resources/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png'
+        self.assertEqual((ROOT / 'docs/icon.png').read_bytes(), icon.read_bytes())
+        readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+        for name in (
+            'menu-bar-light.png', 'menu-bar-dark.png',
+            'panel-light.png', 'panel-dark.png',
+            'settings-light.png', 'settings-dark.png',
+        ):
+            self.assertIn(f'docs/screenshots/{name}', readme)
+        self.assertLess(readme.find('# watt'), readme.find('docs/screenshots/menu-bar-light.png'))
+        self.assertIn('## Security', readme)
+        self.assertIn('brew install --cask ben-ranford/tap/watt', readme)
+
+    def test_release_and_docs_deploys_both_keep_updates(self) -> None:
+        import yaml
+        release = yaml.safe_load((ROOT / '.github/workflows/release.yml').read_text())
+        pages = release['jobs']['pages']
+        names = [step.get('name') for step in pages['steps']]
+        self.assertLess(names.index('Stage manifest and tar'), names.index('Stage the landing page'))
+        self.assertLess(names.index('Stage the landing page'), names.index('Check the Pages artifact'))
+        self.assertLess(names.index('Check the Pages artifact'), names.index('Upload Pages artifact'))
+        self.assertLess(names.index('Upload Pages artifact'), names.index('Deploy to GitHub Pages'))
+        deploy_if = "steps.stage.outputs.deploy == 'true'"
+        for name in ('Stage the landing page', 'Check the Pages artifact', 'Upload Pages artifact', 'Deploy to GitHub Pages'):
+            step = next(step for step in pages['steps'] if step.get('name') == name)
+            self.assertEqual(step.get('if'), deploy_if, name)
+        stage = next(step for step in pages['steps'] if step.get('name') == 'Stage the landing page')
+        verify = next(step for step in pages['steps'] if step.get('name') == 'Check the Pages artifact')
+        self.assertEqual(stage['run'], 'bash source/scripts/stage-pages-site.sh')
+        self.assertEqual(verify['run'], 'bash source/scripts/verify-pages-artifact.sh')
+        self.assertEqual(verify['env']['PAGES_REQUIRE_UPDATES'], 'true')
+        self.assertNotIn('preserve-pages-updates.sh', '\n'.join(
+            step.get('run', '') for step in pages['steps'] if isinstance(step.get('run'), str)
+        ))
+        self.assertEqual(pages['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
+
+        workflow = yaml.safe_load((ROOT / '.github/workflows/pages.yml').read_text())
+        triggers = workflow.get('on', workflow.get(True))
+        self.assertEqual(set(triggers), {'pull_request', 'push'})
+        self.assertNotIn('pull_request_target', triggers)
+        self.assertEqual(workflow['permissions'], {'contents': 'read'})
+        self.assertEqual(workflow['jobs']['verify']['name'], 'Pages artifact')
+        self.assertEqual(workflow['jobs']['verify']['steps'][-1]['run'], 'bash scripts/check-pages-artifact.sh')
+        deploy = workflow['jobs']['deploy']
+        self.assertEqual(deploy['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
+        self.assertEqual(deploy['if'], "github.event_name == 'push' && github.ref == 'refs/heads/main'")
+        self.assertEqual(deploy['permissions'], {'contents': 'read', 'pages': 'write', 'id-token': 'write'})
+        self.assertEqual(deploy['environment']['name'], 'github-pages')
+        deploy_names = [step.get('name') for step in deploy['steps']]
+        self.assertLess(deploy_names.index('Preserve published updates'), deploy_names.index('Stage the landing page'))
+        self.assertLess(deploy_names.index('Stage the landing page'), deploy_names.index('Check the Pages artifact'))
+        self.assertLess(deploy_names.index('Check the Pages artifact'), deploy_names.index('Upload Pages artifact'))
+        preserve = next(step for step in deploy['steps'] if step.get('name') == 'Preserve published updates')
+        self.assertEqual(preserve['env']['PAGES_UPDATES_BASE'], 'https://ben-ranford.github.io/watt/updates')
+        self.assertNotIn('PAGES_ALLOW_ABSENT', preserve.get('env', {}))
+        for step in workflow['jobs']['verify']['steps'] + deploy['steps']:
+            if 'run' in step:
+                self.assertNotIn('${{', step['run'])
+            if 'uses' in step:
+                self.assertRegex(step['uses'], r'@[0-9a-f]{40}( # .+)?$')
+
 
 class ContributorTemplateTests(unittest.TestCase):
     def test_issue_forms_match_the_contributing_checks(self) -> None:
@@ -1480,6 +1789,12 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertEqual(uploaded['with']['retention-days'], 7)
         self.assertEqual(uploaded['with']['if-no-files-found'], 'error')
         self.assertTrue(str(uploaded['with']['path']).endswith('Watt.app.zip'))
+        shots = next(step for step in job['steps'] if step.get('name') == 'Upload site screenshots')
+        self.assertEqual(shots['if'], 'always()')
+        self.assertEqual(shots['with']['name'], 'site-screenshots')
+        self.assertEqual(shots['with']['path'], '.site-screenshots')
+        self.assertEqual(shots['with']['if-no-files-found'], 'warn')
+        self.assertIn('WATT_SCREENSHOT_DIR', steps['Unit tests (xcodebuild)'])
 
     def test_release_update_settings_match_public_config(self) -> None:
         import importlib.util

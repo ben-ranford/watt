@@ -1,5 +1,13 @@
 # watt
 
+The menu bar, the panel, and Settings. Light appearance, then dark. `SiteScreenshotTests` renders these from the SwiftUI views with sample power readings.
+
+| | Light | Dark |
+| --- | --- | --- |
+| Menu bar | ![Menu bar, light appearance, system draw 22.9 W](docs/screenshots/menu-bar-light.png) | ![Menu bar, dark appearance, system draw 22.9 W](docs/screenshots/menu-bar-dark.png) |
+| Panel | ![Panel, light appearance, charging at 42.1 W](docs/screenshots/panel-light.png) | ![Panel, dark appearance, charging at 42.1 W](docs/screenshots/panel-dark.png) |
+| Settings | ![Settings, light appearance](docs/screenshots/settings-light.png) | ![Settings, dark appearance](docs/screenshots/settings-dark.png) |
+
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 [![Build and test](https://github.com/ben-ranford/watt/actions/workflows/ci.yml/badge.svg)](https://github.com/ben-ranford/watt/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
