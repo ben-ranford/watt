@@ -1,12 +1,81 @@
 import CryptoKit
 import Foundation
 
-// P04: detached release signature binds identity, build, minimum OS and exact bytes.
+// P04: detached release signature binds identity, build, minimum OS, notes and exact bytes.
+// `notes` is optional so a manifest signed before this field still decodes. When the
+// key is present it is inside the signed payload; a changed note fails the signature.
 struct UpdateManifest: Codable, Equatable, Sendable {
     let identity: String
     let build: UInt64
     let sha256: Data
     let minimumSystemVersion: String
+    let notes: String?
+
+    init(identity: String, build: UInt64, sha256: Data, minimumSystemVersion: String, notes: String? = nil) {
+        self.identity = identity
+        self.build = build
+        self.sha256 = sha256
+        self.minimumSystemVersion = minimumSystemVersion
+        self.notes = notes
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case identity, build, sha256, minimumSystemVersion, notes
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        identity = try container.decode(String.self, forKey: .identity)
+        build = try container.decode(UInt64.self, forKey: .build)
+        sha256 = try container.decode(Data.self, forKey: .sha256)
+        minimumSystemVersion = try container.decode(String.self, forKey: .minimumSystemVersion)
+        notes = try container.decodeIfPresent(String.self, forKey: .notes)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(identity, forKey: .identity)
+        try container.encode(build, forKey: .build)
+        try container.encode(sha256, forKey: .sha256)
+        try container.encode(minimumSystemVersion, forKey: .minimumSystemVersion)
+        try container.encodeIfPresent(notes, forKey: .notes)
+    }
+}
+
+enum UpdateReleaseNotes {
+    /// Same cap the release script uses before it signs the changelog section.
+    static let maximumUTF8Length = 8_192
+    /// The prompt shows at most this many characters, then an ellipsis.
+    static let displayLimit = 2_000
+    static let unavailable = "Release notes aren’t available for this version."
+
+    static func isAcceptable(_ notes: String) -> Bool {
+        guard notes.utf8.count <= maximumUTF8Length else { return false }
+        return notes.unicodeScalars.allSatisfy { scalar in
+            scalar.value == 0x09 || scalar.value == 0x0A || scalar.value == 0x0D || scalar.value >= 0x20
+        }
+    }
+
+    /// Text the update prompt renders. Nil means the unavailable sentence.
+    static func promptText(_ notes: String?) -> String? {
+        guard let notes, isAcceptable(notes) else { return nil }
+        let trimmed = notes.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        if trimmed.count <= displayLimit { return trimmed }
+        let end = trimmed.index(trimmed.startIndex, offsetBy: displayLimit)
+        let clipped = trimmed[..<end]
+        let boundary = clipped.lastIndex(of: "\n").map { clipped[..<$0] } ?? clipped
+        let kept = boundary.trimmingCharacters(in: .whitespacesAndNewlines)
+        return (kept.isEmpty ? String(clipped) : kept) + "\n\n..."
+    }
+
+    static func markdown(_ notes: String) -> AttributedString {
+        let options = AttributedString.MarkdownParsingOptions(
+            interpretedSyntax: .full,
+            failurePolicy: .returnPartiallyParsedIfPossible
+        )
+        return (try? AttributedString(markdown: notes, options: options)) ?? AttributedString(notes)
+    }
 }
 struct SignedUpdate: Codable, Equatable, Sendable {
     let payload: Data
@@ -26,6 +95,9 @@ struct UpdateTrust {
         guard manifest.identity == identity else { throw ServiceFailure.untrustedIdentity }
         guard manifest.build > 0 else { throw ServiceFailure.incompatibleVersion }
         guard manifest.sha256.count == SHA256.byteCount else { throw ServiceFailure.invalidData }
+        if let notes = manifest.notes, !UpdateReleaseNotes.isAcceptable(notes) {
+            throw ServiceFailure.invalidData
+        }
         return manifest
     }
     // Signed grammar: MAJOR.MINOR[.PATCH], ASCII decimal, no leading zeros,
@@ -223,6 +295,12 @@ final class UpdateAdapter: UpdateService {
             offer = release; state = .available(version: String(manifest.build))
             return .success(String(manifest.build))
         } catch { state = .failed(error as? ServiceFailure ?? .network, nil); return failure(error) }
+    }
+
+    /// Notes from the current offer. Re-checks the signature so the text cannot drift from the payload.
+    func releaseNotes(for version: String) -> String? {
+        guard let offer, let manifest = try? trust.authenticate(offer), String(manifest.build) == version else { return nil }
+        return manifest.notes
     }
 
     func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {

@@ -186,6 +186,10 @@ final class J103AvailableTests: XCTestCase {
         }
         XCTAssertFalse(source.contains("A new version of Watt? is available"))
         XCTAssertFalse(source.contains("What’s New in"))
+        XCTAssertFalse(source.contains("Neural Engine"))
+        XCTAssertFalse(source.contains("version == \"1.1\""))
+        XCTAssertTrue(source.contains("ReleaseNotesBlock(notes: router.promptNotes(version: version))"))
+        XCTAssertTrue(source.contains("UpdateReleaseNotes.unavailable"))
     }
 
     func testAvailableNativeLayout() async {

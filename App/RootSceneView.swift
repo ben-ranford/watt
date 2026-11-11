@@ -119,17 +119,7 @@ struct UpdateAvailableContent: View {
             }
             Text(Self.changesHeading).font(.headline)
                 .accessibilityLabel(Self.changesHeading)
-            Form {
-                if version == "1.1" {
-                    releaseRow("Neural Engine", "Now in Components.")
-                    releaseRow("Steadier numbers", "Less jumping when load spikes.")
-                    releaseRow("New helper", "macOS asks you to approve it once.")
-                } else {
-                    Text("Release notes aren’t available for this version.")
-                }
-            }
-            .formStyle(.grouped)
-            .scrollDisabled(true)
+            ReleaseNotesBlock(notes: router.promptNotes(version: version))
             Toggle("Install future updates automatically", isOn: $automaticUpdates)
                 .toggleStyle(.checkbox)
             HStack {
@@ -154,13 +144,6 @@ struct UpdateAvailableContent: View {
         .frame(minHeight: 334)
     }
 
-    private func releaseRow(_ title: String, _ subtitle: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(title).font(.body)
-            Text(subtitle).font(.subheadline).foregroundStyle(.secondary)
-        }
-    }
-
     private func choose(_ action: UpdateOfferAction) {
         if action == .install {
             choiceFailed = !router.installOfferedUpdate(version: version, generation: store.generation,
@@ -169,6 +152,27 @@ struct UpdateAvailableContent: View {
             choiceFailed = !router.chooseUpdateOffer(action, version: version, generation: store.generation,
                                                      automaticUpdates: automaticUpdates)
             if !choiceFailed { dismiss() }
+        }
+    }
+}
+
+private struct ReleaseNotesBlock: View {
+    let notes: String?
+
+    var body: some View {
+        if let text = UpdateReleaseNotes.promptText(notes) {
+            Text(UpdateReleaseNotes.markdown(text))
+                .font(.body)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(10)
+                .textSelection(.enabled)
+                .accessibilityLabel(text)
+        } else {
+            Text(UpdateReleaseNotes.unavailable)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityLabel(UpdateReleaseNotes.unavailable)
         }
     }
 }
@@ -502,6 +506,11 @@ enum J103FixtureLaunch {
     static func makeWindow() -> NSWindow {
         let service = FakeUpdateService()
         service.availableVersion = .success("1.1")
+        service.offeredNotes = """
+        ### Fixes
+
+        * The update window shows the notes shipped with this release.
+        """
         let router = AppRouter(updateService: service)
         _ = router.checkForUpdatesFromMenu(presentationID: router.beginMenuSetupPresentation())
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 520, height: 334),

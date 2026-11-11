@@ -276,6 +276,8 @@ protocol HelperService {
 @MainActor
 protocol UpdateService {
     func check() async -> ServiceOutcome<String?>
+    /// Notes carried in the signed manifest for `version`. Nil when that manifest has none.
+    func releaseNotes(for version: String) -> String?
     func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState>
     func download(version: String, receipt: OperationReceipt,
                   progress: @escaping @MainActor (UpdateDownloadProgress) -> Void) async -> ServiceOutcome<UpdateState>
@@ -298,6 +300,7 @@ struct UpdateDownloadProgress: Equatable, Sendable {
 }
 
 extension UpdateService {
+    func releaseNotes(for version: String) -> String? { nil }
     func download(version: String, receipt: OperationReceipt,
                   progress: @escaping @MainActor (UpdateDownloadProgress) -> Void) async -> ServiceOutcome<UpdateState> {
         await download(version: version, receipt: receipt)
@@ -650,11 +653,16 @@ final class UpdateStore: ObservableObject {
 @MainActor
 final class FakeUpdateService: UpdateService {
     var availableVersion: ServiceOutcome<String?> = .success(nil)
+    var offeredNotes: String?
     var failure: ServiceFailure?
     private(set) var transactions: [UUID: UpdateState] = [:]
     private var receipts: [UUID: OperationReceipt] = [:]
     private var discarded: Set<UUID> = []
     func check() async -> ServiceOutcome<String?> { Task.isCancelled ? .failure(.cancelled) : availableVersion }
+    func releaseNotes(for version: String) -> String? {
+        guard case .success(let available) = availableVersion, available == version else { return nil }
+        return offeredNotes
+    }
     func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
         if let failure { return .failure(failure) }
         guard !Task.isCancelled else { return .failure(.cancelled) }
