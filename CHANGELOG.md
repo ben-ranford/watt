@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/ben-ranford/watt/compare/v1.1.0...v1.1.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* modern Homebrew cask and version-agnostic live manifest test ([#44](https://github.com/ben-ranford/watt/issues/44)) ([cddf121](https://github.com/ben-ranford/watt/commit/cddf121e97ea5d099fb22b54b4759c9f81cb329b))
+* quit the previous Watt after a successful update handoff ([#46](https://github.com/ben-ranford/watt/issues/46)) ([73fc96e](https://github.com/ben-ranford/watt/commit/73fc96e7d864549a24f0de7a25aa855a49ac2066))
+
 ## [1.1.0](https://github.com/ben-ranford/watt/compare/v1.0.1...v1.1.0) (2026-11-11)
 
 
