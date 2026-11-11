@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/ben-ranford/watt/compare/v1.1.1...v1.2.0) (2026-11-11)
+
+
+### Features
+
+* add low-battery alerts and configurable notification thresholds ([#48](https://github.com/ben-ranford/watt/issues/48)) ([7bc3add](https://github.com/ben-ranford/watt/commit/7bc3add0b9fb6aa04e5fd52f7c548fefcfac7af9))
+
+
+### Bug Fixes
+
+* don't block launch when the app is in Downloads ([#51](https://github.com/ben-ranford/watt/issues/51)) ([275a497](https://github.com/ben-ranford/watt/commit/275a4979eec8389157558cbb0c716fd92c95b4f2))
+
 ## [1.1.1](https://github.com/ben-ranford/watt/compare/v1.1.0...v1.1.1) (2026-11-11)
 
 

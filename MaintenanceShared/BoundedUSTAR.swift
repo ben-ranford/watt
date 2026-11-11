@@ -1,7 +1,36 @@
 import Foundation
 import Darwin
+#if SWIFT_PACKAGE
+import WattHelperShared
+#endif
 
 public enum ArchiveValidationError: Error { case invalidArchive, unsafeDestination, ioFailure }
+
+/// Records directory walks that are about to call `openat`. Tests enable this to prove a
+/// Downloads launch never enters a privacy-protected folder. Production leaves it off.
+public enum DirectoryOpenTrace {
+    private final class State: @unchecked Sendable {
+        let lock = NSLock()
+        var enabled = false
+        var paths: [String] = []
+    }
+    private static let state = State()
+    public static var enabled: Bool {
+        get { state.lock.lock(); defer { state.lock.unlock() }; return state.enabled }
+        set { state.lock.lock(); state.enabled = newValue; state.lock.unlock() }
+    }
+    public static var paths: [String] {
+        state.lock.lock(); defer { state.lock.unlock() }; return state.paths
+    }
+    public static func reset() {
+        state.lock.lock(); state.paths.removeAll(keepingCapacity: false); state.lock.unlock()
+    }
+    static func note(_ path: String) {
+        state.lock.lock()
+        if state.enabled { state.paths.append(path) }
+        state.lock.unlock()
+    }
+}
 
 /// The single release archive profile. The entire immutable input is checked before extraction.
 public struct BoundedUSTAR: Sendable {
@@ -165,16 +194,29 @@ public struct BoundedUSTAR: Sendable {
     }
 
     /// Walk each component so a symlink in any ancestor cannot redirect extraction.
-    public static func openDirectory(_ url: URL) throws -> Int32 {
+    /// A privacy-protected component is refused before `openat`. That syscall is what
+    /// stalls the main thread when Watt is launched from `~/Downloads`: the walk holds
+    /// a directory fd on `$HOME` and blocks in `openat(..., "Downloads")` inside TCC.
+    public static func openDirectory(_ url: URL, home: String = NSHomeDirectory()) throws -> Int32 {
         guard url.isFileURL, url.path.hasPrefix("/") else { throw ArchiveValidationError.unsafeDestination }
+        if LaunchPathPolicy.isPrivacyProtected(path: url.path, home: home) {
+            throw ArchiveValidationError.unsafeDestination
+        }
         var fd = open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC)
         guard fd >= 0 else { throw ArchiveValidationError.ioFailure }
+        var built = ""
         do {
             for component in url.path.split(separator: "/") {
                 guard component != ".", component != ".." else { throw ArchiveValidationError.unsafeDestination }
+                let nextPath = built + "/" + component
+                if LaunchPathPolicy.isPrivacyProtected(path: nextPath, home: home) {
+                    throw ArchiveValidationError.unsafeDestination
+                }
+                DirectoryOpenTrace.note(nextPath)
                 let next = openat(fd, String(component), O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
                 guard next >= 0 else { throw ArchiveValidationError.unsafeDestination }
                 close(fd); fd = next
+                built = nextPath
             }
             return fd
         } catch { close(fd); throw error }
