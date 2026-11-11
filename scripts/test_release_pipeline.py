@@ -680,7 +680,78 @@ class ReadinessTests(unittest.TestCase):
         )
 
 
+# Homebrew 7.0.13 `brew style` and `brew audit --cask --strict --online` accept
+# this shape. Only version and sha256 change between releases.
+HOMEBREW_CASK_GOLDEN = """\
+cask "watt" do
+  version "1.1.0"
+  sha256 "13356021d01279e35fa7f113f4627543654463ed2cd633f025ea7bdddd371337"
+
+  url "https://github.com/ben-ranford/watt/releases/download/v#{version}/Watt-#{version}.zip"
+  name "Watt?"
+  desc "Menu bar power draw monitor"
+  homepage "https://github.com/ben-ranford/watt"
+
+  auto_updates true
+  depends_on macos: :ventura
+
+  app "Watt.app"
+
+  postflight_steps do
+    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/Watt.app"]
+  end
+
+  zap launchctl: "io.github.ben-ranford.watt.helper",
+      trash:     [
+        "/Library/Application Support/Watt",
+        "/Library/Application Support/Watt-maintenance-result.json",
+        "/Library/LaunchDaemons/io.github.ben-ranford.watt.helper.plist",
+        "/Library/PrivilegedHelperTools/io.github.ben-ranford.watt.helper",
+        "~/Library/Application Support/Watt",
+        "~/Library/Preferences/io.github.ben-ranford.watt.plist",
+      ]
+
+  caveats <<~EOS
+    Watt is ad-hoc signed and is not notarised.
+    This cask removes the quarantine attribute so Gatekeeper does not block the first launch.
+  EOS
+end
+"""
+
+
 class HomebrewCaskTests(unittest.TestCase):
+    def test_rendered_cask_matches_the_homebrew_7_golden(self) -> None:
+        text = render_homebrew_cask.render_cask(
+            version='1.1.0',
+            sha256='13356021d01279e35fa7f113f4627543654463ed2cd633f025ea7bdddd371337',
+            bundle_id='io.github.ben-ranford.watt',
+            minimum_system_version='13.0',
+        )
+        self.assertEqual(text, HOMEBREW_CASK_GOLDEN)
+        self.assertNotIn('postflight do', text)
+        self.assertNotIn('>= :', text)
+        other = render_homebrew_cask.render_cask(
+            version='9.9.9',
+            sha256='cd' * 32,
+            bundle_id='io.github.ben-ranford.watt',
+            minimum_system_version='13.0',
+        )
+        changed = [
+            (left, right)
+            for left, right in zip(text.splitlines(), other.splitlines(), strict=True)
+            if left != right
+        ]
+        self.assertEqual(
+            changed,
+            [
+                ('  version "1.1.0"', '  version "9.9.9"'),
+                (
+                    '  sha256 "13356021d01279e35fa7f113f4627543654463ed2cd633f025ea7bdddd371337"',
+                    '  sha256 "' + ('cd' * 32) + '"',
+                ),
+            ],
+        )
+
     def test_rendered_cask_uses_the_release_zip_and_gatekeeper_caveats(self) -> None:
         text = render_homebrew_cask.render_cask(
             version='1.2.3',
@@ -692,7 +763,9 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertIn('version "1.2.3"', text)
         self.assertIn('sha256 "' + ('ab' * 32) + '"', text)
         self.assertIn('releases/download/v#{version}/Watt-#{version}.zip', text)
-        self.assertIn('depends_on macos: ">= :ventura"', text)
+        self.assertIn('depends_on macos: :ventura', text)
+        self.assertNotIn('>= :', text)
+        self.assertNotIn('postflight do', text)
         self.assertIn('auto_updates true', text)
         self.assertIn('app "Watt.app"', text)
         self.assertIn('"~/Library/Application Support/Watt"', text)
@@ -702,18 +775,11 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertIn('"/Library/LaunchDaemons/com.example.watt.helper.plist"', text)
         self.assertIn('"/Library/PrivilegedHelperTools/com.example.watt.helper"', text)
         self.assertIn('launchctl: "com.example.watt.helper"', text)
-        production = render_homebrew_cask.render_cask(
-            version='1.2.3',
-            sha256='ab' * 32,
-            bundle_id='io.github.ben-ranford.watt',
-            minimum_system_version='13.0',
+        self.assertIn('postflight_steps do', text)
+        self.assertIn(
+            'run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/Watt.app"]',
+            text,
         )
-        self.assertIn('"~/Library/Preferences/io.github.ben-ranford.watt.plist"', production)
-        self.assertIn('"/Library/LaunchDaemons/io.github.ben-ranford.watt.helper.plist"', production)
-        self.assertIn('"/Library/PrivilegedHelperTools/io.github.ben-ranford.watt.helper"', production)
-        self.assertIn('launchctl: "io.github.ben-ranford.watt.helper"', production)
-        self.assertIn('postflight do', text)
-        self.assertIn('system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{appdir}/Watt.app"]', text)
         self.assertNotIn('Control-click', text)
         self.assertNotIn('Open Anyway', text)
         self.assertNotIn('no-quarantine', text)
@@ -750,7 +816,9 @@ class HomebrewCaskTests(unittest.TestCase):
                 bundle_id=str(read['identity']),
                 minimum_system_version=str(read['minimum']),
             )
-            self.assertIn('>= :sonoma', text)
+            self.assertIn('depends_on macos: :sonoma', text)
+            self.assertNotIn('>= :', text)
+            self.assertNotIn('postflight do', text)
 
     def test_unset_deploy_key_skips_without_calling_git(self) -> None:
         env = os.environ.copy()
@@ -960,7 +1028,16 @@ class HomebrewCaskTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             ).stdout
-            self.assertIn('postflight do', cask_text)
+            expected = render_homebrew_cask.render_cask(
+                version='1.2.3',
+                sha256=render_homebrew_cask.sha256_file(zip_path),
+                bundle_id='io.github.ben-ranford.watt',
+                minimum_system_version='13.0',
+            )
+            self.assertEqual(cask_text, expected)
+            self.assertIn('postflight_steps do', cask_text)
+            self.assertNotIn('postflight do', cask_text)
+            self.assertNotIn('>= :', cask_text)
             self.assertIn('com.apple.quarantine', cask_text)
 
     def test_archive_script_has_no_notarisation_path(self) -> None:

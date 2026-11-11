@@ -490,8 +490,9 @@ final class P04UpdaterTests: XCTestCase {
         guard case .success = await rig.adapter.discard(receipt: rig.receipt) else { return XCTFail() }
     }
 
-    /// The published manifest for 1.0.1. Same build is up to date; a lower build is offered.
-    @MainActor func testLiveManifestIsUpToDateAtBuild1000001AndOfferedBelowIt() async throws {
+    /// The published manifest, whatever build it currently is. That build is up to date.
+    /// One build lower is offered the update. Release notes may be present.
+    @MainActor func testLiveManifestIsUpToDateAtItsBuildAndOfferedBelowIt() async throws {
         let manifestURL = URL(string: "https://ben-ranford.github.io/watt/updates/manifest.json")!
         var request = URLRequest(url: manifestURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 20)
         request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
@@ -508,14 +509,13 @@ final class P04UpdaterTests: XCTestCase {
         let publicKey = try Curve25519.Signing.PublicKey(rawRepresentation: keyBytes)
         let host = OperatingSystemVersion(majorVersion: 14, minorVersion: 0, patchVersion: 0)
         let manifest = try UpdateTrust(
-            identity: "io.github.ben-ranford.watt", currentBuild: 1_000_001,
+            identity: "io.github.ben-ranford.watt", currentBuild: 1,
             hostSystemVersion: host, publicKey: publicKey
         ).authenticate(signed)
         XCTAssertEqual(manifest.identity, "io.github.ben-ranford.watt")
-        XCTAssertEqual(manifest.build, 1_000_001)
+        XCTAssertGreaterThan(manifest.build, 0)
         XCTAssertEqual(manifest.minimumSystemVersion, "13.0")
-        XCTAssertNil(manifest.notes)
-        XCTAssertEqual(manifest.sha256.base64EncodedString(), "ewWtypFxPPn9PTIah3z9HnB6kpzvweKCAok6SX0CVMk=")
+        let publishedBuild = manifest.build
 
         func checker(currentBuild: UInt64) -> UpdateAdapter {
             let source = P04Source()
@@ -526,16 +526,16 @@ final class P04UpdaterTests: XCTestCase {
             )
             return UpdateAdapter(source: source, driver: P04Installation(), storage: InMemoryStorage(), trust: trust)
         }
-        let current = checker(currentBuild: 1_000_001)
+        let current = checker(currentBuild: publishedBuild)
         guard case .success(nil) = await current.check() else {
-            return XCTFail("build 1000001 must be up to date, state \(current.state)")
+            return XCTFail("build \(publishedBuild) must be up to date, state \(current.state)")
         }
         XCTAssertEqual(current.state, .idle)
-        let older = checker(currentBuild: 1_000_000)
-        guard case .success("1000001") = await older.check() else {
-            return XCTFail("a lower build must be offered 1000001, state \(older.state)")
+        let older = checker(currentBuild: publishedBuild - 1)
+        guard case .success(let offered) = await older.check(), offered == String(publishedBuild) else {
+            return XCTFail("a lower build must be offered \(publishedBuild), state \(older.state)")
         }
-        XCTAssertEqual(older.state, .available(version: "1000001"))
+        XCTAssertEqual(older.state, .available(version: String(publishedBuild)))
     }
 
 }
