@@ -240,6 +240,7 @@ struct ProductionHelperComposition {
     let hasPendingUpdate: () -> Bool
 
     static func configured(bundle: Bundle = .main) throws -> Self {
+        if LaunchPathPolicy.isPrivacyProtected(bundle.bundleURL) { throw ServiceFailure.untrustedIdentity }
         let trust = try HelperTrustConfiguration.configured(bundle: bundle).policy()
         if case .protectedInstallation(let record) = trust {
             let transport = ProductionHelperIPC(trust: trust)

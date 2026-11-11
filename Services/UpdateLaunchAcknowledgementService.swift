@@ -10,6 +10,7 @@ enum UpdateLaunchAcknowledgementService {
     static private(set) var acceptedRequest: UpdateLaunchRequest?
     /// Called before ordinary stores open, while the authenticated observer is still alive.
     static func acknowledge(bundle: Bundle = .main) throws {
+        if LaunchPathPolicy.isPrivacyProtected(bundle.bundleURL) { throw ServiceFailure.untrustedIdentity }
         let parent = try MaintenanceProcessWitness.observe(pid: getppid())
         guard parent.uid == geteuid(), parent.pid > 1 else { throw ServiceFailure.untrustedIdentity }
         let request = try UpdateLaunchRequest.decode(MaintenanceChannel.read(from: STDIN_FILENO))

@@ -1,5 +1,8 @@
 import AppKit
 import Darwin
+#if SWIFT_PACKAGE
+import WattHelperShared
+#endif
 
 /// Published builds store the marketing version in `CFBundleVersion` as
 /// `MAJOR * 1_000_000 + MINOR * 1_000 + PATCH`. The update offer shows that
@@ -114,8 +117,10 @@ enum SingleInstanceClaim {
 
 /// CFBundleVersion from a bundle's Info.plist. Missing or non-numeric values are nil.
 enum BundleBuildNumber {
-    static func read(bundleURL: URL) -> UInt64? {
+    static func read(bundleURL: URL, home: String = NSHomeDirectory()) -> UInt64? {
+        if LaunchPathPolicy.isPrivacyProtected(bundleURL, home: home) { return nil }
         let plistURL = bundleURL.appendingPathComponent("Contents/Info.plist")
+        if LaunchPathPolicy.isPrivacyProtected(plistURL, home: home) { return nil }
         guard let data = try? Data(contentsOf: plistURL),
               let plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] else {
             return nil
