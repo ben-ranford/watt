@@ -34,7 +34,10 @@ final class ReleaseNotesTests: XCTestCase {
         let key = Curve25519.Signing.PrivateKey()
         let digest = Data(SHA256.hash(data: Data("watt".utf8)))
         let notes = "### Fixes\n\n* one"
-        let payload = Data(#"{"identity":"test.watt","build":2,"sha256":"\#(digest.base64EncodedString())","minimumSystemVersion":"13.0","notes":"### Fixes\n\n* one"}"#.utf8)
+        let payload = try JSONSerialization.data(withJSONObject: [
+            "identity": "test.watt", "build": 2, "sha256": digest.base64EncodedString(),
+            "minimumSystemVersion": "13.0", "notes": notes,
+        ])
         let checker = trust(publicKey: key.publicKey)
         let release = try signed(payload, key: key)
         XCTAssertEqual(try checker.authenticate(release).notes, notes)
