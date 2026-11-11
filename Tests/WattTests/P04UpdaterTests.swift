@@ -491,7 +491,7 @@ final class P04UpdaterTests: XCTestCase {
     }
 
     /// The published manifest, whatever build it currently is. That build is up to date.
-    /// One build lower is offered the update. Release notes may be present.
+    /// One build lower is offered the marketing version, not the raw build number.
     @MainActor func testLiveManifestIsUpToDateAtItsBuildAndOfferedBelowIt() async throws {
         let manifestURL = URL(string: "https://ben-ranford.github.io/watt/updates/manifest.json")!
         var request = URLRequest(url: manifestURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 20)
@@ -513,8 +513,9 @@ final class P04UpdaterTests: XCTestCase {
             hostSystemVersion: host, publicKey: publicKey
         ).authenticate(signed)
         XCTAssertEqual(manifest.identity, "io.github.ben-ranford.watt")
-        XCTAssertGreaterThan(manifest.build, 0)
+        XCTAssertGreaterThanOrEqual(manifest.build, 1_000_000)
         XCTAssertEqual(manifest.minimumSystemVersion, "13.0")
+        XCTAssertNotEqual(manifest.offerVersion, String(manifest.build))
         let publishedBuild = manifest.build
 
         func checker(currentBuild: UInt64) -> UpdateAdapter {
@@ -532,10 +533,10 @@ final class P04UpdaterTests: XCTestCase {
         }
         XCTAssertEqual(current.state, .idle)
         let older = checker(currentBuild: publishedBuild - 1)
-        guard case .success(let offered) = await older.check(), offered == String(publishedBuild) else {
-            return XCTFail("a lower build must be offered \(publishedBuild), state \(older.state)")
+        guard case .success(let offered) = await older.check(), offered == manifest.offerVersion else {
+            return XCTFail("a lower build must be offered \(manifest.offerVersion), state \(older.state)")
         }
-        XCTAssertEqual(older.state, .available(version: String(publishedBuild)))
+        XCTAssertEqual(older.state, .available(version: manifest.offerVersion))
     }
 
 }

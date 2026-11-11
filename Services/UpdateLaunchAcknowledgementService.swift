@@ -35,6 +35,21 @@ enum UpdateLaunchAcknowledgementService {
         // The observer waits for this bounded response before exiting, so the liveness
         // check above cannot race its successful completion. No GUI readiness is inferred.
         try MaintenanceChannel.write(Data("startup-confirmed".utf8), to: STDOUT_FILENO)
+        // The parent can quit once it reads this. The launch argument stays on
+        // the process, but it is not an ongoing handshake-child mode: startup
+        // recovery reads `acceptedRequest` once, then retires it.
+        acceptedRequest = request
+    }
+
+    static var isHandshakeChild: Bool { acceptedRequest != nil }
+
+    /// Drops one-shot launch evidence so later recovery does not treat this
+    /// long-lived process as the handshake child.
+    static func retireHandshakeEvidence() {
+        acceptedRequest = nil
+    }
+
+    static func retainStartupEvidenceForTesting(_ request: UpdateLaunchRequest?) {
         acceptedRequest = request
     }
 }

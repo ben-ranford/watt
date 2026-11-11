@@ -54,6 +54,13 @@ struct SoftwareUpdateContent: View {
             .onDisappear { router.closeUpdatePresentation() }
     }
 
+    private static func isClosingAfterUpdate(_ state: UpdateState) -> Bool {
+        switch state {
+        case .completed, .handoffAccepted: return true
+        default: return false
+        }
+    }
+
     @ViewBuilder private var content: some View {
         if router.upToDatePresented || router.couldntCheckPresented {
             Color.clear
@@ -62,7 +69,7 @@ struct SoftwareUpdateContent: View {
                 Text("The update is ready. Administrator installation is required to update Watt? and its helper together. Use the Watt? installer, then launch the installed app.")
                 Button("Discard Download") { Task { if await router.cancelUpdateDownload() { dismiss() } } }
             }.padding(20).frame(width: 420)
-        } else if case .handoffAccepted = store.state {
+        } else if Self.isClosingAfterUpdate(store.state) {
             Text("Watt? will close while the update finishes.").padding(20).frame(width: 420)
         } else if router.isUnattendedInstall, let version = router.downloadVersion {
             UpdateDownloadingContent(router: router, store: store, version: version)
@@ -209,6 +216,11 @@ struct UpdateReadyContent: View {
                 Button("Install and Relaunch") { choose(.installAndRelaunch) }
                     .buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction)
             }.font(WattTypography.bodyEmphasized).disabled(router.readyIntent != nil)
+            if let message = router.readyInstallFailure?.message {
+                Text(message).font(WattTypography.footnote).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityLabel(message)
+            }
             if store.persistenceFailure != nil {
                 Text("Couldn’t save your choice. Try again.").font(WattTypography.footnote)
                     .foregroundStyle(.secondary)
@@ -219,6 +231,11 @@ struct UpdateReadyContent: View {
             presentation = router.beginReadyPresentation()
         }
         .onDisappear { router.closeReadyPresentation(presentation) }
+        .onChange(of: router.readyInstallFailure?.id) { _ in
+            guard router.readyInstallFailure != nil else { return }
+            generation = store.generation
+            presentation = router.beginReadyPresentation()
+        }
     }
 
     private func choose(_ action: AppRouter.ReadyIntent.Action) {

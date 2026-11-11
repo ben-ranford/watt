@@ -257,7 +257,12 @@ struct WattApp: App {
         #endif
         if let update = productionUpdate {
             appRouter.configureUpdateInstallation(adapter: update.adapter)
-            Task { await appRouter.recoverUpdateStartup(adapter: update.adapter) }
+            Task {
+                await appRouter.recoverUpdateStartup(adapter: update.adapter)
+                UpdateLaunchAcknowledgementService.retireHandshakeEvidence()
+            }
+        } else {
+            UpdateLaunchAcknowledgementService.retireHandshakeEvidence()
         }
         let productionHelper: ProductionHelperComposition?
         if Self.isHarnessLaunch {
@@ -304,7 +309,7 @@ struct WattApp: App {
             }
         }
         appRouter.onUninstalled = { NSApplication.shared.terminate(nil) }
-        appRouter.onMaintenanceHandoff = { NSApplication.shared.terminate(nil) }
+        appRouter.onMaintenanceHandoff = { WattApplicationDelegate.quitAfterUpdateHandoff() }
         _router = StateObject(wrappedValue: appRouter)
         let appPowerStore = PowerReadingStore(currentReading: .unavailable,
             telemetry: SystemPowerSourceTelemetryService(),
@@ -373,6 +378,12 @@ struct WattApp: App {
             applicationDelegate.scheduleFallbackStatusItem(router: appRouter,
                                                             powerStore: appPowerStore,
                                                             preferences: appPreferences)
+            // After the handshake has returned, drop any older Watt that did
+            // not exit. The next turn is late enough that this process is no
+            // longer inside the parent's launch wait.
+            Task { @MainActor in
+                SingleInstanceClaim.becomeOnlyInstance()
+            }
         }
     }
 
@@ -1187,6 +1198,26 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     var onReopen: (() -> Void)?
     var onTerminate: (() -> Void)?
     private(set) var isTerminating = false
+    /// Set before an update handoff quit so a confirm-quit or a window cannot cancel it.
+    static var handoffRequiresQuit = false
+
+    /// Quits on the main actor. Windows cannot keep a modal session or a
+    /// delegate from swallowing the update handoff.
+    static func quitAfterUpdateHandoff() {
+        handoffRequiresQuit = true
+        let app = NSApplication.shared
+        for window in app.windows {
+            window.preventsApplicationTerminationWhenModal = false
+            window.delegate = nil
+        }
+        app.reply(toApplicationShouldTerminate: true)
+        app.terminate(nil)
+    }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        UpdateHandoffQuit.reply(handoffRequiresQuit: Self.handoffRequiresQuit,
+                                confirmationAllowsQuit: !Self.handoffRequiresQuit)
+    }
     private var fallbackStatusItem: WattFallbackStatusItem?
     private var pendingFallbackInstall: (() -> Void)?
 

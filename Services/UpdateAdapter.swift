@@ -41,6 +41,10 @@ struct UpdateManifest: Codable, Equatable, Sendable {
         try container.encode(minimumSystemVersion, forKey: .minimumSystemVersion)
         try container.encodeIfPresent(notes, forKey: .notes)
     }
+
+    /// Version string the offer window shows. This is the marketing version
+    /// encoded in the signed build, not the raw build number.
+    var offerVersion: String { UpdateVersionDisplay.marketing(build: build) }
 }
 
 enum UpdateReleaseNotes {
@@ -198,7 +202,7 @@ final class UpdateAdapter: UpdateService {
     func pendingProtectedUpdates() throws -> [PendingProtectedUpdate] {
         guard protectedUpdates != nil else { return [] }
         return try journal().filter { $0.phase == .staged || $0.phase == .protectedHandoff }.map {
-            PendingProtectedUpdate(receipt: $0.receipt, version: String(try trust.authenticate($0.release).build), handedOff: $0.phase == .protectedHandoff)
+            PendingProtectedUpdate(receipt: $0.receipt, version: try trust.authenticate($0.release).offerVersion, handedOff: $0.phase == .protectedHandoff)
         }
     }
     /// Restores observation only. Install consent remains absent after every restart.
@@ -297,8 +301,8 @@ final class UpdateAdapter: UpdateService {
             guard let release else { state = .idle; return .success(nil) }
             let manifest = try trust.authenticate(release)
             guard try isNewer(manifest) else { state = .idle; return .success(nil) }
-            offer = release; state = .available(version: String(manifest.build))
-            return .success(String(manifest.build))
+            offer = release; state = .available(version: manifest.offerVersion)
+            return .success(manifest.offerVersion)
         } catch {
             let reason = error as? ServiceFailure ?? (error is CancellationError ? ServiceFailure.cancelled : .invalidData)
             UpdateDiagnostics.record(error, as: reason, during: "check")
@@ -308,7 +312,7 @@ final class UpdateAdapter: UpdateService {
 
     /// Notes from the current offer. Re-checks the signature so the text cannot drift from the payload.
     func releaseNotes(for version: String) -> String? {
-        guard let offer, let manifest = try? trust.authenticate(offer), String(manifest.build) == version else { return nil }
+        guard let offer, let manifest = try? trust.authenticate(offer), manifest.offerVersion == version else { return nil }
         return manifest.notes
     }
 
@@ -323,7 +327,7 @@ final class UpdateAdapter: UpdateService {
             guard let release = offer, receipt.createdAt.timeIntervalSince1970.isFinite else { throw ServiceFailure.invalidData }
             let manifest = try trust.authenticate(release)
             try verifyNewer(manifest)
-            guard version == String(manifest.build), try journal().allSatisfy({
+            guard version == manifest.offerVersion, try journal().allSatisfy({
                 $0.receipt.id != receipt.id && [.discarded, .rolledBack, .completed].contains($0.phase)
             }) else { throw ServiceFailure.invalidData }
             let entry = UpdateTransaction(receipt: receipt, release: release, phase: .downloading)

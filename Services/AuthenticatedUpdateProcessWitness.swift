@@ -45,13 +45,13 @@ final class AuthenticatedUpdateProcessWitness: ProductionUpdateProcessWitness {
             let before = try MaintenanceProcessWitness.observe(pid: process.processIdentifier)
             guard before.uid == geteuid(), before.codeDirectoryHash == code.codeHash else { throw ServiceFailure.untrustedIdentity }
             try MaintenanceChannel.write(JSONEncoder().encode(request), to: input.fileHandleForWriting.fileDescriptor)
-            let response = try UpdateLaunchAcknowledgement.decode(MaintenanceChannel.read(from: output.fileHandleForReading.fileDescriptor, timeout: 5))
+            let response = try UpdateLaunchAcknowledgement.decode(try readHandshake(from: output.fileHandleForReading.fileDescriptor))
             guard response.request == request, process.isRunning,
                   try MaintenanceProcessWitness.observe(pid: process.processIdentifier) == before,
                   try validator.verify(bundle: bundle) == code else { throw ServiceFailure.untrustedIdentity }
             running = Running(process: process, identity: before, bundle: bundle, manifest: manifest, request: request)
             try MaintenanceChannel.write(Data("launch-accepted".utf8), to: input.fileHandleForWriting.fileDescriptor)
-            guard try MaintenanceChannel.read(from: output.fileHandleForReading.fileDescriptor, timeout: 5) == Data("startup-confirmed".utf8),
+            guard try readHandshake(from: output.fileHandleForReading.fileDescriptor) == Data("startup-confirmed".utf8),
                   try MaintenanceProcessWitness.matches(before) else { throw ServiceFailure.untrustedIdentity }
         } catch {
             // Only terminate the child created by this invocation, never a PID supplied by a receipt.
@@ -68,5 +68,19 @@ final class AuthenticatedUpdateProcessWitness: ProductionUpdateProcessWitness {
             && code.minimumSystemVersion == manifest.minimumSystemVersion
             && code.codeHash == running.identity.codeDirectoryHash
             && matches
+    }
+
+    /// A handshake that does not answer inside the channel deadline is a timeout,
+    /// so the installer can show that and try again. Other protocol failures stay themselves.
+    static func classifyHandshakeTransportError(_ error: Error) -> Error {
+        if let protocolError = error as? MaintenanceProtocolError, case .invalidRequest = protocolError {
+            return ServiceFailure.timedOut
+        }
+        return error
+    }
+
+    private func readHandshake(from descriptor: Int32) throws -> Data {
+        do { return try MaintenanceChannel.read(from: descriptor, timeout: 5) }
+        catch { throw Self.classifyHandshakeTransportError(error) }
     }
 }
