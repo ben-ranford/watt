@@ -1789,6 +1789,10 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertEqual(uploaded['with']['retention-days'], 7)
         self.assertEqual(uploaded['with']['if-no-files-found'], 'error')
         self.assertTrue(str(uploaded['with']['path']).endswith('Watt.app.zip'))
+        collect = next(step for step in job['steps'] if step.get('name') == 'Collect site screenshots')
+        self.assertEqual(collect['if'], 'always()')
+        self.assertIn('site-screenshots', collect['run'])
+        self.assertIn('.site-screenshots', collect['run'])
         shots = next(step for step in job['steps'] if step.get('name') == 'Upload site screenshots')
         self.assertEqual(shots['if'], 'always()')
         self.assertEqual(shots['with']['name'], 'site-screenshots')
@@ -1796,6 +1800,9 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertEqual(shots['with']['if-no-files-found'], 'warn')
         self.assertIs(shots['with']['include-hidden-files'], True)
         self.assertIn('WATT_SCREENSHOT_DIR', steps['Unit tests (xcodebuild)'])
+        names = [step.get('name') for step in job['steps']]
+        self.assertLess(names.index('Unit tests (xcodebuild)'), names.index('Collect site screenshots'))
+        self.assertLess(names.index('Collect site screenshots'), names.index('Upload site screenshots'))
 
     def test_release_update_settings_match_public_config(self) -> None:
         import importlib.util

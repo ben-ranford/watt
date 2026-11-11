@@ -250,7 +250,7 @@ final class SiteScreenshotTests: XCTestCase {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent(".site-screenshots", isDirectory: true)
+            .appendingPathComponent("site-screenshots", isDirectory: true)
     }
 
     private func committedDirectory() -> URL {

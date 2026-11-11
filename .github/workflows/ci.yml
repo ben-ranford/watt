@@ -153,7 +153,22 @@ jobs:
             "CODE_SIGNING_ALLOWED=YES" \
             "COMPILER_INDEX_STORE_ENABLE=NO"
 
-      # SiteScreenshotTests writes here before it compares docs/screenshots.
+      # xcodebuild does not pass WATT_SCREENSHOT_DIR into the test host.
+      # SiteScreenshotTests writes site-screenshots/ next to the sources.
+      # Copy that directory, including a hidden fallback, before upload.
+      - name: Collect site screenshots
+        if: always()
+        run: |
+          set -euo pipefail
+          dest="${RUNNER_TEMP}/site-screenshots"
+          mkdir -p "${dest}"
+          for dir in site-screenshots .site-screenshots; do
+            if [[ -d "${dir}" ]]; then
+              cp -R "${dir}/." "${dest}/"
+            fi
+          done
+          find "${dest}" -type f -print
+
       # always() keeps the render when the comparison fails, so the PNGs can
       # be committed. A missing directory does not fail this step.
       - name: Upload site screenshots
