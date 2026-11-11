@@ -66,7 +66,7 @@ final class FirstRunPolishTests: XCTestCase {
         XCTAssertEqual(MenuBarStatusLabel(reading: reading, preferences: preferences).text, "0 W")
     }
 
-    func testHelperNotInstalledCopyIsSingularAndOffersInstall() {
+    func testHelperNotInstalledCopyIsSingularAndOffersInstall() throws {
         let setup = SettingsHelperSetup()
         setup.unavailableReason = .installationRequired
         XCTAssertEqual(setup.statusTitle, "Not installed")
@@ -82,8 +82,9 @@ final class FirstRunPolishTests: XCTestCase {
 
         let offered = ChooseMenuReadingView.options(reading: .sampleCharging, helperAvailable: false, installOffered: true)
         XCTAssertEqual(offered.last?.mode, .components)
-        XCTAssertEqual(offered.last?.description, "The helper isn’t installed. Install it on the next step.")
-        XCTAssertFalse(offered.last?.description.contains("unavailable in this build") ?? true)
+        let description = try XCTUnwrap(offered.last?.description)
+        XCTAssertEqual(description, "The helper isn’t installed. Install it on the next step.")
+        XCTAssertFalse(description.contains("unavailable in this build"))
         XCTAssertEqual(OfferComponentReadingsView.installMessage.contains("isn’t installed"), true)
 
         let preferences = PreferencesStore(storage: InMemoryStorage())
