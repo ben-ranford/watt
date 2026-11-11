@@ -36,6 +36,14 @@ final class J112SettingsTests: XCTestCase {
         XCTAssertTrue(preferences.componentReadings)
         XCTAssertTrue(preferences.chargerNotification)
         XCTAssertFalse(preferences.fullyChargedNotification)
+        XCTAssertFalse(preferences.lowBatteryNotification)
+        XCTAssertEqual(preferences.insufficientChargerMinutes, 5)
+        XCTAssertEqual(preferences.fullyChargedPercentage, 100)
+        XCTAssertEqual(preferences.lowBatteryPercentage, 20)
+        XCTAssertEqual(SettingsRootView.chargerNotificationDetail(minutes: 5),
+                       "When your Mac draws more than the charger gives for 5 minutes.")
+        XCTAssertEqual(SettingsRootView.notificationsUnavailable,
+                       "Notifications unavailable. Allow Watt? in System Settings.")
         XCTAssertTrue(preferences.openAtLogin)
         XCTAssertTrue(preferences.checkForUpdatesAutomatically)
     }
@@ -64,8 +72,9 @@ final class J112SettingsTests: XCTestCase {
             "Reads power sensors only. No network, nothing leaves this Mac.",
             "Text(mode.title).accessibilityLabel(mode.title)",
             "Section(\"Notifications\")", "Text(\"Charger can’t keep up\")",
-            "When your Mac draws more than the charger gives for 5 minutes.",
-            "Toggle(\"Fully charged\"", "Section(\"General\")", "Toggle(\"Open at login\"",
+            "chargerNotificationDetail(minutes:", "Text(\"Fully charged\")",
+            "Text(\"Low battery\")", "Picker(\"Duration\"", "Picker(\"Fully charged at\"",
+            "Picker(\"Low battery at\"", "Section(\"General\")", "Toggle(\"Open at login\"",
             "Toggle(\"Check for updates automatically\"", "Text(\"Uninstall Watt?\")",
             "Removes the helper and your settings, then moves Watt? to the Trash.",
             "LabeledContent(\"Version\", value: version)"
