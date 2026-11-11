@@ -972,6 +972,84 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertLess(text.index('check_archived_plist.py'), text.index('\nset +e\n'))
 
 
+class AppIconTests(unittest.TestCase):
+    def _snapshot(self) -> Path:
+        temporary = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, temporary)
+        for relative in (
+            'Resources/Assets.xcassets/AppIcon.appiconset',
+            'Resources/Assets.xcassets/WattAppIcon.imageset',
+            'Resources/App/Info.plist',
+            'Watt.xcodeproj/project.pbxproj',
+        ):
+            source = ROOT / relative
+            destination = temporary / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if source.is_dir():
+                shutil.copytree(source, destination)
+            else:
+                shutil.copy2(source, destination)
+        return temporary
+
+    def test_repository_icon_is_not_the_placeholder(self) -> None:
+        import check_app_icon
+        self.assertEqual(
+            check_app_icon.PLACEHOLDER_SHA256,
+            '948a88b21b68fcf435b3ca2c4c5b8be2900ee3f585cf7befe6dc3e9f97ad9b67',
+        )
+        self.assertEqual(check_app_icon.failures(ROOT), [])
+        result = run([sys.executable, 'scripts/check_app_icon.py'])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('PASS', result.stdout)
+        archive = (ROOT / 'scripts/release-archive.sh').read_text()
+        self.assertLess(archive.index('check_app_icon.py'), archive.index('xcodebuild archive'))
+
+    def test_empty_set_placeholder_bytes_and_grey_icon_fail(self) -> None:
+        import check_app_icon
+        root = self._snapshot()
+        catalog = root / 'Resources/Assets.xcassets/AppIcon.appiconset/Contents.json'
+        document = json.loads(catalog.read_text())
+        document['images'] = []
+        catalog.write_text(json.dumps(document))
+        empty = check_app_icon.failures(root)
+        self.assertTrue(any('images array is empty' in reason for reason in empty))
+
+        root = self._snapshot()
+        icon = root / 'Resources/Assets.xcassets/AppIcon.appiconset/icon_16x16.png'
+        digest = hashlib.sha256(icon.read_bytes()).hexdigest()
+        matched = check_app_icon.failures(root, placeholder_sha256=digest)
+        self.assertTrue(any('icon_16x16.png matches the placeholder icon' in reason for reason in matched))
+
+        root = self._snapshot()
+        grey = root / 'Resources/Assets.xcassets/AppIcon.appiconset/icon_512x512@2x.png'
+        _write_flat_png(grey, 1024, (196, 196, 196, 255))
+        grey_failures = check_app_icon.failures(root)
+        self.assertTrue(any('no dark body and green reading dot' in reason for reason in grey_failures))
+
+        root = self._snapshot()
+        plist_path = root / 'Resources/App/Info.plist'
+        import plistlib
+        with plist_path.open('rb') as handle:
+            info = plistlib.load(handle)
+        info.pop('CFBundleIconName', None)
+        with plist_path.open('wb') as handle:
+            plistlib.dump(info, handle)
+        self.assertTrue(any(
+            'CFBundleIconName' in reason for reason in check_app_icon.failures(root)
+        ))
+
+
+def _write_flat_png(path: Path, pixels: int, color: tuple[int, int, int, int]) -> None:
+    import struct
+    import zlib
+    row = b'\x00' + bytes(color) * pixels
+    compressed = zlib.compress(row * pixels)
+    def chunk(tag: bytes, data: bytes) -> bytes:
+        return struct.pack('>I', len(data)) + tag + data + struct.pack('>I', zlib.crc32(tag + data) & 0xFFFFFFFF)
+    ihdr = struct.pack('>IIBBBBB', pixels, pixels, 8, 6, 0, 0, 0)
+    path.write_bytes(b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', ihdr) + chunk(b'IDAT', compressed) + chunk(b'IEND', b''))
+
+
 class ArchivedPlistTests(unittest.TestCase):
     def test_archived_plist_must_contain_the_settings_xcodebuild_was_given(self) -> None:
         import plistlib

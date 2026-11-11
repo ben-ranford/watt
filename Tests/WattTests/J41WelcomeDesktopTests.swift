@@ -20,7 +20,7 @@ final class J41WelcomeDesktopTests: XCTestCase {
             .deletingLastPathComponent().deletingLastPathComponent()
         XCTAssertEqual(NSImage(contentsOf: root.appendingPathComponent(
             "Resources/Assets.xcassets/WattAppIcon.imageset/watt-app-icon.png"))?.size,
-                       NSSize(width: 256, height: 256))
+                       NSSize(width: 1024, height: 1024))
     }
 
     #if DEBUG || SWIFT_PACKAGE

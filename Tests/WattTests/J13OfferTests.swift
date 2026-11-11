@@ -77,7 +77,7 @@ final class J13OfferTests: XCTestCase {
         }
         let icon = NSImage(contentsOf: root.appendingPathComponent(
             "Resources/Assets.xcassets/WattAppIcon.imageset/watt-app-icon.png"))
-        XCTAssertEqual(icon?.size, NSSize(width: 256, height: 256))
+        XCTAssertEqual(icon?.size, NSSize(width: 1024, height: 1024))
     }
 
     func testActionsPersistIntentNotApprovalOrCompletion() {

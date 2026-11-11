@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<!-- Xcode drops unknown INFOPLIST_KEY_* settings. These references expand
 	     into Contents/Info.plist before code signing. Empty WATT_UPDATE_* values
 	     stay empty so a debug or local build is not configured for updates. -->

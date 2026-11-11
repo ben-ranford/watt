@@ -133,7 +133,7 @@ private extension OnboardingCheckpoint {
     }
 }
 
-/// J1.1: system typography, app-icon placeholder and native default action.
+/// J1.1: system typography, the app icon, and the native default action.
 struct WelcomeView: View {
     enum Variant: CaseIterable {
         case standard, desktop

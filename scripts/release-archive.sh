@@ -81,6 +81,9 @@ if [[ -n "${selected}" ]]; then
 fi
 xcodebuild -version
 
+echo "Checking the app icon before archive."
+python3 scripts/check_app_icon.py
+
 echo "Checking resolved Xcode settings before archive."
 xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release \
   -destination 'generic/platform=macOS' -showBuildSettings > "$workdir/settings.txt"
