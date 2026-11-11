@@ -161,14 +161,12 @@ private struct ReleaseNotesBlock: View {
 
     var body: some View {
         if let text = UpdateReleaseNotes.promptText(notes) {
-            ScrollView {
-                Text(UpdateReleaseNotes.markdown(text))
-                    .font(.body)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .textSelection(.enabled)
-            }
-            .frame(height: 132)
-            .accessibilityLabel(text)
+            Text(UpdateReleaseNotes.markdown(text))
+                .font(.body)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(10)
+                .textSelection(.enabled)
+                .accessibilityLabel(text)
         } else {
             Text(UpdateReleaseNotes.unavailable)
                 .font(.subheadline)
