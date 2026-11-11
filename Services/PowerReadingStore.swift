@@ -1149,7 +1149,30 @@ final class SystemNotificationBridge: NotificationBridge {
     }
 }
 
-enum PowerNotificationEvent: CaseIterable, Sendable { case fullyCharged, insufficientCharger }
+enum PowerNotificationEvent: CaseIterable, Sendable { case fullyCharged, insufficientCharger, lowBattery }
+
+enum PowerNotificationThreshold {
+    static func isLowBattery(_ reading: PowerReading, percentage: Int) -> Bool {
+        guard (1...99).contains(percentage),
+              let level = reading.batteryPercentage, level <= percentage,
+              reading.batteryState == .discharging,
+              reading.freshness == .fresh, reading.source != .unavailable,
+              reading.capabilities.battery == .available,
+              (try? reading.validate()) != nil else { return false }
+        return true
+    }
+
+    static func isFullyCharged(_ reading: PowerReading, percentage: Int) -> Bool {
+        guard (1...100).contains(percentage),
+              let level = reading.batteryPercentage, level >= percentage,
+              reading.freshness == .fresh, reading.source != .unavailable,
+              reading.capabilities.battery == .available,
+              reading.capabilities.charger == .available,
+              (try? reading.validate()) != nil else { return false }
+        if percentage >= 100 { return reading.batteryState == .full && level == 100 }
+        return reading.batteryState == .charging || reading.batteryState == .full
+    }
+}
 enum NotificationEffect: Equatable, Sendable {
     case preferenceOff, requestPermission, openNotificationSettings, accepted, duplicate
     case failed(ServiceFailure)
@@ -1161,17 +1184,75 @@ enum NotificationEffect: Equatable, Sendable {
 final class PowerNotificationEffects {
     private let bridge: any NotificationBridge
     private let preferences: PreferencesStore
+    private var lowBatteryEpisodeID: String?
+    private var fullyChargedEpisodeID: String?
+    private var lowBatterySerial = 0
+    private var fullyChargedSerial = 0
     init(bridge: any NotificationBridge, preferences: PreferencesStore) {
         self.bridge = bridge; self.preferences = preferences
     }
+
+    /// One pass over the current reading. Episode identity stays stable until the condition clears.
+    func evaluate(store: PowerReadingStore) async -> [NotificationEffect] {
+        var effects: [NotificationEffect] = []
+        if let low = await handleLowBattery(store: store) { effects.append(low) }
+        if let full = await handleFullyCharged(store: store) { effects.append(full) }
+        if store.statusReading.hasInsufficientCharger(minimumDuration: preferences.insufficientChargerDuration) {
+            effects.append(await handleInsufficientCharger(store: store))
+        }
+        return effects
+    }
+
     /// Semantic entry point for charger telemetry. Revalidate after authorization suspends.
     func handleInsufficientCharger(store: PowerReadingStore) async -> NotificationEffect {
+        let minimum = preferences.insufficientChargerDuration
         let reading = store.statusReading
         let generation = store.generation
-        guard reading.hasInsufficientCharger, let threshold = reading.chargerThreshold,
-              let message = reading.insufficientChargerMessage else { return .failed(.invalidData) }
+        guard reading.hasInsufficientCharger(minimumDuration: minimum), let threshold = reading.chargerThreshold,
+              let message = reading.insufficientChargerMessage(minimumDuration: minimum) else { return .failed(.invalidData) }
         return await handle(.insufficientCharger, episodeID: threshold.episodeID, body: message) {
-            store.generation == generation && store.statusReading == reading && store.statusReading.hasInsufficientCharger
+            store.generation == generation && store.statusReading == reading
+                && store.statusReading.hasInsufficientCharger(minimumDuration: self.preferences.insufficientChargerDuration)
+        }
+    }
+
+    func handleLowBattery(store: PowerReadingStore) async -> NotificationEffect? {
+        let reading = store.statusReading
+        let generation = store.generation
+        guard PowerNotificationThreshold.isLowBattery(reading, percentage: preferences.lowBatteryPercentage),
+              let level = reading.batteryPercentage else {
+            lowBatteryEpisodeID = nil
+            return nil
+        }
+        if lowBatteryEpisodeID == nil {
+            lowBatterySerial += 1
+            lowBatteryEpisodeID = "\(lowBatterySerial)"
+        }
+        let episodeID = lowBatteryEpisodeID ?? ""
+        return await handle(.lowBattery, episodeID: episodeID, body: "Your battery is at \(level)%.") {
+            store.generation == generation
+                && PowerNotificationThreshold.isLowBattery(store.statusReading, percentage: self.preferences.lowBatteryPercentage)
+        }
+    }
+
+    func handleFullyCharged(store: PowerReadingStore) async -> NotificationEffect? {
+        let reading = store.statusReading
+        let generation = store.generation
+        let percentage = preferences.fullyChargedPercentage
+        guard PowerNotificationThreshold.isFullyCharged(reading, percentage: percentage),
+              let level = reading.batteryPercentage else {
+            fullyChargedEpisodeID = nil
+            return nil
+        }
+        if fullyChargedEpisodeID == nil {
+            fullyChargedSerial += 1
+            fullyChargedEpisodeID = "\(fullyChargedSerial)"
+        }
+        let episodeID = fullyChargedEpisodeID ?? ""
+        let body = percentage >= 100 ? "Your battery is fully charged." : "Your battery has reached \(level)%."
+        return await handle(.fullyCharged, episodeID: episodeID, body: body) {
+            store.generation == generation
+                && PowerNotificationThreshold.isFullyCharged(store.statusReading, percentage: self.preferences.fullyChargedPercentage)
         }
     }
 
@@ -1194,18 +1275,46 @@ final class PowerNotificationEffects {
         case .authorized: break
         }
         guard !episodeID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return .failed(.invalidData) }
-        let key = event == .fullyCharged ? "fully-charged" : "insufficient-charger"
-        let title = event == .fullyCharged ? "Battery fully charged" : "Charger can’t keep up"
-        let body = body ?? (event == .fullyCharged ? "Your battery is fully charged." : "Your Mac is using more power than the charger supplies.")
-        switch await bridge.deliver(identifier: "watt.\(key).\(episodeID)", title: title, body: body,
+        let presented = presentation(for: event, body: body)
+        switch await bridge.deliver(identifier: "watt.\(presented.key).\(episodeID)", title: presented.title, body: presented.body,
                                     isEligible: { self.enabled(event) && isEligible() }) {
         case .success(true): return .accepted
         case .success(false): return .duplicate
         case .failure(let failure): return .failed(failure)
         }
     }
+    private func presentation(for event: PowerNotificationEvent, body override: String?) -> (key: String, title: String, body: String) {
+        switch event {
+        case .fullyCharged:
+            let percentage = preferences.fullyChargedPercentage
+            let title = percentage >= 100 ? "Battery fully charged" : "Battery reached \(percentage)%"
+            let body = override ?? (percentage >= 100 ? "Your battery is fully charged." : "Your battery has reached \(percentage)%.")
+            return ("fully-charged", title, body)
+        case .insufficientCharger:
+            return ("insufficient-charger", "Charger can’t keep up", override ?? "Your Mac is using more power than the charger supplies.")
+        case .lowBattery:
+            return ("low-battery", "Low battery", override ?? "Your battery is low.")
+        }
+    }
     private func enabled(_ event: PowerNotificationEvent) -> Bool {
-        event == .fullyCharged ? preferences.fullyChargedNotification : preferences.chargerNotification
+        switch event {
+        case .fullyCharged: preferences.fullyChargedNotification
+        case .insufficientCharger: preferences.chargerNotification
+        case .lowBattery: preferences.lowBatteryNotification
+        }
+    }
+}
+
+/// Asks for authorization only when an enabled notification is ready and permission is still undecided.
+/// The prompt is once per launch unless Settings turns a notification on.
+@MainActor
+enum PowerNotificationDelivery {
+    static func deliver(store: PowerReadingStore, router: AppRouter) async -> [NotificationEffect] {
+        guard let effects = router.powerNotificationEffects else { return [] }
+        let first = await effects.evaluate(store: store)
+        guard first.contains(.requestPermission) else { return first }
+        await router.authorizeNotifications(automatic: true)
+        return await effects.evaluate(store: store)
     }
 }
 

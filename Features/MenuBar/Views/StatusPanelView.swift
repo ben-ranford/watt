@@ -18,6 +18,8 @@ struct StatusPanelModel {
     var includesComponents = true
     var setupIncomplete = false
     var setupSaveFailed = false
+    /// Matches the notification's configured deficit. The default is the historical five minutes.
+    var insufficientChargerMinimumDuration: TimeInterval = PowerReading.defaultInsufficientChargerDuration
     var hasReading: Bool {
         reading.hasCurrentSample
     }
@@ -31,7 +33,7 @@ struct StatusPanelModel {
         guard reading.value(for: isDesktop ? .draw : .delta) != nil ||
                 hasIndependentTelemetry ||
                 (reading.mode == .perComponent && !components.isEmpty) else { return .noReading }
-        if reading.hasInsufficientCharger { return .insufficientCharger }
+        if reading.hasInsufficientCharger(minimumDuration: insufficientChargerMinimumDuration) { return .insufficientCharger }
         guard hasReading, reading.freshness == .fresh,
               reading.capabilities.battery == .available,
               reading.capabilities.charger == .available,
@@ -104,7 +106,7 @@ struct StatusPanelModel {
     }
     var subtitle: String? {
         if hasNoReading { return NoReadingPresentation.subtitle }
-        if hasInsufficientCharger { return reading.insufficientChargerMessage }
+        if hasInsufficientCharger { return reading.insufficientChargerMessage(minimumDuration: insufficientChargerMinimumDuration) }
         if hasFullOnAdapter { return "100% · running straight off the charger" }
         if hasOptimisedChargingHold {
             return "Because Optimised Battery Charging is on. Charging resumes before you usually unplug."
@@ -206,6 +208,7 @@ struct StatusPanelView: View {
     var includesComponents = true
     var setupIncomplete = false
     var setupSaveFailed = false
+    var insufficientChargerMinimumDuration: TimeInterval = PowerReading.defaultInsufficientChargerDuration
     var helperInstallOffered = false
     var onInstallHelper: () -> Void = {}
     var onContinueSetup: () -> Void = {}
@@ -214,7 +217,7 @@ struct StatusPanelView: View {
     let onSettings: () -> Void
     let onQuit: () -> Void
     private var accessibilityPrefix: String { setupIncomplete ? "J5.2" : model.hasNoReading ? "J8.1" : model.hasInsufficientCharger ? "J6.4" : model.hasFullOnAdapter ? "J6.3" : model.hasOptimisedChargingHold ? "J6.2" : !includesComponents ? (reading.batteryState == .discharging ? "J6.5" : "J6.1") : model.isDesktop ? "J4.3" : reading.batteryState == .discharging ? "C02" : "C01" }
-    private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed, componentsNeedInstall: helperInstallOffered) }
+    private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed, insufficientChargerMinimumDuration: insufficientChargerMinimumDuration, componentsNeedInstall: helperInstallOffered) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: WattSpacing.md) {

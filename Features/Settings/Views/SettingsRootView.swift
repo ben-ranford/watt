@@ -52,6 +52,31 @@ struct SettingsRootView: View {
     var uninstallExcerpt = false
     var confirmUninstallExcerpt = false
     static let uninstallMessage = "Removes the helper, your settings and the login item, then moves Watt? to the Trash. Nothing is left behind."
+    static let notificationsUnavailable = "Notifications unavailable. Allow Watt? in System Settings."
+
+    static func chargerNotificationDetail(minutes: Int) -> String {
+        "When your Mac draws more than the charger gives for \(PreferencesStore.chargerDurationLabel(minutes: minutes))."
+    }
+    static func fullyChargedNotificationDetail(percentage: Int) -> String {
+        "When the battery reaches \(percentage)%."
+    }
+    static func lowBatteryNotificationDetail(percentage: Int) -> String {
+        "When the battery falls to \(percentage)% or below."
+    }
+
+    /// Preference writes happen before the authorization prompt, so the toggle matches the stored intent.
+    @MainActor
+    static func updateNotification(_ keyPath: ReferenceWritableKeyPath<PreferencesStore, Bool>,
+                                   enabled: Bool,
+                                   preferences: PreferencesStore,
+                                   router: AppRouter,
+                                   store: PowerReadingStore) async {
+        let turningOn = enabled && preferences[keyPath: keyPath] == false
+        preferences[keyPath: keyPath] = enabled
+        guard turningOn else { return }
+        await router.authorizeNotifications(automatic: false)
+        _ = await PowerNotificationDelivery.deliver(store: store, router: router)
+    }
     static let removeHelperTitle = "Remove the helper?"
     static let removeHelperMessage = "Components stop and the menu bar switches to Delta. Turn it back on any time."
     static let componentsSubtitle = "Two fit."
@@ -184,13 +209,41 @@ struct SettingsRootView: View {
                 }
                 if !helperExcerpt && !menuBarExcerpt {
                     Section("Notifications") {
-                        Toggle(isOn: $preferences.chargerNotification) {
+                        Toggle(isOn: notificationEnabled(\.chargerNotification)) {
                             Text("Charger can’t keep up")
-                            Text("When your Mac draws more than the charger gives for 5 minutes.")
+                            Text(Self.chargerNotificationDetail(minutes: preferences.insufficientChargerMinutes))
                         }
-                        Toggle("Fully charged", isOn: $preferences.fullyChargedNotification)
+                        .accessibilityIdentifier("settings.chargerNotification")
+                        Picker("Duration", selection: notificationChoice(get: { preferences.insufficientChargerMinutes }, set: { preferences.insufficientChargerMinutes = $0 })) {
+                            ForEach(thresholdChoices(PreferencesStore.insufficientChargerMinuteChoices, current: preferences.insufficientChargerMinutes), id: \.self) { minutes in
+                                Text(PreferencesStore.chargerDurationLabel(minutes: minutes)).tag(minutes)
+                            }
+                        }
+                        .accessibilityIdentifier("settings.chargerDuration")
+                        Toggle(isOn: notificationEnabled(\.fullyChargedNotification)) {
+                            Text("Fully charged")
+                            Text(Self.fullyChargedNotificationDetail(percentage: preferences.fullyChargedPercentage))
+                        }
+                        .accessibilityIdentifier("settings.fullyChargedNotification")
+                        Picker("Fully charged at", selection: notificationChoice(get: { preferences.fullyChargedPercentage }, set: { preferences.fullyChargedPercentage = $0 })) {
+                            ForEach(thresholdChoices(PreferencesStore.fullyChargedPercentageChoices, current: preferences.fullyChargedPercentage), id: \.self) { percentage in
+                                Text("\(percentage)%").tag(percentage)
+                            }
+                        }
+                        .accessibilityIdentifier("settings.fullyChargedPercentage")
+                        Toggle(isOn: notificationEnabled(\.lowBatteryNotification)) {
+                            Text("Low battery")
+                            Text(Self.lowBatteryNotificationDetail(percentage: preferences.lowBatteryPercentage))
+                        }
+                        .accessibilityIdentifier("settings.lowBatteryNotification")
+                        Picker("Low battery at", selection: notificationChoice(get: { preferences.lowBatteryPercentage }, set: { preferences.lowBatteryPercentage = $0 })) {
+                            ForEach(thresholdChoices(PreferencesStore.lowBatteryPercentageChoices, current: preferences.lowBatteryPercentage), id: \.self) { percentage in
+                                Text("\(percentage)%").tag(percentage)
+                            }
+                        }
+                        .accessibilityIdentifier("settings.lowBatteryPercentage")
                         if router.notificationAuthorization == .denied {
-                            Text("Notifications unavailable. Allow Watt? in System Settings.")
+                            Text(Self.notificationsUnavailable)
                                 .foregroundStyle(.secondary)
                                 .accessibilityIdentifier("settings.notificationsUnavailable")
                         }
@@ -276,6 +329,10 @@ struct SettingsRootView: View {
             removal = nil
         }
         .task {
+            guard let bridge = router.notificationBridge else { return }
+            router.notificationAuthorization = await bridge.authorization()
+        }
+        .task {
             #if DEBUG
             if J122FixtureLaunch.requested || J113FixtureLaunch.requested,
                router.requestUninstall(presentation: uninstallPresentation, removing: removing) {
@@ -330,6 +387,27 @@ struct SettingsRootView: View {
             if let removalMessage { Text(removalMessage).accessibilityIdentifier("settings.removalResult") }
             if preferences.persistenceFailure != nil { Text("Your settings could not be saved.").foregroundStyle(.secondary) }
         }
+    }
+
+    private func notificationEnabled(_ keyPath: ReferenceWritableKeyPath<PreferencesStore, Bool>) -> Binding<Bool> {
+        Binding {
+            preferences[keyPath: keyPath]
+        } set: { enabled in
+            Task {
+                await Self.updateNotification(keyPath, enabled: enabled, preferences: preferences, router: router, store: powerStore)
+            }
+        }
+    }
+
+    private func notificationChoice(get: @escaping () -> Int, set: @escaping (Int) -> Void) -> Binding<Int> {
+        Binding(get: get) { value in
+            set(value)
+            Task { await PowerNotificationDelivery.deliver(store: powerStore, router: router) }
+        }
+    }
+
+    private func thresholdChoices(_ presets: [Int], current: Int) -> [Int] {
+        presets.contains(current) ? presets : [current] + presets
     }
 
     private var updateChoices: [String] {

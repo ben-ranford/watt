@@ -113,12 +113,32 @@ struct PowerReading: Equatable, Sendable {
         self.componentEstimate = componentEstimate
     }
 
-    // Validation binds the threshold decision to this sample and the Settings five-minute rule.
+    /// Today's Settings default. Callers that pass another duration must use the same value for the panel and the notification.
+    static let defaultInsufficientChargerDuration: TimeInterval = 300
+
     var hasInsufficientCharger: Bool {
-        guard let threshold = chargerThreshold,
+        insufficientChargerIsActive(minimumDuration: Self.defaultInsufficientChargerDuration)
+    }
+
+    /// The supplied duration is the configured deficit, compared with measured `sustainedDuration`.
+    func hasInsufficientCharger(minimumDuration: TimeInterval) -> Bool {
+        insufficientChargerIsActive(minimumDuration: minimumDuration)
+    }
+
+    var insufficientChargerMessage: String? {
+        insufficientChargerDetail(minimumDuration: Self.defaultInsufficientChargerDuration)
+    }
+
+    func insufficientChargerMessage(minimumDuration: TimeInterval) -> String? {
+        insufficientChargerDetail(minimumDuration: minimumDuration)
+    }
+
+    private func insufficientChargerIsActive(minimumDuration: TimeInterval) -> Bool {
+        guard minimumDuration.isFinite, minimumDuration > 0,
+              let threshold = chargerThreshold,
               !threshold.episodeID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               threshold.observedAt == timestamp,
-              threshold.sustainedDuration.isFinite, threshold.sustainedDuration >= 300,
+              threshold.sustainedDuration.isFinite, threshold.sustainedDuration >= minimumDuration,
               source != .unavailable, freshness == .fresh,
               capabilities.battery == .available, capabilities.charger == .available,
               capabilities.systemDraw == .available, batteryState == .discharging,
@@ -128,8 +148,8 @@ struct PowerReading: Equatable, Sendable {
         return true
     }
 
-    var insufficientChargerMessage: String? {
-        guard hasInsufficientCharger else { return nil }
+    private func insufficientChargerDetail(minimumDuration: TimeInterval) -> String? {
+        guard insufficientChargerIsActive(minimumDuration: minimumDuration) else { return nil }
         let draw = PowerFormatter.watts(systemWatts, signed: false, precision: .whole)
         let input = PowerFormatter.watts(chargerWatts, signed: false, precision: .whole)
         return "Because your Mac draws \(draw) and this charger gives \(input). The battery covers the rest."

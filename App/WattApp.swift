@@ -1,6 +1,7 @@
 import AppKit
 import Combine
 import SwiftUI
+import UserNotifications
 #if SWIFT_PACKAGE
 import WattHelperShared
 #endif
@@ -372,6 +373,12 @@ struct WattApp: App {
         // the user-facing app usable with the public AppKit status-item API while
         // retaining MenuBarExtra for all fixture launches.
         if !Self.isHarnessLaunch {
+            let notificationBridge = SystemNotificationBridge(driver: NativeNotificationDriver(center: .current()))
+            appRouter.notificationBridge = notificationBridge
+            appRouter.powerNotificationEffects = PowerNotificationEffects(bridge: notificationBridge, preferences: appPreferences)
+            Task { @MainActor in
+                appRouter.notificationAuthorization = await notificationBridge.authorization()
+            }
             // App.init can run before NSApplication has finished registering its
             // status-bar scene. The delegate installs the public NSStatusItem
             // from applicationDidFinishLaunching instead.
@@ -476,6 +483,7 @@ struct WattApp: App {
                 }
                 .onReceive(powerStore.$currentReading) { reading in
                     router.settingsHelperSetup.confirmRecoveredComponents(reading)
+                    Task { await PowerNotificationDelivery.deliver(store: powerStore, router: router) }
                 }
                 .background {
                     ScenePresentationBridge(router: router, preferences: preferences, powerStore: powerStore,
@@ -1398,6 +1406,13 @@ private final class WattFallbackStatusItem: NSObject {
         powerStore.objectWillChange
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in self?.scheduleButtonUpdate() }
+            .store(in: &observations)
+        powerStore.$currentReading
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                Task { await PowerNotificationDelivery.deliver(store: self.powerStore, router: self.router) }
+            }
             .store(in: &observations)
         preferences.objectWillChange
             .receive(on: RunLoop.main)
