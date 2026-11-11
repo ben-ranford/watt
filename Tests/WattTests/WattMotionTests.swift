@@ -118,19 +118,17 @@ final class WattMotionTests: XCTestCase {
     }
 
     func testSuppressedMotionKeepsTheSettledPanelSize() {
-        let settled = panelSize(reduceMotion: false, suppressed: true)
-        XCTAssertEqual(settled, panelSize(reduceMotion: true, suppressed: true))
+        let settled = panelSize(suppressed: true)
         XCTAssertEqual(settled.width, 320)
-        XCTAssertEqual(panelSize(reduceMotion: true, suppressed: false).width, settled.width)
-        let settings = settingsSize(reduceMotion: true, suppressed: true)
-        XCTAssertEqual(settings.width, settingsSize(reduceMotion: false, suppressed: true).width)
+        XCTAssertEqual(panelSize(suppressed: false).width, settled.width)
+        let settings = settingsSize(suppressed: true)
+        XCTAssertEqual(settings.width, settingsSize(suppressed: false).width)
         XCTAssertEqual(settings.width, WattSpacing.settingsWidth)
     }
 
-    private func panelSize(reduceMotion: Bool, suppressed: Bool) -> NSSize {
+    private func panelSize(suppressed: Bool) -> NSSize {
         let view = StatusPanelView(reading: .sampleCharging, chargerDescription: "96 W USB-C charger",
                                    onSettings: {}, onQuit: {})
-            .environment(\.accessibilityReduceMotion, reduceMotion)
             .environment(\.wattMotionSuppressed, suppressed)
         let host = NSHostingView(rootView: view)
         host.frame = NSRect(x: 0, y: 0, width: 320, height: WattSpacing.panelHeight)
@@ -138,14 +136,13 @@ final class WattMotionTests: XCTestCase {
         return host.fittingSize
     }
 
-    private func settingsSize(reduceMotion: Bool, suppressed: Bool) -> NSSize {
+    private func settingsSize(suppressed: Bool) -> NSSize {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         let router = AppRouter(updateService: FakeUpdateService())
         let view = SettingsRootView()
             .environmentObject(preferences)
             .environmentObject(router)
             .environmentObject(PowerReadingStore.preview)
-            .environment(\.accessibilityReduceMotion, reduceMotion)
             .environment(\.wattMotionSuppressed, suppressed)
         let host = NSHostingView(rootView: view)
         host.frame = NSRect(x: 0, y: 0, width: WattSpacing.settingsWidth, height: WattSpacing.settingsContentHeight)

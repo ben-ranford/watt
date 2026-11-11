@@ -118,8 +118,10 @@ private struct WattMotionSuppressedKey: EnvironmentKey {
     static let defaultValue = false
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     /// Screenshot hosts set this so the render is the settled frame.
+    /// Public so the test module can write the key path. `@testable` does not
+    /// make an internal setter a `WritableKeyPath`.
     var wattMotionSuppressed: Bool {
         get { self[WattMotionSuppressedKey.self] }
         set { self[WattMotionSuppressedKey.self] = newValue }
