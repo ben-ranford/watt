@@ -36,6 +36,7 @@ struct OnboardingFlowView: View {
                 routeShell
             }
         }
+        .background(OnboardingWindowSizer())
         .background {
             OnboardingCloseObserver {
                 Self.closeWelcome(preferences: preferences, router: router)
@@ -59,7 +60,7 @@ struct OnboardingFlowView: View {
         var next = previous
         next.checkpoint = .welcomeClosed
         next.deferredSetupID = UUID()
-        guard preferences.transitionOnboarding(from: previous, to: next, displayMode: .delta) else { return false }
+        guard preferences.transitionOnboarding(from: previous, to: next, displayMode: .draw) else { return false }
         router.showCoachMark()
         return true
     }
@@ -101,6 +102,33 @@ struct OnboardingCloseObserver: NSViewRepresentable {
         return view
     }
     func updateNSView(_ view: OnboardingCloseView, context: Context) { view.onClose = onClose }
+}
+
+/// Grows or shrinks only the production setup window so each step, including
+/// the final Open at login row, fits at the default text size.
+struct OnboardingWindowSizer: NSViewRepresentable {
+    func makeNSView(context: Context) -> Marker { Marker() }
+    func updateNSView(_ view: Marker, context: Context) { view.schedule() }
+
+    final class Marker: NSView {
+        override var intrinsicContentSize: NSSize { .zero }
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            schedule()
+        }
+        func schedule() { DispatchQueue.main.async { [weak self] in self?.apply() } }
+        func apply() {
+            guard let window, window.identifier?.rawValue == "watt.onboarding",
+                  let content = window.contentView else { return }
+            content.layoutSubtreeIfNeeded()
+            let fitted = content.fittingSize
+            guard fitted.width > 1, fitted.height > 1 else { return }
+            let size = NSSize(width: max(fitted.width, WattSpacing.onboardingWidth), height: fitted.height + 28)
+            let current = window.contentRect(forFrameRect: window.frame).size
+            guard abs(current.width - size.width) > 1 || abs(current.height - size.height) > 1 else { return }
+            window.setContentSize(size)
+        }
+    }
 }
 
 final class OnboardingCloseView: NSView {
@@ -170,6 +198,7 @@ struct WelcomeView: View {
                 Button("Continue", action: continueAction)
                     .buttonStyle(.borderedProminent)
                     .keyboardShortcut(.defaultAction)
+                    .wattControlLabel("Continue")
                     .accessibilityIdentifier("onboarding.welcome.continue")
             }
         }
@@ -226,13 +255,15 @@ struct ChooseMenuReadingView: View {
             .contains(preferences.displayMode) {
             preferences.displayMode = .draw
         } else if !helperAvailable && preferences.displayMode == .components {
-            preferences.displayMode = .delta
+            preferences.displayMode = .draw
         }
     }
 
-    static func options(reading: PowerReading, helperAvailable: Bool = true) -> [ReadingPicker.Option] {
+    static func options(reading: PowerReading, helperAvailable: Bool = true, installOffered: Bool = false) -> [ReadingPicker.Option] {
         let componentDescription = helperAvailable
             ? "CPU/GPU estimates. Needs administrator approval."
+            : installOffered
+            ? "The helper isn’t installed. Install it on the next step."
             : "Component readings are unavailable in this build."
         if Variant(reading: reading) == .noBattery {
             return [
@@ -260,9 +291,9 @@ struct ChooseMenuReadingView: View {
         preferences.onboarding.checkpoint = .welcome
     }
 
-    static func advance(preferences: PreferencesStore, helperAvailable: Bool = true) {
+    static func advance(preferences: PreferencesStore, helperAvailable: Bool = true, installOffered: Bool = false) {
         guard preferences.onboarding.checkpoint == .picker else { return }
-        preferences.onboarding.checkpoint = helperAvailable ? .helperOffer : .allSet
+        preferences.onboarding.checkpoint = (helperAvailable || installOffered) ? .helperOffer : .allSet
     }
 
     var body: some View {
@@ -277,7 +308,8 @@ struct ChooseMenuReadingView: View {
                           unavailableModes: Self.unavailableModes(reading: powerStore.currentReading,
                                                                   helperAvailable: router.settingsHelperSetup.helperServiceAvailable),
                           options: Self.options(reading: powerStore.currentReading,
-                                                helperAvailable: router.settingsHelperSetup.helperServiceAvailable))
+                                                helperAvailable: router.settingsHelperSetup.helperServiceAvailable,
+                                                installOffered: router.settingsHelperSetup.canInstallHelper))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 24)
                 .accessibilityIdentifier("onboarding.reading.picker")
@@ -287,7 +319,8 @@ struct ChooseMenuReadingView: View {
                     .accessibilityIdentifier("onboarding.reading.back")
                 WattActionButton(title: "Continue", style: .prominent) {
                     Self.advance(preferences: preferences,
-                                 helperAvailable: router.settingsHelperSetup.helperServiceAvailable)
+                                 helperAvailable: router.settingsHelperSetup.helperServiceAvailable,
+                                 installOffered: router.settingsHelperSetup.canInstallHelper)
                 }
                 .keyboardShortcut(.defaultAction)
                 .accessibilityIdentifier("onboarding.reading.continue")
@@ -316,6 +349,7 @@ struct OfferComponentReadingsView: View {
     static let title = "See where the power goes"
     static let message = "Watt? uses a helper to read Apple’s CPU/GPU power estimates. macOS requires administrator approval. Both estimates appear only when both are available. Display, SSD and Other are unavailable."
     static let unavailableTitle = "Component readings unavailable"
+    static let installMessage = "Watt? Helper isn’t installed, so CPU and GPU estimates are off. Install Helper… asks for an administrator password. No Apple certificate is required."
     static let unavailableMessage = unavailableMessage(for: .missingBundle)
     static func unavailableMessage(for reason: HelperUnavailableReason) -> String {
         reason.message + " You can still use battery, charger and system readings."
@@ -346,6 +380,9 @@ struct OfferComponentReadingsView: View {
         preferences.onboarding = state
     }
 
+    private var helperReady: Bool { router.settingsHelperSetup.helperServiceAvailable }
+    private var installOffered: Bool { router.settingsHelperSetup.canInstallHelper }
+
     var body: some View {
         VStack(spacing: WattSpacing.md) {
             VStack(spacing: WattSpacing.md) {
@@ -354,10 +391,10 @@ struct OfferComponentReadingsView: View {
                     .scaledToFit()
                     .frame(width: 64, height: 64)
                     .accessibilityHidden(true)
-                Text(router.settingsHelperSetup.helperServiceAvailable ? Self.title : Self.unavailableTitle)
+                Text(helperReady || installOffered ? Self.title : Self.unavailableTitle)
                     .font(WattTypography.title)
                     .accessibilityAddTraits(.isHeader)
-                Text(router.settingsHelperSetup.helperServiceAvailable ? Self.message : Self.unavailableMessage(for: router.settingsHelperSetup.unavailableReason))
+                Text(helperReady ? Self.message : installOffered ? Self.installMessage : Self.unavailableMessage(for: router.settingsHelperSetup.unavailableReason))
                     .font(WattTypography.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -365,7 +402,7 @@ struct OfferComponentReadingsView: View {
             }
             .padding(.horizontal, 32)
             Form {
-                if router.settingsHelperSetup.helperServiceAvailable {
+                if helperReady || installOffered {
                     ForEach(Self.facts, id: \.label) { fact in
                         LabeledContent(fact.label, value: fact.value)
                     }
@@ -378,24 +415,46 @@ struct OfferComponentReadingsView: View {
                 Spacer()
                 Button { Self.perform(.notNow, preferences: preferences,
                                       helperAvailable: router.settingsHelperSetup.helperServiceAvailable) } label: {
-                    Text(router.settingsHelperSetup.helperServiceAvailable ? "Not Now" : "Continue")
+                    Text(helperReady || installOffered ? "Not Now" : "Continue")
                 }
                     .buttonStyle(.bordered)
+                    .wattControlLabel(helperReady || installOffered ? "Not Now" : "Continue")
                     .accessibilityIdentifier("onboarding.helper.notNow")
-                if router.settingsHelperSetup.helperServiceAvailable {
+                if helperReady {
                     Button { Self.perform(.turnOn, preferences: preferences,
                                           helperAvailable: router.settingsHelperSetup.helperServiceAvailable) } label: {
                         Text("Turn On…")
                     }
                     .buttonStyle(.borderedProminent)
                     .keyboardShortcut(.defaultAction)
+                    .wattControlLabel("Turn On…")
                     .accessibilityIdentifier("onboarding.helper.turnOn")
+                } else if installOffered {
+                    Button { Task { await installHelper() } } label: { Text("Install Helper…") }
+                        .buttonStyle(.borderedProminent)
+                        .keyboardShortcut(.defaultAction)
+                        .disabled(router.settingsHelperSetup.isInstalling)
+                        .wattControlLabel("Install Helper…")
+                        .accessibilityIdentifier("onboarding.helper.install")
                 }
             }
             .padding(.horizontal, 32)
         }
         .padding(.vertical, 24)
         .frame(width: WattSpacing.onboardingWidth)
+    }
+
+    private func installHelper() async {
+        let failure = await router.settingsHelperSetup.installFromInterface()
+        guard failure == nil, preferences.onboarding.checkpoint == .helperOffer else { return }
+        var state = preferences.onboarding
+        state.helperOptIn = true
+        if router.settingsHelperSetup.helperOn {
+            state.checkpoint = .preview
+        } else if router.settingsHelperSetup.state == .requiresApproval {
+            state.checkpoint = .approval
+        }
+        preferences.onboarding = state
     }
 }
 
@@ -437,10 +496,12 @@ struct WaitingForApprovalView: View {
                 Button("Cancel") { Self.cancel(preferences: preferences, router: router) }
                     .buttonStyle(.bordered)
                     .keyboardShortcut(.cancelAction)
+                    .wattControlLabel("Cancel")
                     .accessibilityIdentifier("onboarding.approval.cancel")
                 Button("Open System Settings") { Self.openSettings(preferences: preferences, router: router) }
                     .buttonStyle(.borderedProminent)
                     .keyboardShortcut(.defaultAction)
+                    .wattControlLabel("Open System Settings")
                     .accessibilityIdentifier("onboarding.approval.openSettings")
             }
         }
@@ -503,10 +564,12 @@ struct AllSetView: View {
                 Section {
                     Toggle("Open at login", isOn: $preferences.openAtLogin)
                         .toggleStyle(.switch)
+                        .wattControlLabel("Open at login")
                         .accessibilityIdentifier("onboarding.allSet.openAtLogin")
                 }
             }
             .formStyle(.grouped)
+            .scrollDisabled(true)
             HStack {
                 if preferences.persistenceFailure != nil {
                     Text("Couldn’t save your preferences. Try again.")
@@ -519,11 +582,14 @@ struct AllSetView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.defaultAction)
+                .wattControlLabel("Done")
                 .accessibilityIdentifier("onboarding.allSet.done")
             }
         }
         .padding(.horizontal, 32)
-        .padding(.vertical, 24)
+        .padding(.top, 24)
+        .padding(.bottom, 36)
+        .fixedSize(horizontal: false, vertical: true)
         .frame(width: WattSpacing.onboardingWidth)
     }
 }
@@ -580,6 +646,7 @@ struct ComponentPreviewView: View {
                 Button("Continue") { Self.advance(preferences: preferences) }
                     .buttonStyle(.borderedProminent)
                     .keyboardShortcut(.defaultAction)
+                    .wattControlLabel("Continue")
                     .accessibilityIdentifier("onboarding.preview.continue")
             }
         }
@@ -600,7 +667,7 @@ struct CoachMarkView: View {
 
     @MainActor enum Variant {
         case standard, welcomeClosed
-        var title: String { self == .standard ? CoachMarkView.title : "Watt? is on, showing Delta." }
+        var title: String { self == .standard ? CoachMarkView.title : "Watt? is on, showing System Draw." }
         var message: String {
             self == .standard ? CoachMarkView.message : "Setup can wait. Two steps, whenever you’re ready."
         }
@@ -685,6 +752,7 @@ struct CoachMarkView: View {
                     }
                     .buttonStyle(.bordered)
                     .keyboardShortcut(.cancelAction)
+                    .wattControlLabel("Not Now")
                     .accessibilityIdentifier("onboarding.deferred.notNow")
                     Button("Finish Setup") {
                         if let presentationID {
@@ -693,11 +761,13 @@ struct CoachMarkView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .keyboardShortcut(.defaultAction)
+                    .wattControlLabel("Finish Setup")
                     .accessibilityIdentifier("onboarding.deferred.finishSetup")
                 } else {
                     Button("Got It") { Self.acknowledge(preferences: preferences, router: router) }
                         .buttonStyle(.borderedProminent)
                         .keyboardShortcut(.defaultAction)
+                        .wattControlLabel("Got It")
                 }
             }.padding(.top, WattSpacing.sm)
         }

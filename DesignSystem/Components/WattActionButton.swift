@@ -13,7 +13,9 @@ struct WattActionButton: View {
     let action: () -> Void
 
     var body: some View {
-        styledButton.controlSize(.regular)
+        styledButton
+            .controlSize(.regular)
+            .wattControlLabel(title)
     }
 
     @ViewBuilder

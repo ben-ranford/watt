@@ -81,8 +81,13 @@ struct StatusPanelModel {
     /// Form report its content height instead of constraining it to a fixed
     /// frame, which made the Form's scroll container compete with the rows
     /// for vertical space.
+    /// The tall panel frame reserves rows for a full component list. An
+    /// unavailable placeholder is one row, so the popover should hug that content.
+    var showsUnavailableComponents: Bool {
+        showsComponents && components.isEmpty && !componentsOff
+    }
     var usesIntrinsicPowerTableHeight: Bool {
-        !setupIncomplete && !isDesktop && (hasNoReading || !showsComponents)
+        !setupIncomplete && !isDesktop && (hasNoReading || !showsComponents || showsUnavailableComponents)
     }
     var panelHeight: CGFloat? {
         if setupIncomplete { return setupSaveFailed ? WattSpacing.setupPanelErrorHeight : WattSpacing.setupPanelHeight }
@@ -119,7 +124,9 @@ struct StatusPanelModel {
         case .full: return "Fully Charged"
         case .chargingHold: return "Charging Paused"
         case .noBattery: return "No Battery"
-        case .unknown: return "Power"
+        case .unknown:
+            if reading.watts == 0, reading.capabilities.battery == .available { return "Not charging" }
+            return "Power"
         }
     }
     var accessibilitySummary: String {
@@ -216,6 +223,7 @@ struct StatusPanelView: View {
                             Spacer()
                             Button(SetupPromptPresentation.action, action: onContinueSetup)
                                 .buttonStyle(.borderedProminent)
+                                .wattControlLabel(SetupPromptPresentation.action)
                                 .accessibilityIdentifier("J5.2.continue")
                         }
                         if setupSaveFailed {
@@ -262,6 +270,7 @@ struct StatusPanelView: View {
                         Button(NoReadingPresentation.retryAction, action: onRetry)
                             .buttonStyle(.bordered)
                             .disabled(isRetrying)
+                            .wattControlLabel(NoReadingPresentation.retryAction)
                             .accessibilityIdentifier("J8.1.retry")
                     }
                 } else if !model.isDesktop {
@@ -281,6 +290,7 @@ struct StatusPanelView: View {
                             LabeledContent {
                                 Button(HelperOffPresentation.action, action: onSettings)
                                     .buttonStyle(.bordered)
+                                    .wattControlLabel(HelperOffPresentation.action)
                                     .accessibilityIdentifier("J3.2.fix")
                             } label: {
                                 VStack(alignment: .leading, spacing: WattSpacing.xxs) {
@@ -295,6 +305,7 @@ struct StatusPanelView: View {
                             LabeledContent {
                                 Button("Turn On…", action: onSettings)
                                     .buttonStyle(.bordered)
+                                    .wattControlLabel("Turn On…")
                                     .accessibilityIdentifier("J2.2.turnOn")
                             } label: {
                                 VStack(alignment: .leading, spacing: WattSpacing.xxs) {
@@ -333,10 +344,12 @@ struct StatusPanelView: View {
             HStack {
                 Button("Settings…", action: onSettings)
                     .keyboardShortcut(",", modifiers: .command)
+                    .wattControlLabel("Settings…")
                     .accessibilityIdentifier("\(accessibilityPrefix).settings")
                 Spacer()
                 Button("Quit Watt?", action: onQuit)
                     .keyboardShortcut("q", modifiers: .command)
+                    .wattControlLabel("Quit Watt?")
                     .accessibilityIdentifier("\(accessibilityPrefix).quit")
             }
             .buttonStyle(.borderless)

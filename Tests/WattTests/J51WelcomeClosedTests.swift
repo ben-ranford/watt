@@ -9,7 +9,7 @@ import WattFixtures
 final class J51WelcomeClosedTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactCopyAndFixtureRegistration() throws {
-        XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.title, "Watt? is on, showing Delta.")
+        XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.title, "Watt? is on, showing System Draw.")
         XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.message,
                        "Setup can wait. Two steps, whenever you’re ready.")
         XCTAssertEqual(CoachMarkView.Variant.standard.title, CoachMarkView.title)
@@ -40,7 +40,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         router.present = {
             destinations.append($0)
             let restored = PreferencesStore(storage: storage)
-            XCTAssertEqual(restored.displayMode, .delta)
+            XCTAssertEqual(restored.displayMode, .draw)
             XCTAssertEqual(restored.onboarding.checkpoint, .welcomeClosed)
             XCTAssertNotNil(restored.onboarding.deferredSetupID)
             XCTAssertEqual(restored.onboarding, preferences.onboarding)
@@ -130,7 +130,7 @@ final class J51WelcomeClosedTests: XCTestCase {
             XCTAssertEqual(preferences.onboarding, after)
             XCTAssertFalse(after.completed)
             XCTAssertTrue(after.helperOptIn)
-            XCTAssertEqual(preferences.displayMode, .delta)
+            XCTAssertEqual(preferences.displayMode, .draw)
             XCTAssertFalse(PreferencesStore(storage: storage).openAtLogin)
         }
     }
@@ -257,7 +257,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         J51FixtureLaunch.prepare(preferences: preferences)
         XCTAssertEqual(preferences.onboarding.checkpoint, .welcomeClosed)
         XCTAssertNotNil(preferences.onboarding.deferredSetupID)
-        XCTAssertEqual(preferences.displayMode, .delta)
+        XCTAssertEqual(preferences.displayMode, .draw)
         XCTAssertEqual(untouched.onboarding.checkpoint, .welcome)
         let before = preferences.onboarding
         let router = AppRouter()

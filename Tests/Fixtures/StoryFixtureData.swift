@@ -558,7 +558,7 @@ enum StoryFixtureData {
     "variants": [
       "base"
     ],
-    "acceptance": "Native light top-trailing CoachMarkView: Watt? is on, showing Delta. / Setup can wait. Two steps, whenever you’re ready. / Not Now / Finish Setup. Not Now persists running/default state; Finish Setup persists picker state. Stale actions are ignored. Base Debug fixture isolated. Visual/AX acceptance fail closed."
+    "acceptance": "Native light top-trailing CoachMarkView: Watt? is on, showing System Draw. / Setup can wait. Two steps, whenever you’re ready. / Not Now / Finish Setup. Not Now persists running/default state; Finish Setup persists picker state. Stale actions are ignored. Base Debug fixture isolated. Visual/AX acceptance fail closed."
   },
   {
     "id": "J5.2",
@@ -572,7 +572,7 @@ enum StoryFixtureData {
     "variants": [
       "base"
     ],
-    "acceptance": "Native light panel: Finish setup / 2 steps left / Continue… above Charger input 65.0 W, System draw 22.9 W, Battery +42.1 W, Settings… and Quit Watt?. Selected status item +42.1 W. Continue persists incomplete J1.2 picker; stale/repeated/failed writes do not navigate. Base Debug fixture isolated. Visual/AX acceptance fail closed."
+    "acceptance": "Native light panel: Finish setup / 2 steps left / Continue… above Charger input 65.0 W, System draw 22.9 W, Battery +42.1 W, Settings… and Quit Watt?. Selected status item 22.9 W. Continue persists incomplete J1.2 picker; stale/repeated/failed writes do not navigate. Base Debug fixture isolated. Visual/AX acceptance fail closed."
   },
   {
     "id": "J5.3",

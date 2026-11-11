@@ -582,16 +582,16 @@ final class F03PreferencesContractTests: XCTestCase {
         XCTAssertEqual(restored.selectedComponents, ["display"])
         XCTAssertEqual(restored.onboarding, first.onboarding)
         XCTAssertNil(restored.persistenceFailure)
-        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .delta)
+        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .draw)
     }
 
     func testDefaultAndPreviewStorageDoNotSharePreferences() {
         let first = PreferencesStore()
-        first.displayMode = .draw
-        XCTAssertEqual(PreferencesStore().displayMode, .delta)
+        first.displayMode = .charger
+        XCTAssertEqual(PreferencesStore().displayMode, .draw)
         let preview = PreferencesStore.preview
         preview.displayMode = .components
-        XCTAssertEqual(PreferencesStore.preview.displayMode, .delta)
+        XCTAssertEqual(PreferencesStore.preview.displayMode, .draw)
     }
 
     func testSelectionRejectsThirdDuplicateAndBlankIDsWithoutPersistingThem() {
@@ -615,13 +615,13 @@ final class F03PreferencesContractTests: XCTestCase {
         let storage = InMemoryStorage()
         let store = PreferencesStore(storage: storage)
         storage.failWrites = true
-        store.displayMode = .draw
+        store.displayMode = .charger
         XCTAssertEqual(store.persistenceFailure, .persistence)
-        XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .delta)
+        XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .draw)
         storage.failWrites = false
         XCTAssertTrue(store.save())
         XCTAssertNil(store.persistenceFailure)
-        XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .draw)
+        XCTAssertEqual(PreferencesStore(storage: storage).displayMode, .charger)
     }
 
     func testUnreadableAndCorruptStoragePreserveSafeDefaults() {
@@ -1880,7 +1880,7 @@ final class J11WelcomeTests: XCTestCase {
         OnboardingFlowView.continueWelcome(preferences: preferences)
         XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
         XCTAssertFalse(preferences.onboarding.completed)
-        XCTAssertEqual(preferences.displayMode, .delta)
+        XCTAssertEqual(preferences.displayMode, .draw)
         XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .picker)
         preferences.onboarding.checkpoint = .helperOffer
         OnboardingFlowView.continueWelcome(preferences: preferences)
@@ -1945,7 +1945,7 @@ final class J12ReadingTests: XCTestCase {
         ])
         XCTAssertEqual(ChooseMenuReadingView.title, "Pick one number for the menu bar")
         XCTAssertEqual(ChooseMenuReadingView.message, "Change it any time. Right-click Watt? or open Settings.")
-        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .delta)
+        XCTAssertEqual(PreferencesStore(storage: InMemoryStorage()).displayMode, .draw)
     }
 
     func testSelectionAndNavigationPersistWithoutHelperApprovalOrCompletion() {

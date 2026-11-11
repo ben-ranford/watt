@@ -122,7 +122,12 @@ enum SystemPowerSourceParser {
         switch state {
         case .discharging: return -value
         case .charging, .chargingHold, .full: return value
-        case .noBattery, .unknown: return nil
+        case .unknown:
+            // Not charging on AC is not a charging hold, but a measured idle
+            // flow is still a reading. A non-zero rate without a classified
+            // state stays unavailable rather than inventing a sign.
+            return value == 0 ? 0 : nil
+        case .noBattery: return nil
         }
     }
 

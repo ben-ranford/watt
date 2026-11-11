@@ -97,7 +97,7 @@ final class J42ReadingBatteryUnavailableTests: XCTestCase {
         let unrelated = PreferencesStore(storage: InMemoryStorage())
         let window = J42FixtureLaunch.makeWindow(preferences: preferences)
         XCTAssertEqual(preferences.displayMode, .draw)
-        XCTAssertEqual(unrelated.displayMode, .delta)
+        XCTAssertEqual(unrelated.displayMode, .draw)
         XCTAssertEqual(unrelated.onboarding.checkpoint, .welcome)
         XCTAssertEqual(window.appearance?.name, .darkAqua)
         XCTAssertEqual(window.titleVisibility, .hidden)

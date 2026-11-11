@@ -32,7 +32,7 @@ final class J53FinishSetupTests: XCTestCase {
             XCTAssertTrue(submenu.showsStateColumn)
             XCTAssertFalse(submenu.autoenablesItems)
             XCTAssertEqual(submenu.items.map(\.title), ["Battery Delta", "Charger Input", "System Draw", "Per Component", "", "Icon Only", "", "Turn On Helper…"])
-            XCTAssertEqual(submenu.items.filter { $0.state == .on }.map(\.title), ["Battery Delta"])
+            XCTAssertEqual(submenu.items.filter { $0.state == .on }.map(\.title), ["System Draw"])
             XCTAssertFalse(submenu.items[3].isEnabled)
             XCTAssertTrue(submenu.items.filter { !$0.isSeparatorItem && $0.title != WattDisplayMode.components.title }.allSatisfy(\.isEnabled))
             XCTAssertTrue(submenu.items.allSatisfy { $0.view == nil })
@@ -237,7 +237,7 @@ final class J53FinishSetupTests: XCTestCase {
         XCTAssertEqual(preferences.onboarding.checkpoint, .runningDefaults)
         XCTAssertFalse(preferences.onboarding.completed)
         XCTAssertFalse(preferences.componentReadings)
-        XCTAssertEqual(preferences.displayMode, .delta)
+        XCTAssertEqual(preferences.displayMode, .draw)
         XCTAssertEqual(untouched.onboarding.checkpoint, .welcome)
         #if SWIFT_PACKAGE
         XCTAssertFalse(J53FixtureLaunch.requested)

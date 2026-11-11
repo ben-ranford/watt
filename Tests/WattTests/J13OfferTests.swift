@@ -119,7 +119,7 @@ final class J13OfferTests: XCTestCase {
                        "Component readings are unavailable in this build.")
         ChooseMenuReadingView.prepareSelection(preferences: preferences, reading: .sampleCharging,
                                                helperAvailable: false)
-        XCTAssertEqual(preferences.displayMode, .delta)
+        XCTAssertEqual(preferences.displayMode, .draw)
         ChooseMenuReadingView.advance(preferences: preferences, helperAvailable: false)
         XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
         XCTAssertFalse(preferences.onboarding.helperOptIn)

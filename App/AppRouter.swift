@@ -770,13 +770,26 @@ final class AppRouter: ObservableObject {
         showUpdate()
     }
 
+    /// Settings and other live controls. The right-click item still has to match
+    /// the menu that created it; a retained item is not a fresh user intent.
+    @discardableResult
+    func checkForUpdatesNow() -> Bool {
+        guard canCheckForUpdates, updateService != nil else { return false }
+        menuSetupPresentationID = nil
+        return beginUpdateCheck()
+    }
+
     /// Synchronous admission prevents two native actions from scheduling duplicate checks.
     /// A retained item from a closed/replaced menu is not a fresh user intent.
     @discardableResult
     func checkForUpdatesFromMenu(presentationID: UUID) -> Bool {
-        guard presentationID == menuSetupPresentationID,
-              canCheckForUpdates, let updateService else { return false }
-        menuSetupPresentationID = nil
+        guard presentationID == menuSetupPresentationID else { return false }
+        return checkForUpdatesNow()
+    }
+
+    @discardableResult
+    private func beginUpdateCheck() -> Bool {
+        guard canCheckForUpdates, let updateService else { return false }
         guard updates.accept(.checking, generation: updates.generation) else { return false }
         let generation = updates.renewGeneration()
         updateOfferIntent = nil
