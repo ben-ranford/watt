@@ -188,14 +188,14 @@ struct RunningApplicationRegistry: AppInstanceRegistry {
     /// Core event 'aevt' / 'rapp' is kAEReopenApplication.
     private func postReopen(processIdentifier: Int32) {
         let target = NSAppleEventDescriptor(processIdentifier: processIdentifier)
-        guard let event = NSAppleEventDescriptor(
+        let event = NSAppleEventDescriptor(
             eventClass: AEEventClass(0x61657674),
             eventID: AEEventID(0x72617070),
             targetDescriptor: target,
             returnID: -1,
             transactionID: 0
-        ) else { return }
-        event.sendEvent(options: .noReply, timeout: 1, error: nil)
+        )
+        try? event.sendEvent(options: .noReply, timeout: 1)
     }
 
     private func runningApplication(_ instance: AppInstance) -> NSRunningApplication? {
