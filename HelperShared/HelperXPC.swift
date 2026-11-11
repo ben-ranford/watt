@@ -14,7 +14,7 @@ public enum HelperIdentity {
     public static let build = "1001001"
 }
 
-public enum HelperSigningError: Error { case missingTeam, invalidRequirement, invalidSignature }
+public enum HelperSigningError: Error, Sendable { case missingTeam, invalidRequirement, invalidSignature }
 
 /// Team must come from the signed bundle's build configuration, never from an XPC payload.
 public struct HelperSigningPolicy: Sendable {

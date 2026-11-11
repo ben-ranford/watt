@@ -35,6 +35,101 @@ private func testUSTAR(_ items: [(String, Data, UInt8)]) -> Data {
     return archive
 }
 
+final class LaunchPathRegressionTests: XCTestCase {
+    func testPrivacyProtectedFoldersAreRefusedBeforeOpen() throws {
+        let home = "/Users/ada"
+        for folder in ["Downloads", "Desktop", "Documents", "downloads"] {
+            XCTAssertTrue(LaunchPathPolicy.isPrivacyProtected(path: "\(home)/\(folder)/Watt.app", home: home), folder)
+            XCTAssertTrue(LaunchPathPolicy.shouldSuggestApplicationsFolder(URL(fileURLWithPath: "\(home)/\(folder)/Watt.app"), home: home), folder)
+        }
+        XCTAssertTrue(LaunchPathPolicy.isPrivacyProtected(path: "\(home)/Library/Mobile Documents/com~apple~CloudDocs/Watt.app", home: home))
+        XCTAssertFalse(LaunchPathPolicy.isPrivacyProtected(path: "\(home)/Library/Application Support/Watt/update-journal", home: home))
+        XCTAssertFalse(LaunchPathPolicy.isPrivacyProtected(path: "\(home)/Downloads-backup/Watt.app", home: home))
+        XCTAssertFalse(LaunchPathPolicy.isPrivacyProtected(path: "/Applications/Watt.app", home: home))
+        XCTAssertTrue(LaunchPathPolicy.isTranslocated(path: "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app"))
+        XCTAssertFalse(LaunchPathPolicy.isPrivacyProtected(path: "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app", home: home))
+        XCTAssertTrue(LaunchPathPolicy.shouldSuggestApplicationsFolder(URL(fileURLWithPath: "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app"), home: home))
+        XCTAssertFalse(LaunchPathPolicy.shouldSuggestApplicationsFolder(URL(fileURLWithPath: "/Applications/Watt.app"), home: home))
+    }
+
+    func testOpenDirectoryDoesNotOpenAReadableDownloadsFolder() throws {
+        let root = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        let home = root.appendingPathComponent("home", isDirectory: true)
+        let downloads = home.appendingPathComponent("Downloads/Watt.app", isDirectory: true)
+        let support = home.appendingPathComponent("Library/Application Support/Watt", isDirectory: true)
+        try FileManager.default.createDirectory(at: downloads, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: support, withIntermediateDirectories: true)
+        let started = Date()
+        XCTAssertThrowsError(try BoundedUSTAR.openDirectory(downloads, home: home.path)) { error in
+            XCTAssertTrue(error is ArchiveValidationError)
+        }
+        XCTAssertLessThan(Date().timeIntervalSince(started), 0.5, "Refusing Downloads must not wait on openat")
+        let fd = try BoundedUSTAR.openDirectory(support, home: home.path)
+        defer { close(fd) }
+        XCTAssertGreaterThanOrEqual(fd, 0)
+    }
+
+    func testBundleVersionReadSkipsAProtectedPlist() throws {
+        let root = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        let app = root.appendingPathComponent("Downloads/Watt.app/Contents", isDirectory: true)
+        try FileManager.default.createDirectory(at: app, withIntermediateDirectories: true)
+        let plist: [String: Any] = ["CFBundleVersion": "7"]
+        try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0).write(to: app.appendingPathComponent("Info.plist"))
+        let bundle = app.deletingLastPathComponent()
+        XCTAssertNil(BundleBuildNumber.read(bundleURL: bundle, home: root.path))
+        XCTAssertEqual(BundleBuildNumber.read(bundleURL: bundle, home: "/elsewhere"), 7)
+    }
+
+    func testSignatureCheckRefusesDownloadsEvenWhenTheBundleIsValid() throws {
+        let root = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        let app = root.appendingPathComponent("Downloads/Signed.app", isDirectory: true)
+        let contents = app.appendingPathComponent("Contents", isDirectory: true)
+        let binaries = contents.appendingPathComponent("MacOS", isDirectory: true)
+        try FileManager.default.createDirectory(at: binaries, withIntermediateDirectories: true)
+        try FileManager.default.copyItem(at: URL(fileURLWithPath: "/usr/bin/true"), to: binaries.appendingPathComponent("Fixture"))
+        let plist: [String: Any] = ["CFBundleIdentifier": "test.watt.launch", "CFBundleVersion": "2",
+                                    "CFBundleExecutable": "Fixture", "CFBundlePackageType": "APPL", "LSMinimumSystemVersion": "13.0"]
+        try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0).write(to: contents.appendingPathComponent("Info.plist"))
+        let signer = Process(); signer.executableURL = URL(fileURLWithPath: "/usr/bin/codesign")
+        signer.arguments = ["--force", "--sign", "-", app.path]
+        try signer.run(); signer.waitUntilExit(); XCTAssertEqual(signer.terminationStatus, 0)
+        XCTAssertThrowsError(try SecurityUpdateCodeValidator().verify(bundle: app, home: root.path)) { error in
+            XCTAssertEqual(error as? ServiceFailure, .untrustedIdentity)
+        }
+        let identity = try SecurityUpdateCodeValidator().verify(bundle: app, home: "/elsewhere")
+        XCTAssertEqual(identity.identifier, "test.watt.launch")
+        XCTAssertEqual(identity.build, 2)
+    }
+
+    @MainActor
+    func testLaunchFileWorkTimesOutInsteadOfWaiting() async throws {
+        let started = Date()
+        let result = await LaunchFileAccess.value(timeout: .milliseconds(200)) { () -> Int in
+            Thread.sleep(forTimeInterval: 5)
+            return 1
+        }
+        XCTAssertLessThan(Date().timeIntervalSince(started), 1.5)
+        guard case .failure(let error) = result else {
+            return XCTFail("A stuck read must fall back")
+        }
+        XCTAssertEqual(error as? ServiceFailure, .timedOut)
+        let ready = await LaunchFileAccess.value(timeout: .seconds(1)) { 4 }
+        XCTAssertEqual(try ready.get(), 4)
+    }
+
+    @MainActor
+    func testApplicationsFolderGuidanceOnlyFiresForProtectedOrTranslocatedBundles() {
+        let home = "/Users/ada"
+        var presented: [String] = []
+        ApplicationsFolderGuidance.presenter = { presented.append($0.path) }
+        defer { ApplicationsFolderGuidance.presenter = nil }
+        ApplicationsFolderGuidance.presentIfNeeded(bundleURL: URL(fileURLWithPath: "\(home)/Downloads/Watt.app"), home: home)
+        ApplicationsFolderGuidance.presentIfNeeded(bundleURL: URL(fileURLWithPath: "/Applications/Watt.app"), home: home)
+        ApplicationsFolderGuidance.presentIfNeeded(bundleURL: URL(fileURLWithPath: "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app"), home: home)
+        XCTAssertEqual(presented, ["\(home)/Downloads/Watt.app", "/private/var/folders/ab/AppTranslocation/XYZ/d/Watt.app"])
+    }
+}
+
 final class BoundedUSTARTests: XCTestCase {
     func testValidArchiveExtractsOnlyIntoFreshPrivateRoot() throws {
         let parent = try updaterTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: parent) }
@@ -269,7 +364,6 @@ final class ProductionUpdateSourceTests: XCTestCase {
     }
 }
 
-@MainActor
 private struct QuarantineMarkingValidator: ProductionUpdateCodeValidator {
     func verify(bundle: URL) throws -> VerifiedUpdateBundle {
         let identity = try FixtureUpdateValidator().verify(bundle: bundle)
@@ -281,7 +375,6 @@ private struct QuarantineMarkingValidator: ProductionUpdateCodeValidator {
         return identity
     }
 }
-@MainActor
 private struct FixtureUpdateValidator: ProductionUpdateCodeValidator {
     func verify(bundle: URL) throws -> VerifiedUpdateBundle {
         let data = try Data(contentsOf: bundle.appendingPathComponent("identity.json"))

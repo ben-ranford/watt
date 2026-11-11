@@ -236,13 +236,15 @@ struct WattApp: App {
             return
         }
         #endif
-        let productionUpdate: ProductionUpdateComposition?
-        let updateFailure: ServiceFailure?
-        if Self.isHarnessLaunch { productionUpdate = nil; updateFailure = nil }
-        else {
-            do { productionUpdate = try ProductionUpdateComposition.configured(); updateFailure = nil }
-            catch { productionUpdate = nil; updateFailure = error as? ServiceFailure ?? .untrustedIdentity }
-        }
+        // No bundle, journal, or preference file is opened in this synchronous init.
+        // Those reads continue in LaunchWiring after the status item is scheduled.
+        let primedDefaults = PrimedUserDefaults(defaults: .standard)
+        let appPreferences = Self.isHarnessLaunch
+            ? PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
+            : PreferencesStore(storage: primedDefaults, load: false)
+        let updateStore = Self.isHarnessLaunch
+            ? UpdateStore(storage: UserDefaultsStorage(defaults: .standard))
+            : UpdateStore(storage: primedDefaults, load: false)
         #if DEBUG
         // The menu fixture shows an enabled Check for Updates… row. Keep
         // that deterministic fixture state without composing an updater into
@@ -250,116 +252,15 @@ struct WattApp: App {
         // is configured.
         let appRouter = C03FixtureLaunch.requested
             ? AppRouter(updateService: FakeUpdateService())
-            : AppRouter(updateService: productionUpdate?.adapter,
-                updates: UpdateStore(storage: UserDefaultsStorage(defaults: .standard)), updateConfigurationFailure: updateFailure)
+            : AppRouter(updateService: nil, updates: updateStore)
         #else
-        let appRouter = AppRouter(updateService: productionUpdate?.adapter,
-            updates: UpdateStore(storage: UserDefaultsStorage(defaults: .standard)), updateConfigurationFailure: updateFailure)
+        let appRouter = AppRouter(updateService: nil, updates: updateStore)
         #endif
-        if let update = productionUpdate {
-            appRouter.configureUpdateInstallation(adapter: update.adapter)
-            Task {
-                await appRouter.recoverUpdateStartup(adapter: update.adapter)
-                UpdateLaunchAcknowledgementService.retireHandshakeEvidence()
-            }
-        } else {
-            UpdateLaunchAcknowledgementService.retireHandshakeEvidence()
-        }
-        let productionHelper: ProductionHelperComposition?
-        if Self.isHarnessLaunch {
-            productionHelper = nil
-        } else {
-            do { productionHelper = try ProductionHelperComposition.configured() }
-            catch {
-                productionHelper = nil
-                let bundle = Bundle.main.bundleURL
-                let helper = bundle.appendingPathComponent("Contents/MacOS/" + HelperIdentity.executableName)
-                let plist = bundle.appendingPathComponent("Contents/Library/LaunchDaemons/" + HelperIdentity.daemonPlist)
-                appRouter.settingsHelperSetup.unavailableReason = .configurationFailure(error,
-                    packagedHelperPresent: FileManager.default.fileExists(atPath: helper.path)
-                        && FileManager.default.fileExists(atPath: plist.path))
-            }
-        }
-        if let helper = productionHelper {
-            appRouter.helperChangedAfterUpdate = helper.hasPendingUpdate
-            appRouter.settingsHelperSetup.service = helper.service
-            appRouter.settingsHelperSetup.configureRepair(receipt: helper.updateReceipt, pending: helper.hasPendingUpdate)
-            appRouter.settingsHelperSetup.captureDiagnostic = {
-                await HelperDiagnosticExport.present(transport: helper.transport)
-            }
-            let previousRemoval = appRouter.removeFromSettings
-            var helperRemovalReceipt: OperationReceipt?
-            appRouter.removeFromSettings = { target in
-                guard target == .helper else { return await previousRemoval(target) }
-                let receipt = helperRemovalReceipt ?? helper.removalReceipt()
-                helperRemovalReceipt = receipt
-                let result = await helper.service.remove(receipt: receipt)
-                if case .verifiedAbsent = result { helperRemovalReceipt = nil }
-                return result
-            }
-        }
-        if !Self.isHarnessLaunch {
-            do {
-                let removal = try ProductionRemovalComposition.configured(helper: productionHelper?.service)
-                appRouter.configureUninstall(coordinator: removal)
-            } catch {
-                let previous = appRouter.removeFromSettings
-                appRouter.removeFromSettings = { target in
-                    target == .uninstall ? .failed((error as? ServiceFailure) ?? .untrustedIdentity) : await previous(target)
-                }
-            }
-        }
         appRouter.onUninstalled = { NSApplication.shared.terminate(nil) }
         appRouter.onMaintenanceHandoff = { WattApplicationDelegate.quitAfterUpdateHandoff() }
         _router = StateObject(wrappedValue: appRouter)
         let appPowerStore = PowerReadingStore(currentReading: .unavailable,
-            telemetry: SystemPowerSourceTelemetryService(),
-            componentTelemetry: productionHelper.map { ProductionHelperTelemetry(transport: $0.transport) })
-        productionHelper?.transport.onInvalidated = { [weak appPowerStore, weak service = productionHelper?.service] in
-            service?.connectionLost()
-            appPowerStore?.invalidateComponents()
-        }
-        if productionHelper == nil, !Self.isHarnessLaunch,
-           appRouter.settingsHelperSetup.unavailableReason == .installationRequired {
-            let installer = Bundle.main.bundleURL.appendingPathComponent("Contents/MacOS/WattHelperInstaller")
-            if FileManager.default.isExecutableFile(atPath: installer.path) {
-                appRouter.settingsHelperSetup.installHelper = { [weak appRouter, weak appPowerStore] in
-                    guard let appRouter else { return .unknownStatus }
-                    let source = Bundle.main.bundleURL
-                    let rotate = FileManager.default.fileExists(atPath: ProtectedHelperRecord.publicURL.path)
-                    if let failure = await HelperBundleInstall.install(installer: installer, source: source, rotate: rotate) {
-                        return failure
-                    }
-                    let helper: ProductionHelperComposition
-                    do { helper = try ProductionHelperComposition.adoptInstalled() }
-                    catch { return (error as? ServiceFailure) ?? .untrustedIdentity }
-                    appRouter.helperChangedAfterUpdate = helper.hasPendingUpdate
-                    appRouter.settingsHelperSetup.service = helper.service
-                    appRouter.settingsHelperSetup.configureRepair(receipt: helper.updateReceipt, pending: helper.hasPendingUpdate)
-                    appRouter.settingsHelperSetup.captureDiagnostic = {
-                        await HelperDiagnosticExport.present(transport: helper.transport)
-                    }
-                    let previousRemoval = appRouter.removeFromSettings
-                    var helperRemovalReceipt: OperationReceipt?
-                    appRouter.removeFromSettings = { target in
-                        guard target == .helper else { return await previousRemoval(target) }
-                        let receipt = helperRemovalReceipt ?? helper.removalReceipt()
-                        helperRemovalReceipt = receipt
-                        let result = await helper.service.remove(receipt: receipt)
-                        if case .verifiedAbsent = result { helperRemovalReceipt = nil }
-                        return result
-                    }
-                    appPowerStore?.attachComponentTelemetry(ProductionHelperTelemetry(transport: helper.transport))
-                    helper.transport.onInvalidated = { [weak appPowerStore, weak service = helper.service] in
-                        service?.connectionLost()
-                        appPowerStore?.invalidateComponents()
-                    }
-                    await appRouter.settingsHelperSetup.refreshStatus()
-                    return nil
-                }
-            }
-        }
-        let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
+            telemetry: SystemPowerSourceTelemetryService())
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
         // The fallback owns the visible production status item on hosts where
@@ -385,11 +286,17 @@ struct WattApp: App {
             applicationDelegate.scheduleFallbackStatusItem(router: appRouter,
                                                             powerStore: appPowerStore,
                                                             preferences: appPreferences)
-            // After the handshake has returned, drop any older Watt that did
-            // not exit. The next turn is late enough that this process is no
-            // longer inside the parent's launch wait.
+            // File checks, the update journal, and preference bytes run off the
+            // main thread. The status item is already scheduled, so a slow or
+            // protected path cannot hide it.
             Task { @MainActor in
-                SingleInstanceClaim.becomeOnlyInstance()
+                await LaunchWiring.finish(bundle: .main, defaults: primedDefaults, preferences: appPreferences,
+                                         updates: updateStore, router: appRouter, powerStore: appPowerStore)
+            }
+            // After the handshake has returned, drop any older Watt that did
+            // not exit. Bundle versions are read off the main thread.
+            Task { @MainActor in
+                await SingleInstanceClaim.becomeOnlyInstance()
             }
         }
     }
@@ -1200,6 +1107,148 @@ private final class GalleryCaptureWindow: NSWindow {
     override var canBecomeKey: Bool { true }
 }
 #endif
+
+/// Production launch file work. The synchronous `App.init` schedules the status item
+/// first. This reads preferences, the update journal, helper trust, and uninstall
+/// identity off the main thread, with a timeout. A bundle in Downloads, Desktop,
+/// Documents, or iCloud Drive is not opened: updates and helper setup fail closed,
+/// and the status item still appears.
+@MainActor
+private enum LaunchWiring {
+    static func finish(bundle: Bundle, defaults: PrimedUserDefaults, preferences: PreferencesStore,
+                       updates: UpdateStore, router: AppRouter, powerStore: PowerReadingStore) async {
+        await loadPreferences(defaults: defaults, preferences: preferences, updates: updates)
+        let bundleURL = bundle.bundleURL
+        ApplicationsFolderGuidance.presentIfNeeded(bundleURL: bundleURL)
+        if LaunchPathPolicy.isPrivacyProtected(bundleURL) {
+            router.adoptUpdateFailure(.untrustedIdentity)
+            router.settingsHelperSetup.unavailableReason = .configurationFailed
+            let previous = router.removeFromSettings
+            router.removeFromSettings = { target in
+                target == .uninstall ? .failed(.untrustedIdentity) : await previous(target)
+            }
+            UpdateLaunchAcknowledgementService.retireHandshakeEvidence()
+            router.startAutomaticUpdates(preferences: preferences)
+            router.launch(preferences: preferences)
+            return
+        }
+        do {
+            let update = try await ProductionUpdateComposition.configured(bundle: bundle)
+            router.adoptUpdateService(update.adapter)
+            router.configureUpdateInstallation(adapter: update.adapter)
+            await router.recoverUpdateStartup(adapter: update.adapter)
+        } catch {
+            router.adoptUpdateFailure((error as? ServiceFailure) ?? .untrustedIdentity)
+        }
+        UpdateLaunchAcknowledgementService.retireHandshakeEvidence()
+        var helperService: (any HelperService)?
+        do {
+            let helper = try await ProductionHelperComposition.configuredOffMain(bundle: bundle)
+            helperService = helper.service
+            apply(helper: helper, router: router, powerStore: powerStore)
+        } catch {
+            router.settingsHelperSetup.unavailableReason = await helperFailure(error, bundle: bundle)
+            await offerInstallerIfNeeded(bundle: bundle, router: router, powerStore: powerStore)
+        }
+        do {
+            let removal = try await ProductionRemovalComposition.configuredOffMain(bundle: bundle, helper: helperService)
+            router.configureUninstall(coordinator: removal)
+        } catch {
+            let previous = router.removeFromSettings
+            let failure = (error as? ServiceFailure) ?? .untrustedIdentity
+            router.removeFromSettings = { target in
+                target == .uninstall ? .failed(failure) : await previous(target)
+            }
+        }
+        router.startAutomaticUpdates(preferences: preferences)
+        router.launch(preferences: preferences)
+    }
+
+    private static func loadPreferences(defaults: PrimedUserDefaults, preferences: PreferencesStore, updates: UpdateStore) async {
+        let keys = PrimedUserDefaults.launchKeys
+        let result = await LaunchFileAccess.value { () -> [String: Data] in
+            var values: [String: Data] = [:]
+            for key in keys {
+                if let data = UserDefaults.standard.data(forKey: key) { values[key] = data }
+            }
+            return values
+        }
+        let values = (try? result.get()) ?? [:]
+        defaults.prime(keys: keys, values: values)
+        preferences.reloadFromStorage()
+        updates.reloadFromStorage()
+    }
+
+    private static func helperFailure(_ error: Error, bundle: Bundle) async -> HelperUnavailableReason {
+        let helper = bundle.bundleURL.appendingPathComponent("Contents/MacOS/" + HelperIdentity.executableName)
+        let plist = bundle.bundleURL.appendingPathComponent("Contents/Library/LaunchDaemons/" + HelperIdentity.daemonPlist)
+        if LaunchPathPolicy.isPrivacyProtected(helper) || LaunchPathPolicy.isPrivacyProtected(plist) {
+            return .configurationFailed
+        }
+        let present = (try? await LaunchFileAccess.require {
+            FileManager.default.fileExists(atPath: helper.path) && FileManager.default.fileExists(atPath: plist.path)
+        }) ?? false
+        return .configurationFailure(error, packagedHelperPresent: present)
+    }
+
+    private static func offerInstallerIfNeeded(bundle: Bundle, router: AppRouter, powerStore: PowerReadingStore) async {
+        guard router.settingsHelperSetup.unavailableReason == .installationRequired else { return }
+        let installer = bundle.bundleURL.appendingPathComponent("Contents/MacOS/WattHelperInstaller")
+        if LaunchPathPolicy.isPrivacyProtected(installer) { return }
+        let executable = (try? await LaunchFileAccess.require {
+            FileManager.default.isExecutableFile(atPath: installer.path)
+        }) ?? false
+        guard executable else { return }
+        router.settingsHelperSetup.installHelper = { [weak router, weak powerStore] in
+            guard let router else { return .unknownStatus }
+            let source = bundle.bundleURL
+            if LaunchPathPolicy.isPrivacyProtected(source) { return .untrustedIdentity }
+            let rotate = (try? await LaunchFileAccess.require {
+                FileManager.default.fileExists(atPath: ProtectedHelperRecord.publicURL.path)
+            }) ?? false
+            if let failure = await HelperBundleInstall.install(installer: installer, source: source, rotate: rotate) {
+                return failure
+            }
+            let helper: ProductionHelperComposition
+            do { helper = try await ProductionHelperComposition.configuredOffMain(bundle: bundle) }
+            catch { return (error as? ServiceFailure) ?? .untrustedIdentity }
+            apply(helper: helper, router: router, powerStore: powerStore)
+            powerStore?.attachComponentTelemetry(ProductionHelperTelemetry(transport: helper.transport))
+            helper.transport.onInvalidated = { [weak powerStore, weak service = helper.service] in
+                service?.connectionLost()
+                powerStore?.invalidateComponents()
+            }
+            await router.settingsHelperSetup.refreshStatus()
+            return nil
+        }
+    }
+
+    private static func apply(helper: ProductionHelperComposition, router: AppRouter, powerStore: PowerReadingStore?) {
+        router.helperChangedAfterUpdate = helper.hasPendingUpdate
+        router.settingsHelperSetup.service = helper.service
+        router.settingsHelperSetup.configureRepair(receipt: helper.updateReceipt, pending: helper.hasPendingUpdate)
+        router.settingsHelperSetup.captureDiagnostic = {
+            await HelperDiagnosticExport.present(transport: helper.transport)
+        }
+        let previousRemoval = router.removeFromSettings
+        var helperRemovalReceipt: OperationReceipt?
+        router.removeFromSettings = { target in
+            guard target == .helper else { return await previousRemoval(target) }
+            let receipt = helperRemovalReceipt ?? helper.removalReceipt()
+            helperRemovalReceipt = receipt
+            let result = await helper.service.remove(receipt: receipt)
+            if case .verifiedAbsent = result { helperRemovalReceipt = nil }
+            return result
+        }
+        if let powerStore {
+            powerStore.attachComponentTelemetry(ProductionHelperTelemetry(transport: helper.transport))
+            helper.transport.onInvalidated = { [weak powerStore, weak service = helper.service] in
+                service?.connectionLost()
+                powerStore?.invalidateComponents()
+            }
+        }
+    }
+}
 
 @MainActor
 final class WattApplicationDelegate: NSObject, NSApplicationDelegate {

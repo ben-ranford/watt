@@ -78,10 +78,15 @@ final class ProductionHelperLifecycle: HelperLifecycleDriver {
     init(system: any HelperRegistrationSystem, journalURL: URL, targetBuild: String,
          candidate: @escaping () throws -> HelperPeer,
          installedBuild: @escaping () async throws -> String?,
-         processesAbsent: @escaping () async throws -> Bool) throws {
+         processesAbsent: @escaping () async throws -> Bool,
+         journalData: Data? = nil, journalAlreadyRead: Bool = false) throws {
         self.system = system; self.journalURL = journalURL; self.targetBuild = targetBuild
         self.candidate = candidate; self.installedBuild = installedBuild; self.processesAbsent = processesAbsent
-        if FileManager.default.fileExists(atPath: journalURL.path) {
+        if journalAlreadyRead {
+            if let journalData {
+                journal = try JSONDecoder().decode(HelperLifecycleJournal.self, from: journalData)
+            }
+        } else if FileManager.default.fileExists(atPath: journalURL.path) {
             journal = try JSONDecoder().decode(HelperLifecycleJournal.self, from: Data(contentsOf: journalURL))
         }
     }
@@ -231,6 +236,14 @@ final class ProductionHelperLifecycle: HelperLifecycleDriver {
     }
 }
 
+struct HelperLaunchFiles: Sendable {
+    let peer: HelperPeer
+    let protectedRecord: ProtectedHelperRecord?
+    let team: String?
+    let journalURL: URL?
+    let journalData: Data?
+}
+
 @MainActor
 struct ProductionHelperComposition {
     let service: HelperLifecycleAdapter
@@ -240,66 +253,119 @@ struct ProductionHelperComposition {
     let hasPendingUpdate: () -> Bool
 
     static func configured(bundle: Bundle = .main) throws -> Self {
-        let trust = try HelperTrustConfiguration.configured(bundle: bundle).policy()
-        if case .protectedInstallation(let record) = trust {
-            let transport = ProductionHelperIPC(trust: trust)
+        try make(try readLaunchFiles(bundle: bundle), bundle: bundle)
+    }
+
+    /// Launch path. File reads, code-signature checks and the helper journal run off the main thread.
+    static func configuredOffMain(bundle: Bundle = .main) async throws -> Self {
+        if LaunchPathPolicy.isPrivacyProtected(bundle.bundleURL) { throw ServiceFailure.untrustedIdentity }
+        let bundleURL = bundle.bundleURL
+        let executable = bundle.executableURL
+        let trustMode = bundle.object(forInfoDictionaryKey: "WATTHelperTrustMode") as? String
+        let team = bundle.object(forInfoDictionaryKey: "WATTSigningTeam") as? String
+        let files = try await LaunchFileAccess.require {
+            try readLaunchFiles(bundleURL: bundleURL, executable: executable, trustMode: trustMode, team: team)
+        }
+        return try make(files, bundle: bundle)
+    }
+
+    nonisolated private static func readLaunchFiles(bundle: Bundle) throws -> HelperLaunchFiles {
+        try readLaunchFiles(bundleURL: bundle.bundleURL, executable: bundle.executableURL,
+                            trustMode: bundle.object(forInfoDictionaryKey: "WATTHelperTrustMode") as? String,
+                            team: bundle.object(forInfoDictionaryKey: "WATTSigningTeam") as? String)
+    }
+
+    nonisolated private static func readLaunchFiles(bundleURL: URL, executable: URL?, trustMode: String?, team: String?) throws -> HelperLaunchFiles {
+        if LaunchPathPolicy.isPrivacyProtected(bundleURL) { throw ServiceFailure.untrustedIdentity }
+        if trustMode == "certificate" {
+            guard let team else { throw HelperSigningError.missingTeam }
+            let policy = try HelperSigningPolicy(team: team)
+            let helper = bundleURL.appendingPathComponent("Contents/MacOS/" + HelperIdentity.executableName)
+            let plist = bundleURL.appendingPathComponent("Contents/Library/LaunchDaemons/" + HelperIdentity.daemonPlist)
+            let peer = try certificatePeer(policy: policy, executable: executable, helper: helper, plist: plist)
+            let directory = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
+                                                        appropriateFor: nil, create: true)
+            let journalURL = directory.appendingPathComponent("Watt/helper-lifecycle.json")
+            let journalData = FileManager.default.fileExists(atPath: journalURL.path) ? try Data(contentsOf: journalURL) : nil
+            return HelperLaunchFiles(peer: peer, protectedRecord: nil, team: policy.team, journalURL: journalURL, journalData: journalData)
+        }
+        let record = try ProtectedHelperRecord.read()
+        let trust = HelperTrustPolicy.protectedInstallation(record)
+        let peer = try protectedPeer(record: record, trust: trust, executable: executable)
+        return HelperLaunchFiles(peer: peer, protectedRecord: record, team: nil, journalURL: nil, journalData: nil)
+    }
+
+    nonisolated private static func protectedPeer(record: ProtectedHelperRecord, trust: HelperTrustPolicy, executable: URL?) throws -> HelperPeer {
+        let protectedFile = try ProtectedHelperRecord.openProtectedFile(at: ProtectedHelperRecord.helperURL)
+        close(protectedFile)
+        guard try ProtectedHelperRecord.read(expectedInstallationID: record.installationID) == record,
+              let executable,
+              let hash = try trust.verifyExecutable(at: ProtectedHelperRecord.helperURL, helper: true) else {
+            throw ServiceFailure.untrustedIdentity
+        }
+        if LaunchPathPolicy.isPrivacyProtected(executable) { throw ServiceFailure.untrustedIdentity }
+        _ = try trust.verifyExecutable(at: executable, helper: false)
+        return HelperPeer(identifier: HelperIdentity.helperIdentifier,
+                          identity: .protectedCodeHash(installationID: record.installationID,
+                                                      generation: record.generation, cdhash: hash), protocolVersion: 1)
+    }
+
+    nonisolated private static func certificatePeer(policy: HelperSigningPolicy, executable: URL?, helper: URL, plist: URL) throws -> HelperPeer {
+        guard let executable,
+              helper.resolvingSymlinksInPath() == helper,
+              plist.resolvingSymlinksInPath() == plist else { throw ServiceFailure.untrustedIdentity }
+        if LaunchPathPolicy.isPrivacyProtected(executable) || LaunchPathPolicy.isPrivacyProtected(helper)
+            || LaunchPathPolicy.isPrivacyProtected(plist) { throw ServiceFailure.untrustedIdentity }
+        try policy.verifyExecutable(at: executable, helper: false)
+        try policy.verifyExecutable(at: helper, helper: true)
+        let object: Any
+        do { object = try PropertyListSerialization.propertyList(from: Data(contentsOf: plist), format: nil) }
+        catch { throw ServiceFailure.invalidData }
+        guard let fields = object as? [String: Any],
+              Set(fields.keys) == Set(["Label", "AssociatedBundleIdentifiers", "BundleProgram", "MachServices", "ProcessType", "AbandonProcessGroup"]),
+              fields["Label"] as? String == HelperIdentity.helperIdentifier,
+              fields["AssociatedBundleIdentifiers"] as? [String] == [HelperIdentity.appIdentifier],
+              fields["BundleProgram"] as? String == "Contents/MacOS/" + HelperIdentity.executableName,
+              fields["Program"] == nil, fields["ProgramArguments"] == nil,
+              fields["ProcessType"] as? String == "Background",
+              fields["AbandonProcessGroup"] as? Bool == false,
+              fields["MachServices"] as? [String: Bool] == [HelperIdentity.machService: true] else {
+            throw ServiceFailure.invalidData
+        }
+        return HelperPeer(identifier: HelperIdentity.helperIdentifier, team: policy.team, protocolVersion: 1)
+    }
+
+    private static func make(_ files: HelperLaunchFiles, bundle: Bundle) throws -> Self {
+        if let record = files.protectedRecord {
+            let trust = HelperTrustPolicy.protectedInstallation(record)
+            let executable = bundle.executableURL
             let verify: () throws -> HelperPeer = {
-                let protectedFile = try ProtectedHelperRecord.openProtectedFile(at: ProtectedHelperRecord.helperURL)
-                close(protectedFile)
-                guard try ProtectedHelperRecord.read(expectedInstallationID: record.installationID) == record,
-                      let executable = bundle.executableURL,
-                      let hash = try trust.verifyExecutable(at: ProtectedHelperRecord.helperURL, helper: true) else {
-                    throw ServiceFailure.untrustedIdentity
-                }
-                _ = try trust.verifyExecutable(at: executable, helper: false)
-                return HelperPeer(identifier: HelperIdentity.helperIdentifier,
-                                  identity: .protectedCodeHash(installationID: record.installationID,
-                                                              generation: record.generation, cdhash: hash), protocolVersion: 1)
+                try protectedPeer(record: record, trust: trust, executable: executable)
             }
-            let peer = try verify()
+            let transport = ProductionHelperIPC(trust: trust)
             let driver = ProtectedHelperLifecycle(record: record, candidate: verify)
-            return Self(service: HelperLifecycleAdapter(driver: driver, transport: transport, expectedPeer: peer),
+            return Self(service: HelperLifecycleAdapter(driver: driver, transport: transport, expectedPeer: files.peer),
                         transport: transport, removalReceipt: { OperationReceipt(createdAt: Date()) },
                         updateReceipt: { OperationReceipt(createdAt: Date()) }, hasPendingUpdate: { false })
         }
-        guard case .certificate(let policy) = trust else { throw ServiceFailure.untrustedIdentity }
+        guard let team = files.team, let journalURL = files.journalURL else { throw ServiceFailure.untrustedIdentity }
+        let policy = try HelperSigningPolicy(team: team)
         let helper = bundle.bundleURL.appendingPathComponent("Contents/MacOS/" + HelperIdentity.executableName)
         let plist = bundle.bundleURL.appendingPathComponent("Contents/Library/LaunchDaemons/" + HelperIdentity.daemonPlist)
+        let executable = bundle.executableURL
         let verify: () throws -> HelperPeer = {
-            guard let executable = bundle.executableURL,
-                  helper.resolvingSymlinksInPath() == helper,
-                  plist.resolvingSymlinksInPath() == plist else { throw ServiceFailure.untrustedIdentity }
-            try policy.verifyExecutable(at: executable, helper: false)
-            try policy.verifyExecutable(at: helper, helper: true)
-            let object: Any
-            do { object = try PropertyListSerialization.propertyList(from: Data(contentsOf: plist), format: nil) }
-            catch { throw ServiceFailure.invalidData }
-            guard let fields = object as? [String: Any],
-                  Set(fields.keys) == Set(["Label", "AssociatedBundleIdentifiers", "BundleProgram", "MachServices", "ProcessType", "AbandonProcessGroup"]),
-                  fields["Label"] as? String == HelperIdentity.helperIdentifier,
-                  fields["AssociatedBundleIdentifiers"] as? [String] == [HelperIdentity.appIdentifier],
-                  fields["BundleProgram"] as? String == "Contents/MacOS/" + HelperIdentity.executableName,
-                  fields["Program"] == nil, fields["ProgramArguments"] == nil,
-                  fields["ProcessType"] as? String == "Background",
-                  fields["AbandonProcessGroup"] as? Bool == false,
-                  fields["MachServices"] as? [String: Bool] == [HelperIdentity.machService: true] else {
-                throw ServiceFailure.invalidData
-            }
-            return HelperPeer(identifier: HelperIdentity.helperIdentifier, team: policy.team, protocolVersion: 1)
+            try certificatePeer(policy: policy, executable: executable, helper: helper, plist: plist)
         }
-        let peer = try verify()
         let transport = ProductionHelperIPC(policy: policy)
-        let directory = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
-                                                    appropriateFor: nil, create: true)
         let driver = try ProductionHelperLifecycle(system: NativeHelperRegistrationSystem(),
-            journalURL: directory.appendingPathComponent("Watt/helper-lifecycle.json"), targetBuild: HelperIdentity.build,
+            journalURL: journalURL, targetBuild: HelperIdentity.build,
             candidate: verify, installedBuild: {
                 _ = try await transport.connect()
                 return transport.daemonBuild
             }, processesAbsent: {
                 await Task.detached { HelperProcessInventory.absent(helperPath: helper.path) }.value
-            })
-        return Self(service: HelperLifecycleAdapter(driver: driver, transport: transport, expectedPeer: peer), transport: transport,
+            }, journalData: files.journalData, journalAlreadyRead: true)
+        return Self(service: HelperLifecycleAdapter(driver: driver, transport: transport, expectedPeer: files.peer), transport: transport,
                     removalReceipt: { driver.removalReceipt() }, updateReceipt: { driver.updateReceipt() },
                     hasPendingUpdate: { driver.journal?.action == .update && driver.journal?.phase != .complete })
     }

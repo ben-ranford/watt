@@ -1,5 +1,8 @@
 import AppKit
 import Darwin
+#if SWIFT_PACKAGE
+import WattHelperShared
+#endif
 
 /// Published builds store the marketing version in `CFBundleVersion` as
 /// `MAJOR * 1_000_000 + MINOR * 1_000 + PATCH`. The update offer shows that
@@ -48,13 +51,21 @@ protocol AppInstanceRegistry {
 /// A same or newer copy is left running, brought forward, and this process quits.
 /// A build that cannot be read counts as same-or-newer, so this process yields.
 enum SingleInstanceClaim {
-    /// Production entry. Runs after launch so the handshake parent has already
-    /// left its pipe wait before this process asks it to quit.
+    /// Production entry. Bundle versions are read off the main thread. A protected
+    /// path or a read that does not finish is an unreadable build, so this process yields.
     @MainActor
-    static func becomeOnlyInstance() {
-        _ = becomeOnlyInstance(bundleIdentifier: Bundle.main.bundleIdentifier ?? "",
-                               currentProcessIdentifier: getpid(),
-                               registry: RunningApplicationRegistry())
+    static func becomeOnlyInstance() async {
+        let registry = RunningApplicationRegistry()
+        let identifier = Bundle.main.bundleIdentifier ?? ""
+        let current = await BundleBuildNumber.readOffMain(bundleURL: Bundle.main.bundleURL)
+        let others = registry.runningInstances(bundleIdentifier: identifier)
+        var versions: [Int32: UInt64?] = [:]
+        for instance in others {
+            guard let url = registry.bundleURL(of: instance) else { continue }
+            versions[instance.processIdentifier] = await BundleBuildNumber.readOffMain(bundleURL: url)
+        }
+        _ = becomeOnlyInstance(bundleIdentifier: identifier, currentProcessIdentifier: getpid(),
+                               registry: PrefetchedInstanceRegistry(base: registry, current: current, versions: versions))
     }
 
     @MainActor
@@ -114,8 +125,10 @@ enum SingleInstanceClaim {
 
 /// CFBundleVersion from a bundle's Info.plist. Missing or non-numeric values are nil.
 enum BundleBuildNumber {
-    static func read(bundleURL: URL) -> UInt64? {
+    static func read(bundleURL: URL, home: String = NSHomeDirectory()) -> UInt64? {
+        if LaunchPathPolicy.isPrivacyProtected(bundleURL, home: home) { return nil }
         let plistURL = bundleURL.appendingPathComponent("Contents/Info.plist")
+        if LaunchPathPolicy.isPrivacyProtected(plistURL, home: home) { return nil }
         guard let data = try? Data(contentsOf: plistURL),
               let plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] else {
             return nil
@@ -137,6 +150,15 @@ enum BundleBuildNumber {
               text.first != "0", let build = UInt64(text), build > 0 else { return nil }
         return build
     }
+
+    /// Nil when the plist is in a privacy-protected folder or the read does not finish.
+    /// An unreadable build is the existing same-or-newer fallback.
+    static func readOffMain(bundleURL: URL, home: String = NSHomeDirectory(), timeout: Duration = LaunchFileAccess.launchTimeout) async -> UInt64? {
+        if LaunchPathPolicy.isPrivacyProtected(bundleURL, home: home) { return nil }
+        let result = await LaunchFileAccess.value(timeout: timeout) { BundleBuildNumber.read(bundleURL: bundleURL, home: home) }
+        if case .success(let build) = result { return build }
+        return nil
+    }
 }
 
 @MainActor
@@ -153,8 +175,12 @@ struct RunningApplicationRegistry: AppInstanceRegistry {
         BundleBuildNumber.read(bundleURL: Bundle.main.bundleURL)
     }
 
+    func bundleURL(of instance: AppInstance) -> URL? {
+        runningApplication(instance)?.bundleURL
+    }
+
     func bundleVersion(of instance: AppInstance) -> UInt64? {
-        guard let bundleURL = runningApplication(instance)?.bundleURL else { return nil }
+        guard let bundleURL = bundleURL(of: instance) else { return nil }
         return BundleBuildNumber.read(bundleURL: bundleURL)
     }
 
@@ -202,6 +228,24 @@ struct RunningApplicationRegistry: AppInstanceRegistry {
         NSRunningApplication.runningApplications(withBundleIdentifier: instance.bundleIdentifier)
             .first { $0.processIdentifier == instance.processIdentifier }
     }
+}
+
+/// Versions already read off the main thread. Termination and activation stay on the caller.
+@MainActor
+private struct PrefetchedInstanceRegistry: AppInstanceRegistry {
+    let base: RunningApplicationRegistry
+    let current: UInt64?
+    let versions: [Int32: UInt64?]
+
+    func runningInstances(bundleIdentifier: String) -> [AppInstance] {
+        base.runningInstances(bundleIdentifier: bundleIdentifier)
+    }
+    func currentBundleVersion() -> UInt64? { current }
+    func bundleVersion(of instance: AppInstance) -> UInt64? { versions[instance.processIdentifier] ?? nil }
+    func requestTermination(_ instance: AppInstance) -> Bool { base.requestTermination(instance) }
+    func forceTermination(_ instance: AppInstance) -> Bool { base.forceTermination(instance) }
+    func activate(_ instance: AppInstance) { base.activate(instance) }
+    func terminateCurrentProcess() { base.terminateCurrentProcess() }
 }
 
 /// A finished update handoff quits this process. A confirm-quit prompt must not cancel it.

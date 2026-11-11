@@ -505,15 +505,22 @@ final class UpdateStore: ObservableObject {
     private(set) var generation = UUID()
     private(set) var downloadReceipt: OperationReceipt?
     private let storage: any PreferenceStorage
-    init(storage: (any PreferenceStorage)? = nil) {
+    init(storage: (any PreferenceStorage)? = nil, load: Bool = true) {
         self.storage = storage ?? InMemoryStorage()
+        if load { reloadFromStorage() }
+    }
+
+    /// Applies an update journal that was read off the main thread. Skips the read when
+    /// this process has already moved the store past its initial idle state.
+    func reloadFromStorage() {
+        guard state == .idle, downloadReceipt == nil, !installFutureUpdatesAutomatically else { return }
         do {
-            if let data = try self.storage.read(key: "update.automatic-install.v1") {
+            if let data = try storage.read(key: "update.automatic-install.v1") {
                 installFutureUpdatesAutomatically = try JSONDecoder().decode(Bool.self, from: data)
             }
         } catch { persistenceFailure = .persistence }
         do {
-            if let data = try self.storage.read(key: "update.v1") {
+            if let data = try storage.read(key: "update.v1") {
                 let restored = try JSONDecoder().decode(UpdateState.self, from: data)
                 switch restored {
                 case .staged(let receipt), .installing(let receipt), .awaitingRelaunch(let receipt), .handoffAccepted(let receipt):

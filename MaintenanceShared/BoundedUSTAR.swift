@@ -1,5 +1,8 @@
 import Foundation
 import Darwin
+#if SWIFT_PACKAGE
+import WattHelperShared
+#endif
 
 public enum ArchiveValidationError: Error { case invalidArchive, unsafeDestination, ioFailure }
 
@@ -165,16 +168,28 @@ public struct BoundedUSTAR: Sendable {
     }
 
     /// Walk each component so a symlink in any ancestor cannot redirect extraction.
-    public static func openDirectory(_ url: URL) throws -> Int32 {
+    /// A privacy-protected component is refused before `openat`. That syscall is what
+    /// stalls the main thread when Watt is launched from `~/Downloads`: the walk holds
+    /// a directory fd on `$HOME` and blocks in `openat(..., "Downloads")` inside TCC.
+    public static func openDirectory(_ url: URL, home: String = NSHomeDirectory()) throws -> Int32 {
         guard url.isFileURL, url.path.hasPrefix("/") else { throw ArchiveValidationError.unsafeDestination }
+        if LaunchPathPolicy.isPrivacyProtected(path: url.path, home: home) {
+            throw ArchiveValidationError.unsafeDestination
+        }
         var fd = open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC)
         guard fd >= 0 else { throw ArchiveValidationError.ioFailure }
+        var built = ""
         do {
             for component in url.path.split(separator: "/") {
                 guard component != ".", component != ".." else { throw ArchiveValidationError.unsafeDestination }
+                let nextPath = built + "/" + component
+                if LaunchPathPolicy.isPrivacyProtected(path: nextPath, home: home) {
+                    throw ArchiveValidationError.unsafeDestination
+                }
                 let next = openat(fd, String(component), O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
                 guard next >= 0 else { throw ArchiveValidationError.unsafeDestination }
                 close(fd); fd = next
+                built = nextPath
             }
             return fd
         } catch { close(fd); throw error }
