@@ -104,6 +104,12 @@ final class UserDefaultsStorage: PreferenceStorage {
     func write(_ data: Data, key: String) throws { defaults.set(data, forKey: key) }
 }
 
+private enum NotificationPreferenceDefaults {
+    static let insufficientChargerMinutes = 5
+    static let fullyChargedPercentage = 100
+    static let lowBatteryPercentage = 20
+}
+
 enum WattPrecision: String, CaseIterable, Codable, Sendable {
     case decimal = "42.1 W", whole = "42 W", hundredths = "42.10 W"
 
@@ -150,9 +156,9 @@ final class PreferencesStore: ObservableObject {
     @Published var chargerNotification = true { didSet { save() } }
     @Published var fullyChargedNotification = false { didSet { save() } }
     @Published var lowBatteryNotification = false { didSet { save() } }
-    @Published private var storedLowBatteryPercentage = Self.defaultLowBatteryPercentage
-    @Published private var storedInsufficientChargerMinutes = Self.defaultInsufficientChargerMinutes
-    @Published private var storedFullyChargedPercentage = Self.defaultFullyChargedPercentage
+    @Published private var storedLowBatteryPercentage = NotificationPreferenceDefaults.lowBatteryPercentage
+    @Published private var storedInsufficientChargerMinutes = NotificationPreferenceDefaults.insufficientChargerMinutes
+    @Published private var storedFullyChargedPercentage = NotificationPreferenceDefaults.fullyChargedPercentage
     @Published var openAtLogin = false { didSet { save() } }
     @Published var checkForUpdatesAutomatically = true { didSet { save() } }
     @Published var onboarding = OnboardingState() { didSet { save() } }
@@ -179,9 +185,9 @@ final class PreferencesStore: ObservableObject {
             && ids.allSatisfy { !$0.isEmpty && $0 == $0.trimmingCharacters(in: .whitespacesAndNewlines) }
     }
 
-    static let defaultInsufficientChargerMinutes = 5
-    static let defaultFullyChargedPercentage = 100
-    static let defaultLowBatteryPercentage = 20
+    static let defaultInsufficientChargerMinutes = NotificationPreferenceDefaults.insufficientChargerMinutes
+    static let defaultFullyChargedPercentage = NotificationPreferenceDefaults.fullyChargedPercentage
+    static let defaultLowBatteryPercentage = NotificationPreferenceDefaults.lowBatteryPercentage
     static let insufficientChargerMinuteChoices = [1, 2, 5, 10, 15]
     static let fullyChargedPercentageChoices = [80, 90, 95, 100]
     static let lowBatteryPercentageChoices = [10, 15, 20, 25, 30]
