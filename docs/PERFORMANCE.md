@@ -4,9 +4,11 @@ Watt? stays running in the menu bar. This note records what the sampler schedule
 
 ## What was measured here
 
-No host numbers were collected for this change.
+The schedule table below is from the source and from the unit tests. It is not a host measurement.
 
-The edit was made on a Linux agent. `uname` reported Linux, and `swift`, `xcodebuild`, Instruments, and `powermetrics` were not installed. Watt is a macOS app, so those tools could not have produced a CPU, wakeup, memory, or launch-time figure here. The schedule table is taken from the source and from the unit tests named below. It is not a substitute for the host procedure.
+The host table is from a Mac, recorded on 18 Nov 2026 (Australia/Sydney, UTC+11) against commit `9072bf80`, before `main` and #56 were merged into this branch. The sampler deadline on that commit is the one this change ships. Commit `139c9c0` later copies `AdapterDetails` and `AppleRawAdapterDetails` as well as `PowerTelemetryData`. That commit was not measured again.
+
+The implementation agent is Linux and did not run `top`, `powermetrics`, or `/usr/bin/time`. The figures below are the ones posted on [pull request #57](https://github.com/ben-ranford/watt/pull/57#issuecomment-6964528923).
 
 ## Schedule before and after
 
@@ -69,18 +71,29 @@ In that output, use the `Watt` task block. Repeat the same two commands with the
 
 Quit from the status item once it has been visible for a few seconds. Keep the real, user, and sys times and the maximum resident set size. Instruments' App Launch template is the tighter launch measurement when it is available.
 
-Fill the host table from those commands. Do not copy the schedule numbers above into it.
+### Host result, 18 Nov 2026
 
-| | Panel closed, before | Panel closed, after | Panel open, before | Panel open, after |
+**Machine.** MacBook Air (Mac15,12), Apple M3, 16 GB, macOS 27.2 (26B123). Plugged in, drawing from AC. InternalBattery at 90%, not charging. Menu bar on System Draw, update interval "Every 2 seconds". Helper not installed. Load while sampling was about 2.4–3.6, and the 5-minute load was about 3.0–3.2. The Mac had been up for about 45–55 minutes. `top`'s 1-second CPU oscillates with the 2-second sample, so the averages are still noisy. An earlier session on this Mac had a load around 125; this one did not.
+
+**Method used.** `top -l 60 -s 1 -stats pid,command,cpu,idlew,mem,threads` after a 60-second settle, panel closed and then held open. Wakeups are the `IDLEW` delta over those 60 samples. `powermetrics` was skipped because it needs an administrator. Launch is `/usr/bin/time -l` on the binary, with SIGTERM about 6 seconds after the status item appeared. `time` reports that the process terminated abnormally. The same stop was used for both builds. The Homebrew 1.2.0 process had already been running for about 30 minutes when its idle sample started. The pull-request process was a couple of minutes old, so `ps` RSS is not a like-for-like memory comparison. `top` MEM is the figure to compare.
+
+| | Panel closed, before (Homebrew 1.2.0) | Panel closed, after (`9072bf80`) | Panel open, before (Homebrew 1.2.0) | Panel open, after (`9072bf80`) |
 | --- | --- | --- | --- | --- |
-| CPU % (`top`) | | | | |
-| Wakeups (`powermetrics`) | | | | |
-| Resident memory | | | | |
-| Launch (`/usr/bin/time -l` or Instruments) | | | | |
+| CPU % (`top`, 60s average; min–max, median) | 1.147 (0.00–3.30, median 1.00) | 0.852 (0.00–2.50, median 0.65) | 1.347 (0.00–3.40, median 1.25) | 1.190 (0.00–11.70, median 0.80) |
+| Wakeups (`top` IDLEW delta over 60s) | 19 | 18 | 20 | 17 |
+| Resident memory | `top` MEM 24M; `ps` RSS 64.1 MB (long-running) | `top` MEM 25–26M; `ps` RSS 94.9 MB (fresh process) | `top` MEM 32M; `ps` RSS 76.1 MB | `top` MEM 36–38M; `ps` RSS 108.1 MB |
+| Launch (`/usr/bin/time -l`) | 7.09s real, 0.25s user, 0.06s sys; max RSS 93.2 MB; peak footprint 24.0 MB | 7.13s real, 0.25s user, 0.06s sys; max RSS 93.6 MB; peak footprint 24.1 MB | Same launch as the closed-panel column | Same launch as the closed-panel column |
 
-### What still needs a Mac
+On this run, average and median CPU were lower with the panel closed and with it open. The 11.70% open-panel maximum is one spike. Wakeups differed by a couple of counts on a 60-second window. Launch time matched. Fresh-process RSS was higher than the long-running Homebrew process on this build and on the #56 build, so that RSS gap is not evidence about this change.
 
-- The host table above.
-- Status item on "Every 5 seconds" does not flip to "No reading" during a quiet minute. The coalesced wake can land as late as 4.75s, and the reading expires at 5s.
-- Per Component in the menu bar still updates while the panel is closed.
-- With the helper installed, opening the panel after it has been closed shows component rows after one helper sample. Until that sample returns, the panel uses the same empty component state it already uses when no fresh estimate exists.
+**Checks on the same Mac.**
+
+- Menu bar set to "Every 5 seconds": 60 status-item samples over about 67 seconds stayed on a live wattage (11.2 W, then 9.6 W when draw changed). The item did not show "No reading". The preference was restored afterwards.
+- Opening the panel after it had been closed for 8 seconds: the 346×426 panel appeared in 514 ms with Charger input, System draw, Battery, and the Components section already visible. The helper is not installed on this Mac, so helper component estimates after a reopen were not checked.
+
+### What this Mac run did not cover
+
+- `powermetrics` wakeups and energy. The wakeup row above is `top` IDLEW.
+- Per Component in the menu bar while the panel is closed.
+- A helper sample appearing after the panel is reopened. This Mac has no helper.
+- Commit `139c9c0`, which adds the two adapter registry keys to each sample.
