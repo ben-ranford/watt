@@ -81,7 +81,7 @@ Report a vulnerability privately through [GitHub Security Advisories](https://gi
 
 Watt? is a native SwiftUI menu-bar utility (`LSUIElement`). It exists to show Mac power in watts from the status item: battery delta, charger input, and system draw, plus optional CPU and GPU estimates.
 
-System readings come from IOKit. Public power-source descriptions omit live watt telemetry. Measured battery, charger, and system watts are read from `AppleSmartBattery` registry properties when the hardware exposes them, and the parser fails closed when it does not. CPU and GPU estimates are a separate path. They come from `powermetrics`, which the root helper runs. The menu bar can show at most two components, and only CPU and GPU. Display, SSD, and Other are not provided.
+System readings come from IOKit. Public power-source descriptions omit live watt telemetry. Measured battery, charger, and system watts are read from `AppleSmartBattery` registry properties when the hardware exposes them, and the parser fails closed when it does not. The charger row adds the adapter’s rated wattage and name from `AdapterDetails` or `IOPSCopyExternalPowerAdapterDetails`. Time to full and time remaining come from the IOPS time keys when that estimate is a real duration. Missing, zero, and still-calculating values are left out. CPU and GPU estimates are a separate path. They come from `powermetrics`, which the root helper runs. The menu bar can show at most two components, and only CPU and GPU. Display, SSD, and Other are not provided.
 
 See also [RELEASING.md](RELEASING.md) for how a release is signed and published, and [HelperInstaller/README.md](HelperInstaller/README.md) for the administrator installer.
 
@@ -121,7 +121,7 @@ Launch the installed app:
 open -a Watt
 ```
 
-Watt? has no Dock icon. Click the menu-bar item for the power panel. Secondary-click it for the menu:
+Watt? has no Dock icon. Click the menu-bar item for the power panel. The charger row shows measured input, and names the adapter and its rated wattage when the Mac reports them. Time to full, or time remaining on battery, is added to the summary only when that estimate is valid. Secondary-click the menu-bar item for the menu:
 
 - **Show in Menu Bar** chooses System Draw (the default for a new install), Battery Delta, Charger Input, Per Component, or Icon Only. System Draw is the useful number on a Mac that is plugged in and holding its charge, which is the usual first-run state; Battery Delta stays one menu away. Per Component stays off until the helper is approved and both CPU and GPU estimates are available. Icon Only keeps the item in place when the menu bar is full.
 - **Open Watt?** opens the panel. **Settings…** (Command-,) opens settings. **About Watt?**, **Check for Updates…**, and **Quit Watt?** (Command-Q) are on the same menu.
