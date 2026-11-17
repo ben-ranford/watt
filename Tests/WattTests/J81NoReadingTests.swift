@@ -328,10 +328,12 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertTrue(scheduler.pauses.contains { abs($0.delay - PowerReadingStore.samplingDelay(for: 2)) < 0.001 })
     }
 
-    func testProductionIdlePathReleasesTheHiddenPanelAndReadsOneRegistryProperty() throws {
+    func testProductionIdlePathReleasesTheHiddenPanelAndReadsNamedRegistryKeys() throws {
         let telemetry = try source("Services/SystemPowerSourceTelemetryService.swift")
         XCTAssertTrue(telemetry.contains("IORegistryEntryCreateCFProperty"))
-        XCTAssertTrue(telemetry.contains("\"PowerTelemetryData\" as CFString"))
+        for key in ["PowerTelemetryData", "AdapterDetails", "AppleRawAdapterDetails"] {
+            XCTAssertTrue(telemetry.contains("\"\(key)\""), key)
+        }
         XCTAssertFalse(telemetry.contains("IORegistryEntryCreateCFProperties"))
         let storeSource = try source("Services/PowerReadingStore.swift")
         XCTAssertTrue(storeSource.contains("try await Task.sleep(for: duration, tolerance: leeway)"))

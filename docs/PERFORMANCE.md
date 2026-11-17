@@ -16,7 +16,7 @@ Read from `PowerReadingStore`, `SystemPowerSourceTelemetryService`, and `WattFal
 | --- | --- | --- |
 | Menu-bar sample deadline | Settings value. Default "Every 2 seconds" is 2s. "Every second" is 1s. "Every 5 seconds" is brought forward to 4.5s so it stays inside the 5s freshness window (0.5s lead). | Unchanged. |
 | Sleep leeway | None. The loop used `Task.sleep` for the exact delay. | `min(10% of the deadline, 0.25s)`. The deadline does not move earlier. The latest coalesced wake for the 4.5s cap is 4.75s, leaving 0.25s of the original lead. |
-| AppleSmartBattery read on each sample | `IORegistryEntryCreateCFProperties` copied the whole service entry. The parser uses only `PowerTelemetryData`. | `IORegistryEntryCreateCFProperty` for `PowerTelemetryData` only. A missing property still produces a metadata-only reading. |
+| AppleSmartBattery read on each sample | `IORegistryEntryCreateCFProperties` copied the whole service entry. The parser uses `PowerTelemetryData`, and, after the adapter-name work, `AdapterDetails` and `AppleRawAdapterDetails`. | `IORegistryEntryCreateCFProperty` for those three keys. A missing key is skipped. The rest of the entry stays in the registry. |
 | Helper component sample, panel hidden, menu bar not Per Component | Every 3s (`retryInterval`) once helper telemetry is attached, including while the panel is closed and the status item shows system draw, charger, battery, or the icon. | Not scheduled. The loop waits with no timer. |
 | Helper component sample, panel open, or menu bar set to Per Component with component readings on | Every 3s, no leeway. | Same 3s deadline, with the leeway above. Opening the panel or selecting Per Component samples immediately instead of waiting out a leftover sleep. |
 | SwiftUI panel while hidden | The production popover kept its hosting controller after close, so later samples invalidated that tree. | `popoverDidClose` drops the content view controller. The status item still updates from the menu-bar sample. |
@@ -41,7 +41,7 @@ The stale-status task is unchanged. After a fresh system sample it sleeps until 
 - `testHiddenPanelStillSamplesComponentsWhenTheMenuBarShowsThem` asserts the 3s helper sleep is armed when the status item is in Per Component mode, even if the panel is hidden.
 - `testOpeningThePanelSchedulesComponentSamplingAndClosingCancelsIt` asserts one helper sample when the panel opens and no further helper sleep after it closes, while menu-bar sampling continues.
 - `testUnsetComponentPolicyKeepsTheHelperSampler` locks the fixture default.
-- `testProductionIdlePathReleasesTheHiddenPanelAndReadsOneRegistryProperty` checks the production call sites: the policy is installed before `startSampling()`, the popover drops its content view, and the registry read is the single `PowerTelemetryData` property.
+- `testProductionIdlePathReleasesTheHiddenPanelAndReadsNamedRegistryKeys` checks the production call sites: the policy is installed before `startSampling()`, the popover drops its content view, and the registry read is `PowerTelemetryData`, `AdapterDetails`, and `AppleRawAdapterDetails`.
 
 ## How to measure on a Mac
 
