@@ -184,9 +184,13 @@ final class SystemPowerSourceTelemetryService: TelemetryService {
         guard service != 0 else { return nil }
         defer { IOObjectRelease(service) }
 
-        var properties: Unmanaged<CFMutableDictionary>?
-        guard IORegistryEntryCreateCFProperties(service, &properties, kCFAllocatorDefault, 0) == 0,
-              let properties else { return nil }
-        return properties.takeRetainedValue() as? [String: Any]
+        // The parser reads only PowerTelemetryData. Asking IORegistry for that
+        // property avoids copying the rest of the AppleSmartBattery entry on
+        // every menu-bar sample. A missing property is the same as a dictionary
+        // that does not contain it: the reading stays metadata-only.
+        guard let telemetry = IORegistryEntryCreateCFProperty(
+            service, "PowerTelemetryData" as CFString, kCFAllocatorDefault, 0
+        )?.takeRetainedValue() else { return nil }
+        return ["PowerTelemetryData": telemetry]
     }
 }
