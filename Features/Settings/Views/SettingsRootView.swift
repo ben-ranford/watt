@@ -91,7 +91,10 @@ struct SettingsRootView: View {
     @State private var removalMessage: String?
     @State private var removing = false
     @State private var uninstallPresentation: UUID?
+    @State private var surfaceVisible = false
+    @Environment(\.wattMotionSuppressed) private var motionSuppressed
     @FocusState private var focusedControl: FocusedControl?
+    private var motionEnabled: Bool { surfaceVisible && !motionSuppressed }
 
     var body: some View {
         let intent = router.uninstallIntent
@@ -195,6 +198,10 @@ struct SettingsRootView: View {
                             Text(preferences.smoothReadings
                                  ? "On — averages the last 5 seconds, so the number doesn’t jump."
                                  : "Off — shows each reading without averaging.")
+                                .wattTextMotion(displayed: preferences.smoothReadings
+                                                ? "On — averages the last 5 seconds, so the number doesn’t jump."
+                                                : "Off — shows each reading without averaging.",
+                                                number: nil, enabled: motionEnabled)
                         }
                         .accessibilityIdentifier("settings.smoothReadings")
                     }
@@ -206,12 +213,15 @@ struct SettingsRootView: View {
                 }
                 if helperExcerpt, let removalMessage {
                     Text(removalMessage).accessibilityIdentifier("settings.removalResult")
+                        .wattFade(when: removalMessage, enabled: motionEnabled)
                 }
                 if !helperExcerpt && !menuBarExcerpt {
                     Section("Notifications") {
                         Toggle(isOn: notificationEnabled(\.chargerNotification)) {
                             Text("Charger can’t keep up")
                             Text(Self.chargerNotificationDetail(minutes: preferences.insufficientChargerMinutes))
+                                .wattTextMotion(displayed: Self.chargerNotificationDetail(minutes: preferences.insufficientChargerMinutes),
+                                                number: Double(preferences.insufficientChargerMinutes), enabled: motionEnabled)
                         }
                         .accessibilityIdentifier("settings.chargerNotification")
                         Picker("Duration", selection: notificationChoice(get: { preferences.insufficientChargerMinutes }, set: { preferences.insufficientChargerMinutes = $0 })) {
@@ -223,6 +233,8 @@ struct SettingsRootView: View {
                         Toggle(isOn: notificationEnabled(\.fullyChargedNotification)) {
                             Text("Fully charged")
                             Text(Self.fullyChargedNotificationDetail(percentage: preferences.fullyChargedPercentage))
+                                .wattTextMotion(displayed: Self.fullyChargedNotificationDetail(percentage: preferences.fullyChargedPercentage),
+                                                number: Double(preferences.fullyChargedPercentage), enabled: motionEnabled)
                         }
                         .accessibilityIdentifier("settings.fullyChargedNotification")
                         Picker("Fully charged at", selection: notificationChoice(get: { preferences.fullyChargedPercentage }, set: { preferences.fullyChargedPercentage = $0 })) {
@@ -234,6 +246,8 @@ struct SettingsRootView: View {
                         Toggle(isOn: notificationEnabled(\.lowBatteryNotification)) {
                             Text("Low battery")
                             Text(Self.lowBatteryNotificationDetail(percentage: preferences.lowBatteryPercentage))
+                                .wattTextMotion(displayed: Self.lowBatteryNotificationDetail(percentage: preferences.lowBatteryPercentage),
+                                                number: Double(preferences.lowBatteryPercentage), enabled: motionEnabled)
                         }
                         .accessibilityIdentifier("settings.lowBatteryNotification")
                         Picker("Low battery at", selection: notificationChoice(get: { preferences.lowBatteryPercentage }, set: { preferences.lowBatteryPercentage = $0 })) {
@@ -246,14 +260,17 @@ struct SettingsRootView: View {
                             Text(Self.notificationsUnavailable)
                                 .foregroundStyle(.secondary)
                                 .accessibilityIdentifier("settings.notificationsUnavailable")
+                                .wattFade(when: true, enabled: motionEnabled)
                         }
                     }
+                    .wattAnimate(.reveal, value: router.notificationAuthorization == .denied, enabled: motionEnabled)
                     generalSection
                 }
             }
         }
         .modifier(HelperNotApprovedPresentation(router: router, preferences: preferences, origin: .settings))
         .formStyle(.grouped)
+        .wattObserveSurface($surfaceVisible)
         .pickerStyle(.menu)
         .toggleStyle(.switch)
         .buttonStyle(.bordered)
@@ -364,6 +381,7 @@ struct SettingsRootView: View {
                     if let reason = router.updateUnavailableReason {
                         Text(reason)
                             .accessibilityIdentifier("settings.updateUnavailable")
+                            .wattFade(when: reason, enabled: motionEnabled)
                     }
                 }
             }
@@ -384,9 +402,16 @@ struct SettingsRootView: View {
                 LabeledContent("Version", value: version)
                     .accessibilityIdentifier("settings.version")
             }
-            if let removalMessage { Text(removalMessage).accessibilityIdentifier("settings.removalResult") }
-            if preferences.persistenceFailure != nil { Text("Your settings could not be saved.").foregroundStyle(.secondary) }
+            if let removalMessage {
+                Text(removalMessage).accessibilityIdentifier("settings.removalResult")
+                    .wattFade(when: removalMessage, enabled: motionEnabled)
+            }
+            if preferences.persistenceFailure != nil {
+                Text("Your settings could not be saved.").foregroundStyle(.secondary)
+                    .wattFade(when: preferences.persistenceFailure != nil, enabled: motionEnabled)
+            }
         }
+        .wattAnimate(.reveal, value: removalMessage, enabled: motionEnabled)
     }
 
     private func notificationEnabled(_ keyPath: ReferenceWritableKeyPath<PreferencesStore, Bool>) -> Binding<Bool> {
@@ -435,8 +460,29 @@ struct SettingsHelperRows: View {
     @EnvironmentObject private var preferences: PreferencesStore
     @EnvironmentObject private var router: AppRouter
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.wattMotionSuppressed) private var motionSuppressed
+    @State private var surfaceVisible = false
     let removing: Bool
     let remove: () -> Void
+    private var motionEnabled: Bool { surfaceVisible && !motionSuppressed }
+    private var motionToken: HelperMotionToken {
+        HelperMotionToken(state: setup.state, installing: setup.isInstalling, loading: setup.isLoading,
+                          message: setup.message, helperOn: setup.helperOn, wasRemoved: setup.wasRemoved,
+                          canInstall: setup.canInstallHelper, canRemove: setup.canRemoveHelper,
+                          canRepair: setup.canRepairHelper)
+    }
+
+    private struct HelperMotionToken: Equatable {
+        var state: SettingsHelperSetup.State
+        var installing: Bool
+        var loading: Bool
+        var message: String?
+        var helperOn: Bool
+        var wasRemoved: Bool
+        var canInstall: Bool
+        var canRemove: Bool
+        var canRepair: Bool
+    }
 
     var body: some View {
         Section {
@@ -444,9 +490,11 @@ struct SettingsHelperRows: View {
                 Text(setup.statusTitle)
                     .foregroundStyle(.secondary)
                     .accessibilityIdentifier("settings.helper.status")
+                    .wattTextMotion(displayed: setup.statusTitle, number: nil, enabled: motionEnabled)
             } label: {
                 Text(Self.statusTitle)
                 Text(setup.statusSubtitle)
+                    .wattTextMotion(displayed: setup.statusSubtitle, number: nil, enabled: motionEnabled)
             }
             LabeledContent {
                 if setup.state == .requiresApproval {
@@ -454,37 +502,44 @@ struct SettingsHelperRows: View {
                         .buttonStyle(.borderedProminent)
                         .disabled(removing)
                         .accessibilityIdentifier("settings.helper.openSettings")
+                        .wattFade(.state, when: setup.state, enabled: motionEnabled)
                 }
                 if setup.canRepairHelper {
                     Button("Repair Helper…") { Task { await setup.repairHelper() } }
                         .disabled(removing || setup.isLoading)
                         .accessibilityIdentifier("settings.helper.repair")
+                        .wattFade(.state, when: setup.canRepairHelper, enabled: motionEnabled)
                 }
                 if setup.canInstallHelper {
                     Button("Install Helper…") { Task { await setup.installFromInterface() } }
                         .disabled(removing || setup.isInstalling)
                         .wattControlLabel("Install Helper…")
                         .accessibilityIdentifier("settings.helper.install")
+                        .wattFade(.state, when: setup.canInstallHelper, enabled: motionEnabled)
                 } else if setup.canRemoveHelper {
                     Button("Remove…", action: remove)
                         .buttonStyle(.bordered)
                         .disabled(removing || setup.isLoading)
                         .accessibilityIdentifier("settings.helper.remove")
+                        .wattFade(.state, when: setup.canRemoveHelper, enabled: motionEnabled)
                 } else if !setup.helperServiceAvailable {
                     Text(setup.actionTitle)
                         .foregroundStyle(.secondary)
                         .accessibilityIdentifier("settings.helper.turnOn")
+                        .wattFade(.state, when: setup.actionTitle, enabled: motionEnabled)
                 } else {
                     if setup.wasRemoved {
                         Button(setup.actionTitle) { Task { await setup.turnOn(preferences: preferences) } }
                             .buttonStyle(.bordered)
                             .disabled(removing || !setup.canTurnOn)
                             .accessibilityIdentifier("settings.helper.turnOn")
+                            .wattFade(.state, when: setup.wasRemoved, enabled: motionEnabled)
                     } else {
                         Button(setup.actionTitle) { Task { await setup.turnOn(preferences: preferences) } }
                         .buttonStyle(.borderedProminent)
                         .disabled(removing || !setup.canTurnOn)
                         .accessibilityIdentifier("settings.helper.turnOn")
+                        .wattFade(.state, when: setup.actionTitle, enabled: motionEnabled)
                     }
                 }
             } label: {
@@ -496,14 +551,23 @@ struct SettingsHelperRows: View {
             if setup.helperOn, let captureDiagnostic = setup.captureDiagnostic {
                 Button("Export Helper Diagnostic…") { Task { await captureDiagnostic() } }
                     .accessibilityIdentifier("settings.helper.diagnostic")
+                    .wattFade(.reveal, when: setup.helperOn, enabled: motionEnabled)
             }
-            if setup.isLoading || setup.isInstalling { ProgressView().accessibilityLabel("Checking helper") }
-            if let message = setup.message { Text(message).accessibilityIdentifier("settings.helper.result") }
+            if setup.isLoading || setup.isInstalling {
+                ProgressView().accessibilityLabel("Checking helper")
+                    .wattFade(.state, when: setup.isLoading || setup.isInstalling, enabled: motionEnabled)
+            }
+            if let message = setup.message {
+                Text(message).accessibilityIdentifier("settings.helper.result")
+                    .wattFade(.state, when: message, enabled: motionEnabled)
+            }
             if setup.state == .denied {
                 Button("Open System Settings") { router.openApprovalSettings() }
+                    .wattFade(.state, when: setup.state, enabled: motionEnabled)
             }
             if setup.isLoading {
                 Button("Cancel", role: .cancel) { setup.cancel() }
+                    .wattFade(.state, when: setup.isLoading, enabled: motionEnabled)
             }
         } header: {
             Text(Self.helperTitle)
@@ -511,9 +575,15 @@ struct SettingsHelperRows: View {
             if setup.helperOn && setup.reconnectedFromLastInstall {
                 Text(Self.reconnectNote).font(.footnote).foregroundStyle(.secondary)
                     .accessibilityIdentifier("settings.helper.reconnected")
+                    .wattFade(.reveal, when: setup.reconnectedFromLastInstall, enabled: motionEnabled)
             } else if setup.helperServiceAvailable && !setup.wasRemoved && !setup.helperOn
-                        && setup.state != .requiresApproval { Text(Self.approvalNote) }
+                        && setup.state != .requiresApproval {
+                Text(Self.approvalNote)
+                    .wattFade(.reveal, when: setup.state, enabled: motionEnabled)
+            }
         }
+        .wattAnimate(.state, value: motionToken, enabled: motionEnabled)
+        .wattObserveSurface($surfaceVisible)
         .onExitCommand {
             if setup.isLoading || setup.state == .requiresApproval { setup.cancel() }
         }

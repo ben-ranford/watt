@@ -141,6 +141,9 @@ struct MenuBarStatusLabel: View {
     var showsSymbol: Bool { preferences.showSymbol || effectiveMode == .iconOnly }
 
     var body: some View {
+        // The status item stays visible while the panel is closed. Leave the
+        // text and symbol unanimated so samples cannot tick, jitter, or change
+        // the item width. Production assigns this string to NSStatusBarButton.
         Group {
             if effectiveMode == .iconOnly {
                 // A single template SF Symbol lets MenuBarExtra own all native metrics.

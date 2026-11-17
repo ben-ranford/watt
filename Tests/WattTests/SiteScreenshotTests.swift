@@ -132,6 +132,7 @@ final class SiteScreenshotTests: XCTestCase {
         defer { NSApp.appearance = previous }
 
         let root = view
+            .environment(\.wattMotionSuppressed, true)
             .environment(\.colorScheme, scheme)
             .environment(\.locale, Locale(identifier: "en_US"))
             .frame(width: size.width, height: size.height)

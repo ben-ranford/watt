@@ -77,6 +77,35 @@ struct StatusPanelModel {
         if isDesktop || hasFullOnAdapter { return system }
         return battery
     }
+    var headlineNumber: Double? {
+        if hasNoReading { return nil }
+        if isDesktop || hasFullOnAdapter { return systemNumber }
+        return batteryNumber
+    }
+    var chargerNumber: Double? {
+        if hasReading && reading.batteryState == .discharging && reading.capabilities.charger == .disconnected {
+            return nil
+        }
+        return finite(available(reading.capabilities.charger) ? reading.chargerWatts : nil)
+    }
+    var systemNumber: Double? { finite(available(reading.capabilities.systemDraw) ? reading.systemWatts : nil) }
+    var batteryNumber: Double? { finite(available(reading.capabilities.battery) ? reading.watts : nil) }
+    var structure: StatusPanelStructure {
+        StatusPanelStructure(
+            state: state,
+            showsComponents: showsComponents,
+            componentIDs: components.map(\.id),
+            helperSwitchedOff: helperSwitchedOff,
+            componentsOff: componentsOff,
+            componentsNeedInstall: componentsNeedInstall,
+            setupIncomplete: setupIncomplete,
+            setupSaveFailed: setupSaveFailed,
+            hasSubtitle: subtitle?.isEmpty == false)
+    }
+    private func finite(_ value: Double?) -> Double? {
+        guard let value, value.isFinite else { return nil }
+        return value
+    }
     var summaryLabel: String { hasNoReading ? NoReadingPresentation.title : isDesktop ? "System draw status" : "Battery status" }
     var showsComponents: Bool { includesComponents && !setupIncomplete && !hasNoReading && !hasOptimisedChargingHold && !hasFullOnAdapter && !hasInsufficientCharger }
     /// Compact states contain only the three-row power table. Let the native
@@ -182,6 +211,20 @@ struct StatusPanelModel {
     }
 }
 
+/// Identity of rows and sections. Watt values are deliberately absent so a
+/// sample can roll its digits without settling the whole panel again.
+struct StatusPanelStructure: Equatable {
+    var state: StatusPanelState
+    var showsComponents: Bool
+    var componentIDs: [String]
+    var helperSwitchedOff: Bool
+    var componentsOff: Bool
+    var componentsNeedInstall: Bool
+    var setupIncomplete: Bool
+    var setupSaveFailed: Bool
+    var hasSubtitle: Bool
+}
+
 struct StatusPanelAccessibilityRow: Equatable {
     let label: String
     let value: String
@@ -216,10 +259,23 @@ struct StatusPanelView: View {
     var isRetrying = false
     let onSettings: () -> Void
     let onQuit: () -> Void
+    @Environment(\.wattMotionSuppressed) private var motionSuppressed
+    @State private var surfaceVisible = false
+    private var motionEnabled: Bool { surfaceVisible && !motionSuppressed }
     private var accessibilityPrefix: String { setupIncomplete ? "J5.2" : model.hasNoReading ? "J8.1" : model.hasInsufficientCharger ? "J6.4" : model.hasFullOnAdapter ? "J6.3" : model.hasOptimisedChargingHold ? "J6.2" : !includesComponents ? (reading.batteryState == .discharging ? "J6.5" : "J6.1") : model.isDesktop ? "J4.3" : reading.batteryState == .discharging ? "C02" : "C01" }
     private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed, insufficientChargerMinimumDuration: insufficientChargerMinimumDuration, componentsNeedInstall: helperInstallOffered) }
 
     var body: some View {
+        column
+            .wattAnimate(.settle, value: model.structure, enabled: motionEnabled)
+            .frame(width: WattSpacing.panelWidth, height: model.panelHeight)
+            .wattObserveSurface($surfaceVisible)
+            // The MenuBarExtra window supplies its own native material and rounded chrome.
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Watt? live power panel")
+    }
+
+    private var column: some View {
         VStack(alignment: .leading, spacing: WattSpacing.md) {
             if setupIncomplete {
                 GroupBox {
@@ -239,6 +295,7 @@ struct StatusPanelView: View {
                         if setupSaveFailed {
                             Text(SetupPromptPresentation.failure)
                                 .font(WattTypography.subheadline).foregroundStyle(.secondary)
+                                .wattFade(when: setupSaveFailed, enabled: motionEnabled)
                         }
                     }
                 }
@@ -246,6 +303,7 @@ struct StatusPanelView: View {
                 .accessibilityIdentifier("J5.2.setup")
                 .padding(.horizontal, WattSpacing.xl)
                 .padding(.top, WattSpacing.lg)
+                .wattFade(.settle, when: setupIncomplete, enabled: motionEnabled)
             }
             VStack(alignment: .leading, spacing: WattSpacing.xs) {
                 if model.hasNoReading {
@@ -255,15 +313,23 @@ struct StatusPanelView: View {
                         Image(systemName: NoReadingPresentation.symbol)
                     }
                     .font(WattTypography.headline)
+                    .wattFade(.state, when: model.state, enabled: motionEnabled)
                 } else if model.hasInsufficientCharger {
                     Label(model.title, systemImage: InsufficientChargerPresentation.symbol)
                         .font(WattTypography.bodyEmphasized)
+                        .wattTextMotion(displayed: model.title, number: nil, enabled: motionEnabled)
+                        .wattFade(.state, when: model.state, enabled: motionEnabled)
                 } else {
                     Text(model.title).font(WattTypography.bodyEmphasized).foregroundStyle(.secondary)
+                        .wattTextMotion(displayed: model.title, number: nil, enabled: motionEnabled)
+                        .wattFade(.state, when: model.state, enabled: motionEnabled)
                 }
                 Text(model.headlineValue).font(WattTypography.largeTitle).monospacedDigit()
+                    .wattTextMotion(displayed: model.headlineValue, number: model.headlineNumber, enabled: motionEnabled)
                 if let subtitle = model.subtitle, !subtitle.isEmpty {
                     Text(subtitle).font(WattTypography.subheadline).foregroundStyle(.secondary)
+                        .wattTextMotion(displayed: subtitle, number: nil, enabled: motionEnabled)
+                        .wattFade(.state, when: model.structure.hasSubtitle, enabled: motionEnabled)
                 }
             }
             .accessibilityElement(children: .ignore)
@@ -283,15 +349,17 @@ struct StatusPanelView: View {
                             .wattControlLabel(NoReadingPresentation.retryAction)
                             .accessibilityIdentifier("J8.1.retry")
                     }
+                    .wattFade(.state, when: model.hasNoReading, enabled: motionEnabled)
                 } else if !model.isDesktop {
                     Section {
-                        row("Charger input", value: model.charger, subtitle: model.chargerSubtitle)
-                        row("System draw", value: model.system)
-                        row("Battery", value: model.battery)
+                        row("Charger input", value: model.charger, number: model.chargerNumber, subtitle: model.chargerSubtitle)
+                        row("System draw", value: model.system, number: model.systemNumber)
+                        row("Battery", value: model.battery, number: model.batteryNumber)
                     }
                     .accessibilityElement(children: .contain)
                     .accessibilityLabel("Power")
                     .accessibilitySortPriority(3)
+                    .wattFade(.state, when: model.isDesktop, enabled: motionEnabled)
                 }
 
                 if model.showsComponents {
@@ -342,15 +410,19 @@ struct StatusPanelView: View {
                             }
                         } else if model.components.isEmpty {
                             row("Components", value: model.unavailableComponentsValue, subtitle: model.unavailableComponentsSubtitle)
+                                .wattFade(.reveal, when: model.components.isEmpty, enabled: motionEnabled)
                         } else {
                             ForEach(model.components) { component in
-                                row(component.name, value: PowerFormatter.watts(component.watts, signed: false))
+                                row(component.name, value: PowerFormatter.watts(component.watts, signed: false),
+                                     number: component.watts.isFinite ? component.watts : nil)
+                                    .wattFade(.reveal, when: component.id, enabled: motionEnabled)
                             }
                             if reading.componentEstimate != nil {
                                 Text("Apple’s power estimates. Display, SSD and Other are unavailable.")
                                     .font(WattTypography.footnote)
                                     .foregroundStyle(.secondary)
                                     .fixedSize(horizontal: false, vertical: true)
+                                    .wattFade(.reveal, when: reading.componentEstimate != nil, enabled: motionEnabled)
                             }
                         }
                     } header: {
@@ -358,6 +430,7 @@ struct StatusPanelView: View {
                             .accessibilityAddTraits(.isHeader)
                     }
                     .accessibilitySortPriority(2)
+                    .wattFade(.reveal, when: model.showsComponents, enabled: motionEnabled)
                 }
             }
             .formStyle(.grouped)
@@ -370,26 +443,25 @@ struct StatusPanelView: View {
                     .keyboardShortcut(",", modifiers: .command)
                     .wattControlLabel("Settings…")
                     .accessibilityIdentifier("\(accessibilityPrefix).settings")
+                    .wattPointerFeedback(enabled: motionEnabled)
                 Spacer()
                 Button("Quit Watt?", action: onQuit)
                     .keyboardShortcut("q", modifiers: .command)
                     .wattControlLabel("Quit Watt?")
                     .accessibilityIdentifier("\(accessibilityPrefix).quit")
+                    .wattPointerFeedback(enabled: motionEnabled)
             }
             .buttonStyle(.borderless)
             .padding(.horizontal, WattSpacing.xl)
             .padding(.bottom, WattSpacing.lg)
             .accessibilitySortPriority(1)
         }
-        .frame(width: WattSpacing.panelWidth, height: model.panelHeight)
-        // The MenuBarExtra window supplies its own native material and rounded chrome.
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Watt? live power panel")
     }
 
-    private func row(_ label: String, value: String, subtitle: String? = nil) -> some View {
+    private func row(_ label: String, value: String, number: Double? = nil, subtitle: String? = nil) -> some View {
         LabeledContent {
             Text(value).foregroundStyle(.secondary).monospacedDigit()
+                .wattTextMotion(displayed: value, number: number, enabled: motionEnabled)
         } label: {
             VStack(alignment: .leading, spacing: WattSpacing.xxs) {
                 Text(label)
