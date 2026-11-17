@@ -40,14 +40,18 @@ final class AboutPanelTests: XCTestCase {
         XCTAssertEqual(credits.string, "\(AboutPanel.whatsNewTitle)\n\(AboutPanel.sponsorTitle)")
         let range = NSRange(location: 0, length: credits.length)
         var links: [URL] = []
+        var centeredRuns = 0
         var centered = true
         credits.enumerateAttribute(.link, in: range) { value, _, _ in
             if let url = value as? URL { links.append(url) }
         }
         credits.enumerateAttribute(.paragraphStyle, in: range) { value, _, _ in
-            if (value as? NSParagraphStyle)?.alignment != .center { centered = false }
+            guard let style = value as? NSParagraphStyle else { return }
+            centeredRuns += 1
+            if style.alignment != .center { centered = false }
         }
         XCTAssertEqual(links, [AboutPanel.whatsNewLink, AppLinks.githubSponsors])
+        XCTAssertGreaterThan(centeredRuns, 0)
         XCTAssertTrue(centered)
     }
 

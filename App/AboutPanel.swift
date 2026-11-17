@@ -41,6 +41,9 @@ enum AboutPanel {
         appendCredit(whatsNewTitle, link: whatsNewLink, to: text)
         text.append(NSAttributedString(string: "\n"))
         appendCredit(sponsorTitle, link: AppLinks.githubSponsors, to: text)
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.alignment = .center
+        text.addAttribute(.paragraphStyle, value: paragraph, range: NSRange(location: 0, length: text.length))
         return text
     }
 
@@ -52,9 +55,6 @@ enum AboutPanel {
         text.addAttribute(.font, value: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize), range: range)
         text.addAttribute(.foregroundColor, value: NSColor.linkColor, range: range)
         text.addAttribute(.underlineStyle, value: NSNumber(value: NSUnderlineStyle.single.rawValue), range: range)
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.alignment = .center
-        text.addAttribute(.paragraphStyle, value: paragraph, range: range)
     }
 
     /// Opens the sponsors page when the credit’s link is the configured URL.

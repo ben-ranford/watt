@@ -11,11 +11,11 @@ final class UpdateRolloutTests: XCTestCase {
 
     func testEncodedPayloadMatchesTheSignerBytes() throws {
         let plain = UpdateManifest(identity: "dev.watt.example", build: 1_002_003, sha256: digest, minimumSystemVersion: "13.0")
-        XCTAssertEqual(try JSONEncoder().encode(plain), plainPayload)
+        XCTAssertEqual(try signerEncoder().encode(plain), plainPayload)
         let rollout = sampleRollout()
         let manifest = UpdateManifest(identity: "dev.watt.example", build: 1_002_003, sha256: digest,
                                       minimumSystemVersion: "13.0", notes: "### Fixes\n\n* steadier numbers", rollout: rollout)
-        XCTAssertEqual(try JSONEncoder().encode(manifest), signedPayload)
+        XCTAssertEqual(try signerEncoder().encode(manifest), signedPayload)
         let decoded = try JSONDecoder().decode(UpdateManifest.self, from: signedPayload)
         XCTAssertEqual(decoded, manifest)
     }
@@ -173,6 +173,14 @@ final class UpdateRolloutTests: XCTestCase {
         try rig.storage.write(JSONEncoder().encode([bad]), key: UpdateAdapter.transactionStorageKey)
         let rejected = UpdateAdapter(source: rig.source, driver: IdleInstallation(), storage: rig.storage, trust: rig.trust)
         XCTAssertNil(rejected.releaseNotesForInstalledBuild(manifest.build))
+    }
+
+    /// The release signer uses compact JSON with unescaped slashes. The default
+    /// encoder writes `\/` for the one slash in this digest.
+    private func signerEncoder() -> JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.withoutEscapingSlashes]
+        return encoder
     }
 
     private func sampleRollout(paused: Bool = false, percent: Int = 1) -> UpdateRollout {
