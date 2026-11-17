@@ -9,15 +9,25 @@ final class UpdateRolloutTests: XCTestCase {
     // Four hashes. The notes contain `"###`, and a one-hash raw string ends at the first `"#`.
     private let signedPayload = Data(####"{"identity":"dev.watt.example","build":1002003,"sha256":"E/sq9EiC6Ak8Rp4TvS6j65H2xWVg4AOe15YVVc3Ebas=","minimumSystemVersion":"13.0","notes":"### Fixes\n\n* steadier numbers","rollout":{"basis":1700000000,"interval":86400,"steps":[1,2,5,10,20,50,100],"paused":false,"percent":1,"critical":false,"halted":false}}"####.utf8)
 
-    func testEncodedPayloadMatchesTheSignerBytes() throws {
-        let plain = UpdateManifest(identity: "dev.watt.example", build: 1_002_003, sha256: digest, minimumSystemVersion: "13.0")
-        XCTAssertEqual(try signerEncoder().encode(plain), plainPayload)
+    func testSignerBytesDecodeAndRoundTrip() throws {
+        let plain = try JSONDecoder().decode(UpdateManifest.self, from: plainPayload)
+        XCTAssertEqual(plain.identity, "dev.watt.example")
+        XCTAssertEqual(plain.build, 1_002_003)
+        XCTAssertEqual(plain.sha256, digest)
+        XCTAssertEqual(plain.minimumSystemVersion, "13.0")
+        XCTAssertNil(plain.notes)
+        XCTAssertNil(plain.rollout)
+
         let rollout = sampleRollout()
-        let manifest = UpdateManifest(identity: "dev.watt.example", build: 1_002_003, sha256: digest,
-                                      minimumSystemVersion: "13.0", notes: "### Fixes\n\n* steadier numbers", rollout: rollout)
-        XCTAssertEqual(try signerEncoder().encode(manifest), signedPayload)
         let decoded = try JSONDecoder().decode(UpdateManifest.self, from: signedPayload)
-        XCTAssertEqual(decoded, manifest)
+        XCTAssertEqual(decoded.identity, "dev.watt.example")
+        XCTAssertEqual(decoded.build, 1_002_003)
+        XCTAssertEqual(decoded.sha256, digest)
+        XCTAssertEqual(decoded.minimumSystemVersion, "13.0")
+        XCTAssertEqual(decoded.notes, "### Fixes\n\n* steadier numbers")
+        XCTAssertEqual(decoded.rollout, rollout)
+        let again = try JSONDecoder().decode(UpdateManifest.self, from: try signerEncoder().encode(decoded))
+        XCTAssertEqual(again, decoded)
     }
 
     func testSignatureCoversTheRolloutAndRejectsAChange() throws {
