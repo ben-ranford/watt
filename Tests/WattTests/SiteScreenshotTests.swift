@@ -59,6 +59,11 @@ final class SiteScreenshotTests: XCTestCase {
             let again = try snapshot(named: name, reading: reading)
             XCTAssertEqual(again, data, "\(name) did not render twice to the same PNG")
         }
+        for name in ["whats-new-light", "whats-new-dark"] {
+            let url = export.appendingPathComponent(name + ".png")
+            let written = try Data(contentsOf: url)
+            XCTAssertGreaterThan(written.count, 32, "\(name).png was not written for the site-screenshots artifact")
+        }
 
         #if !SWIFT_PACKAGE
         let committed = committedDirectory()

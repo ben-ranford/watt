@@ -6,7 +6,8 @@ import XCTest
 final class UpdateRolloutTests: XCTestCase {
     private let digest = Data(SHA256.hash(data: Data("watt".utf8)))
     private let plainPayload = Data(#"{"identity":"dev.watt.example","build":1002003,"sha256":"E/sq9EiC6Ak8Rp4TvS6j65H2xWVg4AOe15YVVc3Ebas=","minimumSystemVersion":"13.0"}"#.utf8)
-    private let signedPayload = Data(#"{"identity":"dev.watt.example","build":1002003,"sha256":"E/sq9EiC6Ak8Rp4TvS6j65H2xWVg4AOe15YVVc3Ebas=","minimumSystemVersion":"13.0","notes":"### Fixes\n\n* steadier numbers","rollout":{"basis":1700000000,"interval":86400,"steps":[1,2,5,10,20,50,100],"paused":false,"percent":1,"critical":false,"halted":false}}"#.utf8)
+    // Four hashes. The notes contain `"###`, and a one-hash raw string ends at the first `"#`.
+    private let signedPayload = Data(####"{"identity":"dev.watt.example","build":1002003,"sha256":"E/sq9EiC6Ak8Rp4TvS6j65H2xWVg4AOe15YVVc3Ebas=","minimumSystemVersion":"13.0","notes":"### Fixes\n\n* steadier numbers","rollout":{"basis":1700000000,"interval":86400,"steps":[1,2,5,10,20,50,100],"paused":false,"percent":1,"critical":false,"halted":false}}"####.utf8)
 
     func testEncodedPayloadMatchesTheSignerBytes() throws {
         let plain = UpdateManifest(identity: "dev.watt.example", build: 1_002_003, sha256: digest, minimumSystemVersion: "13.0")
