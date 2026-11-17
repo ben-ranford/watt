@@ -148,7 +148,7 @@ enum SystemPowerSourceParser {
     /// Time to full while charging, time to empty on battery. -1 is still calculating.
     /// 0 is not "zero minutes", and values above two days are not estimates.
     private static func reportedMinutes(_ battery: [String: Any]?, state: BatteryState) -> Int? {
-        let key: CFString? = switch state {
+        let key: String? = switch state {
         case .charging: kIOPSTimeToFullChargeKey
         case .discharging: kIOPSTimeToEmptyKey
         default: nil
