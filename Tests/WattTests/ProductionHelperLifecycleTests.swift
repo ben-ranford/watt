@@ -213,7 +213,7 @@ final class ProductionHelperLifecycleTests: XCTestCase {
         XCTAssertEqual(source.components(separatedBy: "ProductionHelperComposition.configured()").count, 2,
                        "One factory result must serve lifecycle and telemetry")
         let normalComposition = String(source[normal.upperBound..<stores.lowerBound])
-        XCTAssertTrue(normalComposition.contains("if Self.isHarnessLaunch {"))
+        XCTAssertTrue(normalComposition.contains("if Self.isHarnessLaunch || protectedFolder"))
         XCTAssertTrue(normalComposition.contains("appRouter.settingsHelperSetup.unavailableReason = .configurationFailure(error,"))
         XCTAssertTrue(normalComposition.contains("appRouter.settingsHelperSetup.service = helper.service"))
         XCTAssertTrue(normalComposition.contains("await helper.service.remove(receipt: receipt)"))

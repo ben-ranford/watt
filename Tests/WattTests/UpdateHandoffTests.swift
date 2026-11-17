@@ -213,6 +213,11 @@ final class UpdateHandoffTests: XCTestCase {
         XCTAssertEqual(BundleBuildNumber.read(bundleURL: bundle), 1_001_000)
         try PropertyListSerialization.data(fromPropertyList: ["CFBundleVersion": "1.1.0"], format: .xml, options: 0).write(to: plist)
         XCTAssertNil(BundleBuildNumber.read(bundleURL: bundle))
+        let downloads = root.appendingPathComponent("Downloads/Watt.app/Contents", isDirectory: true)
+        try FileManager.default.createDirectory(at: downloads, withIntermediateDirectories: true)
+        try PropertyListSerialization.data(fromPropertyList: ["CFBundleVersion": "1001001"], format: .xml, options: 0).write(to: downloads.appendingPathComponent("Info.plist"))
+        XCTAssertNil(BundleBuildNumber.read(bundleURL: downloads.deletingLastPathComponent(), home: root.path),
+                     "A readable build inside Downloads is treated as unreadable, so the other copy is not quit")
         XCTAssertNil(BundleBuildNumber.parse("01"))
         XCTAssertNil(BundleBuildNumber.parse(nil))
     }

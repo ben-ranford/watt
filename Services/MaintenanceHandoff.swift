@@ -164,6 +164,7 @@ final class ProductionRemovalComposition: UninstallCoordinator {
     static func configured(bundle: Bundle = .main, helper: (any HelperService)?,
                            environment fixture: Environment? = nil) throws -> ProductionRemovalComposition {
         let application = bundle.bundleURL
+        if LaunchPathPolicy.isPrivacyProtected(application) { throw ServiceFailure.untrustedIdentity }
         let identity = try SecurityUpdateCodeValidator().verify(bundle: application)
         guard identity.identifier == HelperIdentity.appIdentifier, String(identity.build) == HelperIdentity.build else {
             throw ServiceFailure.untrustedIdentity

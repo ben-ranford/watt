@@ -25,6 +25,11 @@ protocol ProductionUpdateCodeValidator {
 /// No certificate/identifier fallback is used when code validation fails.
 struct SecurityUpdateCodeValidator: ProductionUpdateCodeValidator {
     func verify(bundle: URL) throws -> VerifiedUpdateBundle {
+        try verify(bundle: bundle, home: NSHomeDirectory())
+    }
+
+    func verify(bundle: URL, home: String) throws -> VerifiedUpdateBundle {
+        if LaunchPathPolicy.isPrivacyProtected(bundle, home: home) { throw ServiceFailure.untrustedIdentity }
         var code: SecStaticCode?
         guard SecStaticCodeCreateWithPath(bundle as CFURL, [], &code) == errSecSuccess, let code,
               SecStaticCodeCheckValidity(code, SecCSFlags(rawValue: kSecCSStrictValidate | kSecCSCheckAllArchitectures), nil) == errSecSuccess else {
@@ -93,6 +98,7 @@ final class ProductionUpdateInstallationDriver: UpdateInstallationDriver {
     }
     private func save(_ record: Record) throws { try storage.write(JSONEncoder().encode(record), key: key(record.receipt)) }
     private func verified(_ url: URL) throws -> VerifiedUpdateBundle {
+        if LaunchPathPolicy.isPrivacyProtected(url) { throw ServiceFailure.untrustedIdentity }
         let fd = try BoundedUSTAR.openDirectory(url)
         defer { close(fd) }
         var before = stat(), after = stat()
@@ -109,6 +115,7 @@ final class ProductionUpdateInstallationDriver: UpdateInstallationDriver {
         return identity
     }
     private func rejectLinks(_ url: URL) throws {
+        if LaunchPathPolicy.isPrivacyProtected(url) { throw ServiceFailure.untrustedIdentity }
         guard let files = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil) else { throw ServiceFailure.invalidData }
         var count = 0, total: Int64 = 0
         for case let file as URL in files {

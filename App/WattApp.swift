@@ -239,9 +239,15 @@ struct WattApp: App {
             return
         }
         #endif
+        let bundleURL = Bundle.main.bundleURL
+        // Desktop, Documents, Downloads, and iCloud Drive stall openat on the main
+        // thread until a TCC dialog this accessory app cannot show. Do not open the
+        // bundle, the update journal, or staging from here. Updates stay fail-closed
+        // and no staged payload is touched.
+        let protectedFolder = !Self.isHarnessLaunch && LaunchPathPolicy.isPrivacyProtected(bundleURL)
         let productionUpdate: ProductionUpdateComposition?
         let updateFailure: ServiceFailure?
-        if Self.isHarnessLaunch { productionUpdate = nil; updateFailure = nil }
+        if Self.isHarnessLaunch || protectedFolder { productionUpdate = nil; updateFailure = protectedFolder ? .untrustedIdentity : nil }
         else {
             do { productionUpdate = try ProductionUpdateComposition.configured(); updateFailure = nil }
             catch { productionUpdate = nil; updateFailure = error as? ServiceFailure ?? .untrustedIdentity }
@@ -276,8 +282,11 @@ struct WattApp: App {
             UpdateLaunchAcknowledgementService.retireHandshakeEvidence()
         }
         let productionHelper: ProductionHelperComposition?
-        if Self.isHarnessLaunch {
+        if Self.isHarnessLaunch || protectedFolder {
             productionHelper = nil
+            if protectedFolder {
+                appRouter.settingsHelperSetup.unavailableReason = .configurationFailed
+            }
         } else {
             do { productionHelper = try ProductionHelperComposition.configured() }
             catch {
@@ -308,7 +317,7 @@ struct WattApp: App {
                 return result
             }
         }
-        if !Self.isHarnessLaunch {
+        if !Self.isHarnessLaunch && !protectedFolder {
             do {
                 let removal = try ProductionRemovalComposition.configured(helper: productionHelper?.service)
                 appRouter.configureUninstall(coordinator: removal)
@@ -329,7 +338,7 @@ struct WattApp: App {
             service?.connectionLost()
             appPowerStore?.invalidateComponents()
         }
-        if productionHelper == nil, !Self.isHarnessLaunch,
+        if productionHelper == nil, !Self.isHarnessLaunch, !protectedFolder,
            appRouter.settingsHelperSetup.unavailableReason == .installationRequired {
             let installer = Bundle.main.bundleURL.appendingPathComponent("Contents/MacOS/WattHelperInstaller")
             if FileManager.default.isExecutableFile(atPath: installer.path) {
@@ -395,6 +404,7 @@ struct WattApp: App {
             applicationDelegate.scheduleFallbackStatusItem(router: appRouter,
                                                             powerStore: appPowerStore,
                                                             preferences: appPreferences)
+            if protectedFolder { ApplicationsFolderGuidance.presentIfNeeded(bundleURL: bundleURL) }
             // After the handshake has returned, drop any older Watt that did
             // not exit. The next turn is late enough that this process is no
             // longer inside the parent's launch wait.

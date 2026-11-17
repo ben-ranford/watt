@@ -2,7 +2,48 @@ import Foundation
 import Security
 import Darwin
 
-public enum ProtectedTrustError: Error { case unsafePath, invalidRecord, invalidCode, administratorRequired }
+public enum ProtectedTrustError: Error, Sendable { case unsafePath, invalidRecord, invalidCode, administratorRequired }
+
+/// Locations macOS can stall inside `openat` until a TCC consent dialog is answered.
+/// Desktop, Documents, Downloads and iCloud Drive are the user folders that do this.
+/// An accessory (`LSUIElement`) app never brings that dialog forward, so the syscall
+/// waits forever. Classification uses the path string only: it does not open anything.
+public enum LaunchPathPolicy {
+    public static func isPrivacyProtected(_ url: URL, home: String = NSHomeDirectory()) -> Bool {
+        url.isFileURL && isPrivacyProtected(path: url.path, home: home)
+    }
+
+    public static func isPrivacyProtected(path: String, home: String) -> Bool {
+        let parts = components(path)
+        let homeParts = components(home)
+        guard parts.count > homeParts.count else { return false }
+        guard zip(parts, homeParts).allSatisfy({ $0.0.caseInsensitiveCompare($0.1) == .orderedSame }) else { return false }
+        let rest = parts.dropFirst(homeParts.count)
+        guard let first = rest.first?.lowercased() else { return false }
+        if first == "desktop" || first == "documents" || first == "downloads" { return true }
+        let second = rest.dropFirst().first?.lowercased()
+        return first == "library" && second == "mobile documents"
+    }
+
+    /// Gatekeeper's translocated copy. Opening it does not wait on TCC. The string
+    /// check is how launch tells that copy from a normal install without stating it.
+    public static func isTranslocated(path: String) -> Bool {
+        components(path).contains { $0.caseInsensitiveCompare("AppTranslocation") == .orderedSame }
+    }
+
+    public static func isTranslocated(_ url: URL) -> Bool { isTranslocated(path: url.path) }
+
+    /// Downloads, Desktop, Documents, iCloud Drive, or an App Translocation path.
+    /// There is no separate move-to-Applications window; launch still shows the
+    /// status item, and this is the signal a presenter would use.
+    public static func shouldSuggestApplicationsFolder(_ url: URL, home: String = NSHomeDirectory()) -> Bool {
+        isPrivacyProtected(url, home: home) || isTranslocated(url)
+    }
+
+    private static func components(_ path: String) -> [String] {
+        path.split(separator: "/", omittingEmptySubsequences: true).map(String.init)
+    }
+}
 
 public struct ProtectedHelperRecord: Codable, Equatable, Sendable {
     public let installationID: UUID
@@ -123,6 +164,7 @@ public enum ExactCodeIdentity {
     }
 
     public static func verify(at url: URL, requirement text: String) throws -> Data {
+        if LaunchPathPolicy.isPrivacyProtected(url) { throw ProtectedTrustError.unsafePath }
         var code: SecStaticCode?
         var requirement: SecRequirement?
         guard SecStaticCodeCreateWithPath(url as CFURL, [], &code) == errSecSuccess, let code,
@@ -135,6 +177,7 @@ public enum ExactCodeIdentity {
 
     /// Derive every slice identity from the same staged file. Unknown/malformed formats fail closed.
     public static func allHashes(at url: URL, identifier: String) throws -> [Data] {
+        if LaunchPathPolicy.isPrivacyProtected(url) { throw ProtectedTrustError.unsafePath }
         let data = try Data(contentsOf: url, options: .mappedIfSafe)
         guard data.count >= 12, data.count <= 256 * 1024 * 1024 else { throw ProtectedTrustError.invalidCode }
         func word(_ offset: Int, little: Bool = false) throws -> UInt32 {
