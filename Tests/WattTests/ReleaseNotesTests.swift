@@ -150,8 +150,10 @@ final class ReleaseNotesTests: XCTestCase {
             "• What’s New appears once after you update",
         ])
         let glued = "ChangesUpdates roll out graduallyWhat’s New appears once after you update"
+        let lines = blocks.map(\.plain).joined(separator: "\n")
+        XCTAssertEqual(lines, "Changes\nUpdates roll out gradually\nWhat’s New appears once after you update")
+        XCTAssertNotEqual(lines, glued)
         XCTAssertFalse(blocks.contains { $0.plain.contains("ChangesUpdates") || $0.spoken == glued })
-        XCTAssertNotEqual(blocks.map(\.plain).joined(), glued)
 
         let root = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
