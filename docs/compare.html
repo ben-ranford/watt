@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Watt? compared with Stats, AlDente, coconutBattery, and iStat Menus. Free and open source, and focused on where the watts are going.">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#121214" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Watt? compared with Stats, AlDente, coconutBattery, and iStat Menus</title>
+  <link rel="canonical" href="https://ben-ranford.github.io/watt/compare.html">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="https://ben-ranford.github.io/watt/sitemap.xml">
+  <meta property="og:title" content="Watt? compared with Stats, AlDente, coconutBattery, and iStat Menus">
+  <meta property="og:description" content="Watt? compared with Stats, AlDente, coconutBattery, and iStat Menus. Free and open source, and focused on where the watts are going.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ben-ranford.github.io/watt/compare.html">
+  <meta property="og:image" content="https://ben-ranford.github.io/watt/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Watt? app icon and the line: Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Watt? compared with Stats, AlDente, coconutBattery, and iStat Menus">
+  <meta name="twitter:description" content="Watt? compared with Stats, AlDente, coconutBattery, and iStat Menus. Free and open source, and focused on where the watts are going.">
+  <meta name="twitter:image" content="https://ben-ranford.github.io/watt/social-preview.png">
+  <meta name="twitter:image:alt" content="Watt? app icon and the line: Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="wrap">
+    <header>
+      <a href="./" aria-label="Watt?"><img src="icon.png" width="512" height="512" alt=""></a>
+      <div>
+        <p class="eyebrow">macOS menu bar</p>
+        <h1>Watt? compared</h1>
+      </div>
+    </header>
+    <nav class="sitenav" aria-label="Pages">
+      <a href="./">Watt?</a>
+      <a href="why-is-my-mac-charging-slowly.html">Slow charging</a>
+      <a href="compare.html" aria-current="page">Compare</a>
+    </nav>
+    <main id="content" class="guide">
+      <p class="pitch">Free, open source, and native. One question: where are the watts going?</p>
+      <p>Watt? is lighter than <a href="https://github.com/exelban/stats">Stats</a> because Stats monitors the whole Mac and Watt? does not. It is simpler than <a href="https://apphousekitchen.com/aldente-overview/">AlDente</a>, and cheaper than AlDente Pro, because it does not limit charging and it has no paid tier. AlDente’s free version is also free. This page does not guess at prices. Where an app charges, the sentence says so and points at that app’s site.</p>
+      <p>Nothing here is a benchmark. There is no measurement of CPU use or memory against the other apps. Each description is limited to what that project says about itself.</p>
+
+      <section aria-labelledby="watt">
+        <h2 id="watt">Watt?</h2>
+        <ul>
+          <li>A native SwiftUI menu-bar app with no Dock icon. It needs macOS 13 or later.</li>
+          <li>Live charger input, system draw, and battery watts. Time to full, or time remaining on battery, when macOS reports a real duration.</li>
+          <li>The charger row adds the adapter’s rated wattage and name when the Mac reports them.</li>
+          <li>Optional CPU and GPU estimates, only after you install the helper and macOS has approved it. Display, SSD, and Other are not provided.</li>
+          <li>Free. The <a href="https://github.com/ben-ranford/watt">source</a> is published under the <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a>.</li>
+          <li>It does not limit charging, report a battery-health percentage or a cycle count, or control fans.</li>
+          <li>Releases are ad-hoc signed and are not notarised. Gatekeeper blocks the first launch of a zip or disk image. A Homebrew install does not have that block. The steps are on the <a href="./">home page</a>.</li>
+        </ul>
+        <p><a href="why-is-my-mac-charging-slowly.html">Why is my Mac charging slowly?</a> reads the charger row, the system row, and the time-to-full line.</p>
+      </section>
+
+      <section aria-labelledby="stats">
+        <h2 id="stats">Stats</h2>
+        <p><a href="https://github.com/exelban/stats">Stats</a> is a free, MIT-licensed, open-source menu-bar system monitor. The project’s site is <a href="https://mac-stats.com/">mac-stats.com</a>. Its own feature list is CPU, GPU, memory, disk, network, sensors, battery, Bluetooth devices, and a clock. Battery there includes charge level, and the sensors include power. The same list marks fan control as not maintained. The project says it supports macOS 12 or later.</p>
+        <p>Use Stats when you want the rest of the machine in the menu bar. Use Watt? when you want the watts and not the rest. Lighter, on this page, means a narrower app.</p>
+      </section>
+
+      <section aria-labelledby="aldente">
+        <h2 id="aldente">AlDente</h2>
+        <p><a href="https://apphousekitchen.com/aldente-overview/">AlDente</a> is a menu-bar charge limiter from AppHouseKitchen. Its job is to stop the battery charging past a percentage you choose. The project’s repository says the free version includes the charge limiter and discharge, which runs the Mac on the battery while it is plugged in, and that Pro adds further controls, including heat protection. <a href="https://apphousekitchen.com/aldente-overview/pricing/">The price of Pro is on their site</a>. The free version has no price to compare.</p>
+        <p>The <a href="https://github.com/AppHouseKitchen/AlDente-Battery_Care_and_Monitoring">GitHub repository</a> says the current app is no longer open source, and that the code in the repository is a legacy version. Their pricing page marks the app as notarised by Apple.</p>
+        <p>Watt? does not limit charging. For a ceiling, AlDente is built for that. So is macOS Charge Limit, on Apple silicon with macOS Tahoe 26.4 or later, from 80 to 100 percent in Battery settings. For where the watts are going, Watt? is the smaller tool: no paid tier, and no charge-limit controls to learn.</p>
+      </section>
+
+      <section aria-labelledby="coconut">
+        <h2 id="coconut">coconutBattery</h2>
+        <p><a href="https://www.coconut-flavour.com/coconutbattery/">coconutBattery</a> reads battery health for a Mac, an iPhone, and an iPad. The page says it requires macOS 12 Monterey or later. Plus is a one-time purchase, not a subscription. The same page lists a lifetime analyzer, menu-bar battery details, and other Plus items, and it says to see the edition comparison for what each one includes. <a href="https://www.coconut-flavour.com/coconutbattery/">The price, and which edition has which feature, is on their site</a>.</p>
+        <p>That is a different question from Watt?. coconutBattery’s own description is battery quality. This page does not claim the app hides every watt figure. Watt? does not show a cycle count, a design capacity, or a battery-health percentage, and it does not read an iPhone or an iPad.</p>
+      </section>
+
+      <section aria-labelledby="istat">
+        <h2 id="istat">iStat Menus</h2>
+        <p><a href="https://bjango.com/mac/istatmenus/">iStat Menus</a> is Bjango’s menu-bar system monitor. The page describes CPU, GPU, memory, disks, network, sensors, battery, and weather. The power item shows battery level. The sensors include power, and the site says fan speeds can be controlled. It is a paid app. <a href="https://bjango.com/mac/istatmenus/">The price is on their site</a>. iStat Menus 7.5, the version named on that page, requires macOS 13.5 or later.</p>
+        <p>Watt? does not monitor the rest of the machine, and it does not control fans. It is the wrong app if you wanted those menus. It is the free one if you wanted the watts without them.</p>
+      </section>
+
+      <section aria-labelledby="which">
+        <h2 id="which">Which one</h2>
+        <ul>
+          <li>Watt?, for charger, system, and battery watts, with no charge limit.</li>
+          <li>Stats or iStat Menus, for a system monitor. Stats is free and open source. iStat Menus is paid. See iStat’s site for the price.</li>
+          <li>AlDente, or macOS Charge Limit, to stop the battery at a percentage. AlDente Pro is paid. See their site for the price. Watt? does not do this.</li>
+          <li>coconutBattery, for battery health, including an iPhone or an iPad. See their site for the free edition and for the Plus price.</li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      <nav aria-label="Site">
+        <p><a href="./">Watt?</a> · <a href="why-is-my-mac-charging-slowly.html">Slow charging</a> · <a href="compare.html">Compare</a></p>
+        <p><a href="https://github.com/ben-ranford/watt">Source</a> · <a href="https://github.com/ben-ranford/watt/releases/latest">Releases</a> · <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a></p>
+      </nav>
+    </footer>
+  </div>
+</body>
+</html>

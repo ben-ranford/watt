@@ -8,7 +8,11 @@ dest=${PAGES_DIR:?}
 require_updates=${PAGES_REQUIRE_UPDATES:-true}
 max_bytes=${PAGES_MAX_BYTES:-104857600}
 
-for name in index.html site.css icon.png social-preview.png; do
+for name in \
+  index.html why-is-my-mac-charging-slowly.html compare.html \
+  robots.txt sitemap.xml \
+  site.css icon.png social-preview.png
+do
   if [[ ! -s "$dest/$name" ]]; then
     echo "Pages artifact is missing $name." >&2
     exit 1
@@ -31,17 +35,78 @@ fi
 
 python3 - "$dest" "$require_updates" "$max_bytes" <<'PY'
 import json
+import re
 import struct
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
+from urllib.parse import urlparse
 
 dest = Path(sys.argv[1])
 require_updates = sys.argv[2] == 'true'
 limit = int(sys.argv[3])
 
-html = (dest / 'index.html').read_text(encoding='utf-8').lower()
-if '<script' in html:
-    raise SystemExit('Landing page contains a script element.')
+def reject_remote_html(text, name):
+    lowered = text.lower()
+    if 'http://' in lowered:
+        raise SystemExit(f'{name} contains an http:// URL.')
+    for token in (
+        'googleapis', 'googletagmanager', 'google-analytics', 'plausible',
+        'gtag(', 'cdn.jsdelivr', 'unpkg.com', 'fonts.google',
+    ):
+        if token in lowered:
+            raise SystemExit(f'{name} loads a remote resource ({token}).')
+    for attrs in re.findall(r'<script\b([^>]*)>', text, flags=re.I):
+        if re.search(r'\bsrc\s*=', attrs, re.I):
+            raise SystemExit(f'{name} loads a script.')
+        kind = re.search(r'\btype\s*=\s*["\']([^"\']+)["\']', attrs, re.I)
+        if kind is None or kind.group(1).lower() != 'application/ld+json':
+            raise SystemExit(f'{name} contains a script element.')
+
+pages = (
+    'index.html',
+    'why-is-my-mac-charging-slowly.html',
+    'compare.html',
+)
+for name in pages:
+    reject_remote_html((dest / name).read_text(encoding='utf-8'), name)
+
+robots = (dest / 'robots.txt').read_text(encoding='utf-8')
+if 'User-agent: *' not in robots or '\nAllow: /\n' not in f'\n{robots}\n':
+    raise SystemExit('robots.txt does not allow all crawlers.')
+sitemap_line = 'Sitemap: https://ben-ranford.github.io/watt/sitemap.xml'
+if sitemap_line not in robots:
+    raise SystemExit('robots.txt does not point at the sitemap.')
+
+required_pages = {
+    'https://ben-ranford.github.io/watt/',
+    'https://ben-ranford.github.io/watt/why-is-my-mac-charging-slowly.html',
+    'https://ben-ranford.github.io/watt/compare.html',
+}
+locs = []
+for element in ET.parse(dest / 'sitemap.xml').getroot().iter():
+    if element.tag.endswith('loc') and element.text and element.text.strip():
+        locs.append(element.text.strip())
+if set(locs) != required_pages:
+    raise SystemExit(f'sitemap.xml pages are {locs}, expected the three site pages.')
+root = dest.resolve()
+for loc in locs:
+    parsed = urlparse(loc)
+    if parsed.scheme != 'https' or parsed.netloc != 'ben-ranford.github.io':
+        raise SystemExit(f'sitemap loc is outside the site: {loc}')
+    if parsed.query or parsed.fragment:
+        raise SystemExit(f'sitemap loc has a query or fragment: {loc}')
+    prefix = '/watt/'
+    if not parsed.path.startswith(prefix):
+        raise SystemExit(f'sitemap loc is outside /watt/: {loc}')
+    relative = parsed.path[len(prefix):] or 'index.html'
+    if relative.endswith('/'):
+        relative += 'index.html'
+    target = (dest / relative).resolve()
+    if root not in target.parents or not target.is_file():
+        raise SystemExit(f'sitemap URL does not resolve in the Pages artifact: {loc}')
+print('Sitemap URLs resolve in the Pages artifact.')
+
 css = (dest / 'site.css').read_text(encoding='utf-8').lower()
 if '@import' in css or 'url(http' in css or 'fonts.google' in css:
     raise SystemExit('Landing page stylesheet loads a remote resource.')

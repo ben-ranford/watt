@@ -25,6 +25,27 @@
   <meta name="twitter:description" content="Native macOS menu-bar app that shows live charger, system and battery power in watts.">
   <meta name="twitter:image" content="https://ben-ranford.github.io/watt/social-preview.png">
   <meta name="twitter:image:alt" content="Watt? app icon and the line: Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="https://ben-ranford.github.io/watt/sitemap.xml">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Watt?",
+    "operatingSystem": "macOS",
+    "applicationCategory": "UtilitiesApplication",
+    "url": "https://ben-ranford.github.io/watt/",
+    "image": "https://ben-ranford.github.io/watt/social-preview.png",
+    "description": "Native macOS menu-bar app that shows live charger, system and battery power in watts.",
+    "softwareRequirements": "macOS 13 or later",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "isAccessibleForFree": true,
+    "license": "https://github.com/ben-ranford/watt/blob/main/LICENSE"
+  }
+  </script>
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
@@ -37,6 +58,11 @@
         <h1>Watt?</h1>
       </div>
     </header>
+    <nav class="sitenav" aria-label="Pages">
+      <a href="./" aria-current="page">Watt?</a>
+      <a href="why-is-my-mac-charging-slowly.html">Slow charging</a>
+      <a href="compare.html">Compare</a>
+    </nav>
     <main id="content">
       <p class="pitch">Native macOS menu-bar app that shows live charger, system and battery power in watts.</p>
 
@@ -118,7 +144,10 @@
       </section>
     </main>
     <footer>
-      <p><a href="https://github.com/ben-ranford/watt">Source</a> · <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a></p>
+      <nav aria-label="Site">
+        <p><a href="./">Watt?</a> · <a href="why-is-my-mac-charging-slowly.html">Slow charging</a> · <a href="compare.html">Compare</a></p>
+        <p><a href="https://github.com/ben-ranford/watt">Source</a> · <a href="https://github.com/ben-ranford/watt/releases/latest">Releases</a> · <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a></p>
+      </nav>
     </footer>
   </div>
 </body>

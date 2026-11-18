@@ -215,6 +215,31 @@ footer {
 
 footer a { color: var(--ink); }
 
+.sitenav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+}
+
+.sitenav a,
+.guide a,
+footer a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.sitenav a[aria-current="page"] {
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.guide { max-width: 40rem; }
+
+.guide .shot { margin-top: 1rem; }
+
 @media (max-width: 720px) {
   .shots, .columns { grid-template-columns: 1fr; }
   .shot.settings { grid-column: auto; }
