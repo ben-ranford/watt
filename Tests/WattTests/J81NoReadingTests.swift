@@ -208,6 +208,148 @@ final class J81NoReadingTests: XCTestCase {
         XCTAssertEqual(PowerReadingStore.samplingDelay(for: .infinity), PowerReadingStore.retryInterval, accuracy: 0.001)
     }
 
+    func testSamplingToleranceStaysInsideTheFreshnessLead() {
+        XCTAssertEqual(PowerReadingStore.samplingToleranceFraction, 0.10, accuracy: 0.001)
+        for interval in [0.25, 1, 2, 5] {
+            let delay = PowerReadingStore.samplingDelay(for: interval)
+            let tolerance = PowerReadingStore.samplingTolerance(for: delay)
+            XCTAssertGreaterThan(tolerance, 0, "interval \(interval)")
+            XCTAssertLessThanOrEqual(tolerance, PowerReadingStore.samplingRefreshLeadTime / 2)
+            XCTAssertLessThanOrEqual(delay + tolerance,
+                                     PowerReadingStore.statusMaximumAge - PowerReadingStore.samplingRefreshLeadTime / 2)
+        }
+        XCTAssertEqual(PowerReadingStore.samplingTolerance(for: 0), 0, accuracy: 0.001)
+        XCTAssertEqual(PowerReadingStore.samplingDelay(for: 2), 2, accuracy: 0.001)
+        let capped = PowerReadingStore.samplingDelay(for: 5)
+        XCTAssertEqual(capped, 4.5, accuracy: 0.001)
+        XCTAssertEqual(PowerReadingStore.samplingTolerance(for: capped), 0.25, accuracy: 0.001)
+    }
+
+    func testHiddenPanelSchedulesOnlyTheMenuBarSample() async {
+        let harness = IdleSamplingHarness()
+        harness.panelPresented = false
+        harness.menuBarComponents = false
+        let task = harness.start()
+        defer { task.cancel() }
+
+        await harness.waitForMenuBarPause()
+        XCTAssertEqual(harness.system.calls, 1)
+        XCTAssertEqual(harness.components.calls, 0)
+        let delay = PowerReadingStore.samplingDelay(for: 2)
+        let tolerance = PowerReadingStore.samplingTolerance(for: delay)
+        XCTAssertEqual(harness.scheduler.pauses.count, 1)
+        XCTAssertEqual(harness.scheduler.pauses[0].delay, delay, accuracy: 0.001)
+        XCTAssertEqual(harness.scheduler.pauses[0].tolerance, tolerance, accuracy: 0.001)
+
+        for _ in 0..<4 {
+            let calls = harness.system.calls
+            harness.scheduler.resumeNext()
+            await harness.waitUntil("menu-bar sample did not advance") { harness.system.calls > calls }
+            await harness.waitUntil("menu-bar pause was not rearmed") {
+                harness.scheduler.pauses.count == harness.system.calls
+            }
+        }
+        XCTAssertEqual(harness.system.calls, 5)
+        XCTAssertEqual(harness.components.calls, 0)
+        XCTAssertEqual(harness.scheduler.pauses.count, 5)
+        XCTAssertTrue(harness.scheduler.pauses.allSatisfy {
+            abs($0.delay - delay) < 0.001 && abs($0.tolerance - tolerance) < 0.001
+        })
+        let settledCalls = harness.system.calls
+        let settledPauses = harness.scheduler.pauses.count
+        await Task.yield()
+        await Task.yield()
+        XCTAssertEqual(harness.system.calls, settledCalls)
+        XCTAssertEqual(harness.scheduler.pauses.count, settledPauses)
+        XCTAssertEqual(harness.components.calls, 0)
+    }
+
+    func testHiddenPanelStillSamplesComponentsWhenTheMenuBarShowsThem() async throws {
+        let harness = IdleSamplingHarness()
+        harness.menuBarComponents = true
+        let task = harness.start()
+        defer { task.cancel() }
+
+        await harness.waitUntil("component sample was not scheduled for the menu bar") {
+            harness.components.calls == 1 && harness.scheduler.pauses.contains { abs($0.delay - PowerReadingStore.retryInterval) < 0.001 }
+        }
+        XCTAssertGreaterThanOrEqual(harness.system.calls, 1)
+        XCTAssertTrue(harness.scheduler.pauses.contains { abs($0.delay - PowerReadingStore.samplingDelay(for: 2)) < 0.001 })
+        let componentPause = try XCTUnwrap(harness.scheduler.pauses.first { abs($0.delay - PowerReadingStore.retryInterval) < 0.001 })
+        XCTAssertEqual(componentPause.tolerance, PowerReadingStore.samplingTolerance(for: componentPause.delay), accuracy: 0.001)
+        XCTAssertLessThanOrEqual(componentPause.delay + componentPause.tolerance, PowerReadingStore.componentsStatusMaximumAge)
+    }
+
+    func testOpeningThePanelSchedulesComponentSamplingAndClosingCancelsIt() async {
+        let harness = IdleSamplingHarness()
+        let task = harness.start()
+        defer { task.cancel() }
+
+        await harness.waitForMenuBarPause()
+        XCTAssertEqual(harness.components.calls, 0)
+
+        harness.panelPresented = true
+        harness.store.refreshComponentSamplingNeed()
+        await harness.waitUntil("opening the panel did not sample components") {
+            harness.components.calls == 1
+                && harness.scheduler.pauses.contains { abs($0.delay - PowerReadingStore.retryInterval) < 0.001 }
+        }
+        let componentPauses = harness.scheduler.pauses.filter { abs($0.delay - PowerReadingStore.retryInterval) < 0.001 }.count
+
+        harness.clock.advance(by: PowerReadingStore.retryInterval)
+        harness.panelPresented = false
+        harness.store.refreshComponentSamplingNeed()
+        for _ in 0..<20 { await Task.yield() }
+        harness.scheduler.resumeAll()
+        await harness.waitUntil("menu-bar sampling stopped when the panel closed") { harness.system.calls >= 2 }
+        XCTAssertEqual(harness.components.calls, 1)
+        XCTAssertEqual(
+            harness.scheduler.pauses.filter { abs($0.delay - PowerReadingStore.retryInterval) < 0.001 }.count,
+            componentPauses)
+    }
+
+    func testUnsetComponentPolicyKeepsTheHelperSampler() async {
+        let system = CountingTelemetry()
+        let components = CountingComponentTelemetry()
+        let scheduler = ScriptedRefreshScheduler()
+        let store = PowerReadingStore(currentReading: .unavailable, clock: FakeWattClock(),
+                                      telemetry: system, componentTelemetry: components, scheduler: scheduler)
+        let task = Task { await store.runSampling(interval: { 2 }) }
+        defer { task.cancel() }
+        for _ in 0..<200 {
+            if components.calls == 1,
+               scheduler.pauses.contains(where: { abs($0.delay - PowerReadingStore.retryInterval) < 0.001 }) {
+                break
+            }
+            await Task.yield()
+        }
+        XCTAssertEqual(components.calls, 1)
+        XCTAssertGreaterThanOrEqual(system.calls, 1)
+        XCTAssertTrue(scheduler.pauses.contains { abs($0.delay - PowerReadingStore.samplingDelay(for: 2)) < 0.001 })
+    }
+
+    func testProductionIdlePathReleasesTheHiddenPanelAndReadsNamedRegistryKeys() throws {
+        let telemetry = try source("Services/SystemPowerSourceTelemetryService.swift")
+        XCTAssertTrue(telemetry.contains("IORegistryEntryCreateCFProperty"))
+        for key in ["PowerTelemetryData", "AdapterDetails", "AppleRawAdapterDetails"] {
+            XCTAssertTrue(telemetry.contains("\"\(key)\""), key)
+        }
+        XCTAssertFalse(telemetry.contains("IORegistryEntryCreateCFProperties"))
+        let storeSource = try source("Services/PowerReadingStore.swift")
+        XCTAssertTrue(storeSource.contains("try await Task.sleep(for: duration, tolerance: leeway)"))
+        XCTAssertTrue(storeSource.contains("func setComponentSamplingPolicy"))
+        let app = try source("App/WattApp.swift")
+        let installStart = try XCTUnwrap(app.range(of: "func install()"))
+        let uninstall = try XCTUnwrap(app.range(of: "func uninstall()", range: installStart.upperBound..<app.endIndex))
+        let install = app[installStart.lowerBound..<uninstall.lowerBound]
+        let policy = try XCTUnwrap(install.range(of: "setComponentSamplingPolicy"))
+        let sampling = try XCTUnwrap(install.range(of: "startSampling()"))
+        XCTAssertLessThan(policy.lowerBound, sampling.lowerBound)
+        XCTAssertTrue(app.contains("popover.delegate = self"))
+        XCTAssertTrue(app.contains("panel?.contentViewController = nil"))
+        XCTAssertTrue(app.contains("preferences.displayMode == .components"))
+    }
+
     func testRetryCallbackAndNativeFooterActionsPreserveRouterAndPreferences() async throws {
         let preferences = J81FixtureLaunch.makePreferences()
         let original = preferences.onboarding
@@ -471,5 +613,132 @@ private final class DeferredTelemetry: TelemetryService {
     }
     func finish(_ index: Int, with outcome: ServiceOutcome<PowerReading>) {
         continuations[index].resume(returning: outcome)
+    }
+}
+
+@MainActor
+private final class CountingComponentTelemetry: ComponentTelemetryService {
+    private(set) var calls = 0
+    func sampleComponents() async -> ServiceOutcome<ComponentEstimatePair> {
+        calls += 1
+        return .failure(.unknownStatus)
+    }
+}
+
+/// Records every sampler sleep and resumes it only when the test says so.
+/// The recorded pauses live off the main actor so cancellation can complete
+/// the sleep without a hop.
+private final class ScriptedRefreshState: @unchecked Sendable {
+    struct Pause: Equatable {
+        var delay: TimeInterval
+        var tolerance: TimeInterval
+    }
+
+    private let lock = NSLock()
+    private var storedPauses: [Pause] = []
+    private var waiters: [UUID: CheckedContinuation<Void, Error>] = [:]
+    private var order: [UUID] = []
+
+    var pauses: [Pause] {
+        lock.lock()
+        defer { lock.unlock() }
+        return storedPauses
+    }
+
+    func begin(id: UUID, delay: TimeInterval, tolerance: TimeInterval,
+               continuation: CheckedContinuation<Void, Error>) {
+        lock.lock()
+        storedPauses.append(Pause(delay: delay, tolerance: tolerance))
+        waiters[id] = continuation
+        order.append(id)
+        lock.unlock()
+    }
+
+    func finish(_ id: UUID, _ error: Error?) {
+        lock.lock()
+        let continuation = waiters.removeValue(forKey: id)
+        order.removeAll { $0 == id }
+        lock.unlock()
+        guard let continuation else { return }
+        if let error { continuation.resume(throwing: error) }
+        else { continuation.resume() }
+    }
+
+    func resumeNext() {
+        lock.lock()
+        let id = order.first { waiters[$0] != nil }
+        lock.unlock()
+        if let id { finish(id, nil) }
+    }
+
+    func resumeAll() {
+        lock.lock()
+        let pending = order.compactMap { waiters[$0] }
+        waiters.removeAll()
+        order.removeAll()
+        lock.unlock()
+        pending.forEach { $0.resume() }
+    }
+}
+
+@MainActor
+private final class ScriptedRefreshScheduler: RefreshScheduling {
+    private let state = ScriptedRefreshState()
+    var pauses: [ScriptedRefreshState.Pause] { state.pauses }
+
+    func pause(for delay: TimeInterval, tolerance: TimeInterval) async throws {
+        let id = UUID()
+        let state = self.state
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                state.begin(id: id, delay: delay, tolerance: tolerance, continuation: continuation)
+                if Task.isCancelled { state.finish(id, CancellationError()) }
+            }
+        } onCancel: {
+            state.finish(id, CancellationError())
+        }
+    }
+
+    func resumeNext() { state.resumeNext() }
+    func resumeAll() { state.resumeAll() }
+}
+
+@MainActor
+private final class IdleSamplingHarness {
+    let clock = FakeWattClock()
+    let system = CountingTelemetry()
+    let components = CountingComponentTelemetry()
+    let scheduler = ScriptedRefreshScheduler()
+    let store: PowerReadingStore
+    var panelPresented = false
+    var menuBarComponents = false
+
+    init() {
+        store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: system,
+                                  componentTelemetry: components, scheduler: scheduler)
+    }
+
+    func start() -> Task<Void, Never> {
+        store.setComponentSamplingPolicy { [weak self] in
+            guard let self else { return false }
+            return self.panelPresented || self.menuBarComponents
+        }
+        let store = store
+        return Task { await store.runSampling(interval: { 2 }) }
+    }
+
+    func waitForMenuBarPause() async {
+        let delay = PowerReadingStore.samplingDelay(for: 2)
+        await waitUntil("menu-bar pause was not scheduled") {
+            system.calls >= 1 && scheduler.pauses.contains { abs($0.delay - delay) < 0.001 }
+        }
+    }
+
+    func waitUntil(_ description: String, attempts: Int = 200, _ condition: () -> Bool) async {
+        for _ in 0..<attempts {
+            if condition() { return }
+            await Task.yield()
+        }
+        XCTFail(description)
     }
 }

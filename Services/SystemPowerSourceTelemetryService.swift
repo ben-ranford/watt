@@ -12,18 +12,23 @@ struct SystemPowerSourceSnapshot {
     /// properties; this is collected separately and remains optional so the
     /// metadata-only path still fails closed on unsupported hardware.
     let batteryProperties: [String: Any]?
+    /// `IOPSCopyExternalPowerAdapterDetails()`. Flat dictionary, often Watts only.
+    /// Nil when no adapter is attached or the call returns nothing.
+    let externalAdapter: [String: Any]?
 
     init(descriptions: [[String: Any]], providingSource: String?, timestamp: Date,
-         batteryProperties: [String: Any]? = nil) {
+         batteryProperties: [String: Any]? = nil, externalAdapter: [String: Any]? = nil) {
         self.descriptions = descriptions
         self.providingSource = providingSource
         self.timestamp = timestamp
         self.batteryProperties = batteryProperties
+        self.externalAdapter = externalAdapter
     }
 }
 
-// Pure parser: public IOPS keys determine state; IORegistry telemetry supplies
-// measured battery input/output, charger input and system draw when available.
+// Pure parser: public IOPS keys determine state and time remaining. IORegistry
+// telemetry supplies measured watts. Adapter identity comes from AdapterDetails
+// or the external adapter dictionary. Missing and odd values stay hidden.
 enum SystemPowerSourceParser {
     static func parse(_ snapshot: SystemPowerSourceSnapshot) throws -> PowerReading {
         let batteries = snapshot.descriptions.filter { ($0[kIOPSTypeKey] as? String) == kIOPSInternalBatteryType }
@@ -48,12 +53,22 @@ enum SystemPowerSourceParser {
             }
             // Not charging on AC is not proof of an intentional charging hold.
         }
-        let detail: String? = switch snapshot.providingSource {
+        let sourceDetail: String? = switch snapshot.providingSource {
         case kIOPSACPowerValue: "Power source: AC"
         case kIOPSBatteryPowerValue: "Power source: Battery"
         case kIOPMUPSPowerKey: "Power source: UPS"
         default: nil
         }
+        let identity = adapterIdentity(batteryProperties: snapshot.batteryProperties,
+                                       externalAdapter: snapshot.externalAdapter)
+        let minutes = reportedMinutes(battery, state: state)
+        let adapterSubtitle = PowerSourceCopy.chargerSubtitle(ratedWatts: identity.watts, name: identity.name)
+        // A desktop has no charger row, so the adapter name has to live in the summary.
+        // On a laptop the summary keeps the time estimate, or the power source when
+        // IOPS has not finished calculating one.
+        let detail: String? = state == .noBattery
+            ? (adapterSubtitle ?? sourceDetail)
+            : (PowerSourceCopy.timeDetail(minutes: minutes, state: state) ?? sourceDetail)
         let telemetry = measurement(snapshot.batteryProperties?["PowerTelemetryData"])
         let systemWatts = watts(telemetry?["SystemLoad"])
         let chargerWatts = watts(telemetry?["SystemPowerIn"])
@@ -79,7 +94,8 @@ enum SystemPowerSourceParser {
                                 charger: hasChargerInput ? .available : (snapshot.providingSource == kIOPSBatteryPowerValue ? .disconnected : .unsupported),
                                 systemDraw: hasSystemDraw ? .available : .unsupported, components: .unsupported),
             source: .system, chargerWatts: hasChargerInput ? chargerWatts : nil,
-            systemWatts: systemWatts)
+            systemWatts: systemWatts,
+            adapterRatedWatts: identity.watts, adapterName: identity.name)
         try reading.validate()
         return reading
     }
@@ -94,6 +110,64 @@ enum SystemPowerSourceParser {
         let value = number.doubleValue
         guard value.isFinite, value >= 0, value.rounded() == value else { return nil }
         return value
+    }
+
+    /// AdapterDetails, then AppleRawAdapterDetails, then the external adapter dictionary.
+    /// The first usable watts and the first usable name win independently, so a zeroed
+    /// Watts field does not hide a later real rating. Current, voltage, and unrelated
+    /// dictionaries are not wattage.
+    private static func adapterIdentity(batteryProperties: [String: Any]?,
+                                        externalAdapter: [String: Any]?) -> (watts: Int?, name: String?) {
+        let sources = [
+            measurement(batteryProperties?["AdapterDetails"]),
+            measurement(batteryProperties?["AppleRawAdapterDetails"]),
+            externalAdapter
+        ]
+        var watts: Int?
+        var name: String?
+        for source in sources.compactMap({ $0 }) {
+            if watts == nil { watts = ratedWatts(source[kIOPSPowerAdapterWattsKey]) }
+            if name == nil { name = adapterName(in: source) }
+        }
+        return (watts, name)
+    }
+
+    private static func ratedWatts(_ value: Any?) -> Int? {
+        guard let watts = wholeNumber(value), (1...PowerSourceCopy.maximumRatedWatts).contains(watts) else { return nil }
+        return watts
+    }
+
+    private static func adapterName(in details: [String: Any]) -> String? {
+        for key in ["Description", "Name"] {
+            guard let raw = details[key] as? String else { continue }
+            if let name = PowerSourceCopy.normalizedAdapterName(raw) { return name }
+        }
+        return nil
+    }
+
+    /// Time to full while charging, time to empty on battery. -1 is still calculating.
+    /// 0 is not "zero minutes", and values above two days are not estimates.
+    private static func reportedMinutes(_ battery: [String: Any]?, state: BatteryState) -> Int? {
+        let key: String? = switch state {
+        case .charging: kIOPSTimeToFullChargeKey
+        case .discharging: kIOPSTimeToEmptyKey
+        default: nil
+        }
+        guard let battery, let key, let minutes = wholeNumber(battery[key]),
+              (1...PowerSourceCopy.maximumReportedMinutes).contains(minutes) else { return nil }
+        return minutes
+    }
+
+    private static func wholeNumber(_ value: Any?) -> Int? {
+        guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID() else { return nil }
+        let value = number.doubleValue
+        guard value.isFinite, value.rounded() == value,
+              value >= Double(Int.min), value <= Double(Int.max) else { return nil }
+        return Int(value)
+    }
+
+    fileprivate static func bridgedDictionary(_ value: Any?) -> [String: Any]? {
+        measurement(value)
     }
 
     private static func measurement(_ value: Any?) -> [String: Any]? {
@@ -172,10 +246,12 @@ final class SystemPowerSourceTelemetryService: TelemetryService {
             else { return nil }
             descriptions.append(description)
         }
+        let external = IOPSCopyExternalPowerAdapterDetails()?.takeRetainedValue()
         return SystemPowerSourceSnapshot(descriptions: descriptions,
                                          providingSource: IOPSGetProvidingPowerSourceType(info)?.takeUnretainedValue() as String?,
                                          timestamp: timestamp,
-                                         batteryProperties: Self.smartBatteryProperties())
+                                         batteryProperties: Self.smartBatteryProperties(),
+                                         externalAdapter: SystemPowerSourceParser.bridgedDictionary(external))
     }
 
     private static func smartBatteryProperties() -> [String: Any]? {
@@ -184,9 +260,16 @@ final class SystemPowerSourceTelemetryService: TelemetryService {
         guard service != 0 else { return nil }
         defer { IOObjectRelease(service) }
 
-        var properties: Unmanaged<CFMutableDictionary>?
-        guard IORegistryEntryCreateCFProperties(service, &properties, kCFAllocatorDefault, 0) == 0,
-              let properties else { return nil }
-        return properties.takeRetainedValue() as? [String: Any]
+        // Copy the keys the parser reads. The rest of the AppleSmartBattery
+        // entry stays in the registry. A missing key is the same as a dictionary
+        // that does not contain it.
+        var properties: [String: Any] = [:]
+        for key in ["PowerTelemetryData", "AdapterDetails", "AppleRawAdapterDetails"] {
+            guard let value = IORegistryEntryCreateCFProperty(
+                service, key as CFString, kCFAllocatorDefault, 0
+            )?.takeRetainedValue() else { continue }
+            properties[key] = value
+        }
+        return properties.isEmpty ? nil : properties
     }
 }

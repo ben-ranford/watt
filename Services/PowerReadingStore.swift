@@ -17,6 +17,37 @@ final class FakeWattClock: WattClock {
     func advance(by interval: TimeInterval) { now = now.addingTimeInterval(interval); uptime += max(0, interval) }
 }
 
+/// Suspends a sampler. `tolerance` is leeway the system may use to coalesce the
+/// wake. The deadline stays `delay`, so the menu-bar cadence does not move earlier.
+@MainActor
+protocol RefreshScheduling: AnyObject {
+    func pause(for delay: TimeInterval, tolerance: TimeInterval) async throws
+}
+
+/// Production sleep. A zero tolerance is an exact sleep; a positive one is leeway.
+@MainActor
+final class TolerantRefreshScheduler: RefreshScheduling {
+    func pause(for delay: TimeInterval, tolerance: TimeInterval) async throws {
+        let duration = Duration.seconds(max(0, delay))
+        let leeway = Duration.seconds(max(0, tolerance))
+        try await Task.sleep(for: duration, tolerance: leeway)
+    }
+}
+
+/// Resumes a hidden-panel wait at most once, including from a cancellation hop.
+private final class OnceResume: @unchecked Sendable {
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<Void, Never>?
+    init(_ continuation: CheckedContinuation<Void, Never>) { self.continuation = continuation }
+    func resume() {
+        lock.lock()
+        let continuation = self.continuation
+        self.continuation = nil
+        lock.unlock()
+        continuation?.resume()
+    }
+}
+
 @MainActor
 final class PowerReadingStore: ObservableObject {
     @Published private(set) var currentReading: PowerReading
@@ -71,15 +102,28 @@ final class PowerReadingStore: ObservableObject {
     }
     private let clock: any WattClock
     private let telemetry: (any TelemetryService)?
+    private let scheduler: any RefreshScheduling
+    /// An injected scheduler drives tests without a host clock. Production leaves
+    /// this false and keeps sampling tied to the system clock.
+    private let samplesWithInjectedScheduler: Bool
     var observesSystemWake: Bool { clock is SystemWattClock && telemetry != nil }
     private var refreshRequest: UUID?
+    /// Nil keeps the historical behaviour: component estimates sample whenever
+    /// telemetry is attached. Production installs a policy so a hidden panel does
+    /// not schedule that work unless the menu bar is showing it.
+    private var componentSamplingPolicy: (@MainActor () -> Bool)?
+    private var componentEpoch = 0
+    private var componentPause: Task<Void, Error>?
+    private var componentDemandWaiters: [OnceResume] = []
     private var onBatteryExpiry: Task<Void, Never>?
     private(set) var generation = UUID()
     init(currentReading: PowerReading, clock: (any WattClock)? = nil, telemetry: (any TelemetryService)? = nil,
-         componentTelemetry: (any ComponentTelemetryService)? = nil) {
+         componentTelemetry: (any ComponentTelemetryService)? = nil, scheduler: (any RefreshScheduling)? = nil) {
         self.clock = clock ?? SystemWattClock()
         self.telemetry = telemetry
         self.componentTelemetry = componentTelemetry
+        self.scheduler = scheduler ?? TolerantRefreshScheduler()
+        self.samplesWithInjectedScheduler = scheduler != nil
         do {
             try currentReading.validate()
             guard currentReading.timestamp <= self.clock.now else { throw ServiceFailure.invalidData }
@@ -88,7 +132,14 @@ final class PowerReadingStore: ObservableObject {
         catch { self.currentReading = .unavailable; failure = .invalidData }
         scheduleOnBatteryExpiry()
     }
-    deinit { onBatteryExpiry?.cancel(); componentExpiry?.cancel() }
+    deinit {
+        onBatteryExpiry?.cancel()
+        componentExpiry?.cancel()
+        componentPause?.cancel()
+        let waiters = componentDemandWaiters
+        componentDemandWaiters.removeAll()
+        waiters.forEach { $0.resume() }
+    }
 
     private func scheduleOnBatteryExpiry() {
         onBatteryExpiry?.cancel()
@@ -143,16 +194,38 @@ final class PowerReadingStore: ObservableObject {
     }
 
     /// The status item's task owns cancellation; frozen fixture clocks never poll the host.
+    ///
+    /// IOPS power-source notifications fire on adapter and charge-state changes.
+    /// They do not carry `PowerTelemetryData`, which is the menu-bar wattage, so
+    /// this deadline stays. Tolerance is leeway on that deadline, not a slower one.
     func runSampling(interval: @escaping @MainActor () -> TimeInterval = { PowerReadingStore.retryInterval }) async {
-        guard observesSystemWake else { return }
+        guard observesSystemWake || samplesWithInjectedScheduler else { return }
         async let components: Void = runComponentSampling()
         while !Task.isCancelled {
             await refresh()
             let delay = Self.samplingDelay(for: interval())
-            do { try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000)) }
+            do { try await scheduler.pause(for: delay, tolerance: Self.samplingTolerance(for: delay)) }
             catch { break }
         }
         _ = await components
+    }
+
+    /// Installs the production rule for helper sampling. Passing nil restores
+    /// "always sample", which fixtures rely on.
+    func setComponentSamplingPolicy(_ policy: (@MainActor () -> Bool)?) {
+        componentSamplingPolicy = policy
+        refreshComponentSamplingNeed()
+    }
+
+    /// Re-reads the policy. Call it when the panel or the menu-bar display mode
+    /// changes so a waiting sampler either starts immediately or drops its timer.
+    func refreshComponentSamplingNeed() {
+        if componentSamplingIsNeeded {
+            resumeComponentWaiters()
+        } else {
+            componentEpoch &+= 1
+            componentPause?.cancel()
+        }
     }
 
     /// A helper installed after launch starts component sampling without replacing the system sampler.
@@ -164,16 +237,73 @@ final class PowerReadingStore: ObservableObject {
     }
 
     private var componentSamplerRunning = false
+    private var componentSamplingIsNeeded: Bool { componentSamplingPolicy?() ?? true }
+
+    /// Helper estimates feed the panel, and the menu bar only in Per Component
+    /// mode. A policy that returns false waits here with no timer.
     private func runComponentSampling() async {
         guard componentTelemetry != nil, !componentSamplerRunning else { return }
         componentSamplerRunning = true
         defer { componentSamplerRunning = false }
         while !Task.isCancelled {
+            if !componentSamplingIsNeeded {
+                await waitForComponentDemand()
+                continue
+            }
             let started = clock.uptime
             await refreshComponents()
+            if Task.isCancelled { return }
+            if !componentSamplingIsNeeded { continue }
             let delay = max(0.05, Self.retryInterval - (clock.uptime - started))
-            do { try await Task.sleep(for: .seconds(delay)) } catch { return }
+            do { try await pauseWhileNeeded(delay: delay, tolerance: Self.samplingTolerance(for: delay)) }
+            catch is CancellationError {
+                if Task.isCancelled { return }
+                continue
+            } catch {
+                if Task.isCancelled { return }
+                return
+            }
         }
+    }
+
+    private func waitForComponentDemand() async {
+        if componentSamplingIsNeeded || Task.isCancelled { return }
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                let resume = OnceResume(continuation)
+                if self.componentSamplingIsNeeded || Task.isCancelled {
+                    resume.resume()
+                    return
+                }
+                self.componentDemandWaiters.append(resume)
+            }
+        } onCancel: {
+            Task { @MainActor [weak self] in self?.resumeComponentWaiters() }
+        }
+    }
+
+    private func resumeComponentWaiters() {
+        let waiters = componentDemandWaiters
+        componentDemandWaiters.removeAll()
+        waiters.forEach { $0.resume() }
+    }
+
+    /// The pause is its own task so hiding the panel can cancel the leeway
+    /// timer without cancelling menu-bar sampling.
+    private func pauseWhileNeeded(delay: TimeInterval, tolerance: TimeInterval) async throws {
+        let epoch = componentEpoch
+        let scheduler = self.scheduler
+        let task = Task { @MainActor in
+            try await scheduler.pause(for: delay, tolerance: tolerance)
+        }
+        componentPause = task
+        defer { if componentPause == task { componentPause = nil } }
+        try await withTaskCancellationHandler {
+            try await task.value
+        } onCancel: {
+            task.cancel()
+        }
+        if epoch != componentEpoch { throw CancellationError() }
     }
 
     func invalidateComponents() {
@@ -230,6 +360,16 @@ final class PowerReadingStore: ObservableObject {
             ? requestedInterval : retryInterval
         let maximum = max(0.1, statusMaximumAge - samplingRefreshLeadTime)
         return min(normalized, maximum)
+    }
+
+    /// Fraction of the deadline offered as kernel leeway, capped so the latest
+    /// wake still fits in half of the freshness lead. The other half stays
+    /// available for scheduler jitter, which is why a five-second preference
+    /// already samples at 4.5s.
+    static let samplingToleranceFraction = 0.10
+    static func samplingTolerance(for delay: TimeInterval) -> TimeInterval {
+        guard delay.isFinite, delay > 0 else { return 0 }
+        return min(delay * samplingToleranceFraction, samplingRefreshLeadTime / 2)
     }
     func disconnect() {
         onBatteryExpiry?.cancel()

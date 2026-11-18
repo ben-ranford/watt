@@ -14,6 +14,24 @@ final class P01TelemetryTests: XCTestCase {
         try SystemPowerSourceParser.parse(.init(descriptions: descriptions, providingSource: source, timestamp: time))
     }
 
+    private func parseSnapshot(_ descriptions: [[String: Any]], source: String? = kIOPSACPowerValue,
+                               properties: [String: Any]? = nil, external: [String: Any]? = nil) throws -> PowerReading {
+        try SystemPowerSourceParser.parse(.init(
+            descriptions: descriptions, providingSource: source, timestamp: time,
+            batteryProperties: properties, externalAdapter: external))
+    }
+
+    private func chargingTelemetry(description: String = "pd charger") -> [String: Any] {
+        [
+            "PowerTelemetryData": [
+                "BatteryPower": 42_100,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ],
+            "AdapterDetails": ["Watts": 96, "Description": description]
+        ]
+    }
+
     private func parseTelemetry(_ telemetry: [String: Any], source: String? = kIOPSACPowerValue) throws -> PowerReading {
         try SystemPowerSourceParser.parse(.init(
             descriptions: [battery()], providingSource: source, timestamp: time,
@@ -291,6 +309,376 @@ final class P01TelemetryTests: XCTestCase {
         assertFailure(await during.value, .cancelled)
     }
 
+    func testAppleSiliconChargingFillsAdapterSubtitleAndTimeToFull() throws {
+        let reading = try parseSnapshot([battery([
+            kIOPSTimeToFullChargeKey: 38,
+            kIOPSTimeToEmptyKey: -1
+        ])], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 42_100,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ],
+            "AdapterDetails": [
+                "Watts": 96,
+                "Description": "pd charger",
+                "Current": 4_800,
+                "AdapterVoltage": 20_000,
+                "IsWireless": false,
+                "FamilyCode": -536_854_518,
+                "SharedSource": false
+            ]
+        ])
+
+        XCTAssertEqual(reading.batteryState, .charging)
+        XCTAssertEqual(try XCTUnwrap(reading.watts), 42.1, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 65, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 22.9, accuracy: 0.001)
+        XCTAssertEqual(reading.adapterRatedWatts, 96)
+        XCTAssertEqual(reading.adapterName, "USB-C charger")
+        XCTAssertEqual(reading.adapterSubtitle, "96 W USB-C charger")
+        XCTAssertEqual(reading.detail, "full in about 38 min")
+        let panel = StatusPanelModel(reading: reading)
+        XCTAssertEqual(panel.charger, "65.0 W")
+        XCTAssertEqual(panel.battery, "+42.1 W")
+        XCTAssertEqual(panel.chargerSubtitle, "96 W USB-C charger")
+        XCTAssertEqual(panel.subtitle, "64% · full in about 38 min")
+        XCTAssertEqual(panel.accessibilityRows.first?.subtitle, "96 W USB-C charger")
+        XCTAssertNotEqual(panel.charger, "96.0 W")
+        XCTAssertNotEqual(panel.charger, "0.0 W")
+        let presented = reading.presenting(nil)
+        XCTAssertEqual(presented.adapterRatedWatts, 96)
+        XCTAssertEqual(presented.adapterName, "USB-C charger")
+        XCTAssertEqual(presented.detail, reading.detail)
+        let fixture = StatusPanelModel(reading: reading, chargerDescription: "67 W USB-C charger")
+        XCTAssertEqual(fixture.chargerSubtitle, "67 W USB-C charger")
+        try reading.validate()
+    }
+
+    func testIntelRawAdapterNameKeepsMeasuredChargeRate() throws {
+        let details = NSMutableDictionary()
+        details["Watts"] = 87
+        details["Description"] = ""
+        details["Name"] = "Apple 87W USB-C Power Adapter"
+        details["IsWireless"] = false
+        details["Current"] = 4_300
+        let reading = try parseSnapshot([battery([kIOPSTimeToFullChargeKey: 90])], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 20_000,
+                "SystemPowerIn": 60_000,
+                "SystemLoad": 40_000
+            ],
+            "AppleRawAdapterDetails": details
+        ])
+
+        XCTAssertEqual(try XCTUnwrap(reading.watts), 20, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 60, accuracy: 0.001)
+        XCTAssertEqual(reading.adapterSubtitle, "Apple 87 W USB-C Power Adapter")
+        XCTAssertEqual(reading.detail, "full in about 1 h 30 min")
+        let panel = StatusPanelModel(reading: reading)
+        XCTAssertEqual(panel.charger, "60.0 W")
+        XCTAssertEqual(panel.battery, "+20.0 W")
+        XCTAssertEqual(panel.chargerSubtitle, reading.adapterSubtitle)
+        try reading.validate()
+    }
+
+    func testOnBatteryShowsTimeToEmptyAndHidesLingeringAdapter() throws {
+        let reading = try parseSnapshot([battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false,
+            kIOPSPowerSourceStateKey: kIOPSBatteryPowerValue,
+            kIOPSTimeToEmptyKey: 250,
+            kIOPSTimeToFullChargeKey: 12
+        ])], source: kIOPSBatteryPowerValue, properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 18_400,
+                "SystemPowerIn": 0,
+                "SystemLoad": 18_400
+            ],
+            "AdapterDetails": ["Watts": 96, "Description": "pd charger"]
+        ])
+
+        XCTAssertEqual(reading.batteryState, .discharging)
+        XCTAssertEqual(try XCTUnwrap(reading.watts), -18.4, accuracy: 0.001)
+        XCTAssertNil(reading.chargerWatts)
+        XCTAssertEqual(reading.capabilities.charger, .disconnected)
+        XCTAssertEqual(reading.detail, "about 4 h 10 min left")
+        XCTAssertFalse(reading.detail?.contains("12") ?? true)
+        let panel = StatusPanelModel(reading: reading)
+        XCTAssertEqual(panel.charger, "Unplugged")
+        XCTAssertNil(panel.chargerSubtitle)
+        XCTAssertEqual(panel.battery, "−18.4 W")
+        XCTAssertEqual(panel.subtitle, "64% · about 4 h 10 min left")
+        try reading.validate()
+    }
+
+    func testFullChargeAndUnfinishedEstimatesOmitTime() throws {
+        let full = try parseSnapshot([battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: true,
+            kIOPSCurrentCapacityKey: 100,
+            kIOPSTimeToFullChargeKey: 0,
+            kIOPSTimeToEmptyKey: -1
+        ])], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 0,
+                "SystemPowerIn": 19_800,
+                "SystemLoad": 19_800
+            ],
+            "AdapterDetails": ["Watts": 96.0, "Description": "usb-c"]
+        ])
+        XCTAssertEqual(full.batteryState, .full)
+        XCTAssertEqual(full.detail, "Power source: AC")
+        XCTAssertEqual(full.adapterSubtitle, "96 W USB-C charger")
+        let fullPanel = StatusPanelModel(reading: full)
+        XCTAssertEqual(fullPanel.subtitle, "100% · running straight off the charger")
+        XCTAssertEqual(fullPanel.charger, "19.8 W")
+        XCTAssertEqual(fullPanel.chargerSubtitle, "96 W USB-C charger")
+        XCTAssertFalse(fullPanel.subtitle?.contains("0 min") ?? false)
+
+        let calculating = try parseSnapshot([battery([
+            kIOPSTimeToFullChargeKey: -1,
+            kIOPSTimeToEmptyKey: "Calculating"
+        ])], properties: chargingTelemetry())
+        XCTAssertEqual(calculating.detail, "Power source: AC")
+        XCTAssertNil(calculating.detail.flatMap { $0.contains("min") ? $0 : nil })
+
+        let unknown = try parseSnapshot([battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false,
+            kIOPSTimeToFullChargeKey: 38
+        ])], properties: chargingTelemetry())
+        XCTAssertEqual(unknown.batteryState, .unknown)
+        XCTAssertEqual(unknown.detail, "Power source: AC")
+        try full.validate()
+    }
+
+    func testMissingAndOddAdapterKeysNeverBecomeZeroOrATime() throws {
+        let missing = try parseSnapshot([battery()], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 42_100,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ]
+        ])
+        XCTAssertNil(missing.adapterRatedWatts)
+        XCTAssertNil(missing.adapterName)
+        XCTAssertNil(missing.adapterSubtitle)
+        XCTAssertNil(StatusPanelModel(reading: missing).chargerSubtitle)
+        XCTAssertEqual(missing.detail, "Power source: AC")
+        XCTAssertEqual(try XCTUnwrap(missing.chargerWatts), 65, accuracy: 0.001)
+
+        let longName = String(repeating: "USB-C ", count: 20)
+        let long = try parseSnapshot([battery()], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 42_100,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ],
+            "AdapterDetails": ["Watts": 96, "Description": longName + "\u{0001}"]
+        ])
+        XCTAssertEqual(long.adapterRatedWatts, 96)
+        XCTAssertNil(long.adapterName)
+        XCTAssertEqual(long.adapterSubtitle, "96 W charger")
+        XCTAssertEqual(try XCTUnwrap(long.chargerWatts), 65, accuracy: 0.001)
+        try long.validate()
+
+        let measured: [String: Any] = [
+            "BatteryPower": 42_100,
+            "SystemPowerIn": 65_000,
+            "SystemLoad": 22_900
+        ]
+        let oddWatts: [Any] = ["96", true, false, -1, 0, 501, 96.5, Double.nan, Double.infinity]
+        for watts in oddWatts {
+            let reading = try parseSnapshot([battery()], properties: [
+                "PowerTelemetryData": measured,
+                "AdapterDetails": [
+                    "Watts": watts,
+                    "Current": 4_800,
+                    "AdapterVoltage": 20_000,
+                    "Description": watts,
+                    "AdapterWattage": 96
+                ],
+                "LegacyBatteryInfo": ["Watts": 96],
+                "DesignCapacity": 5_000
+            ])
+            XCTAssertNil(reading.adapterRatedWatts, "\(watts)")
+            XCTAssertNil(reading.adapterSubtitle, "\(watts)")
+            XCTAssertEqual(reading.detail, "Power source: AC", "\(watts)")
+            XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 65, accuracy: 0.001, "\(watts)")
+            XCTAssertEqual(StatusPanelModel(reading: reading).charger, "65.0 W", "\(watts)")
+            try reading.validate()
+        }
+
+        let hiddenMinutes: [Any] = [-1, -2, 0, 65_535, 2_881, "38", true, 38.5, Double.nan]
+        for minutes in hiddenMinutes {
+            let reading = try parseSnapshot([battery([
+                kIOPSTimeToFullChargeKey: minutes,
+                kIOPSTimeToEmptyKey: minutes
+            ])], properties: chargingTelemetry(description: "   \n  "))
+            XCTAssertEqual(reading.detail, "Power source: AC", "\(minutes)")
+            XCTAssertEqual(reading.adapterSubtitle, "96 W charger", "\(minutes)")
+            XCTAssertFalse(reading.detail?.contains("0 min") ?? false, "\(minutes)")
+            try reading.validate()
+        }
+
+        let blank = try parseSnapshot([battery([kIOPSTimeToFullChargeKey: 38.0])], properties: chargingTelemetry(description: "charger"))
+        XCTAssertEqual(blank.detail, "full in about 38 min")
+        XCTAssertEqual(blank.adapterSubtitle, "96 W charger")
+        let hour = try parseSnapshot([battery([kIOPSTimeToFullChargeKey: 60])])
+        XCTAssertEqual(hour.detail, "full in about 1 h")
+        let mixed = try parseSnapshot([battery([kIOPSTimeToFullChargeKey: 70])])
+        XCTAssertEqual(mixed.detail, "full in about 1 h 10 min")
+        let minute = try parseSnapshot([battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false,
+            kIOPSPowerSourceStateKey: kIOPSBatteryPowerValue,
+            kIOPSTimeToEmptyKey: 1
+        ])], source: kIOPSBatteryPowerValue)
+        XCTAssertEqual(minute.detail, "about 1 min left")
+        XCTAssertNil(PowerReading.sampleCharging.adapterSubtitle)
+        XCTAssertNil(StatusPanelModel(reading: .sampleCharging).chargerSubtitle)
+    }
+
+    func testDesktopAndUPSOmitTimeToFull() throws {
+        var absent = battery([kIOPSIsPresentKey: false, kIOPSTimeToFullChargeKey: 40])
+        absent["Watts"] = 900
+        let desktop = try parseSnapshot([
+            absent
+        ], properties: [
+            "PowerTelemetryData": ["SystemLoad": 38_200]
+        ], external: ["Watts": 96, "Description": "pd charger", "Source": "External"])
+        XCTAssertEqual(desktop.batteryState, .noBattery)
+        XCTAssertNil(desktop.watts)
+        XCTAssertNil(desktop.batteryPercentage)
+        XCTAssertEqual(try XCTUnwrap(desktop.systemWatts), 38.2, accuracy: 0.001)
+        XCTAssertEqual(desktop.adapterSubtitle, "96 W USB-C charger")
+        XCTAssertEqual(desktop.detail, "96 W USB-C charger")
+        XCTAssertFalse(desktop.detail?.contains("min") ?? true)
+        let panel = StatusPanelModel(reading: desktop)
+        XCTAssertTrue(panel.isDesktop)
+        XCTAssertEqual(panel.headlineValue, "38.2 W")
+        XCTAssertEqual(panel.subtitle, "96 W USB-C charger")
+        XCTAssertFalse(panel.accessibilityRows.contains { $0.label == "Charger input" })
+        try desktop.validate()
+
+        let bareDesktop = try parseSnapshot([], properties: [
+            "PowerTelemetryData": ["SystemLoad": 12_500]
+        ])
+        XCTAssertEqual(bareDesktop.batteryState, .noBattery)
+        XCTAssertNil(bareDesktop.adapterSubtitle)
+        XCTAssertEqual(bareDesktop.detail, "Power source: AC")
+
+        var upsDescription: [String: Any] = [
+            kIOPSTypeKey: kIOPSUPSType,
+            kIOPSIsPresentKey: true,
+            kIOPSTimeToFullChargeKey: 38,
+            kIOPSTimeToEmptyKey: 120
+        ]
+        upsDescription["Watts"] = 4_000
+        upsDescription["Description"] = "pd charger"
+        let ups = try parseSnapshot([upsDescription], source: kIOPMUPSPowerKey, properties: [
+            "AdapterDetails": ["Watts": "nope", "Current": 9_000],
+            "LegacyBatteryInfo": ["Watts": 96]
+        ], external: ["Watts": 0, "Source": "Internal"])
+        XCTAssertEqual(ups.batteryState, .noBattery)
+        XCTAssertNil(ups.watts)
+        XCTAssertNil(ups.adapterSubtitle)
+        XCTAssertEqual(ups.detail, "Power source: UPS")
+        XCTAssertFalse(ups.detail?.contains("min") ?? false)
+
+        let upsAdapter = try parseSnapshot([[
+            kIOPSTypeKey: kIOPSUPSType,
+            kIOPSIsPresentKey: true,
+            kIOPSTimeToEmptyKey: 90
+        ]], source: kIOPMUPSPowerKey, external: [
+            "Watts": 150,
+            "Description": "magsafe 3"
+        ])
+        XCTAssertEqual(upsAdapter.batteryState, .noBattery)
+        XCTAssertNil(upsAdapter.watts)
+        XCTAssertEqual(upsAdapter.adapterSubtitle, "150 W MagSafe charger")
+        XCTAssertEqual(upsAdapter.detail, "150 W MagSafe charger")
+        XCTAssertFalse(upsAdapter.detail?.contains("min") ?? true)
+        try upsAdapter.validate()
+    }
+
+    func testAdapterSourcesPreferTheFirstRealWattsAndName() throws {
+        let reading = try parseSnapshot([battery()], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 42_100,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ],
+            "AdapterDetails": ["Watts": 0, "Description": "", "Current": 4_800],
+            "AppleRawAdapterDetails": ["Name": "magsafe 3", "Manufacturer": "Apple Inc."]
+        ], external: [
+            "Watts": 140,
+            "Description": "pd charger",
+            "AdapterID": 0,
+            "FamilyCode": 1
+        ])
+        XCTAssertEqual(reading.adapterRatedWatts, 140)
+        XCTAssertEqual(reading.adapterName, "MagSafe charger")
+        XCTAssertEqual(reading.adapterSubtitle, "140 W MagSafe charger")
+        XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 65, accuracy: 0.001)
+
+        let externalOnly = try parseSnapshot([battery()], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 42_100,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ]
+        ], external: ["Watts": 67])
+        XCTAssertEqual(externalOnly.adapterSubtitle, "67 W charger")
+        XCTAssertEqual(externalOnly.detail, "Power source: AC")
+        XCTAssertEqual(StatusPanelModel(reading: externalOnly).charger, "65.0 W")
+
+        let trailing = try parseSnapshot([battery()], properties: [
+            "AdapterDetails": ["Watts": 30, "Name": "USB-C Port 2"]
+        ])
+        XCTAssertEqual(trailing.adapterSubtitle, "30 W USB-C Port 2")
+        let suffixed = try parseSnapshot([battery()], properties: [
+            "AdapterDetails": ["Watts": 96, "Name": "Compact 96W"]
+        ])
+        XCTAssertEqual(suffixed.adapterSubtitle, "Compact 96 W")
+        try trailing.validate()
+        try suffixed.validate()
+
+        let conflicting = try parseSnapshot([battery()], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 42_100,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ],
+            "AdapterDetails": ["Watts": 67, "Name": "96W USB-C Power Adapter"]
+        ])
+        XCTAssertEqual(conflicting.adapterSubtitle, "67 W charger")
+        let conflicted = StatusPanelModel(reading: conflicting)
+        XCTAssertEqual(conflicted.charger, "65.0 W")
+        XCTAssertEqual(conflicted.chargerSubtitle, "67 W charger")
+        XCTAssertEqual(conflicted.battery, "+42.1 W")
+        try reading.validate()
+    }
+
+    func testReleaseChargerCopyIsNotAFixtureString() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+        let menu = try String(contentsOf: root.appendingPathComponent("Features/MenuBar/Views/MenuBarRootView.swift"), encoding: .utf8)
+        let release = menu.components(separatedBy: "#else").dropFirst().joined(separator: "#else")
+        XCTAssertFalse(release.contains("USB-C charger"))
+        XCTAssertTrue(release.contains("nil"))
+        let service = try String(contentsOf: root.appendingPathComponent("Services/SystemPowerSourceTelemetryService.swift"), encoding: .utf8)
+        XCTAssertTrue(service.contains("IOPSCopyExternalPowerAdapterDetails"))
+        XCTAssertTrue(service.contains("AdapterDetails"))
+        XCTAssertTrue(service.contains("kIOPSTimeToFullChargeKey"))
+        XCTAssertTrue(service.contains("kIOPSTimeToEmptyKey"))
+        XCTAssertTrue(service.contains("kIOPSPowerAdapterWattsKey"))
+        for forbidden in ["Timer(", "Timer.", "Task.sleep", "scheduledTimer", "asyncAfter"] {
+            XCTAssertFalse(service.contains(forbidden), forbidden)
+        }
+    }
+
     @MainActor func testPhysicalHostPublicAPISmoke() async throws {
         guard ProcessInfo.processInfo.environment["WATT_P01_HOST_PROBE"] == "1" else {
             throw XCTSkip("Opt-in physical-host metadata probe; not fixture evidence")
@@ -305,11 +693,10 @@ final class P01TelemetryTests: XCTestCase {
         }
         XCTAssertEqual(reading.capabilities.systemDraw, .available)
         XCTAssertNotNil(reading.systemWatts)
-        if reading.detail == "Power source: AC" {
-            XCTAssertEqual(reading.capabilities.charger, .available)
+        if reading.capabilities.charger == .available {
             XCTAssertNotNil(reading.chargerWatts)
         }
-        print("P01 HOST: battery=\(reading.batteryState.rawValue) percentage=\(String(describing: reading.batteryPercentage)) batteryWatts=\(String(describing: reading.watts)) chargerWatts=\(String(describing: reading.chargerWatts)) systemWatts=\(String(describing: reading.systemWatts)) source=\(reading.detail ?? "unknown") observedAt=\(reading.timestamp)")
+        print("P01 HOST: battery=\(reading.batteryState.rawValue) percentage=\(String(describing: reading.batteryPercentage)) batteryWatts=\(String(describing: reading.watts)) chargerWatts=\(String(describing: reading.chargerWatts)) systemWatts=\(String(describing: reading.systemWatts)) adapter=\(reading.adapterSubtitle ?? "none") detail=\(reading.detail ?? "none") observedAt=\(reading.timestamp)")
     }
 
     private func assertFailure(_ outcome: ServiceOutcome<PowerReading>, _ expected: ServiceFailure, file: StaticString = #filePath, line: UInt = #line) {

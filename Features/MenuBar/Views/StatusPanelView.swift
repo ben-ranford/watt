@@ -145,7 +145,14 @@ struct StatusPanelModel {
         if reading.batteryState == .discharging && reading.watts == nil { return nil }
         return [reading.batteryPercentage.map { "\($0)%" }, reading.detail].compactMap { $0 }.joined(separator: " · ")
     }
-    var chargerSubtitle: String? { available(reading.capabilities.charger) ? chargerDescription : nil }
+    var chargerSubtitle: String? {
+        guard hasReading, reading.capabilities.charger != .disconnected else { return nil }
+        // Fixture launches pass a description. A system reading carries its own.
+        if let chargerDescription {
+            return available(reading.capabilities.charger) ? chargerDescription : nil
+        }
+        return reading.adapterSubtitle
+    }
     var title: String {
         if hasNoReading { return NoReadingPresentation.title }
         if hasInsufficientCharger { return InsufficientChargerPresentation.title }

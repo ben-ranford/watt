@@ -87,6 +87,10 @@ struct PowerReading: Equatable, Sendable {
     let chargingHoldReason: BatteryChargingHoldReason?
     let chargerThreshold: ChargerThresholdProvenance?
     let componentEstimate: ComponentEstimatePair?
+    /// Rated adapter wattage from AdapterDetails or the external adapter dictionary.
+    let adapterRatedWatts: Int?
+    /// Short adapter name. The panel combines this with the rated wattage.
+    let adapterName: String?
 
     init(mode: PowerMode, watts: Double?, batteryPercentage: Int? = nil,
          detail: String? = nil, components: [PowerComponent] = [],
@@ -95,7 +99,8 @@ struct PowerReading: Equatable, Sendable {
          source: ReadingSource = .unavailable, chargerWatts: Double? = nil, systemWatts: Double? = nil,
          chargingHoldReason: BatteryChargingHoldReason? = nil,
          chargerThreshold: ChargerThresholdProvenance? = nil,
-         componentEstimate: ComponentEstimatePair? = nil) {
+         componentEstimate: ComponentEstimatePair? = nil,
+         adapterRatedWatts: Int? = nil, adapterName: String? = nil) {
         self.mode = mode
         self.watts = watts
         self.batteryPercentage = batteryPercentage
@@ -111,6 +116,13 @@ struct PowerReading: Equatable, Sendable {
         self.chargingHoldReason = chargingHoldReason
         self.chargerThreshold = chargerThreshold
         self.componentEstimate = componentEstimate
+        self.adapterRatedWatts = adapterRatedWatts
+        self.adapterName = adapterName
+    }
+
+    /// Rated wattage and name for the charger row. Nil when the hardware did not report either.
+    var adapterSubtitle: String? {
+        PowerSourceCopy.chargerSubtitle(ratedWatts: adapterRatedWatts, name: adapterName)
     }
 
     /// Today's Settings default. Callers that pass another duration must use the same value for the panel and the notification.
@@ -168,7 +180,9 @@ struct PowerReading: Equatable, Sendable {
               components.allSatisfy({ !$0.id.isEmpty && $0.watts.isFinite && $0.watts >= 0 }),
               batteryState != .charging || (watts.map { $0 >= 0 } ?? true),
               batteryState != .discharging || (watts.map { $0 <= 0 } ?? true),
-              batteryState != .noBattery || (watts == nil && batteryPercentage == nil)
+              batteryState != .noBattery || (watts == nil && batteryPercentage == nil),
+              adapterRatedWatts.map({ (1...PowerSourceCopy.maximumRatedWatts).contains($0) }) ?? true,
+              adapterName.map({ PowerSourceCopy.normalizedAdapterName($0) == $0 }) ?? true
         else { throw ServiceFailure.invalidData }
     }
 
@@ -212,7 +226,8 @@ struct PowerReading: Equatable, Sendable {
             timestamp: componentOnly ? pair!.startedAt : timestamp, batteryState: batteryState,
             capabilities: capabilities, freshness: componentOnly ? .fresh : freshness,
             source: componentOnly ? .helper : source, chargerWatts: chargerWatts, systemWatts: systemWatts,
-            chargingHoldReason: chargingHoldReason, chargerThreshold: chargerThreshold, componentEstimate: pair)
+            chargingHoldReason: chargingHoldReason, chargerThreshold: chargerThreshold, componentEstimate: pair,
+            adapterRatedWatts: adapterRatedWatts, adapterName: adapterName)
     }
 
     static let unavailable = PowerReading(mode: .noReading, watts: nil, timestamp: .distantPast,
@@ -309,5 +324,108 @@ enum PowerFormatter {
         } // Includes negative zero and sub-precision noise.
         let format = signed ? "%+.*f W" : "%.*f W"
         return String(format: format, locale: Locale(identifier: "en_US_POSIX"), precision.decimalPlaces, rounded)
+    }
+}
+
+/// Short English copy for adapter identity and IOPS time estimates.
+/// The rest of the panel uses the same literal-string style.
+enum PowerSourceCopy {
+    static let maximumRatedWatts = 500
+    /// Two days. Longer values, including the 65535 firmware sentinel, are not estimates.
+    static let maximumReportedMinutes = 48 * 60
+
+    static func chargerSubtitle(ratedWatts: Int?, name: String?) -> String? {
+        let watts = ratedWatts.flatMap { (1...maximumRatedWatts).contains($0) ? $0 : nil }
+        let name = name.flatMap(normalizedAdapterName)
+        if let watts, let name {
+            if containsWattage(name, equalTo: watts) { return name }
+            if containsWattage(name) { return "\(watts) W charger" }
+            return "\(watts) W \(name)"
+        }
+        if let watts { return "\(watts) W charger" }
+        return name
+    }
+
+    static func timeDetail(minutes: Int?, state: BatteryState) -> String? {
+        guard let minutes, (1...maximumReportedMinutes).contains(minutes) else { return nil }
+        let body = duration(minutes)
+        switch state {
+        case .charging: return "full in about \(body)"
+        case .discharging: return "about \(body) left"
+        default: return nil
+        }
+    }
+
+    /// Known generic IOKit descriptions become the same short names the panel already uses.
+    /// Anything else keeps its words, with "96W" spaced as "96 W".
+    static func normalizedAdapterName(_ raw: String) -> String? {
+        let collapsed = raw.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+        guard !collapsed.isEmpty, collapsed.count <= 60,
+              collapsed.contains(where: \.isLetter),
+              collapsed.unicodeScalars.allSatisfy({ !CharacterSet.controlCharacters.contains($0) }) else { return nil }
+        switch collapsed.lowercased() {
+        case "pd charger", "usb-c", "usb c", "usbc", "usb-pd", "usb pd", "usb-c charger", "usbc charger":
+            return "USB-C charger"
+        case "magsafe", "magsafe 3", "magsafe3", "mag safe", "magsafe charger":
+            return "MagSafe charger"
+        case "charger", "adapter", "power adapter", "ac", "battery", "ups", "internal", "external":
+            return nil
+        default:
+            let spaced = spaceBeforeWattUnit(collapsed)
+            guard spaced.count <= 60 else { return nil }
+            return spaced
+        }
+    }
+
+    private static func duration(_ minutes: Int) -> String {
+        let hours = minutes / 60
+        let remainder = minutes % 60
+        if hours > 0 && remainder > 0 { return "\(hours) h \(remainder) min" }
+        if hours > 0 { return "\(hours) h" }
+        return "\(minutes) min"
+    }
+
+    private static func containsWattage(_ name: String, equalTo watts: Int? = nil) -> Bool {
+        let scalars = Array(name)
+        var index = 0
+        while index < scalars.count {
+            guard scalars[index].isNumber else { index += 1; continue }
+            let start = index
+            while index < scalars.count, scalars[index].isNumber { index += 1 }
+            let digits = String(scalars[start..<index])
+            if index < scalars.count, scalars[index] == " " { index += 1 }
+            guard index < scalars.count, scalars[index] == "W" || scalars[index] == "w" else { continue }
+            let next = index + 1
+            guard next == scalars.count || !scalars[next].isLetter else { continue }
+            if let watts { return digits == String(watts) }
+            return true
+        }
+        return false
+    }
+
+    private static func spaceBeforeWattUnit(_ text: String) -> String {
+        var result = ""
+        let scalars = Array(text)
+        var index = 0
+        while index < scalars.count {
+            guard scalars[index].isNumber else {
+                result.append(scalars[index])
+                index += 1
+                continue
+            }
+            let start = index
+            while index < scalars.count, scalars[index].isNumber { index += 1 }
+            let unit = index
+            let followedByWatt = unit < scalars.count && (scalars[unit] == "W" || scalars[unit] == "w")
+            let wordContinues = unit + 1 < scalars.count && scalars[unit + 1].isLetter
+            if followedByWatt && !wordContinues {
+                result.append(contentsOf: scalars[start..<unit])
+                result.append(" W")
+                index = unit + 1
+                continue
+            }
+            result.append(contentsOf: scalars[start..<index])
+        }
+        return result
     }
 }

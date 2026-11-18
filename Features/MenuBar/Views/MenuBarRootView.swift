@@ -11,6 +11,7 @@ struct MenuBarRootView: View {
         #if DEBUG
         J64FixtureLaunch.requested ? "67 W USB-C charger" : (J111FixtureLaunch.requested || J63FixtureLaunch.requested || J62FixtureLaunch.requested || J61FixtureLaunch.requested || C01FixtureLaunch.requested || J17FixtureLaunch.requested || J18FixtureLaunch.requested) ? "96 W USB-C charger" : nil
         #else
+        // Release copy comes from the system reading. Fixture strings stay in Debug.
         nil
         #endif
     }
