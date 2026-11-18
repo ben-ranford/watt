@@ -548,11 +548,20 @@ final class AppRouter: ObservableObject {
         return saved
     }
 
+    struct WhatsNewPresentation: Equatable {
+        let version: String
+        let notes: String?
+    }
+    @Published private(set) var whatsNewPresentation: WhatsNewPresentation?
+    private let whatsNew: WhatsNewStore
+
     init(updateService: (any UpdateService)? = nil, updates: UpdateStore? = nil,
-         updateConfigurationFailure: ServiceFailure? = nil) {
+         updateConfigurationFailure: ServiceFailure? = nil,
+         whatsNewStorage: (any PreferenceStorage)? = nil) {
         self.updateService = updateService
         self.updateConfigurationFailure = updateConfigurationFailure
         self.updates = updates ?? UpdateStore()
+        self.whatsNew = WhatsNewStore(storage: whatsNewStorage ?? InMemoryStorage())
         helperObservation = settingsHelperSetup.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
@@ -672,6 +681,50 @@ final class AppRouter: ObservableObject {
         if CoachMarkView.canPresent(state) { showCoachMark() }
         else if state.completed { showSettings() }
         else if !state.completed && state.checkpoint != .runningDefaults { beginOnboarding() }
+        considerWhatsNew(version: currentAppVersion, notes: installedReleaseNotes(),
+                         onboardingComplete: state.completed)
+    }
+
+    /// Shows the signed notes once, on the first launch after an update.
+    /// A fresh install and a later launch of the same version stay quiet.
+    /// The record is written when the window appears, not when it closes.
+    func considerWhatsNew(version: String, notes: String?, onboardingComplete: Bool) {
+        let evaluation = whatsNew.evaluate(current: version)
+        switch evaluation.action {
+        case .suppress:
+            if let record = evaluation.persist { try? whatsNew.write(record) }
+        case .show:
+            guard onboardingComplete else { return }
+            guard UpdateReleaseNotes.promptText(notes) != nil else {
+                try? whatsNew.write(WhatsNewCenter.appearedRecord(current: version))
+                return
+            }
+            whatsNewPresentation = WhatsNewPresentation(version: version, notes: notes)
+            present(.whatsNew)
+        }
+    }
+
+    /// The window is on screen. A later launch of this version does not show it again.
+    func whatsNewDidAppear() {
+        guard let version = whatsNewPresentation?.version else { return }
+        try? whatsNew.write(WhatsNewCenter.appearedRecord(current: version))
+    }
+
+    /// About and any later manual control. This does not depend on the automatic once-flag.
+    func showInstalledReleaseNotes() {
+        let version = currentAppVersion
+        whatsNewPresentation = WhatsNewPresentation(version: version, notes: installedReleaseNotes())
+        present(.whatsNew)
+    }
+
+    private func installedReleaseNotes() -> String? {
+        guard let build = currentBuildNumber else { return nil }
+        return updateService?.releaseNotesForInstalledBuild(build)
+    }
+
+    var currentBuildNumber: UInt64? {
+        guard let raw = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String else { return nil }
+        return UInt64(raw)
     }
 
     func reopen(preferences: PreferencesStore) {
@@ -783,7 +836,7 @@ final class AppRouter: ObservableObject {
         checkFailurePresentation = nil
         dismissUpToDate()
         updateCheck = Task { [weak self] in
-            let outcome = await updateService.check()
+            let outcome = await updateService.check(initiator: .automatic)
             self?.finishBackgroundCheck(outcome, generation: generation, isEnabled: isEnabled, finished: finished)
         }
         return true
@@ -901,7 +954,7 @@ final class AppRouter: ObservableObject {
         offeredUpdateNotes = nil
         checkFailurePresentation = nil
         updateCheck = Task { [weak self] in
-            let outcome = await updateService.check()
+            let outcome = await updateService.check(initiator: .manual)
             guard let self else { return }
             defer { self.updateCheck = nil }
             guard !Task.isCancelled else { return }

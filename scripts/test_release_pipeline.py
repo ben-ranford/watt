@@ -21,6 +21,7 @@ import release_lib
 import release_plan
 import release_readiness
 import render_homebrew_cask
+import rollout_manifest
 
 
 def run(arguments: list[str], *, env: dict[str, str] | None = None, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -488,7 +489,16 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(cask['permissions'], {'contents': 'read'})
         self.assertEqual(cask['needs'], ['release-please', 'build'])
         self.assertEqual(cask['if'], "needs.build.result == 'success'")
+        gate = next(step for step in cask['steps'] if step.get('name') == 'Decide whether the cask can move')
+        self.assertEqual(gate['id'], 'cask-gate')
+        self.assertEqual(gate['run'], 'bash scripts/cask-rollout-gate.sh')
+        self.assertNotIn('${{', gate['run'])
         update = next(step for step in cask['steps'] if step.get('name') == 'Update the Homebrew tap')
+        self.assertEqual(update['if'], "steps.cask-gate.outputs.bump == 'true'")
+        self.assertLess(
+            [step.get('name') for step in cask['steps']].index('Decide whether the cask can move'),
+            [step.get('name') for step in cask['steps']].index('Update the Homebrew tap'),
+        )
         self.assertEqual(update['env']['HOMEBREW_TAP_DEPLOY_KEY'], '${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}')
         self.assertNotIn('HOMEBREW_TAP_TOKEN', update['env'])
         self.assertNotIn('${{', update['run'])
@@ -606,6 +616,7 @@ class WorkflowTests(unittest.TestCase):
             'verify-pages-artifact.sh',
             'preserve-pages-updates.sh',
             'check-pages-artifact.sh',
+            'cask-rollout-gate.sh',
             'retry_on_timeout.sh',
         ):
             result = subprocess.run(['bash', '-n', str(ROOT / 'scripts' / name)], capture_output=True, text=True)
@@ -1067,7 +1078,9 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertIn('WATT_UPDATE_PUBLIC_KEY=$public_key', text)
         self.assertIn('--changelog "$root/CHANGELOG.md"', text)
         self.assertIn('--marketing-version "$version"', text)
-        self.assertLess(text.index('--changelog "$root/CHANGELOG.md"'), text.index('--output "$output/Watt-$version-update-manifest.json"'))
+        self.assertIn('--rollout "$root/Resources/ReleaseRollout.json"', text)
+        self.assertLess(text.index('--changelog "$root/CHANGELOG.md"'), text.index('--rollout "$root/Resources/ReleaseRollout.json"'))
+        self.assertLess(text.index('--rollout "$root/Resources/ReleaseRollout.json"'), text.index('--output "$output/Watt-$version-update-manifest.json"'))
         self.assertNotIn('${WATT_UPDATE_MANIFEST_URL', text)
         self.assertNotIn('${WATT_UPDATE_ARTIFACT_URL', text)
         self.assertLess(text.index('check_archived_plist.py'), text.index('\nset +e\n'))
@@ -1533,6 +1546,35 @@ class PagesSiteTests(unittest.TestCase):
             self.assertEqual(invalid.returncode, 1)
             self.assertFalse((root / 'invalid/updates').exists())
 
+            files.clear()
+            absent_dir = root / 'absent'
+            absent_output = root / 'absent-output'
+            absent = run(
+                ['bash', 'scripts/preserve-pages-updates.sh'],
+                env={
+                    'PAGES_DIR': str(absent_dir),
+                    'PAGES_UPDATES_BASE': base,
+                    'PAGES_ALLOW_ABSENT': 'true',
+                    'GITHUB_OUTPUT': str(absent_output),
+                },
+            )
+            self.assertEqual(absent.returncode, 0, absent.stderr)
+            self.assertIn('updates=absent', absent_output.read_text(encoding='utf-8'))
+            self.assertFalse((absent_dir / 'updates').exists())
+
+            files['manifest.json'] = manifest
+            partial = run(
+                ['bash', 'scripts/preserve-pages-updates.sh'],
+                env={
+                    'PAGES_DIR': str(root / 'partial'),
+                    'PAGES_UPDATES_BASE': base,
+                    'PAGES_ALLOW_ABSENT': 'true',
+                },
+            )
+            self.assertEqual(partial.returncode, 1, partial.stdout)
+            self.assertIn('Refusing to deploy without the published updates', partial.stderr)
+            self.assertFalse((root / 'partial/updates').exists())
+
     def test_repository_pages_artifact_contains_the_landing_page_and_updates(self) -> None:
         result = run(['bash', 'scripts/check-pages-artifact.sh'])
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -1870,6 +1912,244 @@ class CIWorkflowTests(unittest.TestCase):
         )
         self.assertEqual(refused.returncode, 2, refused.stderr)
         self.assertIn('refusing to delete', refused.stderr)
+
+
+class RolloutTests(unittest.TestCase):
+    def rollout(self, **overrides: object) -> dict:
+        document = {
+            'basis': 1_700_000_000,
+            'interval': 86_400,
+            'steps': [1, 2, 5, 10, 20, 50, 100],
+            'paused': False,
+            'percent': 1,
+            'critical': False,
+            'halted': False,
+        }
+        document.update(overrides)
+        return rollout_manifest.canonical(document)
+
+    def test_schedule_boundaries_match_the_client(self) -> None:
+        basis = 1_700_000_000
+        cases = {
+            basis - 1: 0,
+            basis: 1,
+            basis + 86_399: 1,
+            basis + 86_400: 2,
+            basis + 86_400 * 2: 5,
+            basis + 86_400 * 6: 100,
+            basis + 86_400 * 30: 100,
+        }
+        rollout = self.rollout()
+        for now, expected in cases.items():
+            self.assertEqual(rollout_manifest.share(rollout, now), expected)
+            self.assertEqual(rollout_manifest.share(rollout, now), expected)
+        paused = self.rollout(paused=True, percent=5)
+        self.assertEqual(rollout_manifest.share(paused, basis + 86_400 * 30), 5)
+        critical = self.rollout(critical=True, percent=1)
+        self.assertEqual(rollout_manifest.share(critical, basis - 10), 100)
+
+    def test_payload_appends_rollout_without_changing_the_old_prefix(self) -> None:
+        digest = hashlib.sha256(b'watt').digest()
+        rollout = self.rollout()
+        payload = release_lib.manifest_payload('dev.watt.example', 1_002_003, digest, '13.0', '### Fixes\n\n* steadier numbers', rollout)
+        self.assertEqual(
+            payload,
+            b'{"identity":"dev.watt.example","build":1002003,"sha256":"'
+            + base64.b64encode(digest)
+            + b'","minimumSystemVersion":"13.0","notes":"### Fixes\\n\\n* steadier numbers","rollout":'
+            + json.dumps(rollout, separators=(',', ':')).encode('ascii')
+            + b'}',
+        )
+        plain = release_lib.manifest_payload('dev.watt.example', 1_002_003, digest, '13.0')
+        self.assertTrue(payload.startswith(plain[:-1] + b',"notes":'))
+        parsed = json.loads(payload)
+        legacy = {key: parsed[key] for key in ('identity', 'build', 'sha256', 'minimumSystemVersion', 'notes')}
+        self.assertEqual(legacy['notes'], '### Fixes\n\n* steadier numbers')
+        self.assertNotIn('rollout', legacy)
+        with self.assertRaises(release_lib.ReleaseError):
+            release_lib.manifest_payload('dev.watt.example', 1_002_003, digest, '13.0', None, {'paused': True})
+
+    def test_release_file_starts_at_one_percent_unless_critical(self) -> None:
+        spec = json.loads((ROOT / 'Resources/ReleaseRollout.json').read_text(encoding='utf-8'))
+        now = 1_700_000_000
+        started = rollout_manifest.initial_rollout(spec, now)
+        self.assertEqual(started['percent'], 1)
+        self.assertEqual(started['basis'], now)
+        self.assertFalse(started['critical'])
+        self.assertFalse(rollout_manifest.cask_ready({'rollout': started}, now))
+        critical = rollout_manifest.initial_rollout({**spec, 'critical': True}, now)
+        self.assertTrue(critical['critical'])
+        self.assertEqual(critical['percent'], 100)
+        self.assertTrue(rollout_manifest.cask_ready({'rollout': critical}, now))
+        self.assertTrue(rollout_manifest.cask_ready({'identity': 'dev.watt.example'}, now))
+        self.assertFalse(rollout_manifest.cask_ready({'rollout': self.rollout(halted=True, paused=True, percent=0, critical=False)}, now))
+
+    def test_actions_pause_advance_finish_and_halt(self) -> None:
+        now = 1_700_000_000
+        started = self.rollout()
+        paused, changed = rollout_manifest.apply_action(started, 'pause', now + 86_400 * 2)
+        self.assertTrue(changed)
+        self.assertTrue(paused['paused'])
+        self.assertEqual(paused['percent'], 5)
+        self.assertFalse(paused['halted'])
+        again, changed = rollout_manifest.apply_action(paused, 'sync', now + 86_400 * 4)
+        self.assertFalse(changed)
+        self.assertEqual(again, paused)
+        resumed, changed = rollout_manifest.apply_action(paused, 'resume', now + 86_400 * 4)
+        self.assertTrue(changed)
+        self.assertFalse(resumed['paused'])
+        self.assertEqual(rollout_manifest.share(resumed, now + 86_400 * 4), 5)
+        advanced, changed = rollout_manifest.apply_action(resumed, 'advance', now + 86_400 * 4)
+        self.assertTrue(changed)
+        self.assertEqual(rollout_manifest.share(advanced, now + 86_400 * 4), 10)
+        finished, changed = rollout_manifest.apply_action(advanced, 'finish', now + 86_400 * 4)
+        self.assertTrue(changed)
+        self.assertEqual(rollout_manifest.share(finished, now + 86_400 * 4), 100)
+        self.assertTrue(rollout_manifest.cask_ready({'rollout': finished}, now + 86_400 * 4))
+        halted, changed = rollout_manifest.apply_action(started, 'halt', now)
+        self.assertTrue(changed)
+        self.assertTrue(halted['halted'])
+        self.assertEqual(halted['percent'], 0)
+        self.assertFalse(rollout_manifest.cask_ready({'rollout': halted}, now))
+        same, changed = rollout_manifest.apply_action(halted, 'halt', now + 10)
+        self.assertFalse(changed)
+        critical, changed = rollout_manifest.apply_action(halted, 'critical', now + 10)
+        self.assertTrue(changed)
+        self.assertTrue(critical['critical'])
+        self.assertFalse(critical['halted'])
+        self.assertTrue(rollout_manifest.cask_ready({'rollout': critical}, now + 10))
+
+    def test_signed_rollout_fails_verification_when_changed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            pem = directory / 'key.pem'
+            archive = directory / 'Watt-1.2.3.tar'
+            output = directory / 'manifest.json'
+            rollout = directory / 'rollout.json'
+            archive.write_bytes(b'ustar-bytes')
+            rollout.write_text(json.dumps({
+                'critical': False,
+                'interval': 86400,
+                'steps': [1, 2, 5, 10, 20, 50, 100],
+            }), encoding='utf-8')
+            subprocess.run(['openssl', 'genpkey', '-algorithm', 'ED25519', '-out', str(pem)], check=True, capture_output=True)
+            encoded = base64.b64encode(pem.read_bytes()).decode('ascii')
+            signed = run(
+                [sys.executable, 'scripts/sign-update-manifest.py', '--archive', str(archive), '--identity', 'dev.watt.example',
+                 '--build', '1002003', '--minimum-system-version', '13.0', '--rollout', str(rollout),
+                 '--rollout-basis', '1700000000', '--output', str(output)],
+                env={'WATT_UPDATE_SIGNING_KEY': encoded},
+            )
+            self.assertEqual(signed.returncode, 0, signed.stderr)
+            document = json.loads(output.read_text())
+            payload = base64.b64decode(document['payload'])
+            parsed = json.loads(payload)
+            self.assertEqual(parsed['rollout']['percent'], 1)
+            self.assertNotIn('notes', parsed)
+            signature = base64.b64decode(document['signature'])
+            public_pem = directory / 'public.pem'
+            payload_path = directory / 'payload.json'
+            signature_path = directory / 'sig.bin'
+            payload_path.write_bytes(payload)
+            signature_path.write_bytes(signature)
+            subprocess.run(['openssl', 'pkey', '-in', str(pem), '-pubout', '-out', str(public_pem)], check=True, capture_output=True)
+            verified = subprocess.run(
+                ['openssl', 'pkeyutl', '-verify', '-pubin', '-inkey', str(public_pem), '-rawin', '-in', str(payload_path), '-sigfile', str(signature_path)],
+                capture_output=True,
+            )
+            self.assertEqual(verified.returncode, 0, verified.stderr)
+            payload_path.write_bytes(payload.replace(b'"percent":1', b'"percent":9'))
+            tampered = subprocess.run(
+                ['openssl', 'pkeyutl', '-verify', '-pubin', '-inkey', str(public_pem), '-rawin', '-in', str(payload_path), '-sigfile', str(signature_path)],
+                capture_output=True,
+            )
+            self.assertNotEqual(tampered.returncode, 0)
+
+            output.write_bytes(release_lib.signed_update_document(payload, signature) + b'\n')
+            unchanged = run(
+                [sys.executable, 'scripts/resign-rollout-manifest.py', '--manifest', str(output), '--archive', str(archive),
+                 '--action', 'sync', '--now', '1700000000'],
+                env={'WATT_UPDATE_SIGNING_KEY': encoded},
+            )
+            self.assertEqual(unchanged.returncode, 0, unchanged.stderr)
+            self.assertIn('changed=false', unchanged.stdout)
+            self.assertIn('cask=false', unchanged.stdout)
+            self.assertEqual(output.read_bytes(), release_lib.signed_update_document(payload, signature) + b'\n')
+
+            advanced = run(
+                [sys.executable, 'scripts/resign-rollout-manifest.py', '--manifest', str(output), '--archive', str(archive),
+                 '--action', 'advance', '--now', '1700000000'],
+                env={'WATT_UPDATE_SIGNING_KEY': encoded},
+            )
+            self.assertEqual(advanced.returncode, 0, advanced.stderr)
+            self.assertIn('changed=true', advanced.stdout)
+            self.assertIn('deploy=true', advanced.stdout)
+            republished = json.loads(base64.b64decode(json.loads(output.read_text())['payload']))
+            self.assertEqual(republished['rollout']['percent'], 2)
+            self.assertEqual(republished['sha256'], parsed['sha256'])
+            self.assertEqual(archive.read_bytes(), b'ustar-bytes')
+
+            refused = run(
+                [sys.executable, 'scripts/resign-rollout-manifest.py', '--manifest', str(output), '--archive', str(archive),
+                 '--action', 'pause', '--percent', 'nope', '--now', '1700000000'],
+                env={'WATT_UPDATE_SIGNING_KEY': encoded},
+            )
+            self.assertEqual(refused.returncode, 1)
+            self.assertIn('BLOCKED', refused.stderr)
+
+
+class RolloutWorkflowTests(unittest.TestCase):
+    def test_rollout_workflow_keeps_the_pages_guard(self) -> None:
+        import yaml
+        workflow = yaml.safe_load((ROOT / '.github/workflows/rollout.yml').read_text())
+        triggers = workflow.get('on', workflow.get(True))
+        self.assertEqual(set(triggers), {'schedule', 'workflow_dispatch'})
+        self.assertNotIn('pull_request_target', triggers)
+        self.assertEqual(workflow['permissions'], {'contents': 'read'})
+        publish = workflow['jobs']['publish']
+        self.assertEqual(publish['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
+        self.assertEqual(publish['permissions'], {'contents': 'read', 'pages': 'write', 'id-token': 'write'})
+        self.assertEqual(publish['environment']['name'], 'github-pages')
+        names = [step.get('name') for step in publish['steps']]
+        self.assertLess(names.index('Preserve published updates'), names.index('Re-sign the rollout'))
+        self.assertLess(names.index('Re-sign the rollout'), names.index('Stage the landing page'))
+        self.assertLess(names.index('Check the Pages artifact'), names.index('Upload Pages artifact'))
+        self.assertLess(names.index('Upload Pages artifact'), names.index('Deploy to GitHub Pages'))
+        preserve = next(step for step in publish['steps'] if step.get('name') == 'Preserve published updates')
+        self.assertEqual(preserve['env']['PAGES_ALLOW_ABSENT'], 'true')
+        self.assertEqual(preserve['env']['PAGES_UPDATES_BASE'], 'https://ben-ranford.github.io/watt/updates')
+        resign = next(step for step in publish['steps'] if step.get('name') == 'Re-sign the rollout')
+        self.assertEqual(resign['if'], "steps.preserve.outputs.updates == 'preserved'")
+        self.assertEqual(resign['env']['WATT_UPDATE_SIGNING_KEY'], '${{ secrets.WATT_UPDATE_SIGNING_KEY }}')
+        self.assertNotIn('WATT_UPDATE_SIGNING_KEY', resign['run'])
+        self.assertNotIn('${{', resign['run'])
+        for name in ('Stage the landing page', 'Check the Pages artifact', 'Upload Pages artifact', 'Deploy to GitHub Pages'):
+            step = next(step for step in publish['steps'] if step.get('name') == name)
+            self.assertEqual(step.get('if'), "steps.rollout.outputs.deploy == 'true'")
+        verify = next(step for step in publish['steps'] if step.get('name') == 'Check the Pages artifact')
+        self.assertEqual(verify['env']['PAGES_REQUIRE_UPDATES'], 'true')
+        cask = workflow['jobs']['cask']
+        self.assertEqual(cask['if'], "needs.publish.outputs.cask == 'true'")
+        self.assertEqual(cask['needs'], 'publish')
+        update = next(step for step in cask['steps'] if step.get('name') == 'Update the Homebrew tap')
+        self.assertEqual(update['env']['SOURCE_REPO'], 'ben-ranford/homebrew-tap')
+        self.assertNotIn('${{', update['run'])
+        delete = next(step for step in cask['steps'] if step.get('name') == 'Delete the Homebrew deploy key')
+        self.assertEqual(delete['if'], 'always()')
+
+        def walk(node: object) -> None:
+            if isinstance(node, dict):
+                if 'uses' in node:
+                    self.assertRegex(node['uses'], r'@[0-9a-f]{40}( # .+)?$')
+                if 'run' in node:
+                    self.assertNotIn('${{', node['run'])
+                for value in node.values():
+                    walk(value)
+            elif isinstance(node, list):
+                for value in node:
+                    walk(value)
+
+        walk(workflow)
 
 
 if __name__ == '__main__':

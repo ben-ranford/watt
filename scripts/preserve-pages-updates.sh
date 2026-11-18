@@ -34,6 +34,17 @@ fetch_code() {
 manifest_code=$(fetch_code "$base/manifest.json" "$work/manifest.json")
 tar_code=$(fetch_code "$base/Watt.tar" "$work/Watt.tar")
 
+allow_absent=false
+if [[ "${PAGES_ALLOW_ABSENT:-}" == true ]]; then
+  allow_absent=true
+fi
+if [[ "$allow_absent" == true && "$manifest_code" == 404 && "$tar_code" == 404 ]]; then
+  echo "No published updates to preserve."
+  if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+    echo "updates=absent" >> "$GITHUB_OUTPUT"
+  fi
+  exit 0
+fi
 if [[ "$manifest_code" != 200 || "$tar_code" != 200 ]]; then
   echo "Refusing to deploy without the published updates (manifest HTTP ${manifest_code}, tar HTTP ${tar_code})." >&2
   exit 1

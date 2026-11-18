@@ -2,26 +2,30 @@ import CryptoKit
 import Foundation
 import os
 
-// P04: detached release signature binds identity, build, minimum OS, notes and exact bytes.
-// `notes` is optional so a manifest signed before this field still decodes. When the
-// key is present it is inside the signed payload; a changed note fails the signature.
+// P04: detached release signature binds identity, build, minimum OS, notes, rollout and exact bytes.
+// `notes` and `rollout` are optional so a manifest signed before either field still decodes.
+// When a field is present it is inside the signed payload; changing it fails the signature.
+// Older clients decode the same bytes and ignore `rollout`.
 struct UpdateManifest: Codable, Equatable, Sendable {
     let identity: String
     let build: UInt64
     let sha256: Data
     let minimumSystemVersion: String
     let notes: String?
+    let rollout: UpdateRollout?
 
-    init(identity: String, build: UInt64, sha256: Data, minimumSystemVersion: String, notes: String? = nil) {
+    init(identity: String, build: UInt64, sha256: Data, minimumSystemVersion: String,
+         notes: String? = nil, rollout: UpdateRollout? = nil) {
         self.identity = identity
         self.build = build
         self.sha256 = sha256
         self.minimumSystemVersion = minimumSystemVersion
         self.notes = notes
+        self.rollout = rollout
     }
 
     enum CodingKeys: String, CodingKey {
-        case identity, build, sha256, minimumSystemVersion, notes
+        case identity, build, sha256, minimumSystemVersion, notes, rollout
     }
 
     init(from decoder: Decoder) throws {
@@ -31,6 +35,7 @@ struct UpdateManifest: Codable, Equatable, Sendable {
         sha256 = try container.decode(Data.self, forKey: .sha256)
         minimumSystemVersion = try container.decode(String.self, forKey: .minimumSystemVersion)
         notes = try container.decodeIfPresent(String.self, forKey: .notes)
+        rollout = try container.decodeIfPresent(UpdateRollout.self, forKey: .rollout)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -40,6 +45,7 @@ struct UpdateManifest: Codable, Equatable, Sendable {
         try container.encode(sha256, forKey: .sha256)
         try container.encode(minimumSystemVersion, forKey: .minimumSystemVersion)
         try container.encodeIfPresent(notes, forKey: .notes)
+        try container.encodeIfPresent(rollout, forKey: .rollout)
     }
 
     /// Version string the offer window shows. This is the marketing version
@@ -74,12 +80,122 @@ enum UpdateReleaseNotes {
         return (kept.isEmpty ? String(clipped) : kept) + "\n\n..."
     }
 
-    static func markdown(_ notes: String) -> AttributedString {
+    /// One visible row of release notes. Headings, bullets and paragraphs stay
+    /// separate; inline marks are parsed inside each row.
+    struct Block: Equatable, Identifiable {
+        enum Kind: Equatable {
+            case heading(Int)
+            case bullet
+            case paragraph
+        }
+
+        let id: Int
+        let kind: Kind
+        /// Unordered notes use `•`. Numbered notes keep the written marker, such as `1.`.
+        let marker: String?
+        let inline: AttributedString
+        /// Spoken text, without heading marks or list markers.
+        let plain: String
+
+        var isHeader: Bool {
+            if case .heading = kind { return true }
+            return false
+        }
+
+        var spoken: String {
+            if let marker { return "\(marker) \(plain)" }
+            return plain
+        }
+    }
+
+    static func blocks(_ notes: String) -> [Block] {
+        let normalized = notes
+            .replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
+        var blocks: [Block] = []
+        var paragraph: [String] = []
+
+        func append(_ kind: Block.Kind, marker: String?, source: String) {
+            let inline = inlineMarkdown(source)
+            let characters = String(inline.characters).trimmingCharacters(in: .whitespacesAndNewlines)
+            blocks.append(Block(
+                id: blocks.count,
+                kind: kind,
+                marker: marker,
+                inline: inline,
+                plain: characters.isEmpty ? source : characters
+            ))
+        }
+        func flushParagraph() {
+            let text = paragraph.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+            paragraph.removeAll(keepingCapacity: true)
+            guard !text.isEmpty else { return }
+            append(.paragraph, marker: nil, source: text)
+        }
+
+        for raw in normalized.split(separator: "\n", omittingEmptySubsequences: false) {
+            let line = String(raw).trimmingCharacters(in: .whitespaces)
+            if line.isEmpty {
+                flushParagraph()
+                continue
+            }
+            if let heading = heading(in: line) {
+                flushParagraph()
+                append(.heading(heading.level), marker: nil, source: heading.text)
+                continue
+            }
+            if let bullet = bullet(in: line) {
+                flushParagraph()
+                append(.bullet, marker: bullet.marker, source: bullet.text)
+                continue
+            }
+            paragraph.append(line)
+        }
+        flushParagraph()
+        return blocks
+    }
+
+    /// Inline marks only. Block characters stay in the row splitter above.
+    private static func inlineMarkdown(_ source: String) -> AttributedString {
         let options = AttributedString.MarkdownParsingOptions(
-            interpretedSyntax: .full,
+            interpretedSyntax: .inlineOnlyPreservingWhitespace,
             failurePolicy: .returnPartiallyParsedIfPossible
         )
-        return (try? AttributedString(markdown: notes, options: options)) ?? AttributedString(notes)
+        return (try? AttributedString(markdown: source, options: options)) ?? AttributedString(source)
+    }
+
+    private static func heading(in line: String) -> (level: Int, text: String)? {
+        var level = 0
+        var index = line.startIndex
+        while level < 6, index < line.endIndex, line[index] == "#" {
+            level += 1
+            index = line.index(after: index)
+        }
+        guard level > 0, index < line.endIndex, line[index] == " " || line[index] == "\t" else { return nil }
+        let text = line[index...].trimmingCharacters(in: .whitespaces)
+        guard !text.isEmpty else { return nil }
+        return (level, text)
+    }
+
+    private static func bullet(in line: String) -> (marker: String, text: String)? {
+        let unordered = ["* ", "- ", "+ ", "*\t", "-\t", "+\t"]
+        if let prefix = unordered.first(where: { line.hasPrefix($0) }) {
+            let text = String(line.dropFirst(prefix.count)).trimmingCharacters(in: .whitespaces)
+            guard !text.isEmpty else { return nil }
+            return ("•", text)
+        }
+        var index = line.startIndex
+        var digits = 0
+        while index < line.endIndex, line[index].isNumber, digits < 6 {
+            digits += 1
+            index = line.index(after: index)
+        }
+        guard digits > 0, index < line.endIndex, line[index] == "." || line[index] == ")" else { return nil }
+        let afterMarker = line.index(after: index)
+        guard afterMarker < line.endIndex, line[afterMarker] == " " || line[afterMarker] == "\t" else { return nil }
+        let text = line[afterMarker...].trimmingCharacters(in: .whitespaces)
+        guard !text.isEmpty else { return nil }
+        return (String(line[..<afterMarker]), text)
     }
 }
 struct SignedUpdate: Codable, Equatable, Sendable {
@@ -102,6 +218,9 @@ struct UpdateTrust {
         guard manifest.sha256.count == SHA256.byteCount else { throw ServiceFailure.invalidData }
         if let notes = manifest.notes, !UpdateReleaseNotes.isAcceptable(notes) {
             throw ServiceFailure.invalidData
+        }
+        if let rollout = manifest.rollout {
+            try UpdateRollout.validate(rollout)
         }
         return manifest
     }
@@ -189,7 +308,12 @@ final class UpdateAdapter: UpdateService {
     private var busy = false
     private var epoch = UUID()
     private var consent: OperationReceipt?
-    private let key = "updater.transactions.v1"
+    static let transactionStorageKey = "updater.transactions.v1"
+    private let key = UpdateAdapter.transactionStorageKey
+    /// Overrides the install's saved cohort. Tests set this. Production leaves it nil.
+    var rolloutBucket: Int?
+    /// Clock for the signed schedule. Production uses the current time.
+    var rolloutNow: @Sendable () -> Date = { Date() }
     private(set) var state: UpdateState = .idle
     var administratorCommand: String? { protectedUpdates?.administratorCommand }
     var protectedPackageDirectory: URL? { protectedUpdates?.packageDirectory }
@@ -289,6 +413,10 @@ final class UpdateAdapter: UpdateService {
     }
 
     func check() async -> ServiceOutcome<String?> {
+        await check(initiator: .automatic)
+    }
+
+    func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?> {
         do {
             try requireIdle()
             guard try journal().allSatisfy({ [.discarded, .rolledBack, .completed].contains($0.phase) }) else {
@@ -301,6 +429,10 @@ final class UpdateAdapter: UpdateService {
             guard let release else { state = .idle; return .success(nil) }
             let manifest = try trust.authenticate(release)
             guard try isNewer(manifest) else { state = .idle; return .success(nil) }
+            guard try admitRollout(manifest, initiator: initiator) else {
+                state = .idle
+                return .success(nil)
+            }
             offer = release; state = .available(version: manifest.offerVersion)
             return .success(manifest.offerVersion)
         } catch {
@@ -308,6 +440,40 @@ final class UpdateAdapter: UpdateService {
             UpdateDiagnostics.record(error, as: reason, during: "check")
             return failure(error)
         }
+    }
+
+    /// Notes for the build that is already installed, re-read from the signed journal.
+    func releaseNotesForInstalledBuild(_ build: UInt64) -> String? {
+        guard let entries = try? journal() else { return nil }
+        for entry in entries.reversed() {
+            guard entry.phase != .discarded, entry.phase != .rolledBack, entry.phase != .cancelled else { continue }
+            guard let manifest = try? trust.authenticate(entry.release), manifest.build == build else { continue }
+            return manifest.notes
+        }
+        return nil
+    }
+
+    /// Automatic checks follow the signed schedule. Manual checks skip it unless the release is halted.
+    /// The cohort is created only when an automatic check needs it, and it is not logged.
+    private func admitRollout(_ manifest: UpdateManifest, initiator: UpdateCheckInitiator) throws -> Bool {
+        guard let rollout = manifest.rollout else { return true }
+        if rollout.halted {
+            UpdateDiagnostics.withheldRollout()
+            return false
+        }
+        if initiator == .manual || rollout.critical { return true }
+        let bucket = try resolvedBucket()
+        let admitted = UpdateRolloutGate.admits(rollout: rollout, initiator: .automatic, bucket: bucket, now: rolloutNow())
+        if !admitted { UpdateDiagnostics.withheldRollout() }
+        return admitted
+    }
+
+    private func resolvedBucket() throws -> Int {
+        if let rolloutBucket {
+            guard (0..<RolloutBucket.count).contains(rolloutBucket) else { throw ServiceFailure.invalidData }
+            return rolloutBucket
+        }
+        return try RolloutBucket.stableValue(in: storage)
     }
 
     /// Notes from the current offer. Re-checks the signature so the text cannot drift from the payload.
@@ -510,5 +676,9 @@ enum UpdateDiagnostics {
         let ns = error as NSError
         let detail = "update \(context) classified \(reason.rawValue) domain \(ns.domain) code \(ns.code) \(ns.localizedDescription)"
         log.error("\(detail, privacy: .public)")
+    }
+
+    static func withheldRollout() {
+        log.error("update check withheld by the signed rollout")
     }
 }

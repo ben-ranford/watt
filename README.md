@@ -67,9 +67,9 @@ The app reads two HTTPS URLs from its Info.plist. Release builds fill `$(WATT_UP
 - `https://ben-ranford.github.io/watt/updates/manifest.json`
 - `https://ben-ranford.github.io/watt/updates/Watt.tar`
 
-GitHub Pages publishes both files together. The manifest is a `SignedUpdate`: base64 `payload` and base64 `signature`. The payload is the compact JSON `UpdateManifest` (`identity`, `build`, `sha256`, `minimumSystemVersion`). The signature is Ed25519 over those exact payload bytes. The app checks it with the public key built into that release. The private key is not in this repository.
+GitHub Pages publishes both files together. The manifest is a `SignedUpdate`: base64 `payload` and base64 `signature`. The payload is the compact JSON `UpdateManifest` (`identity`, `build`, `sha256`, `minimumSystemVersion`, optional `notes`, and optional `rollout`). The signature is Ed25519 over those exact payload bytes. The app checks it with the public key built into that release. The private key is not in this repository. A client that does not know `rollout` still verifies the signature and ignores that field.
 
-A manifest is accepted only when the signature is valid, `identity` is `io.github.ben-ranford.watt`, `build` is a positive integer newer than the installed build, `minimumSystemVersion` is a `MAJOR.MINOR[.PATCH]` version this Mac can run, and the SHA-256 of `Watt.tar` matches `sha256`. Update URLs must be `https`, with no user, password, query, or fragment. Redirects are allowed only when the host stays the same, and only up to three of them. The updater reads the uncompressed ustar of `Watt.app`. The zip and the disk image are downloads for people. They are not the update artifact.
+A manifest is accepted only when the signature is valid, `identity` is `io.github.ben-ranford.watt`, `build` is a positive integer newer than the installed build, `minimumSystemVersion` is a `MAJOR.MINOR[.PATCH]` version this Mac can run, and the SHA-256 of `Watt.tar` matches `sha256`. A staged `rollout` then keeps an automatic check to the signed cohort. The cohort is a random number stored on this Mac. It is not sent anywhere. **Check for Updates** skips that schedule. A halted release is not offered, and a critical one is offered to every install. Update URLs must be `https`, with no user, password, query, or fragment. Redirects are allowed only when the host stays the same, and only up to three of them. The updater reads the uncompressed ustar of `Watt.app`. The zip and the disk image are downloads for people. They are not the update artifact.
 
 The release flow is described in [RELEASING.md](RELEASING.md).
 
@@ -101,7 +101,7 @@ The cask `watt` is published from [ben-ranford/homebrew-tap](https://github.com/
 brew install --cask ben-ranford/tap/watt
 ```
 
-The cask downloads `Watt-X.Y.Z.zip` from GitHub Releases, installs `Watt.app`, and removes the quarantine attribute in `postflight_steps`. It sets `auto_updates true`, so Homebrew leaves upgrades to Watt. `brew upgrade` does not replace the app unless you pass `--greedy`.
+The cask downloads `Watt-X.Y.Z.zip` from GitHub Releases, installs `Watt.app`, and removes the quarantine attribute in `postflight_steps`. It sets `auto_updates true`, so Homebrew leaves upgrades to Watt. `brew upgrade` does not replace the app unless you pass `--greedy`. The cask moves when a rollout is complete or the release is critical, not while a staged rollout is still in progress. New installs during a rollout get the last complete version, then follow the in-app schedule.
 
 ### Download
 
@@ -111,7 +111,9 @@ Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launc
 
 ### Updating
 
-**Check for Updates…** is in the secondary-click menu, and **Check for Updates Now** is in Settings. Both use the signed-manifest updater. Automatic checks start on, and Settings can turn them off. Up to date and couldn’t-check results use the existing update window. The app downloads the signed manifest and `Watt.tar` described under [Update verification](#update-verification). With no privileged-helper record, it replaces its own bundle. With a helper record, the administrator installer rotates that installation after it checks the same manifest and archive digest, then restarts the helper. The ready window says Watt? quits, updates, and comes back to the menu bar, in about 5 seconds.
+**Check for Updates…** is in the secondary-click menu, and **Check for Updates Now** is in Settings. Both use the signed-manifest updater and both skip a staged rollout. Automatic checks start on, follow the signed schedule, and Settings can turn them off. Up to date and couldn’t-check results use the existing update window. The app downloads the signed manifest and `Watt.tar` described under [Update verification](#update-verification). With no privileged-helper record, it replaces its own bundle. With a helper record, the administrator installer rotates that installation after it checks the same manifest and archive digest, then restarts the helper. The ready window says Watt? quits, updates, and comes back to the menu bar, in about 5 seconds.
+
+The first launch after that update shows **What’s New** once, using the signed release notes. The app remembers that the window appeared as soon as it is shown, so closing the Mac without pressing Done does not bring it back. A fresh install does not show it. The same notes stay available from **What’s New** in the About panel.
 
 ## Usage
 
