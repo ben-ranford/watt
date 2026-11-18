@@ -1389,6 +1389,21 @@ class PagesSiteTests(unittest.TestCase):
         shots = docs / 'screenshots'
         shots.mkdir(parents=True)
         (docs / 'index.html').write_text('<!DOCTYPE html><title>Watt?</title><p>Native macOS menu-bar app that shows live charger, system and battery power in watts.</p>', encoding='utf-8')
+        (docs / 'why-is-my-mac-charging-slowly.html').write_text('<!DOCTYPE html><title>Slow charging</title><p>Guide</p>', encoding='utf-8')
+        (docs / 'compare.html').write_text('<!DOCTYPE html><title>Compare</title><p>Compare</p>', encoding='utf-8')
+        (docs / 'robots.txt').write_text(
+            'User-agent: *\nAllow: /\n\nSitemap: https://ben-ranford.github.io/watt/sitemap.xml\n',
+            encoding='utf-8',
+        )
+        (docs / 'sitemap.xml').write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            '  <url><loc>https://ben-ranford.github.io/watt/</loc></url>\n'
+            '  <url><loc>https://ben-ranford.github.io/watt/why-is-my-mac-charging-slowly.html</loc></url>\n'
+            '  <url><loc>https://ben-ranford.github.io/watt/compare.html</loc></url>\n'
+            '</urlset>\n',
+            encoding='utf-8',
+        )
         (docs / 'site.css').write_text('body { color: #111; }\n', encoding='utf-8')
         (docs / 'icon.png').write_bytes(self._png(8, 8))
         (docs / 'social-preview.png').write_bytes(self._png(1280, 640))
@@ -1581,16 +1596,60 @@ class PagesSiteTests(unittest.TestCase):
         self.assertIn('PASS: landing page and updates/', result.stdout)
 
     def test_landing_page_has_no_trackers_and_matches_the_readme(self) -> None:
+        import re
         import struct
         html = (ROOT / 'docs/index.html').read_text(encoding='utf-8')
         css = (ROOT / 'docs/site.css').read_text(encoding='utf-8')
+        pages = {
+            'index.html': html,
+            'why-is-my-mac-charging-slowly.html': (ROOT / 'docs/why-is-my-mac-charging-slowly.html').read_text(encoding='utf-8'),
+            'compare.html': (ROOT / 'docs/compare.html').read_text(encoding='utf-8'),
+        }
+        for name, page in pages.items():
+            lowered_page = page.lower()
+            for token in (
+                'googleapis', 'googletagmanager', 'google-analytics',
+                'plausible', 'gtag', 'cdn.jsdelivr', 'unpkg.com', 'fonts.google',
+            ):
+                self.assertNotIn(token, lowered_page, f'{name} {token}')
+            self.assertNotIn('http://', lowered_page, name)
+            self.assertIn('site.css', page, name)
+            self.assertIn('summary_large_image', page, name)
+            self.assertIn('prefers-color-scheme', css)
+            for attrs in re.findall(r'<script\b([^>]*)>', page, flags=re.I):
+                self.assertIsNone(re.search(r'\bsrc\s*=', attrs, re.I), name)
+                kind = re.search(r'\btype\s*=\s*["\']([^"\']+)["\']', attrs, re.I)
+                self.assertIsNotNone(kind, name)
+                self.assertEqual(kind.group(1).lower(), 'application/ld+json', name)
         lowered = html.lower()
-        for token in (
-            '<script', 'googleapis', 'googletagmanager', 'google-analytics',
-            'plausible', 'gtag', 'cdn.jsdelivr', 'unpkg.com', 'fonts.google',
+        self.assertIn('application/ld+json', lowered)
+        self.assertIn('"operatingSystem": "macOS"', html)
+        self.assertIn('"applicationCategory": "UtilitiesApplication"', html)
+        self.assertIn('"price": "0"', html)
+        self.assertNotIn('aggregateRating', html)
+        self.assertNotIn('ratingValue', html)
+        self.assertNotIn('reviewCount', html)
+        self.assertIn('why-is-my-mac-charging-slowly.html', html)
+        self.assertIn('compare.html', html)
+        robots = (ROOT / 'docs/robots.txt').read_text(encoding='utf-8')
+        self.assertIn('User-agent: *', robots)
+        self.assertIn('Allow: /', robots)
+        self.assertIn('Sitemap: https://ben-ranford.github.io/watt/sitemap.xml', robots)
+        sitemap = (ROOT / 'docs/sitemap.xml').read_text(encoding='utf-8')
+        for loc in (
+            'https://ben-ranford.github.io/watt/',
+            'https://ben-ranford.github.io/watt/why-is-my-mac-charging-slowly.html',
+            'https://ben-ranford.github.io/watt/compare.html',
         ):
-            self.assertNotIn(token, lowered, token)
-        self.assertNotIn('http://', lowered)
+            self.assertIn(loc, sitemap)
+        for name, page in pages.items():
+            if name == 'index.html':
+                continue
+            self.assertIn('href="./"', page, name)
+            self.assertIn('https://github.com/ben-ranford/watt"', page, name)
+            self.assertIn('https://github.com/ben-ranford/watt/releases/latest', page, name)
+        self.assertIn('@media (prefers-color-scheme: light)', css)
+        self.assertIn('@media (prefers-reduced-motion: reduce)', css)
         self.assertNotIn('@import', css.lower())
         self.assertNotIn('url(http', css.lower())
         pitch = 'Native macOS menu-bar app that shows live charger, system and battery power in watts.'

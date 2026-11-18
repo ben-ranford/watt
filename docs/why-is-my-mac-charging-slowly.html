@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Why a Mac charges slowly: the adapter, the cable, system load, Optimized Battery Charging, and heat, and how Watt? shows charger watts and time to full.">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#121214" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Why is my Mac charging slowly? — Watt?</title>
+  <link rel="canonical" href="https://ben-ranford.github.io/watt/why-is-my-mac-charging-slowly.html">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="https://ben-ranford.github.io/watt/sitemap.xml">
+  <meta property="og:title" content="Why is my Mac charging slowly?">
+  <meta property="og:description" content="Why a Mac charges slowly: the adapter, the cable, system load, Optimized Battery Charging, and heat, and how Watt? shows charger watts and time to full.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ben-ranford.github.io/watt/why-is-my-mac-charging-slowly.html">
+  <meta property="og:image" content="https://ben-ranford.github.io/watt/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Watt? app icon and the line: Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Why is my Mac charging slowly?">
+  <meta name="twitter:description" content="Why a Mac charges slowly: the adapter, the cable, system load, Optimized Battery Charging, and heat, and how Watt? shows charger watts and time to full.">
+  <meta name="twitter:image" content="https://ben-ranford.github.io/watt/social-preview.png">
+  <meta name="twitter:image:alt" content="Watt? app icon and the line: Native macOS menu-bar app that shows live charger, system and battery power in watts.">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="wrap">
+    <header>
+      <a href="./" aria-label="Watt?"><img src="icon.png" width="512" height="512" alt=""></a>
+      <div>
+        <p class="eyebrow">macOS menu bar</p>
+        <h1>Why is my Mac charging slowly?</h1>
+      </div>
+    </header>
+    <nav class="sitenav" aria-label="Pages">
+      <a href="./">Watt?</a>
+      <a href="why-is-my-mac-charging-slowly.html" aria-current="page">Slow charging</a>
+      <a href="compare.html">Compare</a>
+    </nav>
+    <main id="content" class="guide">
+      <p class="pitch">Four ordinary reasons a Mac charges slowly, and what the watts in Watt? are telling you.</p>
+      <p>A Mac charges slowly because the adapter or the cable is delivering fewer watts than the model can use, because the Mac is spending those watts on itself, because macOS is holding the charge on purpose, or because the machine is too hot. Watt? does not change any of that. It shows the first two as charger watts, system watts, and battery watts, and it shows macOS’s own estimate of time to full.</p>
+      <p>Watt? needs macOS 13 or later, and it can show these watts only when that Mac’s battery exposes them. The practical rules are the same on the Intel USB-C MacBooks and on Apple silicon. What changes is the adapter Apple lists for the model. A desktop has no battery to charge.</p>
+
+      <nav aria-label="On this page">
+        <ol>
+          <li><a href="#charger">Which charger is enough</a></li>
+          <li><a href="#cable">The cable, and the watts that were negotiated</a></li>
+          <li><a href="#load">When the Mac is using the power</a></li>
+          <li><a href="#hold">When macOS is holding the charge</a></li>
+          <li><a href="#heat">Heat</a></li>
+          <li><a href="#try">What to try</a></li>
+        </ol>
+      </nav>
+
+      <section aria-labelledby="charger">
+        <h2 id="charger">Which charger is enough</h2>
+        <p>Apple’s rule, on <a href="https://support.apple.com/en-us/109509">Use a power adapter with your Mac</a>: if the Mac charges over USB-C, any USB-C power adapter or display that supports USB Power Delivery can charge it, including one with higher or lower wattage than the adapter Apple recommends. For the best charging experience they want at least the minimum wattage recommended for that Mac. A lower-wattage adapter still charges. It charges more slowly, and under a heavy load it may only run the Mac.</p>
+        <p>That page groups the recommended adapters as follows. Use it for your model, including any model Apple has added since this was written.</p>
+        <ul>
+          <li>MacBook Air, 2018 through 2021: a 30&nbsp;W USB-C adapter, or the 40&nbsp;W Dynamic Power Adapter with a 60&nbsp;W max.</li>
+          <li>MacBook Air, 2022 or later: 30&nbsp;W (13-inch only), 35&nbsp;W dual USB-C, 67&nbsp;W, or 70&nbsp;W. Apple also lists the 40&nbsp;W Dynamic Power Adapter for these models when it is used with a USB-C charge cable.</li>
+          <li>13-inch MacBook Pro, 2016 or later: 61&nbsp;W. Apple lists the Intel models and the later 13-inch Apple silicon models in this one group.</li>
+          <li>15-inch MacBook Pro, 2016 or later: 87&nbsp;W. These are Intel machines.</li>
+          <li>16-inch MacBook Pro, 2019: 96&nbsp;W. Intel.</li>
+          <li>14-inch MacBook Pro, 2021 or later: 67&nbsp;W, 70&nbsp;W, or 96&nbsp;W. Apple silicon.</li>
+          <li>16-inch MacBook Pro, 2021 or later: 140&nbsp;W. Apple silicon.</li>
+        </ul>
+        <p>The same page lists MacBook Neo with a 20&nbsp;W adapter. Enough, for the Air and the Pro, means a charging solution at or above the minimum Apple lists for that model. A higher wattage than that recommendation is fine: Apple says a USB-C Power Delivery adapter above or below it can still charge the Mac. A lower one has less headroom once the Mac is awake and working.</p>
+        <p>On macOS Tahoe 26.4 or later, Apple shows “Slow Charger” in the battery status menu and in Battery settings when the charging solution is below that minimum. Their charging page says the adapter and the cable should deliver at least the recommended wattage. <a href="https://support.apple.com/en-us/102397">Charge your Mac laptop computer</a> is that page. Some models can also fast charge, and only with the adapter and cable combination Apple documents there. Meeting the minimum charges the Mac. It is not, by itself, the fast-charge combination.</p>
+        <p>A second plug does not help. Whether the ports are MagSafe or USB-C, the Mac charges from one of them: the source that provides the most power. Connecting another charger does not add the two ratings.</p>
+        <p>Older MagSafe and MagSafe&nbsp;2 adapters are a different connector. Apple says MagSafe&nbsp;3 is not compatible with the adapters and cables those earlier ports used.</p>
+      </section>
+
+      <section aria-labelledby="cable">
+        <h2 id="cable">The cable, and the watts that were negotiated</h2>
+        <p>The number printed on the adapter is a ceiling. USB-C Power Delivery is a contract between the charger and the Mac, and the cable is part of what that contract can be. A passive USB-C cable is specified for up to 3&nbsp;A, which is 60&nbsp;W at 20&nbsp;V. Current above 3&nbsp;A needs an electronically marked cable. USB-IF now certifies USB-C to USB-C cables at 60&nbsp;W or 240&nbsp;W. A data-only cable, or a cable rated below the adapter, negotiates less than the number on the brick.</p>
+        <p>The 3&nbsp;A / 60&nbsp;W baseline is the one described in Microchip’s <a href="https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ApplicationNotes/ApplicationNotes/00001974A.pdf">introduction to USB Power Delivery</a>. The 60&nbsp;W and 240&nbsp;W certification marks are from <a href="https://compliance.usb.org/index.asp?Format=Standard&amp;UpdateFile=Cables+and+Connectors">USB-IF’s cable update</a>. Cables certified before that change can still be in use, so a drawer can contain a cable that is neither 60&nbsp;W nor 240&nbsp;W.</p>
+        <p>Apple’s practical version, from <a href="https://support.apple.com/guide/mac-help/if-your-battery-wont-charge-mh29198/mac">If your Mac battery won’t charge</a>: not every cable can charge, so use one designed for charging, and for best results the cable that came with the Mac.</p>
+        <p>You can see the gap in Watt?. Open the panel and read Charger input. The large number is the watts coming in now. When the Mac reports an adapter, a second line names it and its rated wattage, such as “96&nbsp;W USB-C charger”. The rated figure is the adapter details the Mac publishes. The input figure is measured power. When a 96&nbsp;W adapter is only delivering some lower number, the cable, the port, or the negotiated contract is below the rating.</p>
+        <p>Hold Option and choose Apple menu, System Information, Power, then AC Charger Information, for Apple’s own look at the connected adapter. Watt? is the live split of that question: watts in, watts the system is using, and watts into or out of the battery.</p>
+      </section>
+
+      <section aria-labelledby="load">
+        <h2 id="load">When the Mac is using the power</h2>
+        <p>Charger input is what arrives. System draw is what the Mac is using. Battery is what is left. A positive battery number is charging. A negative number is the battery covering a deficit.</p>
+        <p>Apple describes that deficit directly. A Mac can run hard enough to use more power than the adapter supplies. Video editing and games are the examples they give, and screen brightness and connected devices count too. The battery then drains while the cable is plugged in. A low-wattage adapter can also be enough to run the Mac and not enough to charge it. The battery menu says “Not Charging”, and the battery does not charge even if the Mac is asleep or shut. That is <a href="https://support.apple.com/guide/mac-help/if-your-battery-status-is-not-charging-mh20876/mac">If your Mac battery status is “Not Charging”</a>.</p>
+        <p>Watt? shows the same split as three rows. If system draw stays above charger input, the battery number goes negative. Once that has lasted for the duration in Settings, 5 minutes by default, the panel title becomes “Charger can’t keep up”. The note fills in the live readings, rounded to whole watts: “Because your Mac draws [system] and this charger gives [charger]. The battery covers the rest.” Settings can change that duration. An idle battery on AC, when it is not the Optimised Battery Charging hold described below, shows 0.0&nbsp;W and the title “Not charging”. That is a reading, not a gap.</p>
+        <p>While the battery is charging, the line under the title adds the percentage and macOS’s time-to-full estimate, in the form “full in about 38 min”. Watt? does not calculate that from the watts on screen. It shows the system’s time-to-full when the value is a real duration from 1 minute through 48 hours. A missing value, a zero, and “still calculating” are left off, so the line stays at the percentage.</p>
+        <figure class="shot panel">
+          <img src="screenshots/panel-light.png" width="640" height="946" alt="Sample power panel in light appearance. Charging at plus 42.1 watts, 64 percent, full in about 38 minutes. Charger input 65.0 watts from a 96 watt USB-C charger, system draw 22.9 watts, battery plus 42.1 watts.">
+          <figcaption>Sample panel, light appearance. The watts and the “full in about 38 min” line are sample readings, rendered from the SwiftUI views for the home page. They are not a measurement of a particular Mac.</figcaption>
+        </figure>
+        <p>The secondary-click menu can put charger input in the menu bar, if you want the incoming watts without opening the panel. System draw is the default for a new install.</p>
+      </section>
+
+      <section aria-labelledby="hold">
+        <h2 id="hold">When macOS is holding the charge</h2>
+        <p>Optimized Battery Charging, on macOS Big Sur 11 or later, learns your routine and can delay charging past 80 percent when it expects the Mac to stay plugged in. The battery menu says “Charging On Hold”. Choose “Charge to Full Now” when you want 100 percent sooner. On macOS Ventura 13 or later the switch is in System Settings, Battery, the info button next to Charging or Battery Health. Apple’s page is <a href="https://support.apple.com/en-us/102338">About Optimized Battery Charging and Charge Limit</a>.</p>
+        <p>Watt? shows that hold as the title “Holding at” plus the percentage, for example “Holding at 80%”, with the note “Because Optimised Battery Charging is on. Charging resumes before you usually unplug.” Watt? spells it Optimised. The feature is Apple’s. Watt? is not applying a limit of its own.</p>
+        <p>On a Mac with Apple silicon and macOS Tahoe 26.4 or later, Battery settings can also set a Charge Limit from 80 to 100 percent. The battery menu then says “Charged to [%] Limit”. Watt? does not set that limit, and it has no charge-limit control. The battery menu is where macOS shows it. With either feature, macOS still charges to 100 percent occasionally so its charge estimate stays accurate.</p>
+      </section>
+
+      <section aria-labelledby="heat">
+        <h2 id="heat">Heat</h2>
+        <p>Apple’s range for using a Mac laptop is an ambient 10° to 35°&nbsp;C (50° to 95°&nbsp;F). In a poorly ventilated spot, such as under a blanket or on thick carpet, the adapter can turn off to avoid overheating. If battery temperatures go past what Apple recommends, charging may stop at 80 percent. If Optimized Battery Charging is already off and the battery still will not pass 80 percent, Apple says the battery may be too hot, and to move the Mac somewhere cooler with more airflow.</p>
+        <p>Those two notes are <a href="https://support.apple.com/guide/mac-help/if-your-battery-wont-charge-mh29198/mac">If your Mac battery won’t charge</a> and <a href="https://support.apple.com/guide/mac-help/if-your-battery-wont-charge-completely-mchlbfb7e12a/mac">If your Mac battery won’t charge completely</a>. Watt? does not report a temperature. What you see is the effect: charger input drops if the adapter has shut off, or the battery stops climbing while the system keeps drawing.</p>
+      </section>
+
+      <section aria-labelledby="try">
+        <h2 id="try">What to try</h2>
+        <ol>
+          <li>Look up the minimum on Apple’s adapter page, then read the watts printed on your adapter.</li>
+          <li>Use a charge cable. Start with the one that came with the Mac. One cable is the whole supply. A second port does not add watts.</li>
+          <li>Open Watt?. If charger input is well below the adapter’s rated watts, the cable or the negotiated contract is the limit. If charger input is close to that rating and system draw is most of it, the Mac is using the power, and time to full gets longer.</li>
+          <li>If the panel says “Holding at”, that is Optimized Battery Charging, not a weak charger.</li>
+          <li>If the Mac or the room is hot, let it cool on a hard surface before deciding the adapter is too small.</li>
+        </ol>
+        <p>Watt? will not raise the charge rate, limit the battery, or control the fans. <a href="compare.html">Watt? compared with Stats, AlDente, coconutBattery, and iStat Menus</a> is the page for that difference.</p>
+      </section>
+    </main>
+    <footer>
+      <nav aria-label="Site">
+        <p><a href="./">Watt?</a> · <a href="why-is-my-mac-charging-slowly.html">Slow charging</a> · <a href="compare.html">Compare</a></p>
+        <p><a href="https://github.com/ben-ranford/watt">Source</a> · <a href="https://github.com/ben-ranford/watt/releases/latest">Releases</a> · <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a></p>
+      </nav>
+    </footer>
+  </div>
+</body>
+</html>

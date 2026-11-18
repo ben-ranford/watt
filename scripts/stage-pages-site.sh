@@ -17,6 +17,10 @@ fi
 
 files=(
   index.html
+  why-is-my-mac-charging-slowly.html
+  compare.html
+  robots.txt
+  sitemap.xml
   site.css
   icon.png
   social-preview.png
