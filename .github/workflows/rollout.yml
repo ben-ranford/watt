@@ -1,0 +1,118 @@
+name: Rollout
+
+"on":
+  schedule:
+    # Daily, off the hour. Clients already follow the signed schedule; this
+    # republishes the snapshot and moves the cask once the last step is due.
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: pause, halt, resume, advance, finish, or critical
+        required: true
+        type: choice
+        options:
+          - pause
+          - halt
+          - resume
+          - advance
+          - finish
+          - critical
+      percent:
+        description: Frozen percent for pause, from 0 through 100. Leave empty to freeze the current step.
+        required: false
+        type: string
+
+# Read-only except the publish job, which replaces the Pages site, and the
+# cask job, which only pushes the tap when the signed rollout is complete.
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Re-sign and publish the manifest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    outputs:
+      cask: ${{ steps.rollout.outputs.cask }}
+      tag: ${{ steps.rollout.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Same guard as the docs deploy: refuse to continue without the live
+      # manifest and tar, except when neither has been published yet.
+      - name: Preserve published updates
+        id: preserve
+        env:
+          PAGES_DIR: site
+          PAGES_UPDATES_BASE: https://ben-ranford.github.io/watt/updates
+          PAGES_ALLOW_ABSENT: "true"
+        run: bash scripts/preserve-pages-updates.sh
+      - name: Re-sign the rollout
+        id: rollout
+        if: steps.preserve.outputs.updates == 'preserved'
+        env:
+          WATT_UPDATE_SIGNING_KEY: ${{ secrets.WATT_UPDATE_SIGNING_KEY }}
+          ROLLOUT_ACTION: ${{ github.event_name == 'schedule' && 'sync' || github.event.inputs.action }}
+          ROLLOUT_PERCENT: ${{ github.event.inputs.percent || '' }}
+        run: python3 scripts/resign-rollout-manifest.py --manifest site/updates/manifest.json --archive site/updates/Watt.tar --action "$ROLLOUT_ACTION" --percent "$ROLLOUT_PERCENT"
+      - name: Stage the landing page
+        if: steps.rollout.outputs.deploy == 'true'
+        env:
+          PAGES_SOURCE: .
+          PAGES_DIR: site
+        run: bash scripts/stage-pages-site.sh
+      - name: Check the Pages artifact
+        if: steps.rollout.outputs.deploy == 'true'
+        env:
+          PAGES_DIR: site
+          PAGES_REQUIRE_UPDATES: "true"
+        run: bash scripts/verify-pages-artifact.sh
+      - name: Upload Pages artifact
+        if: steps.rollout.outputs.deploy == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: steps.rollout.outputs.deploy == 'true'
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  cask:
+    name: Update Homebrew cask
+    needs: publish
+    if: needs.publish.outputs.cask == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Update the Homebrew tap
+        env:
+          HOMEBREW_TAP_DEPLOY_KEY: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ needs.publish.outputs.tag }}
+          SOURCE_REPO: ben-ranford/homebrew-tap
+        run: bash scripts/update-homebrew-cask.sh
+      - name: Delete the Homebrew deploy key
+        if: always()
+        run: |
+          set -euo pipefail
+          rm -f "${RUNNER_TEMP}/homebrew-tap-deploy-key"
