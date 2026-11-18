@@ -1302,7 +1302,7 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
 /// register a visible status item. It deliberately uses the native status button
 /// and NSPopover; no custom menu-bar chrome or pixel drawing is introduced.
 @MainActor
-private final class WattFallbackStatusItem: NSObject {
+private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     private let router: AppRouter
     private let powerStore: PowerReadingStore
     private let preferences: PreferencesStore
@@ -1343,6 +1343,11 @@ private final class WattFallbackStatusItem: NSObject {
         // hosts do not materialise its status item. The fallback is therefore
         // also the owner of the production sampling task; attaching polling
         // only to the hidden SwiftUI label leaves the visible widget at “—”.
+        // Install the policy first so the component loop does not arm a timer
+        // before it knows the panel is hidden.
+        powerStore.setComponentSamplingPolicy { [weak self] in
+            self?.componentSamplingNeeded ?? false
+        }
         startSampling()
 
         wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(
@@ -1439,6 +1444,18 @@ private final class WattFallbackStatusItem: NSObject {
                 DispatchQueue.main.async { [weak self] in self?.startSampling() }
             }
             .store(in: &observations)
+        preferences.$displayMode
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                DispatchQueue.main.async { [weak self] in self?.powerStore.refreshComponentSamplingNeed() }
+            }
+            .store(in: &observations)
+        preferences.$componentReadings
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                DispatchQueue.main.async { [weak self] in self?.powerStore.refreshComponentSamplingNeed() }
+            }
+            .store(in: &observations)
 
         // The normal launch does not mount the SwiftUI status-item bridge, so
         // route persisted setup here after installing its presentation handler.
@@ -1467,11 +1484,13 @@ private final class WattFallbackStatusItem: NSObject {
         if let panel, panel.isShown {
             panel.performClose(nil)
             router.statusPanelPresented = false
+            powerStore.refreshComponentSamplingNeed()
             return
         }
         let popover = panel ?? NSPopover()
         popover.behavior = .transient
         popover.animates = false
+        popover.delegate = self
         let host = NSHostingController(rootView:
             MenuBarRootView()
                 .environmentObject(router)
@@ -1486,6 +1505,25 @@ private final class WattFallbackStatusItem: NSObject {
             popover.contentSize = NSSize(width: max(fitted.width, WattSpacing.panelWidth), height: fitted.height)
         }
         router.statusPanelPresented = true
+        powerStore.refreshComponentSamplingNeed()
+    }
+
+    /// The popover is reused, but its SwiftUI tree is not. Leaving the hosting
+    /// controller in place invalidates the hidden panel on every menu-bar sample.
+    func popoverDidClose(_ notification: Notification) {
+        if panel?.contentViewController != nil {
+            panel?.contentViewController = nil
+        }
+        router.statusPanelPresented = false
+        powerStore.refreshComponentSamplingNeed()
+    }
+
+    /// Component watts are visible in the open panel, and in the status item
+    /// when that display mode is selected. Either one keeps the helper sampler.
+    private var componentSamplingNeeded: Bool {
+        guard preferences.componentReadings, !router.settingsHelperSetup.helperSwitchedOff else { return false }
+        if router.statusPanelPresented { return true }
+        return preferences.displayMode == .components
     }
 
     private func updateButton() {
