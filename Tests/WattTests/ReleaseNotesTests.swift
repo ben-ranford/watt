@@ -1,4 +1,6 @@
+import AppKit
 import CryptoKit
+import SwiftUI
 import XCTest
 @testable import Watt
 
@@ -77,10 +79,133 @@ final class ReleaseNotesTests: XCTestCase {
         let shown = UpdateReleaseNotes.promptText(long)
         XCTAssertLessThanOrEqual(shown?.count ?? 0, UpdateReleaseNotes.displayLimit + "\n\n...".count)
         XCTAssertTrue(shown?.hasSuffix("\n\n...") == true)
-        let rendered = UpdateReleaseNotes.markdown("### Fixes\n\n* **steadier** numbers")
-        XCTAssertTrue(String(rendered.characters).contains("Fixes"))
-        XCTAssertTrue(String(rendered.characters).contains("steadier"))
+        let rendered = UpdateReleaseNotes.blocks("### Fixes\n\n* **steadier** numbers")
+        XCTAssertEqual(rendered.map(\.kind), [.heading(3), .bullet])
+        XCTAssertEqual(rendered.map(\.plain), ["Fixes", "steadier numbers"])
+        XCTAssertTrue(rendered[1].inline.runs.contains {
+            $0.inlinePresentationIntent?.contains(.stronglyEmphasized) == true
+        })
         XCTAssertEqual(UpdateReleaseNotes.unavailable, "Release notes aren’t available for this version.")
+        let clipped = UpdateReleaseNotes.blocks(shown ?? "")
+        XCTAssertEqual(clipped.last?.kind, .paragraph)
+        XCTAssertEqual(clipped.last?.plain, "...")
+    }
+
+    func testBlocksKeepHeadingsBulletsAndParagraphsApart() {
+        let notes = """
+        # Release
+
+        This is a paragraph
+        that stays together.
+
+        Another paragraph with **bold** and [notes](https://example.com/notes).
+
+        * first item
+        - second **item**
+        + third item
+        1. fourth item
+        2) fifth item
+        """
+        let blocks = UpdateReleaseNotes.blocks(notes.replacingOccurrences(of: "\n", with: "\r\n"))
+        XCTAssertEqual(blocks.map(\.kind), [
+            .heading(1), .paragraph, .paragraph, .bullet, .bullet, .bullet, .bullet, .bullet,
+        ])
+        XCTAssertEqual(blocks[0].plain, "Release")
+        XCTAssertNil(blocks[0].marker)
+        XCTAssertTrue(blocks[0].isHeader)
+        XCTAssertEqual(blocks[0].spoken, "Release")
+        XCTAssertEqual(blocks[1].plain, "This is a paragraph that stays together.")
+        XCTAssertEqual(blocks[1].kind, .paragraph)
+        XCTAssertEqual(blocks[2].plain, "Another paragraph with bold and notes.")
+        XCTAssertTrue(blocks[2].inline.runs.contains {
+            $0.inlinePresentationIntent?.contains(.stronglyEmphasized) == true
+        })
+        XCTAssertTrue(blocks[2].inline.runs.contains { $0.link?.absoluteString == "https://example.com/notes" })
+        XCTAssertEqual(blocks[3].marker, "•")
+        XCTAssertEqual(blocks[3].spoken, "• first item")
+        XCTAssertEqual(blocks[4].plain, "second item")
+        XCTAssertEqual(blocks[4].marker, "•")
+        XCTAssertEqual(blocks[5].marker, "•")
+        XCTAssertEqual(blocks[5].plain, "third item")
+        XCTAssertEqual(blocks[6].marker, "1.")
+        XCTAssertEqual(blocks[6].plain, "fourth item")
+        XCTAssertEqual(blocks[7].marker, "2)")
+        XCTAssertEqual(blocks[7].spoken, "2) fifth item")
+        XCTAssertEqual(UpdateReleaseNotes.blocks(" \n\n "), [])
+        XCTAssertEqual(UpdateReleaseNotes.blocks(""), [])
+    }
+
+    func testWhatsNewSampleNotesDoNotRunTogether() throws {
+        let notes = "### Changes\n\n* Updates roll out gradually\n* What’s New appears once after you update"
+        let blocks = UpdateReleaseNotes.blocks(notes)
+        XCTAssertEqual(blocks.map(\.kind), [.heading(3), .bullet, .bullet])
+        XCTAssertEqual(blocks.map(\.plain), [
+            "Changes",
+            "Updates roll out gradually",
+            "What’s New appears once after you update",
+        ])
+        XCTAssertEqual(blocks.map(\.spoken), [
+            "Changes",
+            "• Updates roll out gradually",
+            "• What’s New appears once after you update",
+        ])
+        let glued = "ChangesUpdates roll out graduallyWhat’s New appears once after you update"
+        XCTAssertFalse(blocks.contains { $0.plain.contains("ChangesUpdates") || $0.spoken == glued })
+        XCTAssertNotEqual(blocks.map(\.plain).joined(), glued)
+
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let view = try String(contentsOf: root.appendingPathComponent("App/RootSceneView.swift"), encoding: .utf8)
+        let parser = try String(contentsOf: root.appendingPathComponent("Services/UpdateAdapter.swift"), encoding: .utf8)
+        let shots = try String(contentsOf: root.appendingPathComponent("Tests/WattTests/SiteScreenshotTests.swift"), encoding: .utf8)
+        let whatsNew = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/WhatsNewView.swift"), encoding: .utf8)
+        XCTAssertTrue(view.contains("noteRows(UpdateReleaseNotes.blocks(text))"))
+        XCTAssertTrue(view.contains(".wattAnimate(.reveal, value: revealed, enabled: !motionSuppressed)"))
+        XCTAssertTrue(view.contains(".accessibilityAddTraits(.isHeader)"))
+        XCTAssertTrue(view.contains("ReleaseNotesBlock(notes: router.promptNotes(version: version))"))
+        XCTAssertFalse(view.contains("UpdateReleaseNotes.markdown"))
+        XCTAssertFalse(view.contains("interpretedSyntax: .full"))
+        XCTAssertTrue(parser.contains("interpretedSyntax: .inlineOnlyPreservingWhitespace"))
+        XCTAssertFalse(parser.contains("interpretedSyntax: .full"))
+        XCTAssertTrue(whatsNew.contains("ReleaseNotesBlock(notes: notes)"))
+        XCTAssertTrue(shots.contains(#"### Changes\n\n* Updates roll out gradually\n* What’s New appears once after you update"#))
+    }
+
+    @MainActor
+    func testRenderedNotesExposeHeadingAndBulletsAsSeparateLabels() throws {
+        let notes = "### Changes\n\n* Updates roll out gradually\n* What’s New appears once after you update"
+        let host = NSHostingView(rootView: ReleaseNotesBlock(notes: notes)
+            .environment(\.wattMotionSuppressed, true)
+            .frame(width: 520, alignment: .leading))
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 520, height: 240),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        defer { window.close() }
+        window.contentView = host
+        window.orderFront(nil)
+        host.layoutSubtreeIfNeeded()
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.15))
+        let labels = accessibilityLabels(in: host).filter { !$0.isEmpty }
+        try XCTSkipIf(labels.isEmpty,
+                      "Native SwiftUI host exposes no AX labels in this test process. Block parsing still covers the rows.")
+        let listed = labels.joined(separator: " | ")
+        XCTAssertTrue(labels.contains { $0.contains("Changes") && !$0.contains("Updates") }, listed)
+        XCTAssertTrue(labels.contains { $0.contains("Updates roll out gradually") && !$0.contains("What’s New") }, listed)
+        XCTAssertTrue(labels.contains { $0.contains("What’s New appears once after you update") && !$0.contains("Updates roll out gradually") }, listed)
+        XCTAssertFalse(labels.allSatisfy { $0.contains("Changes") && $0.contains("Updates roll out gradually") }, listed)
+    }
+
+    @MainActor
+    private func accessibilityLabels(in root: NSView) -> [String] {
+        var seen = Set<ObjectIdentifier>()
+        func collect(_ object: Any) -> [String] {
+            guard let element = object as? any NSAccessibilityProtocol,
+                  seen.insert(ObjectIdentifier(element as AnyObject)).inserted else { return [] }
+            let own = element.accessibilityLabel().map { [$0] } ?? []
+            return own + (element.accessibilityChildren() ?? []).flatMap(collect)
+                + ((object as? NSView)?.subviews ?? []).flatMap(collect)
+        }
+        return collect(root)
     }
 
     @MainActor func testAdapterPublishesNotesOnlyFromTheVerifiedOffer() async throws {

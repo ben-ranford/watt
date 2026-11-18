@@ -80,12 +80,122 @@ enum UpdateReleaseNotes {
         return (kept.isEmpty ? String(clipped) : kept) + "\n\n..."
     }
 
-    static func markdown(_ notes: String) -> AttributedString {
+    /// One visible row of release notes. Headings, bullets and paragraphs stay
+    /// separate; inline marks are parsed inside each row.
+    struct Block: Equatable, Identifiable {
+        enum Kind: Equatable {
+            case heading(Int)
+            case bullet
+            case paragraph
+        }
+
+        let id: Int
+        let kind: Kind
+        /// Unordered notes use `•`. Numbered notes keep the written marker, such as `1.`.
+        let marker: String?
+        let inline: AttributedString
+        /// Spoken text, without heading marks or list markers.
+        let plain: String
+
+        var isHeader: Bool {
+            if case .heading = kind { return true }
+            return false
+        }
+
+        var spoken: String {
+            if let marker { return "\(marker) \(plain)" }
+            return plain
+        }
+    }
+
+    static func blocks(_ notes: String) -> [Block] {
+        let normalized = notes
+            .replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
+        var blocks: [Block] = []
+        var paragraph: [String] = []
+
+        func append(_ kind: Block.Kind, marker: String?, source: String) {
+            let inline = inlineMarkdown(source)
+            let characters = String(inline.characters).trimmingCharacters(in: .whitespacesAndNewlines)
+            blocks.append(Block(
+                id: blocks.count,
+                kind: kind,
+                marker: marker,
+                inline: inline,
+                plain: characters.isEmpty ? source : characters
+            ))
+        }
+        func flushParagraph() {
+            let text = paragraph.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+            paragraph.removeAll(keepingCapacity: true)
+            guard !text.isEmpty else { return }
+            append(.paragraph, marker: nil, source: text)
+        }
+
+        for raw in normalized.split(separator: "\n", omittingEmptySubsequences: false) {
+            let line = String(raw).trimmingCharacters(in: .whitespaces)
+            if line.isEmpty {
+                flushParagraph()
+                continue
+            }
+            if let heading = heading(in: line) {
+                flushParagraph()
+                append(.heading(heading.level), marker: nil, source: heading.text)
+                continue
+            }
+            if let bullet = bullet(in: line) {
+                flushParagraph()
+                append(.bullet, marker: bullet.marker, source: bullet.text)
+                continue
+            }
+            paragraph.append(line)
+        }
+        flushParagraph()
+        return blocks
+    }
+
+    /// Inline marks only. Block characters stay in the row splitter above.
+    private static func inlineMarkdown(_ source: String) -> AttributedString {
         let options = AttributedString.MarkdownParsingOptions(
-            interpretedSyntax: .full,
+            interpretedSyntax: .inlineOnlyPreservingWhitespace,
             failurePolicy: .returnPartiallyParsedIfPossible
         )
-        return (try? AttributedString(markdown: notes, options: options)) ?? AttributedString(notes)
+        return (try? AttributedString(markdown: source, options: options)) ?? AttributedString(source)
+    }
+
+    private static func heading(in line: String) -> (level: Int, text: String)? {
+        var level = 0
+        var index = line.startIndex
+        while level < 6, index < line.endIndex, line[index] == "#" {
+            level += 1
+            index = line.index(after: index)
+        }
+        guard level > 0, index < line.endIndex, line[index] == " " || line[index] == "\t" else { return nil }
+        let text = line[index...].trimmingCharacters(in: .whitespaces)
+        guard !text.isEmpty else { return nil }
+        return (level, text)
+    }
+
+    private static func bullet(in line: String) -> (marker: String, text: String)? {
+        let unordered = ["* ", "- ", "+ ", "*\t", "-\t", "+\t"]
+        if let prefix = unordered.first(where: { line.hasPrefix($0) }) {
+            let text = String(line.dropFirst(prefix.count)).trimmingCharacters(in: .whitespaces)
+            guard !text.isEmpty else { return nil }
+            return ("•", text)
+        }
+        var index = line.startIndex
+        var digits = 0
+        while index < line.endIndex, line[index].isNumber, digits < 6 {
+            digits += 1
+            index = line.index(after: index)
+        }
+        guard digits > 0, index < line.endIndex, line[index] == "." || line[index] == ")" else { return nil }
+        let afterMarker = line.index(after: index)
+        guard afterMarker < line.endIndex, line[afterMarker] == " " || line[afterMarker] == "\t" else { return nil }
+        let text = line[afterMarker...].trimmingCharacters(in: .whitespaces)
+        guard !text.isEmpty else { return nil }
+        return (String(line[..<afterMarker]), text)
     }
 }
 struct SignedUpdate: Codable, Equatable, Sendable {

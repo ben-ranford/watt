@@ -165,21 +165,78 @@ struct UpdateAvailableContent: View {
 
 struct ReleaseNotesBlock: View {
     let notes: String?
+    @Environment(\.wattMotionSuppressed) private var motionSuppressed
+    @State private var revealed = false
 
     var body: some View {
         if let text = UpdateReleaseNotes.promptText(notes) {
-            Text(UpdateReleaseNotes.markdown(text))
-                .font(.body)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .lineLimit(10)
-                .textSelection(.enabled)
-                .accessibilityLabel(text)
+            noteRows(UpdateReleaseNotes.blocks(text))
         } else {
             Text(UpdateReleaseNotes.unavailable)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityLabel(UpdateReleaseNotes.unavailable)
+        }
+    }
+
+    private func noteRows(_ blocks: [UpdateReleaseNotes.Block]) -> some View {
+        VStack(alignment: .leading, spacing: WattSpacing.sm) {
+            ForEach(blocks) { block in
+                noteRow(block)
+                    .padding(.top, block.isHeader && block.id > 0 ? WattSpacing.xs : 0)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .contain)
+        .opacity(motionSuppressed ? 1 : (revealed ? 1 : 0))
+        .accessibilityHidden(!motionSuppressed && !revealed)
+        .wattAnimate(.reveal, value: revealed, enabled: !motionSuppressed)
+        .onAppear { revealed = true }
+    }
+
+    @ViewBuilder private func noteRow(_ block: UpdateReleaseNotes.Block) -> some View {
+        let row = rowBody(block)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(block.spoken)
+        if block.isHeader {
+            row.accessibilityAddTraits(.isHeader)
+        } else {
+            row
+        }
+    }
+
+    @ViewBuilder private func rowBody(_ block: UpdateReleaseNotes.Block) -> some View {
+        if let marker = block.marker {
+            HStack(alignment: .firstTextBaseline, spacing: WattSpacing.sm) {
+                Text(marker)
+                    .font(WattTypography.body)
+                    .foregroundStyle(.secondary)
+                noteText(block)
+            }
+        } else {
+            noteText(block)
+        }
+    }
+
+    private func noteText(_ block: UpdateReleaseNotes.Block) -> some View {
+        Text(block.inline)
+            .font(noteFont(block.kind))
+            .foregroundStyle(.primary)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .textSelection(.enabled)
+    }
+
+    private func noteFont(_ kind: UpdateReleaseNotes.Block.Kind) -> Font {
+        switch kind {
+        case .heading(let level) where level < 3:
+            return WattTypography.headline
+        case .heading:
+            return WattTypography.bodyEmphasized
+        case .bullet, .paragraph:
+            return WattTypography.body
         }
     }
 }
