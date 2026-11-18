@@ -6,9 +6,9 @@ Watt? stays running in the menu bar. This note records what the sampler schedule
 
 The schedule table below is from the source and from the unit tests. It is not a host measurement.
 
-The host table is from a Mac, recorded on 18 Nov 2026 (Australia/Sydney, UTC+11) against commit `9072bf80`, before `main` and #56 were merged into this branch. The sampler deadline on that commit is the one this change ships. Commit `139c9c0` later copies `AdapterDetails` and `AppleRawAdapterDetails` as well as `PowerTelemetryData`. That commit was not measured again.
+Two host samples were taken on a Mac on 18 Nov 2026 (Australia/Sydney, UTC+11). The first is commit `9072bf80`, before `main` and #56 were merged. The second is commit `95e54274`, which includes `139c9c0` (the sample also copies `AdapterDetails` and `AppleRawAdapterDetails`) and the #56 charger row. The sampler deadline is the same on both commits.
 
-The implementation agent is Linux and did not run `top`, `powermetrics`, or `/usr/bin/time`. The figures below are the ones posted on [pull request #57](https://github.com/ben-ranford/watt/pull/57#issuecomment-6964528923).
+The implementation agent is Linux and did not run `top`, `powermetrics`, or `/usr/bin/time`. The figures below are the ones posted on [pull request #57](https://github.com/ben-ranford/watt/pull/57#issuecomment-6964528923) and the [follow-up](https://github.com/ben-ranford/watt/pull/57#issuecomment-6965062221).
 
 ## Schedule before and after
 
@@ -91,9 +91,22 @@ On this run, average and median CPU were lower with the panel closed and with it
 - Menu bar set to "Every 5 seconds": 60 status-item samples over about 67 seconds stayed on a live wattage (11.2 W, then 9.6 W when draw changed). The item did not show "No reading". The preference was restored afterwards.
 - Opening the panel after it had been closed for 8 seconds: the 346×426 panel appeared in 514 ms with Charger input, System draw, Battery, and the Components section already visible. The helper is not installed on this Mac, so helper component estimates after a reopen were not checked.
 
-### What this Mac run did not cover
+### Follow-up on `95e54274`, same Mac
 
-- `powermetrics` wakeups and energy. The wakeup row above is `top` IDLEW.
+Taken 11:18–11:22 Australia/Sydney. Load was about 2.1–3.7. The Mac had been up for about 1.5 hours. This build copies `AdapterDetails` and `AppleRawAdapterDetails` on each sample and includes the #56 charger row. Launch was not measured again. The Homebrew 1.2.0 columns are the same earlier sample.
+
+| | Panel closed, before (Homebrew 1.2.0) | Panel closed, after (`95e54274`) | Panel open, before (Homebrew 1.2.0) | Panel open, after (`95e54274`) |
+| --- | --- | --- | --- | --- |
+| CPU % (`top`, 60s average; min–max, median) | 1.147 (0.00–3.30, median 1.00) | 1.502 (0.00–2.80, median 1.60) | 1.347 (0.00–3.40, median 1.25) | 1.238 (0.00–15.40, median 0.75) |
+| Wakeups (`top` IDLEW delta over 60s) | 19 | 30 | 20 | 16 |
+| Resident memory (`top` MEM) | 24M | 25M | 32M | 38–39M |
+
+Closed-panel average CPU and wakeups are a little higher than both Homebrew 1.2.0 and the `9072bf80` sample. Open-panel average CPU is still under Homebrew 1.2.0. The 15.40% open-panel maximum is one spike. The 1-second `top` figures are noisy, so this is not treated as a meaningful regression against 1.2.0. The closed-panel delta is the one to watch if a later sample looks worse.
+
+On this build the panel showed **65 W charger**, matching `AdapterDetails` watts of 65. This Mac has no adapter Description or Name. Time to full and time to empty stayed hidden, which is correct while the battery is not charging (`IOPS` time to full and time to empty were 0, and `TimeRemaining` in the registry was 65535). Charger input, System draw, Battery, and the Components section (Helper not installed) appeared with the panel. The "Every 5 seconds" check was on `9072bf80`. The menu-bar deadline did not change in `139c9c0`.
+
+### What these Mac runs did not cover
+
+- `powermetrics` wakeups and energy. The wakeup rows are `top` IDLEW.
 - Per Component in the menu bar while the panel is closed.
 - A helper sample appearing after the panel is reopened. This Mac has no helper.
-- Commit `139c9c0`, which adds the two adapter registry keys to each sample.
