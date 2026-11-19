@@ -1,17 +1,16 @@
-import AppIntents
 import XCTest
 @testable import Watt
 
 @MainActor
 final class AppIntentsTests: XCTestCase {
-    override func setUp() {
-        super.setUp()
-        WattIntentSession.resetForTests()
+    override func setUp() async throws {
+        try await super.setUp()
+        await WattIntentSession.resetForTests()
     }
 
-    override func tearDown() {
-        WattIntentSession.resetForTests()
-        super.tearDown()
+    override func tearDown() async throws {
+        await WattIntentSession.resetForTests()
+        try await super.tearDown()
     }
 
     func testFreshReadingMatchesThePanelAndDoesNotSample() async throws {
@@ -118,9 +117,8 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(Set(WattMenuBarDisplay.allCases.map(\.displayMode)), Set(WattDisplayMode.allCases))
         for mode in WattDisplayMode.allCases {
             XCTAssertEqual(WattMenuBarDisplay(mode).displayMode, mode)
-            var intent = SetMenuBarDisplayIntent(mode: IntentParameter())
-            intent.mode = WattMenuBarDisplay(mode)
-            _ = try await intent.perform()
+            let title = try await SetMenuBarDisplayIntent.apply(WattMenuBarDisplay(mode))
+            XCTAssertEqual(title, mode.title)
             XCTAssertEqual(preferences.displayMode, mode)
             XCTAssertEqual(PreferencesStore(storage: storage).displayMode, mode)
         }

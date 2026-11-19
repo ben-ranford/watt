@@ -133,9 +133,15 @@ struct SetMenuBarDisplayIntent: AppIntent {
     @Parameter(title: "Display")
     var mode: WattMenuBarDisplay
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
+    /// Shortcuts fills `mode` and calls `perform`. Tests call this with each existing mode.
+    static func apply(_ mode: WattMenuBarDisplay) async throws -> String {
         try await WattIntentSession.setDisplayMode(mode.displayMode)
-        return .result(dialog: IntentDialog(stringLiteral: "Menu bar shows \(mode.displayMode.title)."))
+        return mode.displayMode.title
+    }
+
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let title = try await Self.apply(mode)
+        return .result(dialog: IntentDialog(stringLiteral: "Menu bar shows \(title)."))
     }
 }
 
