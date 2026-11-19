@@ -179,6 +179,13 @@ final class SiteScreenshotTests: XCTestCase {
         window.orderFrontRegardless()
         RunLoop.current.run(until: Date().addingTimeInterval(0.15))
         host.layoutSubtreeIfNeeded()
+        // A borderless window sometimes becomes key during that turn. Dark-mode
+        // switches then draw a white thumb instead of the inactive gray one, so
+        // settings-dark.png changes between otherwise identical runs. Resign
+        // before the capture so the thumb matches the committed screenshot.
+        if window.isKeyWindow {
+            window.resignKey()
+        }
         window.displayIfNeeded()
 
         let pixelsWide = Int((size.width * scale).rounded())
