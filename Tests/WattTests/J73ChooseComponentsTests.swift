@@ -213,7 +213,7 @@ final class J73ChooseComponentsTests: XCTestCase {
         _ = try XCTUnwrap(settings.target as? NSObject).perform(action, with: settings)
         XCTAssertEqual(routes, [.settings])
         XCTAssertEqual(preferences.selectedComponents, ["CPU", "GPU"])
-        let source = try source("App/WattApp.swift")
+        let source = try source("App/WattApp.swift") + source("App/StatusItemAdapter.swift")
         XCTAssertTrue(source.contains("SettingsRootView(menuBarExcerpt: settingsMenuBarExcerpt,"))
         XCTAssertTrue(source.contains("relaunchExcerpt: settingsRelaunchExcerpt, removalExcerpt: settingsRemovalExcerpt,"))
         XCTAssertTrue(source.contains("await J73FixtureLaunch.prepare(router: router)\n                    router.showSettings()"))

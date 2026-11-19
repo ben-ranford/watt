@@ -1513,7 +1513,7 @@ final class C05SettingsTests: XCTestCase {
 
     func testFallbackMenuBarSettingsUsesDirectNativeSettingsSurface() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-        let source = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+        let source = try String(contentsOf: root.appendingPathComponent("App/WattFallbackStatusItem.swift"), encoding: .utf8)
         let start = try XCTUnwrap(source.range(of: "router.present = { [weak self] destination in"))
         let end = try XCTUnwrap(source.range(of: "case .onboarding:", range: start.upperBound..<source.endIndex))
         let fallbackSettingsRoute = String(source[start.upperBound..<end.lowerBound])
