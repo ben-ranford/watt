@@ -16,8 +16,8 @@ extension WattIntentSession {
 
 /// Shortcuts value for one panel snapshot. Missing watts stay nil.
 struct WattPowerReadingEntity: AppEntity, Equatable, Sendable {
-    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Power Reading")
-    static var defaultQuery = WattPowerReadingQuery()
+    static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Power Reading")
+    static let defaultQuery = WattPowerReadingQuery()
 
     var id: String
     var available: Bool
@@ -52,8 +52,8 @@ enum WattMenuBarDisplay: String, AppEnum, CaseIterable {
     case perComponent = "Per Component"
     case iconOnly = "Icon Only"
 
-    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Menu Bar Display")
-    static var caseDisplayRepresentations: [WattMenuBarDisplay: DisplayRepresentation] = [
+    static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Menu Bar Display")
+    static let caseDisplayRepresentations: [WattMenuBarDisplay: DisplayRepresentation] = [
         .batteryDelta: "Battery Delta",
         .chargerInput: "Charger Input",
         .systemDraw: "System Draw",
@@ -83,8 +83,8 @@ enum WattMenuBarDisplay: String, AppEnum, CaseIterable {
 }
 
 struct GetPowerReadingIntent: AppIntent {
-    static var title: LocalizedStringResource = "Get Power Reading"
-    static var description = IntentDescription("Read system draw, charger watts, and battery.")
+    static let title: LocalizedStringResource = "Get Power Reading"
+    static let description = IntentDescription("Read system draw, charger watts, and battery.")
     static var openAppWhenRun: Bool { false }
 
     static func entity(from reading: WattPowerReading, precision: WattPrecision = .decimal) -> WattPowerReadingEntity {
@@ -104,8 +104,8 @@ struct GetPowerReadingIntent: AppIntent {
 }
 
 struct OpenStatusPanelIntent: AppIntent {
-    static var title: LocalizedStringResource = "Open Status Panel"
-    static var description = IntentDescription("Open the power panel.")
+    static let title: LocalizedStringResource = "Open Status Panel"
+    static let description = IntentDescription("Open the power panel.")
     static var openAppWhenRun: Bool { true }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -115,8 +115,8 @@ struct OpenStatusPanelIntent: AppIntent {
 }
 
 struct OpenSettingsIntent: AppIntent {
-    static var title: LocalizedStringResource = "Open Settings"
-    static var description = IntentDescription("Open Watt? settings.")
+    static let title: LocalizedStringResource = "Open Settings"
+    static let description = IntentDescription("Open Watt? settings.")
     static var openAppWhenRun: Bool { true }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -126,8 +126,8 @@ struct OpenSettingsIntent: AppIntent {
 }
 
 struct SetMenuBarDisplayIntent: AppIntent {
-    static var title: LocalizedStringResource = "Set Menu Bar Display"
-    static var description = IntentDescription("Choose what the menu bar shows.")
+    static let title: LocalizedStringResource = "Set Menu Bar Display"
+    static let description = IntentDescription("Choose what the menu bar shows.")
     static var openAppWhenRun: Bool { false }
 
     @Parameter(title: "Display")
@@ -140,8 +140,8 @@ struct SetMenuBarDisplayIntent: AppIntent {
 }
 
 struct CheckForUpdatesIntent: AppIntent {
-    static var title: LocalizedStringResource = "Check for Updates"
-    static var description = IntentDescription("Check for an update. Signature and hash verification stay on.")
+    static let title: LocalizedStringResource = "Check for Updates"
+    static let description = IntentDescription("Check for an update. Signature and hash verification stay on.")
     static var openAppWhenRun: Bool { true }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
