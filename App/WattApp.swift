@@ -381,6 +381,7 @@ struct WattApp: App {
         let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
+        WattIntentSession.install(router: appRouter, readings: appPowerStore, preferences: appPreferences)
         // The fallback owns the visible production status item on hosts where
         // MenuBarExtra does not materialise, so keep reopen routing alive there
         // as well as in the SwiftUI scene bridge.
@@ -1437,6 +1438,7 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
                     .environmentObject(self.router))
             }
         }
+        WattIntentSession.notePresenterReady()
 
         powerStore.objectWillChange
             .receive(on: RunLoop.main)
@@ -1698,6 +1700,7 @@ private struct StatusItemAdapter: NSViewRepresentable {
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 }
             }
+            WattIntentSession.notePresenterReady()
             applicationDelegate.onTerminate = { [weak view] in
                 router.leftoverHelper?.close()
                 router.present = { _ in }
