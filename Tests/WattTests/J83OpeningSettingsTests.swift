@@ -111,7 +111,7 @@ final class J83OpeningSettingsTests: XCTestCase {
     #endif
 
     func testNativeAppCompositionReusesSettingsSceneAndRoutesConfiguredLaunch() throws {
-        let app = try source("App/WattApp.swift")
+        let app = try source("App/WattApp.swift") + source("App/WattFallbackStatusItem.swift")
         let router = try source("App/AppRouter.swift")
         for token in ["SettingsRootView(menuBarExcerpt: settingsMenuBarExcerpt,",
                       "relaunchExcerpt: settingsRelaunchExcerpt", "openSettings()", "router.launch(preferences: preferences)"] {
