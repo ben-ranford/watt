@@ -131,7 +131,7 @@ struct SetMenuBarDisplayIntent: AppIntent {
     static var openAppWhenRun: Bool { false }
 
     @Parameter(title: "Display")
-    var mode: WattMenuBarDisplay
+    var mode: WattMenuBarDisplay = .systemDraw
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         try await WattIntentSession.setDisplayMode(mode.displayMode)

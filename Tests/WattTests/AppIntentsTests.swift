@@ -117,7 +117,9 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(Set(WattMenuBarDisplay.allCases.map(\.displayMode)), Set(WattDisplayMode.allCases))
         for mode in WattDisplayMode.allCases {
             XCTAssertEqual(WattMenuBarDisplay(mode).displayMode, mode)
-            _ = try await SetMenuBarDisplayIntent(mode: WattMenuBarDisplay(mode)).perform()
+            var intent = SetMenuBarDisplayIntent()
+            intent.mode = WattMenuBarDisplay(mode)
+            _ = try await intent.perform()
             XCTAssertEqual(preferences.displayMode, mode)
             XCTAssertEqual(PreferencesStore(storage: storage).displayMode, mode)
         }
