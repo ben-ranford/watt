@@ -56,10 +56,11 @@ enum SingleInstanceClaim {
     /// Production entry. Runs after launch so the handshake parent has already
     /// left its pipe wait before this process asks it to quit.
     @MainActor
-    static func becomeOnlyInstance() {
-        _ = becomeOnlyInstance(bundleIdentifier: Bundle.main.bundleIdentifier ?? "",
-                               currentProcessIdentifier: getpid(),
-                               registry: RunningApplicationRegistry())
+    @discardableResult
+    static func becomeOnlyInstance() -> SingleInstanceOutcome {
+        becomeOnlyInstance(bundleIdentifier: Bundle.main.bundleIdentifier ?? "",
+                           currentProcessIdentifier: getpid(),
+                           registry: RunningApplicationRegistry())
     }
 
     @MainActor
