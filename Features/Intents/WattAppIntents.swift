@@ -90,8 +90,6 @@ enum WattIntentActivation {
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { .background }
-    @available(macOS 27.0, *)
-    static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 }
 
@@ -103,7 +101,7 @@ struct GetPowerReadingIntent: AppIntent {
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
     @available(macOS 27.0, *)
-    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
     static func entity(from reading: WattPowerReading, precision: WattPrecision = .decimal) -> WattPowerReadingEntity {
@@ -130,7 +128,7 @@ struct OpenStatusPanelIntent: AppIntent {
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
     @available(macOS 27.0, *)
-    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -147,7 +145,7 @@ struct OpenSettingsIntent: AppIntent {
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
     @available(macOS 27.0, *)
-    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -164,7 +162,7 @@ struct SetMenuBarDisplayIntent: AppIntent {
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
     @available(macOS 27.0, *)
-    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
     @Parameter(title: "Display")
@@ -191,7 +189,7 @@ struct CheckForUpdatesIntent: AppIntent {
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
     @available(macOS 27.0, *)
-    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
