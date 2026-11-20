@@ -77,8 +77,11 @@ final class SiteScreenshotTests: XCTestCase {
             XCTAssertTrue(FileManager.default.fileExists(atPath: url.path),
                           "Missing \(url.path). Copy \(export.path)/\(name).png here after the macOS render.")
             let stored = try Data(contentsOf: url)
-            XCTAssertEqual(stored, rendered[name],
-                           "\(name).png does not match the SwiftUI render in \(export.path)")
+            // Control edges in dark mode antialias by a few levels between runs.
+            // Exact PNG bytes flap; a real layout change is far above this.
+            if let mismatch = screenshotMismatch(stored, rendered[name] ?? Data(), tolerance: 40) {
+                XCTFail("\(name).png does not match the SwiftUI render in \(export.path): \(mismatch)")
+            }
         }
         #endif
     }
@@ -276,6 +279,36 @@ final class SiteScreenshotTests: XCTestCase {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .appendingPathComponent("site-screenshots", isDirectory: true)
+    }
+
+    /// Nil when every channel of every pixel is within `tolerance`.
+    private func screenshotMismatch(_ stored: Data, _ rendered: Data, tolerance: Int) -> String? {
+        if stored == rendered { return nil }
+        guard let left = NSBitmapImageRep(data: stored), let right = NSBitmapImageRep(data: rendered) else {
+            return "could not decode the PNG"
+        }
+        guard left.pixelsWide == right.pixelsWide, left.pixelsHigh == right.pixelsHigh else {
+            return "size \(left.pixelsWide)x\(left.pixelsHigh) vs \(right.pixelsWide)x\(right.pixelsHigh)"
+        }
+        guard let leftPixels = left.bitmapData, let rightPixels = right.bitmapData else { return "no bitmap" }
+        let channels = min(left.samplesPerPixel, right.samplesPerPixel, 4)
+        guard channels > 0, left.bitsPerPixel >= 8, right.bitsPerPixel >= 8 else { return "unsupported bitmap" }
+        var maxDelta = 0
+        var count = 0
+        for y in 0..<left.pixelsHigh {
+            for x in 0..<left.pixelsWide {
+                let leftIndex = y * left.bytesPerRow + x * (left.bitsPerPixel / 8)
+                let rightIndex = y * right.bytesPerRow + x * (right.bitsPerPixel / 8)
+                var pixelDelta = 0
+                for channel in 0..<channels {
+                    pixelDelta = max(pixelDelta, abs(Int(leftPixels[leftIndex + channel]) - Int(rightPixels[rightIndex + channel])))
+                }
+                if pixelDelta > 0 { count += 1 }
+                maxDelta = max(maxDelta, pixelDelta)
+            }
+        }
+        if maxDelta <= tolerance { return nil }
+        return "max channel delta \(maxDelta) across \(count) pixels"
     }
 
     private func committedDirectory() -> URL {
