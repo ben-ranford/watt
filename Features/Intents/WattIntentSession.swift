@@ -42,6 +42,7 @@ enum WattIntentSession {
         reopenQuietNanoseconds = 400_000_000
         reopenSenderLookup = liveReopenSender
         reopenHasAppleEvent = { NSAppleEventManager.shared().currentAppleEvent != nil }
+        frontmostBundleIdentifier = { nil }
         otherCopies = liveOtherCopies
         role = .keeper
         intentAccepted = false
@@ -266,6 +267,8 @@ enum WattIntentSession {
     /// An intent that starts in that window cancels it. Finder still opens Settings.
     static var reopenQuietNanoseconds: UInt64 = 400_000_000
     static var reopenSenderLookup: @MainActor () -> String? = liveReopenSender
+    /// Tests set this to nil. Production reads the app that is in front.
+    static var frontmostBundleIdentifier: @MainActor () -> String? = liveFrontmostBundleIdentifier
     static var reopenHasAppleEvent: @MainActor () -> Bool = {
         NSAppleEventManager.shared().currentAppleEvent != nil
     }
@@ -327,8 +330,9 @@ enum WattIntentSession {
     /// actions that do not ask to come forward. That path must not open Settings.
     static func handleReopen(_ showSettings: @escaping @MainActor () -> Void) {
         let sender = reopenSenderLookup()
-        let choice = decision(for: sender, hasAppleEvent: reopenHasAppleEvent())
-        WattIntentLog.notice("reopen sender=\(sender ?? "none") decision=\(String(describing: choice)) pid=\(getpid()) role=\(role.rawValue)")
+        let frontmost = frontmostBundleIdentifier()
+        let choice = decision(for: sender, hasAppleEvent: reopenHasAppleEvent(), frontmost: frontmost)
+        WattIntentLog.notice("reopen sender=\(sender ?? "none") frontmost=\(frontmost ?? "none") decision=\(String(describing: choice)) pid=\(getpid()) role=\(role.rawValue)")
         switch choice {
         case .suppress:
             return
@@ -340,17 +344,28 @@ enum WattIntentSession {
             Task { @MainActor in
                 if delay > 0 { try? await Task.sleep(nanoseconds: delay) }
                 guard claimReopen(ticket) else { return }
+                let later = frontmostBundleIdentifier()
+                // The wait is for an intent. It is not a second chance to open
+                // Settings while Shortcuts is the app in front.
+                if isIntentDispatcher(later) { return }
                 showSettings()
             }
         }
     }
 
-    static func decision(for senderBundleIdentifier: String?, hasAppleEvent: Bool) -> WattReopenDecision {
-        if performingIntent > 0 || remoteIntent || isIntentDispatcher(senderBundleIdentifier) { return .suppress }
-        if let quietUntil, Date() < quietUntil, !isUserReopenSender(senderBundleIdentifier) { return .suppress }
-        // Only Finder, the Dock, loginwindow, and this app open Settings immediately.
-        // Shortcuts activates this accessory app with no Apple event. That is not a user reopen.
-        if isUserReopenSender(senderBundleIdentifier) { return .showSettings }
+    static func decision(for senderBundleIdentifier: String?, hasAppleEvent: Bool, frontmost: String? = nil) -> WattReopenDecision {
+        if performingIntent > 0 || remoteIntent || isIntentDispatcher(senderBundleIdentifier) || isIntentDispatcher(frontmost) {
+            return .suppress
+        }
+        if let quietUntil, Date() < quietUntil,
+           !isUserReopenSender(senderBundleIdentifier), !isExternalUserOpener(frontmost) {
+            return .suppress
+        }
+        // The reopen event often has no sender. Finder is still the frontmost
+        // app when someone opens Watt? from Finder; Shortcuts is frontmost when
+        // the Shortcuts editor runs an action. This process being frontmost is
+        // not that signal: an action can activate Watt? before the reopen runs.
+        if isUserReopenSender(senderBundleIdentifier) || isExternalUserOpener(frontmost) { return .showSettings }
         _ = hasAppleEvent
         return .waitForIntent
     }
@@ -366,10 +381,19 @@ enum WattIntentSession {
         return senders.contains { id == $0 || id.hasPrefix($0 + ".") }
     }
 
+    static func liveFrontmostBundleIdentifier() -> String? {
+        NSWorkspace.shared.frontmostApplication?.bundleIdentifier
+    }
+
+    static func isExternalUserOpener(_ bundleIdentifier: String?) -> Bool {
+        guard let id = bundleIdentifier?.lowercased() else { return false }
+        return ["com.apple.finder", "com.apple.dock", "com.apple.loginwindow"].contains(id)
+    }
+
     static func isUserReopenSender(_ bundleIdentifier: String?) -> Bool {
         guard let id = bundleIdentifier?.lowercased() else { return false }
         if let own = Bundle.main.bundleIdentifier?.lowercased(), id == own { return true }
-        return ["com.apple.finder", "com.apple.dock", "com.apple.loginwindow"].contains(id)
+        return isExternalUserOpener(id)
     }
 
     private static func reserveReopen() -> Int {

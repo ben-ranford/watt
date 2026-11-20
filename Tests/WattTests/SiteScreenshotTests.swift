@@ -77,9 +77,9 @@ final class SiteScreenshotTests: XCTestCase {
             XCTAssertTrue(FileManager.default.fileExists(atPath: url.path),
                           "Missing \(url.path). Copy \(export.path)/\(name).png here after the macOS render.")
             let stored = try Data(contentsOf: url)
-            // Control edges in dark mode antialias by a few levels between runs.
-            // Exact PNG bytes flap; a real layout change is far above this.
-            if let mismatch = screenshotMismatch(stored, rendered[name] ?? Data(), tolerance: 40) {
+            // Antialiasing can move a few edge pixels by a couple of levels.
+            // A tint, fill, or contrast shift changes far more of the image.
+            if let mismatch = screenshotMismatch(stored, rendered[name] ?? Data(), tolerance: 4, changedFraction: 0.002) {
                 XCTFail("\(name).png does not match the SwiftUI render in \(export.path): \(mismatch)")
             }
         }
@@ -281,8 +281,9 @@ final class SiteScreenshotTests: XCTestCase {
             .appendingPathComponent("site-screenshots", isDirectory: true)
     }
 
-    /// Nil when every channel of every pixel is within `tolerance`.
-    private func screenshotMismatch(_ stored: Data, _ rendered: Data, tolerance: Int) -> String? {
+    /// Nil only when every changed pixel is within `tolerance` channel levels
+    /// and those pixels are at most `changedFraction` of the image.
+    private func screenshotMismatch(_ stored: Data, _ rendered: Data, tolerance: Int, changedFraction: Double) -> String? {
         if stored == rendered { return nil }
         guard let left = NSBitmapImageRep(data: stored), let right = NSBitmapImageRep(data: rendered) else {
             return "could not decode the PNG"
@@ -307,8 +308,9 @@ final class SiteScreenshotTests: XCTestCase {
                 maxDelta = max(maxDelta, pixelDelta)
             }
         }
-        if maxDelta <= tolerance { return nil }
-        return "max channel delta \(maxDelta) across \(count) pixels"
+        let total = left.pixelsWide * left.pixelsHigh
+        if total > 0, maxDelta <= tolerance, Double(count) / Double(total) <= changedFraction { return nil }
+        return "max channel delta \(maxDelta) across \(count) of \(total) pixels"
     }
 
     private func committedDirectory() -> URL {

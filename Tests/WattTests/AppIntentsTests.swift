@@ -246,6 +246,9 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(WattIntentSession.decision(for: "com.apple.shortcuts.events", hasAppleEvent: true), .suppress)
         XCTAssertEqual(WattIntentSession.decision(for: "com.apple.linkd", hasAppleEvent: true), .suppress)
         XCTAssertEqual(WattIntentSession.decision(for: "com.apple.finder", hasAppleEvent: true), .showSettings)
+        XCTAssertEqual(WattIntentSession.decision(for: nil, hasAppleEvent: false, frontmost: "com.apple.shortcuts"), .suppress)
+        XCTAssertEqual(WattIntentSession.decision(for: nil, hasAppleEvent: false, frontmost: "com.apple.finder"), .showSettings)
+        XCTAssertEqual(WattIntentSession.decision(for: nil, hasAppleEvent: false, frontmost: Bundle.main.bundleIdentifier), .waitForIntent)
         XCTAssertEqual(WattIntentSession.decision(for: nil, hasAppleEvent: false), .waitForIntent)
         XCTAssertEqual(WattIntentSession.decision(for: "com.apple.launchservicesd", hasAppleEvent: true), .waitForIntent)
 
