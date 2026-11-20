@@ -400,6 +400,139 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertTrue(exercise.contains("Check for"))
         XCTAssertTrue(exercise.contains("no Dock icon"))
         XCTAssertFalse(exercise.contains("install the helper"))
+        XCTAssertTrue(exercise.contains("log stream --level debug --style compact --predicate 'subsystem == \"io.github.ben-ranford.watt\" AND category == \"intents\"'"))
+        XCTAssertTrue(source.contains("AppDependencyManager.shared.add"))
+        XCTAssertTrue(source.contains("io.github.ben-ranford.watt"))
+        XCTAssertTrue(source.contains("category: \"intents\""))
+        let claim = try String(contentsOf: root.appendingPathComponent("Services/UpdateRelaunchLifecycle.swift"), encoding: .utf8)
+        XCTAssertTrue(claim.contains("deferredForIntent"))
+        XCTAssertTrue(claim.contains("intentLaunch"))
+        XCTAssertTrue(app.contains("WattIntentSession.finishLaunchClaim()"))
+        XCTAssertFalse(source.contains("com.apple.runningboard"))
+    }
+
+    func testIntentLaunchLeavesTheRunningInstanceInPlace() async {
+        let probe = ClaimProbe()
+        prepareClaim(probe)
+        WattIntentSession.otherInstances = { [20, 21] }
+        WattIntentSession.launchSignal = {
+            WattIntentLaunchSignal(parentPID: 8, parentBundleIdentifier: "com.apple.linkd", eventSenderBundleIdentifier: nil)
+        }
+        await WattIntentSession.finishLaunchClaim()
+        XCTAssertEqual(WattIntentSession.role, .satellite)
+        XCTAssertEqual(probe.calls, 0)
+        XCTAssertFalse(probe.becameKeeper)
+    }
+
+    func testSecondLaunchWithoutAnIntentStillClaims() async {
+        let probe = ClaimProbe()
+        prepareClaim(probe)
+        WattIntentSession.otherInstances = { [20] }
+        await WattIntentSession.finishLaunchClaim()
+        XCTAssertEqual(WattIntentSession.role, .keeper)
+        XCTAssertEqual(probe.calls, 1)
+        XCTAssertTrue(probe.becameKeeper)
+    }
+
+    func testKeeperIntentInFlightSkipsTheClaim() async {
+        let probe = ClaimProbe()
+        prepareClaim(probe)
+        WattIntentSession.otherInstances = { [20] }
+        WattIntentSession.keeperIntentInFlight = { true }
+        await WattIntentSession.finishLaunchClaim()
+        XCTAssertEqual(WattIntentSession.role, .satellite)
+        XCTAssertEqual(probe.calls, 0)
+    }
+
+    func testOnlyInstanceBecomesTheKeeperImmediately() async {
+        let probe = ClaimProbe()
+        prepareClaim(probe)
+        WattIntentSession.otherInstances = { [] }
+        await WattIntentSession.finishLaunchClaim()
+        XCTAssertEqual(WattIntentSession.role, .keeper)
+        XCTAssertEqual(probe.calls, 1)
+        XCTAssertTrue(probe.becameKeeper)
+    }
+
+    func testLaunchLineRecordsAnAdhocSignatureWithoutATeamID() {
+        let line = WattCodeSignature.launchLine(
+            pid: 42, version: "1002000", path: "/Applications/Watt.app",
+            signature: WattCodeSignature.Snapshot(teamIdentifier: "none", adhoc: true, cdhash: "abcd", readable: true),
+            others: [7],
+            other: WattCodeSignature.Snapshot(teamIdentifier: "none", adhoc: true, cdhash: "abcd", readable: true),
+            signal: WattIntentLaunchSignal(parentPID: 1, parentBundleIdentifier: "com.apple.linkd", eventSenderBundleIdentifier: nil))
+        XCTAssertTrue(line.contains("pid=42"))
+        XCTAssertTrue(line.contains("team=none"))
+        XCTAssertTrue(line.contains("adhoc=true"))
+        XCTAssertTrue(line.contains("cdhash=abcd"))
+        XCTAssertTrue(line.contains("others=7"))
+        XCTAssertTrue(line.contains("signatureMatch=true"))
+        XCTAssertTrue(line.contains("parentBundle=com.apple.linkd"))
+        XCTAssertTrue(line.contains("no Team ID"))
+        XCTAssertTrue(WattIntentSession.isDispatcherLaunch(WattIntentLaunchSignal(parentPID: 9, parentBundleIdentifier: "com.apple.shortcuts", eventSenderBundleIdentifier: nil)))
+        XCTAssertTrue(WattIntentSession.isDispatcherLaunch(WattIntentLaunchSignal(parentPID: 1, parentBundleIdentifier: nil, eventSenderBundleIdentifier: "com.apple.linkd")))
+        XCTAssertFalse(WattIntentSession.isDispatcherLaunch(WattIntentLaunchSignal(parentPID: 1, parentBundleIdentifier: nil, eventSenderBundleIdentifier: "com.apple.finder")))
+        let signed = WattCodeSignature.current()
+        XCTAssertFalse(signed.cdhash.isEmpty)
+    }
+
+    func testSatelliteDoesNotInstallASecondStatusItem() {
+        let router = AppRouter()
+        let delegate = WattApplicationDelegate()
+        defer { delegate.applicationWillTerminate(Notification(name: NSApplication.willTerminateNotification)) }
+        WattIntentSession.role = .satellite
+        delegate.installFallbackStatusItem(router: router,
+                                           powerStore: PowerReadingStore(currentReading: .unavailable, clock: FakeWattClock()),
+                                           preferences: PreferencesStore(storage: InMemoryStorage()))
+        router.present(.statusPanel)
+        XCTAssertFalse(router.statusPanelPresented)
+    }
+
+    func testIntentBridgeReachesTheRegisteredHost() async throws {
+        let root = URL(fileURLWithPath: "/tmp/watt-intent-\(getpid())", isDirectory: true)
+        WattIntentBridge.directoryOverride = root
+        defer {
+            WattIntentBridge.stop()
+            try? FileManager.default.removeItem(at: root)
+        }
+        let preferences = PreferencesStore(storage: InMemoryStorage())
+        let router = AppRouter()
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
+        let clock = FakeWattClock(now: PowerReading.sampleCharging.timestamp)
+        install(store: PowerReadingStore(currentReading: .sampleCharging, clock: clock), router: router, preferences: preferences)
+        WattIntentSession.notePresenterReady()
+        WattIntentBridge.startKeeper()
+        let reading = try await WattIntentBridge.exchange(WattIntentRequest(action: "reading"))
+        XCTAssertEqual(reading.summary, "System draw 22.9 W, charger 65.0 W, battery 64%, Charging.")
+        XCTAssertEqual(reading.systemDrawWatts ?? -1, 22.9, accuracy: 0.001)
+        let mode = try await WattIntentBridge.exchange(WattIntentRequest(action: "displayMode", mode: WattDisplayMode.charger.rawValue))
+        XCTAssertEqual(mode.displayTitle, WattDisplayMode.charger.title)
+        XCTAssertEqual(preferences.displayMode, .charger)
+        let opened = try await WattIntentBridge.exchange(WattIntentRequest(action: "open", destination: "statusPanel"))
+        XCTAssertTrue(opened.ok)
+        XCTAssertEqual(routes, [.statusPanel])
+        let probe = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
+        XCTAssertFalse(probe.intentInFlight)
+        WattIntentSession.beginIntent()
+        let during = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
+        XCTAssertTrue(during.intentInFlight)
+        WattIntentSession.endIntent()
+    }
+
+    private func prepareClaim(_ probe: ClaimProbe) {
+        WattIntentSession.exitProcess = {}
+        WattIntentSession.startBridge = {}
+        WattIntentSession.claimDeferralNanoseconds = 0
+        WattIntentSession.keeperIntentInFlight = { false }
+        WattIntentSession.launchSignal = {
+            WattIntentLaunchSignal(parentPID: 1, parentBundleIdentifier: nil, eventSenderBundleIdentifier: nil)
+        }
+        WattIntentSession.onBecameKeeper = { probe.becameKeeper = true }
+        WattIntentSession.claimSingleInstance = {
+            probe.calls += 1
+            return SingleInstanceOutcome()
+        }
     }
 
     private func install(store: PowerReadingStore? = nil, router: AppRouter = AppRouter(),
@@ -432,6 +565,12 @@ final class AppIntentsTests: XCTestCase {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
     }
+}
+
+@MainActor
+private final class ClaimProbe {
+    var calls = 0
+    var becameKeeper = false
 }
 
 @MainActor

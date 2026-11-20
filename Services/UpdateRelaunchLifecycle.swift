@@ -28,6 +28,8 @@ struct SingleInstanceOutcome: Equatable, Sendable {
     var stopped: [Int32] = []
     var activated: Int32?
     var terminatedSelf = false
+    /// An App Intents launch left every running copy in place.
+    var deferredForIntent = false
 }
 
 @MainActor
@@ -64,11 +66,18 @@ enum SingleInstanceClaim {
     @discardableResult
     static func becomeOnlyInstance(bundleIdentifier: String,
                                    currentProcessIdentifier: Int32,
-                                   registry: any AppInstanceRegistry) -> SingleInstanceOutcome {
+                                   registry: any AppInstanceRegistry,
+                                   intentLaunch: Bool = false) -> SingleInstanceOutcome {
         guard !bundleIdentifier.isEmpty, currentProcessIdentifier > 0 else { return SingleInstanceOutcome() }
         let others = registry.runningInstances(bundleIdentifier: bundleIdentifier).filter {
             $0.bundleIdentifier == bundleIdentifier && $0.processIdentifier > 0
                 && $0.processIdentifier != currentProcessIdentifier
+        }
+        // linkd starts a second copy to run a shortcut. Quitting either copy
+        // drops the process LinkDaemon registered, and activating the survivor
+        // posts the reopen that opens Settings. Leave both processes alone.
+        if intentLaunch, !others.isEmpty {
+            return SingleInstanceOutcome(deferredForIntent: true)
         }
         let current = registry.currentBundleVersion()
         var outcome = SingleInstanceOutcome()
