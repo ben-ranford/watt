@@ -99,7 +99,7 @@ struct GetPowerReadingIntent: AppIntent {
     static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
-    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    static var supportedModes: IntentModes { .background }
     @available(macOS 27.0, *)
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
@@ -126,7 +126,7 @@ struct OpenStatusPanelIntent: AppIntent {
     static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
-    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    static var supportedModes: IntentModes { .background }
     @available(macOS 27.0, *)
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
@@ -143,7 +143,7 @@ struct OpenSettingsIntent: AppIntent {
     static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
-    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    static var supportedModes: IntentModes { .background }
     @available(macOS 27.0, *)
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
@@ -160,7 +160,7 @@ struct SetMenuBarDisplayIntent: AppIntent {
     static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
-    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    static var supportedModes: IntentModes { .background }
     @available(macOS 27.0, *)
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
@@ -187,7 +187,7 @@ struct CheckForUpdatesIntent: AppIntent {
     static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
-    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    static var supportedModes: IntentModes { .background }
     @available(macOS 27.0, *)
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
