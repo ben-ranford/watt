@@ -577,7 +577,11 @@ final class WattIntentHost: NSObject, @unchecked Sendable {
             return true
         }
         guard shouldRegister else { return }
-        AppDependencyManager.shared.add(dependency: shared)
+        // `add` stores a Sendable closure. Capture the instance here so that
+        // closure does not read a main-actor static, and register the host
+        // rather than the closure's own type.
+        let host = WattIntentHost.shared
+        AppDependencyManager.shared.add(dependency: host)
     }
 
     @MainActor

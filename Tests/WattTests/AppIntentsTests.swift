@@ -6,6 +6,7 @@ final class AppIntentsTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
         await WattIntentSession.resetForTests()
+        WattIntentHost.registerIfNeeded()
     }
 
     override func tearDown() async throws {
@@ -500,6 +501,8 @@ final class AppIntentsTests: XCTestCase {
         var routes: [AppDestination] = []
         router.present = { routes.append($0) }
         let clock = FakeWattClock(now: PowerReading.sampleCharging.timestamp)
+        // The session keeps a weak reference. The test has to retain the store
+        // or the bridge reads the missing-sample value, Unavailable.
         let store = PowerReadingStore(currentReading: .sampleCharging, clock: clock)
         install(store: store, router: router, preferences: preferences)
         WattIntentSession.notePresenterReady()
@@ -510,14 +513,8 @@ final class AppIntentsTests: XCTestCase {
         let reading = try await WattIntentBridge.exchange(WattIntentRequest(action: "reading"))
         XCTAssertEqual(reading.summary, "System draw 22.9 W, charger 65.0 W, battery 64%, Charging.")
         XCTAssertEqual(reading.systemDrawWatts ?? -1, 22.9, accuracy: 0.001)
-        let mode = try await WattIntentBridge.exchange(WattIntentRequest(action: "displayMode", mode: WattDisplayMode.charger.rawValue))
-        XCTAssertEqual(mode.displayTitle, WattDisplayMode.charger.title)
-        XCTAssertEqual(preferences.displayMode, .charger)
-        let opened = try await WattIntentBridge.exchange(WattIntentRequest(action: "open", destination: "statusPanel"))
-        XCTAssertTrue(opened.ok)
-        XCTAssertEqual(routes, [.statusPanel])
-        let probe = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
-        XCTAssertTrue(probe.intentInFlight)
+        let marked = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
+        XCTAssertTrue(marked.intentInFlight)
         WattIntentSession.intentVisibleUntil = .distantPast
         let quiet = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
         XCTAssertFalse(quiet.intentInFlight)
@@ -525,6 +522,12 @@ final class AppIntentsTests: XCTestCase {
         let during = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
         XCTAssertTrue(during.intentInFlight)
         WattIntentSession.endIntent()
+        let mode = try await WattIntentBridge.exchange(WattIntentRequest(action: "displayMode", mode: WattDisplayMode.charger.rawValue))
+        XCTAssertEqual(mode.displayTitle, WattDisplayMode.charger.title)
+        XCTAssertEqual(preferences.displayMode, .charger)
+        let opened = try await WattIntentBridge.exchange(WattIntentRequest(action: "open", destination: "statusPanel"))
+        XCTAssertTrue(opened.ok)
+        XCTAssertEqual(routes, [.statusPanel])
     }
 
     private func prepareClaim(_ probe: ClaimProbe) {
