@@ -564,31 +564,39 @@ struct WattIntentLaunchSignal: Equatable, Sendable {
 
 /// The model Shortcuts calls. Registered from `App.init`, not from the delegate,
 /// so `perform()` does not need a process that has finished launching windows.
-@MainActor
+/// The type stays off the main actor: `AppDependencyManager.add` stores it in a
+/// Sendable closure, which cannot read a main-actor static.
 final class WattIntentHost: NSObject, @unchecked Sendable {
     static let shared = WattIntentHost()
-    private static var registered = false
+    private static let registration = OSAllocatedUnfairLock(initialState: false)
 
+    @MainActor
     static func registerIfNeeded() {
-        guard !registered else { return }
-        registered = true
-        // `add` stores a Sendable closure. Read the main-actor singleton first.
-        let host = shared
-        AppDependencyManager.shared.add(dependency: host)
+        let shouldRegister = registration.withLock { registered in
+            if registered { return false }
+            registered = true
+            return true
+        }
+        guard shouldRegister else { return }
+        AppDependencyManager.shared.add(dependency: shared)
     }
 
+    @MainActor
     func readingEntity() -> WattPowerReadingEntity {
         GetPowerReadingIntent.entity(from: WattIntentSession.currentReading(), precision: WattIntentSession.precision)
     }
 
+    @MainActor
     func setDisplayMode(_ mode: WattDisplayMode) throws -> String {
         try SetMenuBarDisplayIntent.apply(WattMenuBarDisplay(mode))
     }
 
+    @MainActor
     func open(_ destination: AppDestination) throws {
         try WattIntentSession.open(destination)
     }
 
+    @MainActor
     func checkForUpdates() throws -> WattUpdateIntentOutcome {
         try WattIntentSession.checkForUpdates()
     }
