@@ -1308,6 +1308,10 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         guard !isTerminating else { return false }
+        // Shortcuts talks to this accessory app by activating it. AppKit reports
+        // that as a reopen, and the reopen path opens Settings. Doing that while
+        // an intent is running keeps the shortcut from finishing.
+        guard WattIntentSession.shouldPresentOnReopen else { return false }
         onReopen?()
         return false
     }

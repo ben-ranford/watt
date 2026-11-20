@@ -15,6 +15,11 @@ enum WattIntentSession {
     /// Production activates the accessory app. Tests replace this so they do not
     /// change the host app's activation policy.
     static var activateForIntent: @MainActor () -> Void = defaultActivation
+    /// Shortcuts activates this accessory app, and AppKit turns that into a reopen.
+    /// The reopen handler opens Settings. While an intent is on the stack that
+    /// would run at the same time as `perform` and the shortcut would not finish.
+    private static var intentDepth = 0
+    static var shouldPresentOnReopen: Bool { intentDepth == 0 }
 
     static func install(router: AppRouter, readings: PowerReadingStore, preferences: PreferencesStore) {
         self.router = router
@@ -29,6 +34,17 @@ enum WattIntentSession {
         presenterReady = false
         pendingDestination = nil
         activateForIntent = defaultActivation
+        intentDepth = 0
+    }
+
+    static func beginIntentHandling() { intentDepth += 1 }
+
+    static func endIntentHandling() { intentDepth = max(0, intentDepth - 1) }
+
+    static func handlingIntent<T>(_ body: () throws -> T) rethrows -> T {
+        beginIntentHandling()
+        defer { endIntentHandling() }
+        return try body()
     }
 
     static func notePresenterReady() {

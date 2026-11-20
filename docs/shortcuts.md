@@ -9,6 +9,7 @@ Watt? is a menu-bar app with no Dock icon. The actions still run. Opening the pa
 1. Build Watt and launch it. Leave it running in the menu bar.
 2. Open Shortcuts. If Watt? is missing, quit Shortcuts and launch Watt? again. The system index can lag a new build.
 3. The actions read the store the app already keeps. They do not start a sampler of their own. A reading taken before the first sample is Unavailable.
+4. A shortcut must finish on its own. It must not leave Settings open unless the action is Open Settings. Finder’s reopen of the running app still opens Settings.
 
 ## Get Power Reading
 

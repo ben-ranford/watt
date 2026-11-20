@@ -82,10 +82,24 @@ enum WattMenuBarDisplay: String, AppEnum, CaseIterable {
     }
 }
 
+/// Shortcuts must not foreground this accessory app. Foregrounding runs
+/// `applicationShouldHandleReopen`, which opens Settings and leaves the shortcut running.
+enum WattIntentActivation {
+    static var openAppWhenRun: Bool { false }
+    #if compiler(>=6.2)
+    @available(macOS 26.0, *)
+    static var supportedModes: IntentModes { .background }
+    #endif
+}
+
 struct GetPowerReadingIntent: AppIntent {
     static let title: LocalizedStringResource = "Get Power Reading"
     static let description = IntentDescription("Read system draw, charger watts, and battery.")
-    static var openAppWhenRun: Bool { false }
+    static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
+    #if compiler(>=6.2)
+    @available(macOS 26.0, *)
+    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    #endif
 
     static func entity(from reading: WattPowerReading, precision: WattPrecision = .decimal) -> WattPowerReadingEntity {
         WattPowerReadingEntity(id: reading.available ? "current" : "unavailable",
@@ -98,7 +112,7 @@ struct GetPowerReadingIntent: AppIntent {
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<WattPowerReadingEntity> & ProvidesDialog {
-        let entity = await WattIntentSession.readingEntity()
+        let entity = await WattIntentSession.handlingIntent { WattIntentSession.readingEntity() }
         return .result(value: entity, dialog: IntentDialog(stringLiteral: entity.summary))
     }
 }
@@ -106,10 +120,14 @@ struct GetPowerReadingIntent: AppIntent {
 struct OpenStatusPanelIntent: AppIntent {
     static let title: LocalizedStringResource = "Open Status Panel"
     static let description = IntentDescription("Open the power panel.")
-    static var openAppWhenRun: Bool { true }
+    static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
+    #if compiler(>=6.2)
+    @available(macOS 26.0, *)
+    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        try await WattIntentSession.open(.statusPanel)
+        try await WattIntentSession.handlingIntent { try WattIntentSession.open(.statusPanel) }
         return .result(dialog: "Opened the power panel.")
     }
 }
@@ -117,10 +135,14 @@ struct OpenStatusPanelIntent: AppIntent {
 struct OpenSettingsIntent: AppIntent {
     static let title: LocalizedStringResource = "Open Settings"
     static let description = IntentDescription("Open Watt? settings.")
-    static var openAppWhenRun: Bool { true }
+    static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
+    #if compiler(>=6.2)
+    @available(macOS 26.0, *)
+    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        try await WattIntentSession.open(.settings)
+        try await WattIntentSession.handlingIntent { try WattIntentSession.open(.settings) }
         return .result(dialog: "Opened Settings.")
     }
 }
@@ -128,15 +150,21 @@ struct OpenSettingsIntent: AppIntent {
 struct SetMenuBarDisplayIntent: AppIntent {
     static let title: LocalizedStringResource = "Set Menu Bar Display"
     static let description = IntentDescription("Choose what the menu bar shows.")
-    static var openAppWhenRun: Bool { false }
+    static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
+    #if compiler(>=6.2)
+    @available(macOS 26.0, *)
+    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    #endif
 
     @Parameter(title: "Display")
     var mode: WattMenuBarDisplay
 
     /// Shortcuts fills `mode` and calls `perform`. Tests call this with each existing mode.
     static func apply(_ mode: WattMenuBarDisplay) async throws -> String {
-        try await WattIntentSession.setDisplayMode(mode.displayMode)
-        return mode.displayMode.title
+        try await WattIntentSession.handlingIntent {
+            try WattIntentSession.setDisplayMode(mode.displayMode)
+            return mode.displayMode.title
+        }
     }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -148,10 +176,14 @@ struct SetMenuBarDisplayIntent: AppIntent {
 struct CheckForUpdatesIntent: AppIntent {
     static let title: LocalizedStringResource = "Check for Updates"
     static let description = IntentDescription("Check for an update. Signature and hash verification stay on.")
-    static var openAppWhenRun: Bool { true }
+    static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
+    #if compiler(>=6.2)
+    @available(macOS 26.0, *)
+    static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let outcome = try await WattIntentSession.checkForUpdates()
+        let outcome = try await WattIntentSession.handlingIntent { try WattIntentSession.checkForUpdates() }
         return .result(dialog: IntentDialog(stringLiteral: outcome.message))
     }
 }

@@ -133,8 +133,8 @@ final class AppIntentsTests: XCTestCase {
         var activations = 0
         install(router: router)
         WattIntentSession.activateForIntent = { activations += 1 }
-        XCTAssertTrue(OpenStatusPanelIntent.openAppWhenRun)
-        XCTAssertTrue(OpenSettingsIntent.openAppWhenRun)
+        XCTAssertFalse(OpenStatusPanelIntent.openAppWhenRun)
+        XCTAssertFalse(OpenSettingsIntent.openAppWhenRun)
         try WattIntentSession.open(.statusPanel)
         XCTAssertTrue(routes.isEmpty)
         WattIntentSession.notePresenterReady()
@@ -174,7 +174,7 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(service.installs, 0)
         XCTAssertEqual(router.updates.state, .idle)
         XCTAssertEqual(removals, 0)
-        XCTAssertTrue(CheckForUpdatesIntent.openAppWhenRun)
+        XCTAssertFalse(CheckForUpdatesIntent.openAppWhenRun)
     }
 
     func testUpdateIntentWithoutAServiceDoesNotInventACheck() async throws {
@@ -186,6 +186,22 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(router.updates.state, .idle)
         _ = try await CheckForUpdatesIntent().perform()
         XCTAssertEqual(router.updates.state, .idle)
+    }
+
+    func testReopenDoesNotOpenSettingsWhileAnIntentIsRunning() {
+        let delegate = WattApplicationDelegate()
+        var reopens = 0
+        delegate.onReopen = { reopens += 1 }
+        XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
+        XCTAssertEqual(reopens, 1)
+        WattIntentSession.beginIntentHandling()
+        XCTAssertFalse(WattIntentSession.shouldPresentOnReopen)
+        XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
+        XCTAssertEqual(reopens, 1)
+        WattIntentSession.endIntentHandling()
+        XCTAssertTrue(WattIntentSession.shouldPresentOnReopen)
+        XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
+        XCTAssertEqual(reopens, 2)
     }
 
     func testMissingSessionFailsClosed() async {
@@ -212,6 +228,8 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertTrue(source.contains("NSApp.activate(ignoringOtherApps: true)"))
         XCTAssertTrue(source.contains("NSApp.setActivationPolicy(.accessory)"))
         XCTAssertTrue(source.contains("openAppWhenRun"))
+        XCTAssertTrue(source.contains("supportedModes"))
+        XCTAssertTrue(source.contains("shouldPresentOnReopen"))
         for forbidden in ["installHelper", "removeFromSettings", "URLSession", "confirmInstall",
                           "register(receipt", "powermetrics", "runSampling", "refresh(", "URLRequest"] {
             XCTAssertFalse(source.contains(forbidden), forbidden)
