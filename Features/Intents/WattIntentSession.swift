@@ -580,7 +580,7 @@ final class WattIntentHost: NSObject, @unchecked Sendable {
     }
 
     func setDisplayMode(_ mode: WattDisplayMode) throws -> String {
-        try SetMenuBarDisplayIntent.apply(mode)
+        try SetMenuBarDisplayIntent.apply(WattMenuBarDisplay(mode))
     }
 
     func open(_ destination: AppDestination) throws {
@@ -661,7 +661,8 @@ enum WattCodeSignature {
               let fields = information as? [String: Any] else { return nil }
         let team = (fields[kSecCodeInfoTeamIdentifier as String] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? "none"
         let flags = flagValue(fields[kSecCodeInfoFlags as String])
-        let adhoc = (flags & UInt32(kSecCodeSignatureAdhoc)) != 0
+        // cs_blobs.h kSecCodeSignatureAdhoc. The Security Swift overlay does not import that C enum.
+        let adhoc = (flags & 0x0002) != 0
         let hash = (fields[kSecCodeInfoUnique as String] as? Data).map { $0.map { String(format: "%02x", $0) }.joined() } ?? "none"
         return Snapshot(teamIdentifier: team, adhoc: adhoc, cdhash: hash, readable: true)
     }
@@ -843,7 +844,7 @@ enum WattIntentBridge {
                 return WattIntentReply(ok: false, intentInFlight: true, failure: "mode")
             }
             do {
-                let title = try SetMenuBarDisplayIntent.apply(mode)
+                let title = try SetMenuBarDisplayIntent.apply(WattMenuBarDisplay(mode))
                 return WattIntentReply(ok: true, intentInFlight: true, displayTitle: title)
             } catch {
                 return WattIntentReply(ok: false, intentInFlight: true, failure: "notRunning")
