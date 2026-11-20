@@ -572,7 +572,9 @@ final class WattIntentHost: NSObject, @unchecked Sendable {
     static func registerIfNeeded() {
         guard !registered else { return }
         registered = true
-        AppDependencyManager.shared.add(dependency: shared)
+        // `add` stores a Sendable closure. Read the main-actor singleton first.
+        let host = shared
+        AppDependencyManager.shared.add(dependency: host)
     }
 
     func readingEntity() -> WattPowerReadingEntity {
