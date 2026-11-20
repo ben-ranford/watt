@@ -152,11 +152,6 @@ enum WattIntentSession {
     /// `displayMode` set to `WattDisplayMode.rawValue` (`Components`, not the
     /// Shortcuts label `Per Component`). The published change refreshes the
     /// status item on the next main-queue turn.
-    static func refreshReadingIfNeeded() async {
-        guard let readings, !readings.statusReading.hasCurrentSample else { return }
-        await readings.refresh()
-    }
-
     static func setDisplayMode(_ mode: WattDisplayMode) throws {
         guard let preferences else { throw WattIntentFailure.notRunning }
         preferences.displayMode = mode
