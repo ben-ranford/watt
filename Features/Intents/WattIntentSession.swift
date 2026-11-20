@@ -41,7 +41,7 @@ enum WattIntentSession {
 
     static func endIntentHandling() { intentDepth = max(0, intentDepth - 1) }
 
-    static func handlingIntent<T>(_ body: () throws -> T) rethrows -> T {
+    static func handlingIntent<T>(_ body: @MainActor () throws -> T) rethrows -> T {
         beginIntentHandling()
         defer { endIntentHandling() }
         return try body()
