@@ -187,8 +187,11 @@ enum WattIntentSession {
 
     static func decision(for senderBundleIdentifier: String?, hasAppleEvent: Bool) -> WattReopenDecision {
         if performingIntent > 0 || isIntentDispatcher(senderBundleIdentifier) { return .suppress }
-        if let quietUntil, Date() < quietUntil, !isUserReopenSender(senderBundleIdentifier) { return .suppress }
+        // No Apple event is a direct AppKit reopen, including the unit-test call
+        // and a Finder open. The quiet tail only covers an event from an
+        // unknown sender, such as Launch Services delivering a shortcut.
         if isUserReopenSender(senderBundleIdentifier) || !hasAppleEvent { return .showSettings }
+        if let quietUntil, Date() < quietUntil { return .suppress }
         return .waitForIntent
     }
 

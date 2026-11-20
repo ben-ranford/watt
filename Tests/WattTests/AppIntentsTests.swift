@@ -319,8 +319,8 @@ final class AppIntentsTests: XCTestCase {
         let delegate = WattApplicationDelegate()
         var reopens = 0
         delegate.onReopen = { reopens += 1 }
-        WattIntentSession.reopenSenderLookup = { nil }
         WattIntentSession.reopenHasAppleEvent = { false }
+        WattIntentSession.reopenSenderLookup = { nil }
 
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
         XCTAssertEqual(reopens, 1)
@@ -332,18 +332,18 @@ final class AppIntentsTests: XCTestCase {
 
         WattIntentSession.endIntentHandling()
         XCTAssertTrue(WattIntentSession.shouldPresentOnReopen)
-        // The reopen that follows an action is still inside the quiet window.
+        // A direct reopen after the action is not a Shortcuts event, so Settings opens.
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(reopens, 1)
+        XCTAssertEqual(reopens, 2)
 
         WattIntentSession.reopenSenderLookup = { "com.apple.shortcuts" }
         WattIntentSession.reopenHasAppleEvent = { true }
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(reopens, 1)
+        XCTAssertEqual(reopens, 2)
 
         WattIntentSession.reopenSenderLookup = { "com.apple.finder" }
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(reopens, 2)
+        XCTAssertEqual(reopens, 3)
     }
 
     func testMissingSessionFailsClosed() async {
