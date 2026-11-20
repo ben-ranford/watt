@@ -83,12 +83,15 @@ enum WattMenuBarDisplay: String, AppEnum, CaseIterable {
 }
 
 /// Shortcuts must not foreground this accessory app. Foregrounding runs
-/// `applicationShouldHandleReopen`, which opens Settings and leaves the shortcut running.
+/// `applicationShouldHandleReopen`, which opens Settings and leaves the shortcut
+/// waiting on a process LinkDaemon never registers.
 enum WattIntentActivation {
     static var openAppWhenRun: Bool { false }
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { .background }
+    @available(macOS 27.0, *)
+    static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 }
 
@@ -99,6 +102,8 @@ struct GetPowerReadingIntent: AppIntent {
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    @available(macOS 27.0, *)
+    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
     #endif
 
     static func entity(from reading: WattPowerReading, precision: WattPrecision = .decimal) -> WattPowerReadingEntity {
@@ -124,6 +129,8 @@ struct OpenStatusPanelIntent: AppIntent {
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    @available(macOS 27.0, *)
+    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
     #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -139,6 +146,8 @@ struct OpenSettingsIntent: AppIntent {
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    @available(macOS 27.0, *)
+    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
     #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -154,21 +163,22 @@ struct SetMenuBarDisplayIntent: AppIntent {
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    @available(macOS 27.0, *)
+    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
     #endif
 
     @Parameter(title: "Display")
     var mode: WattMenuBarDisplay
 
     /// Shortcuts fills `mode` and calls `perform`. Tests call this with each existing mode.
-    static func apply(_ mode: WattMenuBarDisplay) async throws -> String {
-        try await WattIntentSession.handlingIntent {
-            try WattIntentSession.setDisplayMode(mode.displayMode)
-            return mode.displayMode.title
-        }
+    @MainActor
+    static func apply(_ mode: WattMenuBarDisplay) throws -> String {
+        try WattIntentSession.setDisplayMode(mode.displayMode)
+        return mode.displayMode.title
     }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let title = try await Self.apply(mode)
+        let title = try await WattIntentSession.handlingIntent { try Self.apply(mode) }
         return .result(dialog: IntentDialog(stringLiteral: "Menu bar shows \(title)."))
     }
 }
@@ -180,6 +190,8 @@ struct CheckForUpdatesIntent: AppIntent {
     #if compiler(>=6.2)
     @available(macOS 26.0, *)
     static var supportedModes: IntentModes { WattIntentActivation.supportedModes }
+    @available(macOS 27.0, *)
+    static var allowedExecutionTargets: IntentExecutionTargets { WattIntentActivation.allowedExecutionTargets }
     #endif
 
     func perform() async throws -> some IntentResult & ProvidesDialog {

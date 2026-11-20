@@ -382,6 +382,7 @@ struct WattApp: App {
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
         WattIntentSession.install(router: appRouter, readings: appPowerStore, preferences: appPreferences)
+        WattIntentSession.connectToShortcuts()
         // The fallback owns the visible production status item on hosts where
         // MenuBarExtra does not materialise, so keep reopen routing alive there
         // as well as in the SwiftUI scene bridge.
@@ -1308,11 +1309,12 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         guard !isTerminating else { return false }
-        // Shortcuts talks to this accessory app by activating it. AppKit reports
-        // that as a reopen, and the reopen path opens Settings. Doing that while
-        // an intent is running keeps the shortcut from finishing.
-        guard WattIntentSession.shouldPresentOnReopen else { return false }
-        onReopen?()
+        // Finder and the Dock still open Settings. A Shortcuts action also
+        // delivers this reopen to an accessory app; that one must not.
+        WattIntentSession.handleReopen { [weak self] in
+            guard let self, !self.isTerminating else { return }
+            self.onReopen?()
+        }
         return false
     }
 
@@ -1403,7 +1405,7 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
 
         router.present = { [weak self] destination in
             switch destination {
-            case .statusPanel: self?.togglePanel()
+            case .statusPanel: self?.showPanel()
             case .coachMark: self?.togglePanel()
             case .settings:
                 guard let self else { return }
@@ -1506,11 +1508,22 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     }
 
     @objc private func togglePanel() {
-        guard let button = item?.button else { return }
-        if let panel, panel.isShown {
-            panel.performClose(nil)
+        if panel?.isShown == true {
+            panel?.performClose(nil)
             router.statusPanelPresented = false
             powerStore.refreshComponentSamplingNeed()
+            return
+        }
+        showPanel()
+    }
+
+    /// Open Status Panel and the menu's Open Watt? show the popover. A second
+    /// request leaves it open. The status button still toggles.
+    private func showPanel() {
+        guard let button = item?.button else { return }
+        if panel?.isShown == true {
+            NSApp.activate(ignoringOtherApps: true)
+            router.statusPanelPresented = true
             return
         }
         let popover = panel ?? NSPopover()
@@ -1524,6 +1537,7 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
                 .environmentObject(preferences))
         popover.contentViewController = host
         panel = popover
+        NSApp.activate(ignoringOtherApps: true)
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         host.view.layoutSubtreeIfNeeded()
         let fitted = host.view.fittingSize

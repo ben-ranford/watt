@@ -76,7 +76,7 @@ final class AppIntentsTests: XCTestCase {
         assertUnavailable(WattIntentSession.currentReading())
     }
 
-    func testDisconnectedChargerStaysUnmeasuredAndARealZeroIsKept() {
+    func testDisconnectedChargerStaysUnmeasuredAndARealZeroIsKept() async throws {
         let unplugged = PowerReading(mode: .onBattery, watts: -18.4, batteryPercentage: 64,
                                      timestamp: Date(timeIntervalSince1970: 1_700_000_000),
                                      batteryState: .discharging,
@@ -101,6 +101,12 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertNil(zero.batteryPercentage)
         XCTAssertEqual(zero.batteryState, "No battery")
         XCTAssertEqual(zero.summary(), "System draw 0.0 W, charger Unavailable, battery Unavailable, No battery.")
+        let idleStore = PowerReadingStore(currentReading: idle, clock: FakeWattClock(now: idle.timestamp))
+        install(store: idleStore)
+        XCTAssertEqual(WattIntentSession.currentReading().systemDrawWatts, 0)
+        _ = try await GetPowerReadingIntent().perform()
+        XCTAssertEqual(WattIntentSession.currentReading().systemDrawWatts, 0)
+        XCTAssertFalse(WattIntentSession.isPerformingIntent)
     }
 
     func testDisplayModeIntentWritesEveryExistingMode() async throws {
@@ -117,10 +123,18 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(Set(WattMenuBarDisplay.allCases.map(\.displayMode)), Set(WattDisplayMode.allCases))
         for mode in WattDisplayMode.allCases {
             XCTAssertEqual(WattMenuBarDisplay(mode).displayMode, mode)
-            let title = try await SetMenuBarDisplayIntent.apply(WattMenuBarDisplay(mode))
+            let title = try SetMenuBarDisplayIntent.apply(WattMenuBarDisplay(mode))
             XCTAssertEqual(title, mode.title)
             XCTAssertEqual(preferences.displayMode, mode)
             XCTAssertEqual(PreferencesStore(storage: storage).displayMode, mode)
+            let stored = try JSONSerialization.jsonObject(with: XCTUnwrap(storage.values["preferences.v1"])) as? [String: Any]
+            XCTAssertEqual(stored?["displayMode"] as? String, mode.rawValue)
+            let choice = WattMenuBarDisplay(mode)
+            if choice.rawValue != mode.rawValue {
+                XCTAssertNotEqual(stored?["displayMode"] as? String, choice.rawValue)
+            }
+            let label = MenuBarStatusLabel(reading: .unavailable, preferences: preferences)
+            XCTAssertEqual(label.text == nil, mode == .iconOnly)
         }
         XCTAssertEqual(removals, 0)
         XCTAssertFalse(SetMenuBarDisplayIntent.openAppWhenRun)
@@ -147,8 +161,10 @@ final class AppIntentsTests: XCTestCase {
         routes.removeAll()
         router.statusPanelPresented = true
         _ = try await OpenStatusPanelIntent().perform()
-        XCTAssertTrue(routes.isEmpty)
+        XCTAssertEqual(routes, [.statusPanel])
+        XCTAssertTrue(router.statusPanelPresented)
 
+        routes.removeAll()
         _ = try await OpenSettingsIntent().perform()
         XCTAssertEqual(routes, [.settings])
         XCTAssertGreaterThan(activations, 0)
@@ -175,6 +191,117 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(router.updates.state, .idle)
         XCTAssertEqual(removals, 0)
         XCTAssertFalse(CheckForUpdatesIntent.openAppWhenRun)
+    }
+
+    func testUpdateIntentReturnsTheDialogBeforeTheCheckFinishes() async throws {
+        let service = SuspendedUpdateSpy()
+        let router = AppRouter(updateService: service)
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
+        install(router: router)
+        WattIntentSession.notePresenterReady()
+        defer { service.resume() }
+        let outcome = try WattIntentSession.checkForUpdates()
+        XCTAssertTrue(outcome.started)
+        XCTAssertEqual(outcome.message, "Checking for updates.")
+        XCTAssertEqual(routes, [.softwareUpdate])
+        XCTAssertEqual(router.updates.state, .checking)
+        XCTAssertEqual(service.downloads, 0)
+        XCTAssertEqual(service.installs, 0)
+    }
+
+    func testActionsRunInTheOpenProcessWithoutAForegroundLaunch() {
+        for openAppWhenRun in [
+            GetPowerReadingIntent.openAppWhenRun, OpenStatusPanelIntent.openAppWhenRun,
+            OpenSettingsIntent.openAppWhenRun, SetMenuBarDisplayIntent.openAppWhenRun,
+            CheckForUpdatesIntent.openAppWhenRun
+        ] {
+            XCTAssertFalse(openAppWhenRun)
+        }
+        #if compiler(>=6.2)
+        if #available(macOS 26, *) {
+            for modes in [
+                GetPowerReadingIntent.supportedModes, OpenStatusPanelIntent.supportedModes,
+                OpenSettingsIntent.supportedModes, SetMenuBarDisplayIntent.supportedModes,
+                CheckForUpdatesIntent.supportedModes
+            ] {
+                XCTAssertEqual(modes, .background)
+            }
+        }
+        if #available(macOS 27, *) {
+            for targets in [
+                GetPowerReadingIntent.allowedExecutionTargets, OpenStatusPanelIntent.allowedExecutionTargets,
+                OpenSettingsIntent.allowedExecutionTargets, SetMenuBarDisplayIntent.allowedExecutionTargets,
+                CheckForUpdatesIntent.allowedExecutionTargets
+            ] {
+                XCTAssertEqual(targets, .main)
+            }
+        }
+        #endif
+    }
+
+    func testShortcutReopenDoesNotOpenSettingsAndFinderStillDoes() async throws {
+        XCTAssertEqual(WattIntentSession.decision(for: "com.apple.shortcuts", hasAppleEvent: true), .suppress)
+        XCTAssertEqual(WattIntentSession.decision(for: "com.apple.shortcuts.events", hasAppleEvent: true), .suppress)
+        XCTAssertEqual(WattIntentSession.decision(for: "com.apple.linkd", hasAppleEvent: true), .suppress)
+        XCTAssertEqual(WattIntentSession.decision(for: "com.apple.finder", hasAppleEvent: true), .showSettings)
+        XCTAssertEqual(WattIntentSession.decision(for: nil, hasAppleEvent: false), .showSettings)
+        XCTAssertEqual(WattIntentSession.decision(for: "com.apple.launchservicesd", hasAppleEvent: true), .waitForIntent)
+
+        let delegate = WattApplicationDelegate()
+        var shown = 0
+        delegate.onReopen = { shown += 1 }
+        defer { delegate.applicationWillTerminate(Notification(name: NSApplication.willTerminateNotification)) }
+        WattIntentSession.reopenHasAppleEvent = { false }
+        WattIntentSession.reopenSenderLookup = { nil }
+
+        XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
+        XCTAssertEqual(shown, 1)
+
+        WattIntentSession.reopenHasAppleEvent = { true }
+        WattIntentSession.reopenSenderLookup = { "com.apple.shortcuts" }
+        XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
+        XCTAssertEqual(shown, 1)
+
+        _ = try await GetPowerReadingIntent().perform()
+        WattIntentSession.reopenSenderLookup = { "com.apple.launchservicesd" }
+        WattIntentSession.handleReopen { shown += 1 }
+        XCTAssertEqual(shown, 1)
+
+        WattIntentSession.reopenSenderLookup = { "com.apple.finder" }
+        XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
+        XCTAssertEqual(shown, 2)
+
+        WattIntentSession.reopenQuietNanoseconds = 0
+        WattIntentSession.beginIntent()
+        WattIntentSession.endIntent()
+        WattIntentSession.reopenQuietNanoseconds = 50_000_000
+        WattIntentSession.reopenHasAppleEvent = { true }
+        WattIntentSession.reopenSenderLookup = { "com.apple.launchservicesd" }
+        var deferred = 0
+        WattIntentSession.handleReopen { deferred += 1 }
+        XCTAssertEqual(deferred, 0)
+        WattIntentSession.beginIntent()
+        try? await Task.sleep(nanoseconds: 80_000_000)
+        XCTAssertEqual(deferred, 0)
+        WattIntentSession.endIntent()
+    }
+
+    func testOpenStatusPanelShowsThePopoverAndLeavesItOpen() throws {
+        let preferences = PreferencesStore(storage: InMemoryStorage())
+        preferences.onboarding.checkpoint = .runningDefaults
+        let store = PowerReadingStore(currentReading: .sampleCharging,
+                                      clock: FakeWattClock(now: PowerReading.sampleCharging.timestamp))
+        let router = AppRouter()
+        let delegate = WattApplicationDelegate()
+        defer { delegate.applicationWillTerminate(Notification(name: NSApplication.willTerminateNotification)) }
+        delegate.installFallbackStatusItem(router: router, powerStore: store, preferences: preferences)
+        install(store: store, router: router, preferences: preferences)
+        WattIntentSession.notePresenterReady()
+        try WattIntentSession.open(.statusPanel)
+        XCTAssertTrue(router.statusPanelPresented)
+        try WattIntentSession.open(.statusPanel)
+        XCTAssertTrue(router.statusPanelPresented)
     }
 
     func testUpdateIntentWithoutAServiceDoesNotInventACheck() async throws {
@@ -214,6 +341,10 @@ final class AppIntentsTests: XCTestCase {
     func testShortcutSurfaceDoesNotExposeHelperOrBypassVerification() throws {
         XCTAssertEqual(WattShortcuts.appShortcuts.count, 5)
         XCTAssertFalse(GetPowerReadingIntent.openAppWhenRun)
+        XCTAssertFalse(OpenStatusPanelIntent.openAppWhenRun)
+        XCTAssertFalse(OpenSettingsIntent.openAppWhenRun)
+        XCTAssertFalse(SetMenuBarDisplayIntent.openAppWhenRun)
+        XCTAssertFalse(CheckForUpdatesIntent.openAppWhenRun)
         let root = repoRoot()
         let folder = root.appendingPathComponent("Features/Intents")
         let sources = try FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)
@@ -228,14 +359,23 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertTrue(source.contains("NSApp.activate(ignoringOtherApps: true)"))
         XCTAssertTrue(source.contains("NSApp.setActivationPolicy(.accessory)"))
         XCTAssertTrue(source.contains("openAppWhenRun"))
+        XCTAssertFalse(source.contains("openAppWhenRun: Bool { true }"))
         XCTAssertTrue(source.contains("supportedModes"))
+        XCTAssertTrue(source.contains(".background"))
+        XCTAssertTrue(source.contains("allowedExecutionTargets"))
+        XCTAssertTrue(source.contains(".main"))
+        XCTAssertTrue(source.contains("preferences.v1"))
         XCTAssertTrue(source.contains("shouldPresentOnReopen"))
+        XCTAssertTrue(source.contains("handlingIntent"))
         for forbidden in ["installHelper", "removeFromSettings", "URLSession", "confirmInstall",
                           "register(receipt", "powermetrics", "runSampling", "refresh(", "URLRequest"] {
             XCTAssertFalse(source.contains(forbidden), forbidden)
         }
         let app = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
         XCTAssertTrue(app.contains("WattIntentSession.install"))
+        XCTAssertTrue(app.contains("WattIntentSession.connectToShortcuts()"))
+        XCTAssertTrue(app.contains("WattIntentSession.handleReopen"))
+        XCTAssertTrue(app.contains("self?.showPanel()"))
         XCTAssertEqual(app.components(separatedBy: "WattIntentSession.notePresenterReady()").count - 1, 2)
         XCTAssertFalse(app.contains("AppIntent"))
         XCTAssertFalse(app.contains("AppShortcut"))
@@ -299,6 +439,41 @@ private final class CountingTelemetry: TelemetryService {
         samples += 1
         return .failure(.disconnected)
     }
+}
+
+@MainActor
+private final class SuspendedUpdateSpy: UpdateService {
+    var downloads = 0
+    var installs = 0
+    private var resumed = false
+    private var continuation: CheckedContinuation<ServiceOutcome<String?>, Never>?
+
+    func check() async -> ServiceOutcome<String?> { await check(initiator: .automatic) }
+
+    func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?> {
+        if resumed { return .success(nil) }
+        return await withCheckedContinuation { continuation = $0 }
+    }
+
+    func resume() {
+        resumed = true
+        continuation?.resume(returning: .success(nil))
+        continuation = nil
+    }
+
+    func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
+        downloads += 1
+        return .failure(.unknownStatus)
+    }
+
+    func install(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
+        installs += 1
+        return .failure(.unknownStatus)
+    }
+
+    func recover(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
+    func cancel(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
+    func discard(receipt: OperationReceipt) async -> ServiceOutcome<OperationReceipt> { .failure(.unknownStatus) }
 }
 
 @MainActor

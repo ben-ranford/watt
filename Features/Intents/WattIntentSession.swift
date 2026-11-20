@@ -15,11 +15,6 @@ enum WattIntentSession {
     /// Production activates the accessory app. Tests replace this so they do not
     /// change the host app's activation policy.
     static var activateForIntent: @MainActor () -> Void = defaultActivation
-    /// Shortcuts activates this accessory app, and AppKit turns that into a reopen.
-    /// The reopen handler opens Settings. While an intent is on the stack that
-    /// would run at the same time as `perform` and the shortcut would not finish.
-    private static var intentDepth = 0
-    static var shouldPresentOnReopen: Bool { intentDepth == 0 }
 
     static func install(router: AppRouter, readings: PowerReadingStore, preferences: PreferencesStore) {
         self.router = router
@@ -34,17 +29,22 @@ enum WattIntentSession {
         presenterReady = false
         pendingDestination = nil
         activateForIntent = defaultActivation
-        intentDepth = 0
+        performingIntent = 0
+        reopenTicket = 0
+        quietUntil = nil
+        reopenQuietNanoseconds = 400_000_000
+        reopenSenderLookup = liveReopenSender
+        reopenHasAppleEvent = { NSAppleEventManager.shared().currentAppleEvent != nil }
     }
 
-    static func beginIntentHandling() { intentDepth += 1 }
-
-    static func endIntentHandling() { intentDepth = max(0, intentDepth - 1) }
-
-    static func handlingIntent<T>(_ body: @MainActor () throws -> T) rethrows -> T {
-        beginIntentHandling()
-        defer { endIntentHandling() }
-        return try body()
+    /// Shortcuts asks LinkDaemon which process will run the action. Announcing
+    /// the running app is the public registration call. It does not install a
+    /// helper or start a sampler. Ad-hoc builds may log a RunningBoard warning;
+    /// that warning is not fatal and does not change the accessory policy.
+    static func connectToShortcuts() {
+        Task { @MainActor in
+            WattShortcuts.updateAppShortcutParameters()
+        }
     }
 
     static func notePresenterReady() {
@@ -64,6 +64,10 @@ enum WattIntentSession {
 
     static var precision: WattPrecision { preferences?.precision ?? .decimal }
 
+    /// Writes the mode the menu bar and Settings already read: `preferences.v1`,
+    /// `displayMode` set to `WattDisplayMode.rawValue` (`Components`, not the
+    /// Shortcuts label `Per Component`). The published change refreshes the
+    /// status item on the next main-queue turn.
     static func setDisplayMode(_ mode: WattDisplayMode) throws {
         guard let preferences else { throw WattIntentFailure.notRunning }
         preferences.displayMode = mode
@@ -111,10 +115,9 @@ enum WattIntentSession {
         guard let router else { return }
         switch destination {
         case .statusPanel:
-            // The fallback presenter toggles. An Open action must not close the panel.
-            if !router.statusPanelPresented {
-                router.showStatusPanel()
-            }
+            // The status-item button toggles. Open must show the popover and
+            // leave it up when the action runs again.
+            router.showStatusPanel()
         case .settings:
             router.showSettings()
         case .softwareUpdate:
@@ -123,6 +126,115 @@ enum WattIntentSession {
             router.present(destination)
         }
     }
+
+    private(set) static var performingIntent = 0
+    private static var reopenTicket = 0
+    private static var quietUntil: Date?
+    /// How long a Shortcuts-delivered reopen waits before it may open Settings.
+    /// An intent that starts in that window cancels it. Finder still opens Settings.
+    static var reopenQuietNanoseconds: UInt64 = 400_000_000
+    static var reopenSenderLookup: @MainActor () -> String? = liveReopenSender
+    static var reopenHasAppleEvent: @MainActor () -> Bool = {
+        NSAppleEventManager.shared().currentAppleEvent != nil
+    }
+
+    static var isPerformingIntent: Bool { performingIntent > 0 }
+    /// False while `perform` is on the stack, so a reopen in that window does not open Settings.
+    static var shouldPresentOnReopen: Bool { performingIntent == 0 }
+
+    static func handlingIntent<T>(_ body: @MainActor () throws -> T) rethrows -> T {
+        beginIntentHandling()
+        defer { endIntentHandling() }
+        return try body()
+    }
+
+    static func beginIntentHandling() { beginIntent() }
+
+    static func endIntentHandling() { endIntent() }
+
+    static func beginIntent() {
+        performingIntent += 1
+        reopenTicket += 1
+        quietUntil = nil
+    }
+
+    static func endIntent() {
+        performingIntent = max(0, performingIntent - 1)
+        guard performingIntent == 0 else { return }
+        quietUntil = Date().addingTimeInterval(Double(reopenQuietNanoseconds) / 1_000_000_000)
+        reopenTicket += 1
+    }
+
+    /// `applicationShouldHandleReopen` shows Settings for a Finder or Dock open.
+    /// Shortcuts talks to this accessory app with the same reopen, including for
+    /// actions that do not ask to come forward. That path must not open Settings.
+    static func handleReopen(_ showSettings: @escaping @MainActor () -> Void) {
+        switch decision(for: reopenSenderLookup(), hasAppleEvent: reopenHasAppleEvent()) {
+        case .suppress:
+            return
+        case .showSettings:
+            showSettings()
+        case .waitForIntent:
+            let ticket = reserveReopen()
+            let delay = reopenQuietNanoseconds
+            Task { @MainActor in
+                if delay > 0 { try? await Task.sleep(nanoseconds: delay) }
+                guard claimReopen(ticket) else { return }
+                showSettings()
+            }
+        }
+    }
+
+    static func decision(for senderBundleIdentifier: String?, hasAppleEvent: Bool) -> WattReopenDecision {
+        if performingIntent > 0 || isIntentDispatcher(senderBundleIdentifier) { return .suppress }
+        if let quietUntil, Date() < quietUntil, !isUserReopenSender(senderBundleIdentifier) { return .suppress }
+        if isUserReopenSender(senderBundleIdentifier) || !hasAppleEvent { return .showSettings }
+        return .waitForIntent
+    }
+
+    static func isIntentDispatcher(_ bundleIdentifier: String?) -> Bool {
+        guard let bundleIdentifier else { return false }
+        let id = bundleIdentifier.lowercased()
+        let senders = [
+            "com.apple.shortcuts", "com.apple.linkd", "com.apple.siri", "com.apple.siriactionsd",
+            "com.apple.assistant", "com.apple.spotlight", "com.apple.corespotlight",
+            "com.apple.speech", "com.apple.workflowkit"
+        ]
+        return senders.contains { id == $0 || id.hasPrefix($0 + ".") }
+    }
+
+    static func isUserReopenSender(_ bundleIdentifier: String?) -> Bool {
+        guard let id = bundleIdentifier?.lowercased() else { return false }
+        if let own = Bundle.main.bundleIdentifier?.lowercased(), id == own { return true }
+        return ["com.apple.finder", "com.apple.dock", "com.apple.loginwindow"].contains(id)
+    }
+
+    private static func reserveReopen() -> Int {
+        reopenTicket += 1
+        return reopenTicket
+    }
+
+    private static func claimReopen(_ ticket: Int) -> Bool {
+        guard ticket == reopenTicket, performingIntent == 0 else { return false }
+        if let quietUntil, Date() < quietUntil { return false }
+        return true
+    }
+
+    /// `keySenderPIDAttr` ('spid'). The reopen event's sender tells a Finder
+    /// double-click apart from Shortcuts and linkd.
+    private static func liveReopenSender() -> String? {
+        let keySenderPIDAttr = AEKeyword(0x73706964)
+        guard let event = NSAppleEventManager.shared().currentAppleEvent,
+              let pid = event.attributeDescriptor(forKeyword: keySenderPIDAttr)?.int32Value,
+              pid > 0 else { return nil }
+        return NSRunningApplication(processIdentifier: pid_t(pid))?.bundleIdentifier
+    }
+}
+
+enum WattReopenDecision: Equatable {
+    case showSettings
+    case suppress
+    case waitForIntent
 }
 
 enum WattIntentFailure: Error, Equatable {
