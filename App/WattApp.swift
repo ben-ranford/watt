@@ -411,7 +411,7 @@ struct WattApp: App {
             // not exit. The next turn is late enough that this process is no
             // longer inside the parent's launch wait.
             Task { @MainActor in
-                SingleInstanceClaim.becomeOnlyInstance()
+                await WattIntentSession.claimSingleInstanceIfIdle()
             }
         }
     }
@@ -1300,6 +1300,9 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
         // the system menu bar has finished materialising before creating the
         // public status item.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // A second process only exists so Shortcuts can finish an action.
+            // The copy that is already running keeps the menu-bar item.
+            if WattIntentSession.otherCopies() { return }
             install?()
         }
         #if DEBUG

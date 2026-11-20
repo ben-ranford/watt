@@ -245,32 +245,33 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(WattIntentSession.decision(for: "com.apple.shortcuts.events", hasAppleEvent: true), .suppress)
         XCTAssertEqual(WattIntentSession.decision(for: "com.apple.linkd", hasAppleEvent: true), .suppress)
         XCTAssertEqual(WattIntentSession.decision(for: "com.apple.finder", hasAppleEvent: true), .showSettings)
-        XCTAssertEqual(WattIntentSession.decision(for: nil, hasAppleEvent: false), .showSettings)
+        XCTAssertEqual(WattIntentSession.decision(for: nil, hasAppleEvent: false), .waitForIntent)
         XCTAssertEqual(WattIntentSession.decision(for: "com.apple.launchservicesd", hasAppleEvent: true), .waitForIntent)
 
         let delegate = WattApplicationDelegate()
         var shown = 0
         delegate.onReopen = { shown += 1 }
         defer { delegate.applicationWillTerminate(Notification(name: NSApplication.willTerminateNotification)) }
+        WattIntentSession.reopenQuietNanoseconds = 60_000_000_000
         WattIntentSession.reopenHasAppleEvent = { false }
         WattIntentSession.reopenSenderLookup = { nil }
 
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(shown, 1)
+        XCTAssertEqual(shown, 0)
 
         WattIntentSession.reopenHasAppleEvent = { true }
         WattIntentSession.reopenSenderLookup = { "com.apple.shortcuts" }
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(shown, 1)
+        XCTAssertEqual(shown, 0)
 
         _ = try await GetPowerReadingIntent().perform()
         WattIntentSession.reopenSenderLookup = { "com.apple.launchservicesd" }
         WattIntentSession.handleReopen { shown += 1 }
-        XCTAssertEqual(shown, 1)
+        XCTAssertEqual(shown, 0)
 
         WattIntentSession.reopenSenderLookup = { "com.apple.finder" }
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(shown, 2)
+        XCTAssertEqual(shown, 1)
 
         WattIntentSession.reopenQuietNanoseconds = 0
         WattIntentSession.beginIntent()
@@ -319,31 +320,31 @@ final class AppIntentsTests: XCTestCase {
         let delegate = WattApplicationDelegate()
         var reopens = 0
         delegate.onReopen = { reopens += 1 }
+        WattIntentSession.reopenQuietNanoseconds = 60_000_000_000
         WattIntentSession.reopenHasAppleEvent = { false }
         WattIntentSession.reopenSenderLookup = { nil }
 
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(reopens, 1)
+        XCTAssertEqual(reopens, 0)
 
         WattIntentSession.beginIntentHandling()
         XCTAssertFalse(WattIntentSession.shouldPresentOnReopen)
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(reopens, 1)
+        XCTAssertEqual(reopens, 0)
 
         WattIntentSession.endIntentHandling()
         XCTAssertTrue(WattIntentSession.shouldPresentOnReopen)
-        // A direct reopen after the action is not a Shortcuts event, so Settings opens.
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(reopens, 2)
+        XCTAssertEqual(reopens, 0)
 
         WattIntentSession.reopenSenderLookup = { "com.apple.shortcuts" }
         WattIntentSession.reopenHasAppleEvent = { true }
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(reopens, 2)
+        XCTAssertEqual(reopens, 0)
 
         WattIntentSession.reopenSenderLookup = { "com.apple.finder" }
         XCTAssertFalse(delegate.applicationShouldHandleReopen(.shared, hasVisibleWindows: false))
-        XCTAssertEqual(reopens, 3)
+        XCTAssertEqual(reopens, 1)
     }
 
     func testMissingSessionFailsClosed() async {

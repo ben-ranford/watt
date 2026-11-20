@@ -32,9 +32,20 @@ enum WattIntentSession {
         performingIntent = 0
         reopenTicket = 0
         quietUntil = nil
+        remoteIntent = false
         reopenQuietNanoseconds = 400_000_000
         reopenSenderLookup = liveReopenSender
         reopenHasAppleEvent = { NSAppleEventManager.shared().currentAppleEvent != nil }
+        otherCopies = liveOtherCopies
+    }
+
+    static var shouldPresentLaunchUI: Bool { !otherCopies() && performingIntent == 0 }
+
+    static func liveOtherCopies() -> Bool {
+        let id = Bundle.main.bundleIdentifier ?? ""
+        guard !id.isEmpty else { return false }
+        return NSRunningApplication.runningApplications(withBundleIdentifier: id)
+            .contains { $0.processIdentifier != getpid() && !$0.isTerminated }
     }
 
     /// Shortcuts asks LinkDaemon which process will run the action. Announcing
@@ -42,9 +53,82 @@ enum WattIntentSession {
     /// helper or start a sampler. Ad-hoc builds may log a RunningBoard warning;
     /// that warning is not fatal and does not change the accessory policy.
     static func connectToShortcuts() {
+        startRelay()
         Task { @MainActor in
             WattShortcuts.updateAppShortcutParameters()
         }
+    }
+
+    /// Stay out of the way when Shortcuts has launched a second copy to run an action.
+    /// A Finder or Dock open still yields to the copy that is already running.
+    static func claimSingleInstanceIfIdle() async {
+        let sender = reopenSenderLookup()
+        if isUserReopenSender(sender) {
+            SingleInstanceClaim.becomeOnlyInstance()
+            return
+        }
+        if isIntentDispatcher(sender) { return }
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        if isPerformingIntent || isIntentDispatcher(reopenSenderLookup()) { return }
+        SingleInstanceClaim.becomeOnlyInstance()
+    }
+
+    private static let relayName = Notification.Name("io.github.ben-ranford.watt.intent")
+    private static var relayObserver: NSObjectProtocol?
+
+    private static func startRelay() {
+        guard relayObserver == nil else { return }
+        relayObserver = DistributedNotificationCenter.default().addObserver(
+            forName: relayName, object: nil, queue: .main
+        ) { notification in
+            let action = notification.object as? String
+            let mode = notification.userInfo?["mode"] as? String
+            Task { @MainActor in
+                applyRelay(action: action, mode: mode)
+            }
+        }
+    }
+
+    private static func applyRelay(action: String?, mode: String?) {
+        switch action {
+        case "began":
+            remoteIntent = true
+            reopenTicket += 1
+        case "ended":
+            remoteIntent = false
+        case "panel":
+            guard presenterReady else { return }
+            router?.showStatusPanel()
+        case "settings":
+            guard presenterReady else { return }
+            router?.showSettings()
+        case "updates":
+            guard presenterReady else { return }
+            _ = router?.checkForUpdatesNow()
+        case "mode":
+            guard let mode, let displayMode = WattDisplayMode(rawValue: mode), let preferences else { return }
+            preferences.displayMode = displayMode
+        default:
+            break
+        }
+    }
+
+    private static func relayAction(_ destination: AppDestination) -> String? {
+        switch destination {
+        case .statusPanel: return "panel"
+        case .settings: return "settings"
+        case .softwareUpdate: return "updates"
+        default: return nil
+        }
+    }
+
+    private static func postRelay(_ action: String?, mode: String? = nil) {
+        guard let action else { return }
+        var info: [String: String] = [:]
+        if let mode { info["mode"] = mode }
+        DistributedNotificationCenter.default().postNotificationName(
+            relayName, object: action, userInfo: info, deliverImmediately: true
+        )
     }
 
     static func notePresenterReady() {
@@ -68,13 +152,23 @@ enum WattIntentSession {
     /// `displayMode` set to `WattDisplayMode.rawValue` (`Components`, not the
     /// Shortcuts label `Per Component`). The published change refreshes the
     /// status item on the next main-queue turn.
+    static func refreshReadingIfNeeded() async {
+        guard let readings, !readings.statusReading.hasCurrentSample else { return }
+        await readings.refresh()
+    }
+
     static func setDisplayMode(_ mode: WattDisplayMode) throws {
         guard let preferences else { throw WattIntentFailure.notRunning }
         preferences.displayMode = mode
+        if otherCopies() { postRelay("mode", mode: mode.rawValue) }
     }
 
     static func open(_ destination: AppDestination) throws {
         guard router != nil else { throw WattIntentFailure.notRunning }
+        if otherCopies() {
+            postRelay(relayAction(destination))
+            return
+        }
         activate()
         if presenterReady {
             deliver(destination)
@@ -88,6 +182,10 @@ enum WattIntentSession {
     /// and is not reachable from this intent.
     static func checkForUpdates() throws -> WattUpdateIntentOutcome {
         guard let router else { throw WattIntentFailure.notRunning }
+        if otherCopies() {
+            postRelay("updates")
+            return WattUpdateIntentOutcome(started: true, message: "Checking for updates.")
+        }
         activate()
         let started = router.checkForUpdatesNow()
         if started, !presenterReady {
@@ -128,6 +226,9 @@ enum WattIntentSession {
     }
 
     private(set) static var performingIntent = 0
+    /// The other Watt process is running an action, so this process must not open Settings.
+    private static var remoteIntent = false
+    static var otherCopies: @MainActor () -> Bool = liveOtherCopies
     private static var reopenTicket = 0
     private static var quietUntil: Date?
     /// How long a Shortcuts-delivered reopen waits before it may open Settings.
@@ -156,6 +257,7 @@ enum WattIntentSession {
         performingIntent += 1
         reopenTicket += 1
         quietUntil = nil
+        if otherCopies() { postRelay("began") }
     }
 
     static func endIntent() {
@@ -163,6 +265,14 @@ enum WattIntentSession {
         guard performingIntent == 0 else { return }
         quietUntil = Date().addingTimeInterval(Double(reopenQuietNanoseconds) / 1_000_000_000)
         reopenTicket += 1
+        if otherCopies() {
+            postRelay("ended")
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                guard performingIntent == 0, otherCopies() else { return }
+                NSApp.terminate(nil)
+            }
+        }
     }
 
     /// `applicationShouldHandleReopen` shows Settings for a Finder or Dock open.
@@ -186,12 +296,12 @@ enum WattIntentSession {
     }
 
     static func decision(for senderBundleIdentifier: String?, hasAppleEvent: Bool) -> WattReopenDecision {
-        if performingIntent > 0 || isIntentDispatcher(senderBundleIdentifier) { return .suppress }
-        // No Apple event is a direct AppKit reopen, including the unit-test call
-        // and a Finder open. The quiet tail only covers an event from an
-        // unknown sender, such as Launch Services delivering a shortcut.
-        if isUserReopenSender(senderBundleIdentifier) || !hasAppleEvent { return .showSettings }
-        if let quietUntil, Date() < quietUntil { return .suppress }
+        if performingIntent > 0 || remoteIntent || isIntentDispatcher(senderBundleIdentifier) { return .suppress }
+        if let quietUntil, Date() < quietUntil, !isUserReopenSender(senderBundleIdentifier) { return .suppress }
+        // Only Finder, the Dock, loginwindow, and this app open Settings immediately.
+        // Shortcuts activates this accessory app with no Apple event. That is not a user reopen.
+        if isUserReopenSender(senderBundleIdentifier) { return .showSettings }
+        _ = hasAppleEvent
         return .waitForIntent
     }
 
@@ -218,7 +328,7 @@ enum WattIntentSession {
     }
 
     private static func claimReopen(_ ticket: Int) -> Bool {
-        guard ticket == reopenTicket, performingIntent == 0 else { return false }
+        guard ticket == reopenTicket, performingIntent == 0, !remoteIntent else { return false }
         if let quietUntil, Date() < quietUntil { return false }
         return true
     }

@@ -115,6 +115,7 @@ struct GetPowerReadingIntent: AppIntent {
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<WattPowerReadingEntity> & ProvidesDialog {
+        await WattIntentSession.refreshReadingIfNeeded()
         let entity = await WattIntentSession.handlingIntent { WattIntentSession.readingEntity() }
         return .result(value: entity, dialog: IntentDialog(stringLiteral: entity.summary))
     }
