@@ -570,7 +570,6 @@ final class WattIntentHost: NSObject, @unchecked Sendable {
     static let shared = WattIntentHost()
     private static let registration = OSAllocatedUnfairLock(initialState: false)
 
-    @MainActor
     static func registerIfNeeded() {
         let shouldRegister = registration.withLock { registered in
             if registered { return false }

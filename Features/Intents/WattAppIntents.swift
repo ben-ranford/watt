@@ -117,10 +117,13 @@ struct GetPowerReadingIntent: AppIntent {
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<WattPowerReadingEntity> & ProvidesDialog {
-        await WattIntentHost.registerIfNeeded()
+        WattIntentHost.registerIfNeeded()
+        // Read the dependency before the first await. After a suspension the
+        // intent flow no longer has it, and the access traps.
+        let intentHost = host
         let entity = try await WattIntentSession.handlingIntent(action: "reading") {
             if let forwarded = try await WattIntentBridge.forwardReading() { return forwarded }
-            let entity = host.readingEntity()
+            let entity = intentHost.readingEntity()
             WattIntentLog.notice("reading via=local summary=\(entity.summary)")
             return entity
         }
@@ -142,12 +145,13 @@ struct OpenStatusPanelIntent: AppIntent {
     @Dependency var host: WattIntentHost
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        await WattIntentHost.registerIfNeeded()
+        WattIntentHost.registerIfNeeded()
+        let intentHost = host
         try await WattIntentSession.handlingIntent(action: "openStatusPanel") {
             if try await WattIntentBridge.forwardOpen(.statusPanel) {
                 return
             }
-            try host.open(.statusPanel)
+            try intentHost.open(.statusPanel)
             WattIntentLog.notice("open via=local destination=statusPanel")
         }
         return .result(dialog: "Opened the power panel.")
@@ -168,12 +172,13 @@ struct OpenSettingsIntent: AppIntent {
     @Dependency var host: WattIntentHost
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        await WattIntentHost.registerIfNeeded()
+        WattIntentHost.registerIfNeeded()
+        let intentHost = host
         try await WattIntentSession.handlingIntent(action: "openSettings") {
             if try await WattIntentBridge.forwardOpen(.settings) {
                 return
             }
-            try host.open(.settings)
+            try intentHost.open(.settings)
             WattIntentLog.notice("open via=local destination=settings")
         }
         return .result(dialog: "Opened Settings.")
@@ -204,10 +209,11 @@ struct SetMenuBarDisplayIntent: AppIntent {
     }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        await WattIntentHost.registerIfNeeded()
+        WattIntentHost.registerIfNeeded()
+        let intentHost = host
         let title = try await WattIntentSession.handlingIntent(action: "setDisplayMode") {
             if let forwarded = try await WattIntentBridge.forwardDisplayMode(mode.displayMode) { return forwarded }
-            let title = try host.setDisplayMode(mode.displayMode)
+            let title = try intentHost.setDisplayMode(mode.displayMode)
             WattIntentLog.notice("display mode via=local title=\(title)")
             return title
         }
@@ -229,10 +235,11 @@ struct CheckForUpdatesIntent: AppIntent {
     @Dependency var host: WattIntentHost
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        await WattIntentHost.registerIfNeeded()
+        WattIntentHost.registerIfNeeded()
+        let intentHost = host
         let outcome = try await WattIntentSession.handlingIntent(action: "checkForUpdates") {
             if let forwarded = try await WattIntentBridge.forwardCheck() { return forwarded }
-            let outcome = try host.checkForUpdates()
+            let outcome = try intentHost.checkForUpdates()
             WattIntentLog.notice("check for updates via=local started=\(outcome.started)")
             return outcome
         }

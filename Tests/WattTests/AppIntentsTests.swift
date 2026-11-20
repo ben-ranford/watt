@@ -500,7 +500,8 @@ final class AppIntentsTests: XCTestCase {
         var routes: [AppDestination] = []
         router.present = { routes.append($0) }
         let clock = FakeWattClock(now: PowerReading.sampleCharging.timestamp)
-        install(store: PowerReadingStore(currentReading: .sampleCharging, clock: clock), router: router, preferences: preferences)
+        let store = PowerReadingStore(currentReading: .sampleCharging, clock: clock)
+        install(store: store, router: router, preferences: preferences)
         WattIntentSession.notePresenterReady()
         WattIntentBridge.startKeeper()
         let reading = try await WattIntentBridge.exchange(WattIntentRequest(action: "reading"))
@@ -513,7 +514,10 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertTrue(opened.ok)
         XCTAssertEqual(routes, [.statusPanel])
         let probe = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
-        XCTAssertFalse(probe.intentInFlight)
+        XCTAssertTrue(probe.intentInFlight)
+        WattIntentSession.intentVisibleUntil = .distantPast
+        let quiet = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
+        XCTAssertFalse(quiet.intentInFlight)
         WattIntentSession.beginIntent()
         let during = try await WattIntentBridge.exchange(WattIntentRequest(action: "probe"))
         XCTAssertTrue(during.intentInFlight)
