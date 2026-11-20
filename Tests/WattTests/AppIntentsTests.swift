@@ -415,6 +415,18 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertFalse(source.contains("com.apple.runningboard"))
     }
 
+    func testIntentDispatcherCannotQuitTheMenuBarProcess() {
+        let delegate = WattApplicationDelegate()
+        WattIntentSession.reopenSenderLookup = { "com.apple.linkd" }
+        XCTAssertEqual(delegate.applicationShouldTerminate(.shared), .terminateCancel)
+        WattIntentSession.reopenSenderLookup = { "com.apple.shortcuts" }
+        XCTAssertEqual(delegate.applicationShouldTerminate(.shared), .terminateCancel)
+        WattIntentSession.reopenSenderLookup = { nil }
+        XCTAssertEqual(delegate.applicationShouldTerminate(.shared), .terminateNow)
+        WattIntentSession.reopenSenderLookup = { "com.apple.finder" }
+        XCTAssertEqual(delegate.applicationShouldTerminate(.shared), .terminateNow)
+    }
+
     func testIntentLaunchLeavesTheRunningInstanceInPlace() async {
         let probe = ClaimProbe()
         prepareClaim(probe)

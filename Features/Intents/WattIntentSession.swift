@@ -370,6 +370,18 @@ enum WattIntentSession {
         return .waitForIntent
     }
 
+    /// A Quit from the menu has no intent-dispatcher sender. linkd and Shortcuts
+    /// must not be able to end the menu-bar process after Stop.
+    static func quitReply() -> NSApplication.TerminateReply {
+        let sender = reopenSenderLookup()
+        if isIntentDispatcher(sender) {
+            WattIntentLog.notice("refusing quit from sender=\(sender ?? "none") pid=\(getpid()) role=\(role.rawValue)")
+            return .terminateCancel
+        }
+        WattIntentLog.notice("accepting quit from sender=\(sender ?? "none") pid=\(getpid()) role=\(role.rawValue)")
+        return .terminateNow
+    }
+
     static func isIntentDispatcher(_ bundleIdentifier: String?) -> Bool {
         guard let bundleIdentifier else { return false }
         let id = bundleIdentifier.lowercased()

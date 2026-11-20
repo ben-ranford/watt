@@ -77,10 +77,16 @@ final class SiteScreenshotTests: XCTestCase {
             XCTAssertTrue(FileManager.default.fileExists(atPath: url.path),
                           "Missing \(url.path). Copy \(export.path)/\(name).png here after the macOS render.")
             let stored = try Data(contentsOf: url)
-            // Antialiasing can move a few edge pixels by a couple of levels.
-            // A tint, fill, or contrast shift changes far more of the image.
-            if let mismatch = screenshotMismatch(stored, rendered[name] ?? Data(), tolerance: 4, changedFraction: 0.002) {
-                XCTFail("\(name).png does not match the SwiftUI render in \(export.path): \(mismatch)")
+            if name == "settings-dark" {
+                // Dark control edges can move by a few levels. A uniform tint
+                // or a shifted control still fails. The other five images are exact.
+                if let mismatch = screenshotMismatch(stored, rendered[name] ?? Data(),
+                                                     maxChannelDelta: 8, maxChangedFraction: 0.005) {
+                    XCTFail("\(name).png does not match the SwiftUI render in \(export.path): \(mismatch)")
+                }
+            } else {
+                XCTAssertEqual(stored, rendered[name],
+                               "\(name).png does not match the SwiftUI render in \(export.path)")
             }
         }
         #endif
@@ -281,9 +287,10 @@ final class SiteScreenshotTests: XCTestCase {
             .appendingPathComponent("site-screenshots", isDirectory: true)
     }
 
-    /// Nil only when every changed pixel is within `tolerance` channel levels
-    /// and those pixels are at most `changedFraction` of the image.
-    private func screenshotMismatch(_ stored: Data, _ rendered: Data, tolerance: Int, changedFraction: Double) -> String? {
+    /// Nil when the images match, or the only differences are at most
+    /// `maxChannelDelta` on at most `maxChangedFraction` of the pixels.
+    private func screenshotMismatch(_ stored: Data, _ rendered: Data,
+                                    maxChannelDelta: Int, maxChangedFraction: Double) -> String? {
         if stored == rendered { return nil }
         guard let left = NSBitmapImageRep(data: stored), let right = NSBitmapImageRep(data: rendered) else {
             return "could not decode the PNG"
@@ -294,6 +301,8 @@ final class SiteScreenshotTests: XCTestCase {
         guard let leftPixels = left.bitmapData, let rightPixels = right.bitmapData else { return "no bitmap" }
         let channels = min(left.samplesPerPixel, right.samplesPerPixel, 4)
         guard channels > 0, left.bitsPerPixel >= 8, right.bitsPerPixel >= 8 else { return "unsupported bitmap" }
+        let total = left.pixelsWide * left.pixelsHigh
+        guard total > 0 else { return "empty image" }
         var maxDelta = 0
         var count = 0
         for y in 0..<left.pixelsHigh {
@@ -308,9 +317,9 @@ final class SiteScreenshotTests: XCTestCase {
                 maxDelta = max(maxDelta, pixelDelta)
             }
         }
-        let total = left.pixelsWide * left.pixelsHigh
-        if total > 0, maxDelta <= tolerance, Double(count) / Double(total) <= changedFraction { return nil }
-        return "max channel delta \(maxDelta) across \(count) of \(total) pixels"
+        let fraction = Double(count) / Double(total)
+        if maxDelta <= maxChannelDelta, fraction <= maxChangedFraction { return nil }
+        return "max channel delta \(maxDelta) across \(count) pixels (\(String(format: "%.3f", fraction * 100))%)"
     }
 
     private func committedDirectory() -> URL {

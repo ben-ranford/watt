@@ -402,6 +402,10 @@ struct WattApp: App {
         // the user-facing app usable with the public AppKit status-item API while
         // retaining MenuBarExtra for all fixture launches.
         if !Self.isHarnessLaunch {
+            // Shortcuts can ask an idle accessory app to quit after Stop.
+            // The menu bar process does not opt into that.
+            ProcessInfo.processInfo.disableAutomaticTermination("Watt menu bar")
+            ProcessInfo.processInfo.disableSuddenTermination()
             let notificationBridge = SystemNotificationBridge(driver: NativeNotificationDriver(center: .current()))
             appRouter.notificationBridge = notificationBridge
             appRouter.powerNotificationEffects = PowerNotificationEffects(bridge: notificationBridge, preferences: appPreferences)
@@ -1255,8 +1259,8 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        UpdateHandoffQuit.reply(handoffRequiresQuit: Self.handoffRequiresQuit,
-                                confirmationAllowsQuit: !Self.handoffRequiresQuit)
+        if Self.handoffRequiresQuit { return .terminateNow }
+        return WattIntentSession.quitReply()
     }
     private var fallbackStatusItem: WattFallbackStatusItem?
     private var pendingFallbackInstall: (() -> Void)?
