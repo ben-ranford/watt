@@ -1598,20 +1598,20 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
         panel = popover
         button.window?.orderFrontRegardless()
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-        guard popover.isShown else {
+        if !popover.isShown {
             WattIntentLog.notice("status panel shown=false retry=\(mayRetry) onScreen=\(button.window?.screen != nil) pid=\(getpid())")
             if StatusPanelShowPlan.afterShow(shown: false, mayRetry: mayRetry) == .retry {
                 scheduleStatusPanelRetry(true)
             }
-            return
-        }
-        if let host = popover.contentViewController {
+        } else if let host = popover.contentViewController {
             host.view.layoutSubtreeIfNeeded()
             let fitted = host.view.fittingSize
             if fitted.height > 1 {
                 popover.contentSize = NSSize(width: max(fitted.width, WattSpacing.panelWidth), height: fitted.height)
             }
         }
+        // The action has opened the panel even when AppKit has not marked the
+        // popover shown yet. A retry can still bring it on screen.
         router.statusPanelPresented = true
         powerStore.refreshComponentSamplingNeed()
         WattIntentLog.notice("status panel shown=true pid=\(getpid())")

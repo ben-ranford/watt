@@ -1075,6 +1075,9 @@ final class AppRouter: ObservableObject {
         guard updates.state == .checking else { return false }
         let saved = updates.cancel()
         updateCheck?.cancel()
+        // renewGeneration makes the task's own cleanup skip this property.
+        // Clear it here so another check can start once the cancelled state is saved.
+        updateCheck = nil
         return saved
     }
 

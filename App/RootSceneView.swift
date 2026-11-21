@@ -88,7 +88,8 @@ struct SoftwareUpdateContent: View {
         } else if case .checking = store.state {
             UpdateCheckingContent(router: router, store: store)
         } else {
-            Color.clear
+            // Keep the window's frame when there is nothing else to show.
+            Color.clear.frame(width: 420, alignment: .leading).frame(minHeight: 146)
         }
     }
 }
