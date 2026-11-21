@@ -402,8 +402,8 @@ struct WattApp: App {
         // the user-facing app usable with the public AppKit status-item API while
         // retaining MenuBarExtra for all fixture launches.
         if !Self.isHarnessLaunch {
-            // Shortcuts can ask an idle accessory app to quit after Stop.
-            // The menu bar process does not opt into that.
+            // A menu-bar process stays up after a shortcut ends. Automatic
+            // termination would quit it once the system decides it is idle.
             ProcessInfo.processInfo.disableAutomaticTermination("Watt menu bar")
             ProcessInfo.processInfo.disableSuddenTermination()
             let notificationBridge = SystemNotificationBridge(driver: NativeNotificationDriver(center: .current()))

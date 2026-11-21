@@ -6,11 +6,11 @@ Watt? is a menu-bar app with no Dock icon (`LSUIElement`). Each action runs agai
 
 Get Power Reading and Set Menu Bar Display stay in the background and finish with their result. Open Status Panel, Open Settings, and Check for Updates present that existing UI themselves, then return. None of them ask Shortcuts to launch a foreground copy of the app. None of them start a sampler. A reading taken before the first sample is Unavailable.
 
-Release and CI builds are ad-hoc signed (`CODE_SIGN_IDENTITY=-`) and have no Team ID. On the `d7a7d28` Mac check the process and the bundle had the same cdhash, and LinkDaemon still never called `perform()`. Shortcuts routes an App Intent with the app’s Team ID. An ad-hoc signature does not have one, so this artifact cannot finish the five actions. Run the procedure below on an Apple Development or Developer ID build. The launch log line records the team id, the ad-hoc flag, and the cdhash.
+Same-repo CI signs the Release app with Developer ID for team `GUT4TJFVQ2` and notarises it. LinkDaemon routes an App Intent with that Team ID. An ad-hoc build (`TeamIdentifier` not set) can list the actions and still never call `perform()`. Use the stapled `Watt-app-pr` artifact from the green macOS job, not a local ad-hoc build. The launch log line records the team id, the ad-hoc flag, and the cdhash.
 
 ## Mac test procedure
 
-Use the machine that can run the app. The last check was macOS 27.2.1 on a MacBook Air M3, with the ad-hoc CI artifact installed at `/Applications/Watt.app`.
+Use the machine that can run the app. The last check was macOS 27.2.1 on a MacBook Air M3. Install the signed artifact at `/Applications/Watt.app`.
 
 1. Quit every running Watt?, including one left over from Homebrew. Confirm none remain:
 
@@ -32,7 +32,7 @@ Use the machine that can run the app. The last check was macOS 27.2.1 on a MacBo
    log stream --level debug --style compact --predicate 'subsystem == "io.github.ben-ranford.watt" AND category == "intents"'
    ```
 
-4. Confirm the signature the running app and the bundle on disk will show linkd. An empty TeamIdentifier is expected for this CI artifact. The cdhash of the running process and of `/Applications/Watt.app` must be the same, because the process was launched after the install:
+4. Confirm the signature before running an action. `TeamIdentifier` must be `GUT4TJFVQ2`, the authority must be Developer ID, and the cdhash of the running process must match `/Applications/Watt.app`. The launch log should show `team=GUT4TJFVQ2` and `adhoc=false`. An empty TeamIdentifier means this is not the signed artifact, and the five actions will not finish:
 
    ```bash
    codesign -dv --verbose=4 /Applications/Watt.app 2>&1 | egrep 'Identifier=|TeamIdentifier=|Signature|CDHash='
