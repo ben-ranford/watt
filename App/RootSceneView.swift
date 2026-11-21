@@ -85,8 +85,11 @@ struct SoftwareUpdateContent: View {
             UpdateDownloadingContent(router: router, store: store, version: version)
         } else if case .available(let version) = store.state {
             UpdateAvailableContent(router: router, store: store, version: version)
-        } else {
+        } else if case .checking = store.state {
             UpdateCheckingContent(router: router, store: store)
+        } else {
+            // Keep the window's frame when there is nothing else to show.
+            Color.clear.frame(width: 420, alignment: .leading).frame(minHeight: 146)
         }
     }
 }

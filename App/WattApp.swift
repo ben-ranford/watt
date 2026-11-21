@@ -381,35 +381,45 @@ struct WattApp: App {
         let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
+        WattIntentSession.install(router: appRouter, readings: appPowerStore, preferences: appPreferences)
         // The fallback owns the visible production status item on hosts where
         // MenuBarExtra does not materialise, so keep reopen routing alive there
         // as well as in the SwiftUI scene bridge.
         applicationDelegate.onReopen = { [weak appRouter] in
             appRouter?.reopen(preferences: appPreferences)
         }
+        // Shortcuts may launch a second process. That process must not install
+        // another status item or start another sampler. The claim below calls
+        // this only for the process that keeps the menu bar.
+        WattIntentSession.onBecameKeeper = { [weak applicationDelegate] in
+            WattIntentSession.connectToShortcuts()
+            applicationDelegate?.scheduleFallbackStatusItem(router: appRouter,
+                                                            powerStore: appPowerStore,
+                                                            preferences: appPreferences)
+        }
         // MenuBarExtra is the preferred SwiftUI path, but it is not materialising
         // an item on some macOS hosts (including the local verification host). Keep
         // the user-facing app usable with the public AppKit status-item API while
         // retaining MenuBarExtra for all fixture launches.
         if !Self.isHarnessLaunch {
+            // A menu-bar process stays up after a shortcut ends. Automatic
+            // termination would quit it once the system decides it is idle.
+            ProcessInfo.processInfo.disableAutomaticTermination("Watt menu bar")
+            ProcessInfo.processInfo.disableSuddenTermination()
             let notificationBridge = SystemNotificationBridge(driver: NativeNotificationDriver(center: .current()))
             appRouter.notificationBridge = notificationBridge
             appRouter.powerNotificationEffects = PowerNotificationEffects(bridge: notificationBridge, preferences: appPreferences)
             Task { @MainActor in
                 appRouter.notificationAuthorization = await notificationBridge.authorization()
             }
-            // App.init can run before NSApplication has finished registering its
-            // status-bar scene. The delegate installs the public NSStatusItem
-            // from applicationDidFinishLaunching instead.
-            applicationDelegate.scheduleFallbackStatusItem(router: appRouter,
-                                                            powerStore: appPowerStore,
-                                                            preferences: appPreferences)
             if protectedFolder { ApplicationsFolderGuidance.presentIfNeeded(bundleURL: bundleURL) }
             // After the handshake has returned, drop any older Watt that did
-            // not exit. The next turn is late enough that this process is no
-            // longer inside the parent's launch wait.
+            // not exit. An App Intents launch skips that claim so linkd's
+            // process stays alive and the menu-bar process stays in place.
+            // The next turn is late enough that this process is no longer
+            // inside a parent's launch wait.
             Task { @MainActor in
-                SingleInstanceClaim.becomeOnlyInstance()
+                await WattIntentSession.finishLaunchClaim()
             }
         }
     }
@@ -1249,8 +1259,8 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        UpdateHandoffQuit.reply(handoffRequiresQuit: Self.handoffRequiresQuit,
-                                confirmationAllowsQuit: !Self.handoffRequiresQuit)
+        if Self.handoffRequiresQuit { return .terminateNow }
+        return WattIntentSession.quitReply()
     }
     private var fallbackStatusItem: WattFallbackStatusItem?
     private var pendingFallbackInstall: (() -> Void)?
@@ -1262,6 +1272,7 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
             self?.installFallbackStatusItem(router: router, powerStore: powerStore,
                                             preferences: preferences)
         }
+        armFallbackInstall()
     }
 
     @MainActor
@@ -1282,6 +1293,7 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
         cleanup?()
         fallbackStatusItem?.uninstall()
         fallbackStatusItem = nil
+        WattIntentBridge.stop()
         // SwiftUI owns the MenuBarExtra/NSStatusItem. Process termination removes it;
         // do not remove a borrowed status item behind SwiftUI's back.
         NSApplication.shared.windows.forEach { $0.orderOut(nil) }
@@ -1290,7 +1302,20 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     private let capture = NativeCaptureDelegate()
     #endif
 
+    private var didFinishLaunching = false
+
     func applicationDidFinishLaunching(_ notification: Notification) {
+        didFinishLaunching = true
+        armFallbackInstall()
+        #if DEBUG
+        capture.applicationDidFinishLaunching(notification)
+        #endif
+    }
+
+    /// The status item waits until this process is the one that keeps the menu
+    /// bar. An intent satellite never schedules it, so it never starts a sampler.
+    private func armFallbackInstall() {
+        guard didFinishLaunching, pendingFallbackInstall != nil else { return }
         let install = pendingFallbackInstall
         pendingFallbackInstall = nil
         // On some hosts NSStatusBar has a zero-height window during the
@@ -1298,20 +1323,44 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
         // the system menu bar has finished materialising before creating the
         // public status item.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // A second process only exists so Shortcuts can finish an action.
+            // The copy that is already running keeps the menu-bar item.
+            if WattIntentSession.role == .satellite { return }
             install?()
         }
-        #if DEBUG
-        capture.applicationDidFinishLaunching(notification)
-        #endif
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         guard !isTerminating else { return false }
-        onReopen?()
+        // Finder and the Dock still open Settings. A Shortcuts action also
+        // delivers this reopen to an accessory app; that one must not.
+        WattIntentSession.handleReopen { [weak self] in
+            guard let self, !self.isTerminating else { return }
+            self.onReopen?()
+        }
         return false
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+}
+
+/// Whether a status-item popover can be shown on this turn. A button that is
+/// not on a screen yet, or a popover that did not appear, gets one more try
+/// after activation has reached the menu bar.
+enum StatusPanelShowPlan: Equatable {
+    case show
+    case retry
+    case unavailable
+
+    static func beforeShow(hasButton: Bool, buttonOnScreen: Bool, mayRetry: Bool) -> Self {
+        if hasButton, buttonOnScreen { return .show }
+        return mayRetry ? .retry : .unavailable
+    }
+
+    static func afterShow(shown: Bool, mayRetry: Bool) -> Self {
+        if shown { return .show }
+        return mayRetry ? .retry : .unavailable
+    }
 }
 
 /// Public AppKit fallback for hosts where SwiftUI's MenuBarExtra scene does not
@@ -1339,6 +1388,10 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     }
 
     func install() {
+        guard WattIntentSession.role != .satellite else {
+            WattIntentLog.notice("status item skipped for the intent satellite pid=\(getpid())")
+            return
+        }
         guard item == nil else { return }
         // SwiftUI Window scenes can promote an LSUIElement process to the
         // regular activation policy during launch. Restore the native agent
@@ -1398,7 +1451,7 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
 
         router.present = { [weak self] destination in
             switch destination {
-            case .statusPanel: self?.togglePanel()
+            case .statusPanel: self?.showPanel()
             case .coachMark: self?.togglePanel()
             case .settings:
                 guard let self else { return }
@@ -1437,6 +1490,7 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
                     .environmentObject(self.router))
             }
         }
+        WattIntentSession.notePresenterReady()
 
         powerStore.objectWillChange
             .receive(on: RunLoop.main)
@@ -1500,32 +1554,77 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     }
 
     @objc private func togglePanel() {
-        guard let button = item?.button else { return }
-        if let panel, panel.isShown {
-            panel.performClose(nil)
+        if panel?.isShown == true {
+            panel?.performClose(nil)
             router.statusPanelPresented = false
             powerStore.refreshComponentSamplingNeed()
+            return
+        }
+        showPanel()
+    }
+
+    /// Open Status Panel and the menu's Open Watt? show the popover. A second
+    /// request leaves it open. The status button still toggles.
+    private func showPanel() {
+        presentStatusPanel(mayRetry: true)
+    }
+
+    /// Shortcuts can ask for the panel while this accessory app is not active.
+    /// `NSPopover.show` then returns with the popover hidden. Activate first,
+    /// anchor on the status button, and try once more on the next main turn.
+    private func presentStatusPanel(mayRetry: Bool) {
+        guard let button = item?.button else {
+            scheduleStatusPanelRetry(mayRetry)
+            return
+        }
+        NSApp.setActivationPolicy(.accessory)
+        NSApp.activate(ignoringOtherApps: true)
+        if panel?.isShown == true {
+            router.statusPanelPresented = true
+            WattIntentLog.notice("status panel shown=true pid=\(getpid())")
             return
         }
         let popover = panel ?? NSPopover()
         popover.behavior = .transient
         popover.animates = false
         popover.delegate = self
-        let host = NSHostingController(rootView:
-            MenuBarRootView()
-                .environmentObject(router)
-                .environmentObject(powerStore)
-                .environmentObject(preferences))
-        popover.contentViewController = host
-        panel = popover
-        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-        host.view.layoutSubtreeIfNeeded()
-        let fitted = host.view.fittingSize
-        if fitted.height > 1 {
-            popover.contentSize = NSSize(width: max(fitted.width, WattSpacing.panelWidth), height: fitted.height)
+        if popover.contentViewController == nil {
+            popover.contentViewController = NSHostingController(rootView:
+                MenuBarRootView()
+                    .environmentObject(router)
+                    .environmentObject(powerStore)
+                    .environmentObject(preferences))
         }
+        panel = popover
+        button.window?.orderFrontRegardless()
+        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        if !popover.isShown {
+            WattIntentLog.notice("status panel shown=false retry=\(mayRetry) onScreen=\(button.window?.screen != nil) pid=\(getpid())")
+            if StatusPanelShowPlan.afterShow(shown: false, mayRetry: mayRetry) == .retry {
+                scheduleStatusPanelRetry(true)
+            }
+        } else if let host = popover.contentViewController {
+            host.view.layoutSubtreeIfNeeded()
+            let fitted = host.view.fittingSize
+            if fitted.height > 1 {
+                popover.contentSize = NSSize(width: max(fitted.width, WattSpacing.panelWidth), height: fitted.height)
+            }
+        }
+        // The action has opened the panel even when AppKit has not marked the
+        // popover shown yet. A retry can still bring it on screen.
         router.statusPanelPresented = true
         powerStore.refreshComponentSamplingNeed()
+        WattIntentLog.notice("status panel shown=\(popover.isShown) pid=\(getpid())")
+    }
+
+    private func scheduleStatusPanelRetry(_ mayRetry: Bool) {
+        guard mayRetry else {
+            WattIntentLog.notice("status panel unavailable pid=\(getpid())")
+            return
+        }
+        Task { @MainActor [weak self] in
+            self?.presentStatusPanel(mayRetry: false)
+        }
     }
 
     /// The popover is reused, but its SwiftUI tree is not. Leaving the hosting
@@ -1698,6 +1797,7 @@ private struct StatusItemAdapter: NSViewRepresentable {
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 }
             }
+            WattIntentSession.notePresenterReady()
             applicationDelegate.onTerminate = { [weak view] in
                 router.leftoverHelper?.close()
                 router.present = { _ in }

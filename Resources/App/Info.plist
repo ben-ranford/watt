@@ -4,6 +4,12 @@
 <dict>
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
+	<!-- A menu-bar app must stay running after a shortcut is cancelled.
+	     Automatic and sudden termination would let the system quit it. -->
+	<key>NSSupportsAutomaticTermination</key>
+	<false/>
+	<key>NSSupportsSuddenTermination</key>
+	<false/>
 	<!-- Xcode drops unknown INFOPLIST_KEY_* settings. These references expand
 	     into Contents/Info.plist before code signing. Empty WATT_UPDATE_* values
 	     stay empty so a debug or local build is not configured for updates. -->
