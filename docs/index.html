@@ -71,27 +71,27 @@
         <p class="label" id="brew-label">Homebrew</p>
         <pre tabindex="0" aria-labelledby="brew-label"><code>brew install --cask ben-ranford/tap/watt</code></pre>
         <p><a class="download" href="https://github.com/ben-ranford/watt/releases/latest">Download from GitHub Releases</a></p>
-        <p class="note">Releases are Developer ID signed and notarised. Move Watt into Applications and open it. Gatekeeper accepts the download.</p>
+        <p class="note">Open the zip or the disk image, move Watt into Applications, and open it. The optional helper is a choice inside Watt?, not part of the install.</p>
       </section>
 
       <section aria-labelledby="shots-heading">
         <h2 id="shots-heading">What it looks like</h2>
-        <p class="note">Menu bar, panel, and Settings, in light and dark. Rendered from the SwiftUI views with sample power readings.</p>
+        <p class="note">Menu bar, panel, and Settings, in light and dark.</p>
         <div class="shots">
           <figure class="shot menu">
             <img src="screenshots/menu-bar-light.png" width="224" height="56" alt="Menu bar status item in light appearance showing a bolt and 22.9 W.">
-            <figcaption>Menu bar, light. System draw, 22.9 W.</figcaption>
+            <figcaption>Menu bar, light.</figcaption>
           </figure>
           <figure class="shot menu">
             <img src="screenshots/menu-bar-dark.png" width="224" height="56" alt="Menu bar status item in dark appearance showing a bolt and 22.9 W.">
-            <figcaption>Menu bar, dark. System draw, 22.9 W.</figcaption>
+            <figcaption>Menu bar, dark.</figcaption>
           </figure>
           <figure class="shot panel">
             <img src="screenshots/panel-light.png" width="640" height="946" alt="Power panel in light appearance. Charging at plus 42.1 watts, 64 percent, full in about 38 minutes. Charger input 65.0 watts from a 96 watt USB-C charger, system draw 22.9 watts, battery plus 42.1 watts, CPU estimate 9.8 watts, GPU estimate 4.1 watts.">
             <figcaption>Panel, light.</figcaption>
           </figure>
           <figure class="shot panel">
-            <img src="screenshots/panel-dark.png" width="640" height="946" alt="Power panel in dark appearance with the same charging sample: plus 42.1 watts into the battery, 65.0 watts from the charger, and 22.9 watts of system draw.">
+            <img src="screenshots/panel-dark.png" width="640" height="946" alt="Power panel in dark appearance. Charging at plus 42.1 watts, 64 percent. Charger input 65.0 watts, system draw 22.9 watts, battery plus 42.1 watts.">
             <figcaption>Panel, dark.</figcaption>
           </figure>
           <figure class="shot settings">
@@ -108,12 +108,12 @@
       <section aria-labelledby="features-heading">
         <h2 id="features-heading">Features</h2>
         <ul>
-          <li>A menu-bar status item for the reading you pick: system draw, battery delta, charger input, per component, or the icon alone.</li>
+          <li>A menu-bar item for the reading you pick: system draw, battery, charger, CPU and GPU, or the icon alone.</li>
           <li>A panel with charger input, system draw, and battery power.</li>
-          <li>CPU and GPU estimates when you install the helper and macOS has approved it.</li>
+          <li>CPU and GPU estimates after you allow the helper. Display, SSD, and Other are not included.</li>
           <li>Precision, update interval, and smooth readings. Smooth readings average the last 5 seconds.</li>
           <li>Notifications when the charger cannot keep up (5 minutes by default), when the battery is full (100% by default), and for a low battery (20% by default, off until you turn it on). Settings changes the duration and both percentages.</li>
-          <li>Updates are accepted only after the Ed25519 signature and the archive digest check out.</li>
+          <li>Update checks from the menu or from Settings. Automatic checks start on, and Settings can turn them off. Watt? does not collect usage data.</li>
         </ul>
       </section>
 
@@ -123,19 +123,18 @@
           <div>
             <h3>Watt is</h3>
             <ul>
-              <li>A native macOS menu-bar app, written in SwiftUI. It has no Dock icon.</li>
-              <li>A live view of charger input, system draw, and battery power, in watts. It needs macOS 13 or later.</li>
-              <li>Optional CPU and GPU estimates from Apple’s powermetrics, through a root helper you choose to install.</li>
-              <li>Developer ID signed and notarised.</li>
-              <li>Free software. The <a href="https://github.com/ben-ranford/watt">source</a> is published under the <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a>.</li>
+              <li>A menu-bar app with no Dock icon. It needs macOS 13 or later.</li>
+              <li>A live view of charger input, system draw, and battery power, in watts.</li>
+              <li>Optional CPU and GPU estimates, after you allow the helper.</li>
+              <li>Free. The <a href="https://github.com/ben-ranford/watt">source</a> is published under the <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a>. It does not limit charging.</li>
             </ul>
           </div>
           <div>
             <h3>Watt is not</h3>
             <ul>
-              <li>A full component breakdown. Display, SSD, and Other are not provided. The menu bar shows at most two components, and only CPU and GPU.</li>
+              <li>A full parts list. Display, SSD, and Other are not shown. The menu bar shows at most two components, and only CPU and GPU.</li>
               <li>A battery-health, charge-limit, or fan-control utility.</li>
-              <li>A package that installs the helper for you. <code>brew install</code> places Watt.app in Applications. The helper is a separate step in the app.</li>
+              <li>Something the installer finishes for you. Homebrew places the app in Applications. The helper is a separate choice inside Watt?.</li>
             </ul>
           </div>
         </div>
