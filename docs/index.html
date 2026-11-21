@@ -71,9 +71,7 @@
         <p class="label" id="brew-label">Homebrew</p>
         <pre tabindex="0" aria-labelledby="brew-label"><code>brew install --cask ben-ranford/tap/watt</code></pre>
         <p><a class="download" href="https://github.com/ben-ranford/watt/releases/latest">Download from GitHub Releases</a></p>
-        <h3>First launch from a download</h3>
-        <p class="note">Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launch of a zip or disk image. In Finder, Control-click Watt and choose Open, then choose Open. If macOS still blocks it, open System Settings → Privacy &amp; Security and choose Open Anyway.</p>
-        <p class="note">The Homebrew cask removes <code>com.apple.quarantine</code> from the installed Watt.app after install, so that first-launch block does not apply to a cask install.</p>
+        <p class="note">Releases are Developer ID signed and notarised. Move Watt into Applications and open it. Gatekeeper accepts the download.</p>
       </section>
 
       <section aria-labelledby="shots-heading">
@@ -128,6 +126,7 @@
               <li>A native macOS menu-bar app, written in SwiftUI. It has no Dock icon.</li>
               <li>A live view of charger input, system draw, and battery power, in watts. It needs macOS 13 or later.</li>
               <li>Optional CPU and GPU estimates from Apple’s powermetrics, through a root helper you choose to install.</li>
+              <li>Developer ID signed and notarised.</li>
               <li>Free software. The <a href="https://github.com/ben-ranford/watt">source</a> is published under the <a href="https://github.com/ben-ranford/watt/blob/main/LICENSE">MIT licence</a>.</li>
             </ul>
           </div>
@@ -135,7 +134,6 @@
             <h3>Watt is not</h3>
             <ul>
               <li>A full component breakdown. Display, SSD, and Other are not provided. The menu bar shows at most two components, and only CPU and GPU.</li>
-              <li>Developer ID signed or notarised. Gatekeeper blocks the first launch of a zip or disk image. A Homebrew install does not have that block.</li>
               <li>A battery-health, charge-limit, or fan-control utility.</li>
               <li>A package that installs the helper for you. <code>brew install</code> places Watt.app in Applications. The helper is a separate step in the app.</li>
             </ul>

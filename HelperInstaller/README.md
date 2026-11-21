@@ -1,12 +1,12 @@
 # Administrator installer
 
-`WattHelperInstaller` is an explicit local administrator tool. It does not obtain privilege itself or expose installation commands through telemetry XPC. GitHub builds use local ad-hoc signatures and exact CodeDirectory hash pins; no Apple account is required by this trust mode.
+`WattHelperInstaller` is an explicit local administrator tool. It does not obtain privilege itself or expose installation commands through telemetry XPC. Release builds are Developer ID signed. The helper still trusts an exact CodeDirectory hash pin, not the Developer ID team. Tests sign fixtures ad-hoc. No Apple account is required for that trust mode.
 
-The bundled application must contain `Watt`, `WattHelper`, and `WattMaintenance`, with their configured identifiers, a positive numeric `CFBundleVersion`, and valid ad-hoc signatures. Release archives additionally need `LSMinimumSystemVersion` matching their authenticated manifest. All universal slices are checked.
+The bundled application must contain `Watt`, `WattHelper`, and `WattMaintenance`, with their configured identifiers, a positive numeric `CFBundleVersion`, and a valid code signature. Release archives are Developer ID signed and additionally need `LSMinimumSystemVersion` matching their authenticated manifest. All universal slices are checked.
 
 ## Reviewed local installation
 
-The app’s **Install Helper…** button, in setup and in Settings, runs this tool. It preflights as the current user, then asks for an administrator password and runs `--bootstrap-reviewed` with that digest. Release builds are ad-hoc signed. Registering the bundled launch daemon with `SMAppService` does not write these code-hash pins, so the app does not use that API to install the helper. The Homebrew cask only copies `Watt.app`; it does not bootstrap the helper.
+The app’s **Install Helper…** button, in setup and in Settings, runs this tool. It preflights as the current user, then asks for an administrator password and runs `--bootstrap-reviewed` with that digest. Registering the bundled launch daemon with `SMAppService` does not write these code-hash pins, so the app does not use that API to install the helper. The Homebrew cask only copies `Watt.app`; it does not bootstrap the helper.
 
 1. Run `WattHelperInstaller --preflight --source /absolute/path/Watt.app` as the ordinary user. Inspect the returned hashes and whole-tree approval digest for the intended local build.
 2. An administrator invokes `WattHelperInstaller --bootstrap-reviewed --source /absolute/path/Watt.app --approval <digest>`. For a newer build, use `--rotate-reviewed` with a freshly reviewed preflight digest.

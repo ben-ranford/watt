@@ -1,6 +1,7 @@
 #!/bin/bash
 # Archive Watt, export or package the app, and optionally sign an update manifest.
 set -euo pipefail
+set +x
 
 root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$root"
@@ -18,7 +19,12 @@ SECRET_DIR=$workdir/secrets
 mkdir -p "$workdir" "$SECRET_DIR" "$output"
 chmod 700 "$SECRET_DIR"
 umask 077
-trap 'rm -rf "$SECRET_DIR"' EXIT
+cleanup_release() {
+  set +x
+  bash "$root/scripts/developer-id.sh" cleanup || true
+  rm -rf "$SECRET_DIR"
+}
+trap cleanup_release EXIT
 
 python3 scripts/release_plan.py > "$workdir/plan.json"
 PLAN=$workdir/plan.json
@@ -45,10 +51,11 @@ signing_key_present=$(plan_field signing_key_present)
 embed_update=$(plan_field embed_update)
 manifest_url=$(plan_field manifest_url)
 artifact_url=$(plan_field artifact_url)
-if [[ "$code_signing" != ad-hoc ]]; then
-  echo "Releases are ad-hoc signed." >&2
+if [[ "$code_signing" != developer-id ]]; then
+  echo "Releases are Developer ID signed and notarised." >&2
   exit 1
 fi
+bash scripts/developer-id.sh import
 for flag in "$signing_key_present" "$embed_update"; do
   case "$flag" in
     true|false) ;;
@@ -85,29 +92,32 @@ echo "Checking the app icon before archive."
 python3 scripts/check_app_icon.py
 
 echo "Checking resolved Xcode settings before archive."
+sign_settings=()
+while IFS= read -r setting; do
+  sign_settings+=("${setting}")
+done < <(bash scripts/developer-id.sh xcode-settings)
 xcodebuild -project Watt.xcodeproj -scheme Watt -configuration Release \
   -destination 'generic/platform=macOS' -showBuildSettings \
+  "${sign_settings[@]}" \
   ENABLE_TESTABILITY=NO \
   CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
   > "$workdir/settings.txt"
 python3 scripts/check_xcode_settings.py "$workdir/settings.txt" --marketing "$version" --build "$identity_build"
 
-echo "Archiving with an ad-hoc signature. This release is not Developer ID signed or notarised."
+echo "Archiving with Developer ID Application. Notarisation runs after the archive is signed."
 settings=(
   "MARKETING_VERSION=$version"
   "CURRENT_PROJECT_VERSION=$identity_build"
-  CODE_SIGN_STYLE=Manual
-  CODE_SIGN_IDENTITY=-
-  AD_HOC_CODE_SIGNING_ALLOWED=YES
-  CODE_SIGNING_ALLOWED=YES
-  CODE_SIGNING_REQUIRED=YES
-  ENABLE_HARDENED_RUNTIME=YES
-  # Release config keeps ENABLE_TESTABILITY so a pull-request artifact can be
-  # debugged. That injects get-task-allow. A published archive must not.
+  "${sign_settings[@]}"
+  # Release config keeps ENABLE_TESTABILITY so a local debugger can attach.
+  # That injects get-task-allow, which notarisation rejects. A published
+  # archive must not carry it. Repeated after the signing settings so it wins.
   ENABLE_TESTABILITY=NO
   CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO
   # Custom keys. Xcode drops unknown INFOPLIST_KEY_* settings. Resources/App/Info.plist
   # and Resources/Helper/Info.plist expand this before code signing.
+  # protected-installation keeps the helper on the installed app's cdhash.
+  # Developer ID does not switch that pin to a team requirement.
   WATT_HELPER_TRUST_MODE=protected-installation
 )
 
@@ -145,7 +155,13 @@ archived=$workdir/Watt.xcarchive/Products/Applications/Watt.app
 app=$output/Watt.app
 rm -rf "$app"
 ditto "$archived" "$app"
-/usr/bin/codesign --verify --deep --strict --all-architectures "$app"
+# xcodebuild signs each target as it builds. Sign again inside-out so every
+# nested Mach-O has the Developer ID identity, the hardened runtime, and a
+# secure timestamp before notarisation. The ticket is stapled onto this app
+# before the tar, zip, and disk image are created.
+bash scripts/developer-id.sh sign-app "$app"
+bash scripts/developer-id.sh notarize-app "$app"
+bash scripts/developer-id.sh verify-app "$app" --require-ticket
 
 app=$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$app")
 info=$(python3 scripts/read_app_info.py "$app/Contents/Info.plist" --expect-marketing "$version")
@@ -181,12 +197,19 @@ scripts/verify-release-readiness.sh local "$app" --archive "$archive"
 shasum -a 256 "$archive" > "$output/Watt-$version.tar.sha256"
 ditto -c -k --keepParent "$app" "$output/Watt-$version.zip"
 hdiutil create -volname Watt -srcfolder "$app" -ov -format UDZO "$output/Watt-$version.dmg"
+# The zip cannot take a staple of its own; the ticket is inside the app.
+# The disk image is a separate signed container, so it is notarised and stapled too.
+bash scripts/developer-id.sh notarize-dmg "$output/Watt-$version.dmg"
 
 set +e
 scripts/verify-release-readiness.sh distribution-preflight "$app" > "$output/distribution-preflight.txt" 2>&1
 preflight=$?
 set -e
 cat "$output/distribution-preflight.txt"
+if [[ "$preflight" -ne 0 && "$signing_key_present" == true ]]; then
+  echo "Distribution preflight failed. Not publishing." >&2
+  exit 1
+fi
 if [[ "$preflight" -eq 0 && "$signing_key_present" == true ]]; then
   python3 scripts/sign-update-manifest.py \
     --archive "$archive" \

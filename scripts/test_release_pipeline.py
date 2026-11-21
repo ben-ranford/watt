@@ -279,30 +279,44 @@ class ManifestTests(unittest.TestCase):
 
 
 class PlanTests(unittest.TestCase):
-    def test_absent_secrets_archive_ad_hoc_without_a_manifest(self) -> None:
-        plan = release_plan.build_plan({'RELEASE_VERSION': '1.2.3', 'RELEASE_TAG': 'v1.2.3'}, require_release=True)
-        self.assertEqual(plan['errors'], [])
-        self.assertEqual(plan['code_signing'], 'ad-hoc')
-        self.assertNotIn('notarize', plan)
-        self.assertFalse(plan['signing_key_present'])
-        self.assertFalse(plan['embed_public_key'])
-        self.assertTrue(plan['embed_update'])
-        self.assertEqual(plan['manifest_url'], 'https://ben-ranford.github.io/watt/updates/manifest.json')
-        self.assertEqual(plan['artifact_url'], 'https://ben-ranford.github.io/watt/updates/Watt.tar')
-        self.assertTrue(any('ad-hoc' in message for message in plan['messages']))
-        self.assertTrue(any('preflight' in message for message in plan['messages']))
-        self.assertFalse(any('fallback' in message.lower() for message in plan['messages']))
+    def developer_id_env(self, **extra: str) -> dict[str, str]:
+        env = {
+            'RELEASE_VERSION': '1.2.3',
+            'RELEASE_TAG': 'v1.2.3',
+            'DEVELOPER_ID_P12_BASE64': 'Y2VydA==',
+            'DEVELOPER_ID_P12_PASSWORD': 'secret-password',
+            'APPLE_TEAM_ID': 'GUT4TJFVQ2',
+            'ASC_KEY_ID': 'KEYID12345',
+            'ASC_ISSUER_ID': 'issuer-id',
+            'ASC_KEY_P8_BASE64': 'cDhrZXk=',
+        }
+        env.update(extra)
+        return env
 
-    def test_apple_signing_secrets_are_rejected(self) -> None:
+    def test_absent_developer_id_secrets_fail_closed(self) -> None:
+        plan = release_plan.build_plan({'RELEASE_VERSION': '1.2.3', 'RELEASE_TAG': 'v1.2.3'}, require_release=True)
+        self.assertTrue(plan['errors'])
+        self.assertEqual(plan['code_signing'], 'blocked')
+        self.assertFalse(plan['notarize'])
+        self.assertFalse(plan['signing_key_present'])
+        self.assertTrue(plan['embed_update'])
+        encoded = json.dumps(plan)
+        for name in release_plan.DEVELOPER_ID_SECRET_NAMES:
+            self.assertIn(name, encoded)
+        self.assertNotIn('fallback', encoded.lower())
+        self.assertTrue(any('preflight' in message for message in plan['messages']))
+
+    def test_wrong_team_is_not_printed(self) -> None:
         partial = release_plan.build_plan(
-            {'RELEASE_VERSION': '1.2.3', 'RELEASE_TAG': 'v1.2.3', 'APPLE_TEAM_ID': 'ABCDE12345'},
+            self.developer_id_env(APPLE_TEAM_ID='ABCDE12345'),
             require_release=True,
         )
         self.assertTrue(partial['errors'])
-        encoded = json.dumps(partial['errors'])
+        encoded = json.dumps(partial)
         self.assertNotIn('ABCDE12345', encoded)
         self.assertIn('APPLE_TEAM_ID', encoded)
-        self.assertEqual(partial['code_signing'], 'ad-hoc')
+        self.assertEqual(partial['code_signing'], 'blocked')
+        self.assertFalse(partial['notarize'])
 
     def test_partial_and_invalid_secrets_fail_closed(self) -> None:
         leftover = release_plan.build_plan(
@@ -331,37 +345,25 @@ class PlanTests(unittest.TestCase):
 
     def test_complete_update_plan_omits_secret_material(self) -> None:
         plan = release_plan.build_plan(
-            {
-                'RELEASE_VERSION': '1.2.3',
-                'RELEASE_TAG': 'v1.2.3',
-                'WATT_UPDATE_SIGNING_KEY': 'cGVt',
-            },
+            self.developer_id_env(WATT_UPDATE_SIGNING_KEY='cGVt'),
             require_release=True,
         )
         self.assertEqual(plan['errors'], [])
-        self.assertEqual(plan['code_signing'], 'ad-hoc')
+        self.assertEqual(plan['code_signing'], 'developer-id')
+        self.assertTrue(plan['notarize'])
         self.assertTrue(plan['embed_update'])
         self.assertTrue(plan['embed_public_key'])
         self.assertEqual(plan['manifest_url'], 'https://ben-ranford.github.io/watt/updates/manifest.json')
         self.assertEqual(plan['artifact_url'], 'https://ben-ranford.github.io/watt/updates/Watt.tar')
         encoded = json.dumps(plan)
         self.assertNotIn('cGVt', encoded)
-        apple = release_plan.build_plan(
-            {
-                'RELEASE_VERSION': '1.2.3',
-                'RELEASE_TAG': 'v1.2.3',
-                'APPLE_CERTIFICATE_P12_BASE64': 'Y2VydA==',
-                'APPLE_CERTIFICATE_PASSWORD': 'secret-password',
-                'APPLE_NOTARY_KEY_P8_BASE64': 'cDhrZXk=',
-                'WATT_UPDATE_SIGNING_KEY': 'cGVt',
-            },
-            require_release=True,
-        )
-        self.assertTrue(apple['errors'])
-        rejected = json.dumps(apple)
-        self.assertNotIn('secret-password', rejected)
-        self.assertNotIn('Y2VydA==', rejected)
-        self.assertNotIn('cDhrZXk=', rejected)
+        self.assertNotIn('secret-password', encoded)
+        self.assertNotIn('Y2VydA==', encoded)
+        self.assertNotIn('cDhrZXk=', encoded)
+        self.assertNotIn('KEYID12345', encoded)
+        self.assertNotIn('issuer-id', encoded)
+        self.assertTrue(any('Developer ID' in message for message in plan['messages']))
+        self.assertTrue(any('notarised' in message for message in plan['messages']))
 
 
 class ProjectTests(unittest.TestCase):
@@ -433,24 +435,29 @@ Build settings for action build and target WattTests:
             self.assertEqual(injected.returncode, 1)
             self.assertIn('get-task-allow', injected.stderr)
 
-    def test_workflow_does_not_read_apple_signing_secrets(self) -> None:
+    def test_workflow_reads_developer_id_secrets_only_on_the_archive_step(self) -> None:
+        import yaml
         text = (ROOT / '.github/workflows/release.yml').read_text()
-        for name in (
-            'APPLE_CERTIFICATE_P12_BASE64',
-            'APPLE_CERTIFICATE_PASSWORD',
-            'APPLE_TEAM_ID',
-            'APPLE_NOTARY_KEY_ID',
-            'APPLE_NOTARY_ISSUER_ID',
-            'APPLE_NOTARY_KEY_P8_BASE64',
-            'notarytool',
-            'developer-id',
-        ):
-            self.assertNotIn(name, text)
+        self.assertNotIn('pull_request_target', text)
+        self.assertNotIn('APPLE_CERTIFICATE_P12_BASE64', text)
+        self.assertNotIn('APPLE_NOTARY_KEY', text)
         self.assertIn('HOMEBREW_TAP_DEPLOY_KEY', text)
         self.assertNotIn('HOMEBREW_TAP_TOKEN', text)
         self.assertIn('WATT_UPDATE_SIGNING_KEY', text)
         self.assertNotIn('WATT_UPDATE_MANIFEST_URL', text)
         self.assertNotIn('WATT_UPDATE_ARTIFACT_URL', text)
+        workflow = yaml.safe_load(text)
+        build = workflow['jobs']['build']
+        archive = next(step for step in build['steps'] if step.get('name') == 'Archive, package, and sign the update manifest')
+        cleanup = next(step for step in build['steps'] if step.get('name') == 'Delete signing material')
+        self.assertEqual(cleanup['if'], 'always()')
+        self.assertNotIn('env', cleanup)
+        self.assertIn('developer-id.sh cleanup', cleanup['run'])
+        self.assertIn('set +x', archive['run'])
+        for name in release_plan.DEVELOPER_ID_SECRET_NAMES:
+            self.assertIn(name, archive['env'])
+            self.assertEqual(archive['env'][name], '${{ secrets.%s }}' % name)
+        self.assertNotIn('notarytool', text)
 
     def test_update_urls_match_the_updater_rules(self) -> None:
         self.assertEqual(
@@ -618,6 +625,7 @@ class WorkflowTests(unittest.TestCase):
             'check-pages-artifact.sh',
             'cask-rollout-gate.sh',
             'retry_on_timeout.sh',
+            'developer-id.sh',
         ):
             result = subprocess.run(['bash', '-n', str(ROOT / 'scripts' / name)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -633,10 +641,18 @@ class ReadinessTests(unittest.TestCase):
             'WATTUpdatePublicKey': base64.b64encode(b'\x11' * 32).decode('ascii'),
         }
 
-    def test_distribution_accepts_ad_hoc_cdhash_without_a_team_or_ticket(self) -> None:
+    def test_distribution_accepts_developer_id_for_the_watt_team(self) -> None:
         self.assertEqual(release_readiness.distribution_plist_failures(self.info()), [])
-        detail = 'Identifier=com.example.watt\nSignature=adhoc\nTeamIdentifier=not set\nCodeDirectory v=20400 flags=0x10000(runtime)\n'
-        requirement = 'designated => identifier "com.example.watt" and cdhash H"00112233445566778899aabbccddeeff00112233"\n'
+        detail = (
+            'Identifier=com.example.watt\n'
+            'Authority=Developer ID Application: Example (GUT4TJFVQ2)\n'
+            'TeamIdentifier=GUT4TJFVQ2\n'
+            'CodeDirectory v=20400 flags=0x10000(runtime)\n'
+        )
+        requirement = (
+            'designated => identifier "com.example.watt" and anchor apple generic '
+            'and certificate leaf[subject.OU] = GUT4TJFVQ2\n'
+        )
         self.assertEqual(
             release_readiness.codesign_identity_failures(detail, requirement, 'Watt', distribution=True),
             [],
@@ -646,7 +662,7 @@ class ReadinessTests(unittest.TestCase):
             [],
         )
 
-    def test_distribution_rejects_developer_id_certificate_mode_and_weak_requirements(self) -> None:
+    def test_distribution_rejects_ad_hoc_certificate_mode_and_weak_requirements(self) -> None:
         certificate = self.info()
         certificate['WATTHelperTrustMode'] = 'certificate'
         certificate['WATTSigningTeam'] = 'ABCDE12345'
@@ -659,14 +675,17 @@ class ReadinessTests(unittest.TestCase):
         missing_key = self.info()
         del missing_key['WATTUpdatePublicKey']
         self.assertTrue(any('public key' in reason for reason in release_readiness.distribution_plist_failures(missing_key)))
-        developer_id = 'Authority=Developer ID Application: Example (ABCDE12345)\nSignature=adhoc\nflags=0x10000(runtime)\n'
-        requirement = 'designated => identifier "com.example.watt" and cdhash H"00112233445566778899aabbccddeeff00112233"\n'
-        self.assertTrue(release_readiness.codesign_identity_failures(developer_id, requirement, 'Watt', distribution=True))
-        no_hash = 'Signature=adhoc\nflags=0x10000(runtime)\n'
-        anchor = 'designated => anchor apple generic and identifier "com.example.watt"\n'
-        self.assertTrue(release_readiness.codesign_identity_failures(no_hash, anchor, 'Watt', distribution=True))
+        ad_hoc = 'Signature=adhoc\nTeamIdentifier=not set\nflags=0x10000(runtime)\n'
+        cdhash = 'designated => identifier "com.example.watt" and cdhash H"00112233445566778899aabbccddeeff00112233"\n'
+        self.assertTrue(release_readiness.codesign_identity_failures(ad_hoc, cdhash, 'Watt', distribution=True))
+        other_team = (
+            'Authority=Developer ID Application: Example (ABCDE12345)\n'
+            'TeamIdentifier=ABCDE12345\nflags=0x10000(runtime)\n'
+        )
+        other_requirement = 'designated => anchor apple generic and certificate leaf[subject.OU] = ABCDE12345\n'
+        self.assertTrue(release_readiness.codesign_identity_failures(other_team, other_requirement, 'Watt', distribution=True))
         self.assertTrue(release_readiness.codesign_identity_failures(
-            'Signature=adhoc\n', requirement, 'Watt', distribution=True))
+            'Signature=adhoc\nflags=0x10000(runtime)\n', other_requirement, 'Watt', distribution=True))
         self.assertTrue(release_readiness.entitlement_failures(
             'com.apple.security.cs.disable-library-validation', 'Watt', distribution=True, main_app=True))
         self.assertTrue(release_readiness.entitlement_failures(
@@ -712,10 +731,6 @@ cask "watt" do
 
   app "Watt.app"
 
-  postflight_steps do
-    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/Watt.app"]
-  end
-
   zap launchctl: "io.github.ben-ranford.watt.helper",
       trash:     [
         "/Library/Application Support/Watt",
@@ -725,11 +740,6 @@ cask "watt" do
         "~/Library/Application Support/Watt",
         "~/Library/Preferences/io.github.ben-ranford.watt.plist",
       ]
-
-  caveats <<~EOS
-    Watt is ad-hoc signed and is not notarised.
-    This cask removes the quarantine attribute so Gatekeeper does not block the first launch.
-  EOS
 end
 """
 
@@ -790,17 +800,15 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertIn('"/Library/LaunchDaemons/com.example.watt.helper.plist"', text)
         self.assertIn('"/Library/PrivilegedHelperTools/com.example.watt.helper"', text)
         self.assertIn('launchctl: "com.example.watt.helper"', text)
-        self.assertIn('postflight_steps do', text)
-        self.assertIn(
-            'run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/Watt.app"]',
-            text,
-        )
+        self.assertNotIn('postflight_steps', text)
+        self.assertNotIn('postflight do', text)
+        self.assertNotIn('com.apple.quarantine', text)
+        self.assertNotIn('caveats', text)
         self.assertNotIn('Control-click', text)
         self.assertNotIn('Open Anyway', text)
         self.assertNotIn('no-quarantine', text)
         self.assertNotIn('no_quarantine', text)
-        self.assertNotIn('notarytool', text)
-        self.assertIn('not notarised', text)
+        self.assertNotIn('not notarised', text)
         with self.assertRaises(release_lib.ReleaseError):
             render_homebrew_cask.render_cask(
                 version='1.2.3', sha256='AB' * 32, bundle_id='com.example.watt', minimum_system_version='13.0')
@@ -1050,17 +1058,17 @@ class HomebrewCaskTests(unittest.TestCase):
                 minimum_system_version='13.0',
             )
             self.assertEqual(cask_text, expected)
-            self.assertIn('postflight_steps do', cask_text)
+            self.assertNotIn('postflight_steps', cask_text)
             self.assertNotIn('postflight do', cask_text)
             self.assertNotIn('>= :', cask_text)
-            self.assertIn('com.apple.quarantine', cask_text)
+            self.assertNotIn('com.apple.quarantine', cask_text)
 
-    def test_archive_script_has_no_notarisation_path(self) -> None:
+    def test_archive_script_notarises_after_signing(self) -> None:
         text = (ROOT / 'scripts/release-archive.sh').read_text()
-        self.assertNotIn('notarytool', text)
-        self.assertNotIn('APPLE_', text)
-        self.assertNotIn('developer-id', text)
-        self.assertIn('CODE_SIGN_IDENTITY=-', text)
+        signer = (ROOT / 'scripts/developer-id.sh').read_text()
+        self.assertNotIn('CODE_SIGN_IDENTITY=-', text)
+        self.assertIn('notarytool', signer)
+        self.assertIn('developer-id.sh import', text)
         self.assertEqual(text.count('ENABLE_TESTABILITY=NO'), 2)
         self.assertEqual(text.count('CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO'), 2)
         hardened = (ROOT / 'Resources/Entitlements/HardenedRuntime.entitlements').read_text()
@@ -1084,6 +1092,10 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertNotIn('${WATT_UPDATE_MANIFEST_URL', text)
         self.assertNotIn('${WATT_UPDATE_ARTIFACT_URL', text)
         self.assertLess(text.index('check_archived_plist.py'), text.index('\nset +e\n'))
+        self.assertLess(text.index('developer-id.sh import'), text.index('xcodebuild archive'))
+        self.assertLess(text.index('sign-app'), text.index('notarize-app'))
+        self.assertLess(text.index('notarize-app'), text.index('verify-release-readiness.sh local'))
+        self.assertLess(text.index('hdiutil create'), text.index('notarize-dmg'))
 
 
 class AppIconTests(unittest.TestCase):
@@ -1656,9 +1668,10 @@ class PagesSiteTests(unittest.TestCase):
         self.assertIn(pitch, html)
         self.assertIn('brew install --cask ben-ranford/tap/watt', html)
         self.assertIn('https://github.com/ben-ranford/watt/releases/latest', html)
-        self.assertIn('Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launch of a zip or disk image.', html)
-        self.assertIn('Control-click Watt and choose Open, then choose Open.', html)
-        self.assertIn('com.apple.quarantine', html)
+        self.assertIn('Releases are Developer ID signed and notarised.', html)
+        self.assertNotIn('Control-click', html)
+        self.assertNotIn('Open Anyway', html)
+        self.assertNotIn('com.apple.quarantine', html)
         self.assertIn('https://github.com/ben-ranford/watt/blob/main/LICENSE', html)
         self.assertIn('https://github.com/ben-ranford/watt"', html)
         self.assertIn('og:image', html)
@@ -1904,6 +1917,37 @@ class CIWorkflowTests(unittest.TestCase):
         names = [step.get('name') for step in job['steps']]
         self.assertLess(names.index('Unit tests (xcodebuild)'), names.index('Collect site screenshots'))
         self.assertLess(names.index('Collect site screenshots'), names.index('Upload site screenshots'))
+        self.assertLess(names.index('Import Developer ID keychain'), names.index('Build Debug and Release'))
+        self.assertLess(names.index('Notarise the Release app'), names.index('Zip the Release app'))
+        self.assertLess(names.index('Zip the Release app'), names.index('Delete signing material'))
+        workflow_text = (ROOT / '.github/workflows/ci.yml').read_text()
+        self.assertNotIn('pull_request_target', workflow_text)
+        cache = next(step for step in job['steps'] if step.get('name') == 'Cache SwiftPM')
+        self.assertNotIn('watt-developer-id', str(cache.get('with', {})))
+        uploaded_path = str(uploaded['with']['path'])
+        self.assertNotIn('watt-developer-id', uploaded_path)
+        self.assertNotIn('.p12', uploaded_path)
+        self.assertNotIn('.p8', uploaded_path)
+        cleanup = next(step for step in job['steps'] if step.get('name') == 'Delete signing material')
+        self.assertEqual(cleanup['if'], 'always()')
+        self.assertNotIn('env', cleanup)
+        self.assertNotIn('secrets.', cleanup['run'])
+        collapsed = ' '.join(workflow_text.split())
+        self.assertIn(
+            "(github.event_name == 'push' && github.ref == 'refs/heads/main') || "
+            "(github.event_name == 'pull_request' && "
+            "github.event.pull_request.head.repo.full_name == github.repository)",
+            collapsed,
+        )
+        importer = next(step for step in job['steps'] if step.get('name') == 'Import Developer ID keychain')
+        notarise = next(step for step in job['steps'] if step.get('name') == 'Notarise the Release app')
+        for name in release_plan.DEVELOPER_ID_SECRET_NAMES:
+            self.assertEqual(importer['env'][name], '${{ secrets.%s }}' % name)
+        self.assertNotIn('DEVELOPER_ID_P12_BASE64', notarise['env'])
+        self.assertNotIn('DEVELOPER_ID_P12_PASSWORD', notarise['env'])
+        self.assertNotIn('ASC_KEY_P8_BASE64', notarise['env'])
+        self.assertEqual(notarise['env']['ASC_KEY_ID'], '${{ secrets.ASC_KEY_ID }}')
+        self.assertEqual(notarise['env']['ASC_ISSUER_ID'], '${{ secrets.ASC_ISSUER_ID }}')
 
     def test_release_update_settings_match_public_config(self) -> None:
         import importlib.util
@@ -1971,6 +2015,146 @@ class CIWorkflowTests(unittest.TestCase):
         )
         self.assertEqual(refused.returncode, 2, refused.stderr)
         self.assertIn('refusing to delete', refused.stderr)
+
+
+class DeveloperIDScriptTests(unittest.TestCase):
+    def script(self) -> str:
+        return (ROOT / 'scripts/developer-id.sh').read_text()
+
+    def test_script_does_not_trace_or_print_secret_material(self) -> None:
+        text = self.script()
+        self.assertIn('set +x', text)
+        self.assertNotIn('set -x', text)
+        self.assertIn('::add-mask::', text)
+        self.assertIn('security delete-keychain', text)
+        self.assertIn('rm -rf "${secret_dir}"', text)
+        self.assertNotIn('echo "$DEVELOPER_ID_P12', text)
+        self.assertNotIn('echo "${DEVELOPER_ID_P12', text)
+        self.assertNotIn('echo "$ASC_KEY', text)
+        self.assertNotIn('echo "${ASC_KEY', text)
+        self.assertNotIn('cat "${p12_file}"', text)
+        self.assertNotIn('cat "${p8_file}"', text)
+        self.assertNotIn('cat "$p12_file"', text)
+        self.assertNotIn('cat "$p8_file"', text)
+        self.assertIn('pull_request_target', text)
+        self.assertIn('notarytool log', text)
+        for line in text.splitlines():
+            if 'codesign --force' in line:
+                self.assertNotIn('--deep', line)
+        self.assertIn('codesign --verify --deep --strict', text)
+
+    def test_import_refuses_forks_and_pull_request_target_without_printing_secrets(self) -> None:
+        secret = 'super-secret-password'
+        encoded = 'Y2VydC1ieXRlcw=='
+        placeholder_p8 = 'not-a-p8'
+        for event, head in (
+            ('pull_request', 'someone/watt'),
+            ('pull_request_target', 'ben-ranford/watt'),
+            ('pull_request', ''),
+        ):
+            with tempfile.TemporaryDirectory() as temporary:
+                result = run(
+                    ['bash', 'scripts/developer-id.sh', 'import'],
+                    env={
+                        'RUNNER_TEMP': temporary,
+                        'GITHUB_EVENT_NAME': event,
+                        'GITHUB_REF': 'refs/pull/1/merge',
+                        'GITHUB_REPOSITORY': 'ben-ranford/watt',
+                        'GITHUB_HEAD_REPO': head,
+                        'DEVELOPER_ID_P12_BASE64': encoded,
+                        'DEVELOPER_ID_P12_PASSWORD': secret,
+                        'APPLE_TEAM_ID': 'GUT4TJFVQ2',
+                        'ASC_KEY_ID': 'KEYID12345',
+                        'ASC_ISSUER_ID': 'issuer-id',
+                        'ASC_KEY_P8_BASE64': placeholder_p8,
+                    },
+                )
+            combined = result.stdout + result.stderr
+            self.assertNotEqual(result.returncode, 0, combined)
+            self.assertNotIn(secret, combined)
+            self.assertNotIn(encoded, combined)
+            self.assertNotIn(placeholder_p8, combined)
+            self.assertNotIn('KEYID12345', combined)
+            self.assertIn('BLOCKED', combined)
+            self.assertFalse((Path(temporary) / 'watt-developer-id').exists())
+
+    def test_wrong_team_is_refused_before_any_secret_is_decoded(self) -> None:
+        secret = 'team-mismatch-password'
+        with tempfile.TemporaryDirectory() as temporary:
+            result = run(
+                ['bash', 'scripts/developer-id.sh', 'import'],
+                env={
+                    'RUNNER_TEMP': temporary,
+                    'GITHUB_EVENT_NAME': 'push',
+                    'GITHUB_REF': 'refs/heads/main',
+                    'GITHUB_REPOSITORY': 'ben-ranford/watt',
+                    'DEVELOPER_ID_P12_BASE64': 'Y2VydA==',
+                    'DEVELOPER_ID_P12_PASSWORD': secret,
+                    'APPLE_TEAM_ID': 'ABCDE12345',
+                    'ASC_KEY_ID': 'KEYID12345',
+                    'ASC_ISSUER_ID': 'issuer-id',
+                    'ASC_KEY_P8_BASE64': 'cDhrZXk=',
+                },
+            )
+            combined = result.stdout + result.stderr
+            self.assertNotEqual(result.returncode, 0, combined)
+            self.assertNotIn(secret, combined)
+            self.assertNotIn('ABCDE12345', combined)
+            self.assertNotIn('Y2VydA==', combined)
+            self.assertIn('APPLE_TEAM_ID', combined)
+            self.assertFalse((Path(temporary) / 'watt-developer-id').exists())
+
+    def test_xcode_settings_fall_back_without_a_keychain(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            ad_hoc = run(
+                ['bash', 'scripts/developer-id.sh', 'xcode-settings'],
+                env={'RUNNER_TEMP': temporary},
+            )
+            self.assertEqual(ad_hoc.returncode, 0, ad_hoc.stderr)
+            self.assertIn('CODE_SIGN_IDENTITY=-', ad_hoc.stdout)
+            self.assertNotIn('DEVELOPMENT_TEAM', ad_hoc.stdout)
+            ready = Path(temporary) / 'watt-developer-id'
+            ready.mkdir()
+            (ready / 'ready').write_text('')
+            (ready / 'identity').write_text('Developer ID Application: Example (GUT4TJFVQ2)\n')
+            signed = run(
+                ['bash', 'scripts/developer-id.sh', 'xcode-settings'],
+                env={'RUNNER_TEMP': temporary},
+            )
+            self.assertEqual(signed.returncode, 0, signed.stderr)
+            self.assertIn('CODE_SIGN_IDENTITY=Developer ID Application: Example (GUT4TJFVQ2)', signed.stdout)
+            self.assertIn('DEVELOPMENT_TEAM=GUT4TJFVQ2', signed.stdout)
+            self.assertIn('ENABLE_TESTABILITY=NO', signed.stdout)
+            self.assertIn('CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO', signed.stdout)
+            self.assertIn('OTHER_CODE_SIGN_FLAGS=--timestamp', signed.stdout)
+            self.assertNotIn('CODE_SIGN_IDENTITY=-', signed.stdout)
+
+    def test_unlock_without_a_keychain_does_not_print_a_password(self) -> None:
+        secret = 'unlock-should-not-print'
+        with tempfile.TemporaryDirectory() as temporary:
+            result = run(
+                ['bash', 'scripts/developer-id.sh', 'unlock'],
+                env={'RUNNER_TEMP': temporary, 'DEVELOPER_ID_P12_PASSWORD': secret},
+            )
+            combined = result.stdout + result.stderr
+            self.assertNotEqual(result.returncode, 0, combined)
+            self.assertIn('not imported', combined)
+            self.assertNotIn(secret, combined)
+
+    def test_cleanup_removes_the_secret_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            secret = Path(temporary) / 'watt-developer-id'
+            secret.mkdir()
+            (secret / 'developer-id.p12').write_text('not-a-real-certificate')
+            (secret / 'AuthKey.p8').write_text('not-a-real-key')
+            result = run(
+                ['bash', 'scripts/developer-id.sh', 'cleanup'],
+                env={'RUNNER_TEMP': temporary},
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse(secret.exists())
+            self.assertNotIn('not-a-real-certificate', result.stdout + result.stderr)
+            self.assertNotIn('not-a-real-key', result.stdout + result.stderr)
 
 
 class RolloutTests(unittest.TestCase):

@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Decide update embedding for an ad-hoc release.
+"""Decide update embedding for a Developer ID release.
 
-Releases are ad-hoc signed and are not notarised. Apple Developer ID and
-notary secrets are rejected so a leftover secret cannot change that.
-Update URLs are read from Resources/ReleaseIdentity.json, not from secrets.
-The signing key is optional: without it the archive still builds, and
-distribution preflight fails because the public key is absent.
-Secret values are not printed.
+Releases are signed with Developer ID Application and notarised. The plan
+names any missing signing secret and does not copy secret values into the
+JSON. Update URLs are read from Resources/ReleaseIdentity.json, not from
+secrets. The Ed25519 signing key is optional: without it the archive still
+builds, and distribution preflight fails because the public key is absent.
 """
 
 from __future__ import annotations
@@ -20,14 +19,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import release_lib
 
 
-APPLE_SECRET_NAMES = (
-    'APPLE_CERTIFICATE_P12_BASE64',
-    'APPLE_CERTIFICATE_PASSWORD',
+# Names only. Values are never copied into the plan.
+DEVELOPER_ID_SECRET_NAMES = (
+    'DEVELOPER_ID_P12_BASE64',
+    'DEVELOPER_ID_P12_PASSWORD',
     'APPLE_TEAM_ID',
-    'APPLE_NOTARY_KEY_ID',
-    'APPLE_NOTARY_ISSUER_ID',
-    'APPLE_NOTARY_KEY_P8_BASE64',
+    'ASC_KEY_ID',
+    'ASC_ISSUER_ID',
+    'ASC_KEY_P8_BASE64',
 )
+# Public team on the Developer ID Application certificate.
+DEVELOPER_ID_TEAM = 'GUT4TJFVQ2'
 
 
 def _present(env: dict[str, str], name: str) -> bool:
@@ -52,15 +54,19 @@ def build_plan(
         except release_lib.ReleaseError as error:
             errors.append(str(error))
 
-    apple = [name for name in APPLE_SECRET_NAMES if _present(env, name)]
-    if apple:
+    missing = [name for name in DEVELOPER_ID_SECRET_NAMES if not _present(env, name)]
+    team_ok = env.get('APPLE_TEAM_ID', '').strip() == DEVELOPER_ID_TEAM
+    if missing:
         errors.append(
-            'Developer ID signing and notarization are not the release path. Remove these repository secrets: '
-            + ', '.join(apple)
-            + '.'
+            'Developer ID signing needs these repository secrets: ' + ', '.join(missing) + '.'
         )
+    elif not team_ok:
+        errors.append('APPLE_TEAM_ID is not the Watt Developer ID team.')
     else:
-        messages.append('Archiving with an ad-hoc signature. Releases are not Developer ID signed or notarised.')
+        messages.append(
+            'Archiving with Developer ID Application, hardened runtime, and a secure timestamp. '
+            'The app is notarised and stapled before the zip, disk image, and update tar are packed.'
+        )
 
     for name in ('WATT_UPDATE_MANIFEST_URL', 'WATT_UPDATE_ARTIFACT_URL'):
         if _present(env, name):
@@ -96,7 +102,8 @@ def build_plan(
     return {
         'version': version,
         'tag': tag,
-        'code_signing': 'ad-hoc',
+        'code_signing': 'developer-id' if not missing and team_ok else 'blocked',
+        'notarize': not missing and team_ok,
         'signing_key_present': key_present,
         'embed_update': embed_update,
         'embed_public_key': key_present and embed_update,

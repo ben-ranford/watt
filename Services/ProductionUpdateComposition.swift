@@ -46,8 +46,8 @@ struct ProductionUpdateComposition {
             requiresAdministrator: { _, _ in
                 // A protected installation is rotated by the administrator installer.
                 // That path re-verifies the Ed25519 manifest and archive sha256, then
-                // restarts the helper with the new cdhash. An ordinary ad-hoc app
-                // with no helper record replaces its own bundle in place.
+                // restarts the helper with the new cdhash. An app with no helper
+                // record replaces its own bundle in place.
                 record != nil
             })
         let source = try ProductionUpdateSource(manifestURL: configuration.manifestURL,
