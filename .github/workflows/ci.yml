@@ -5,8 +5,11 @@ on:
   push:
     branches: [main]
 
-# Read-only. Builds are ad-hoc; no signing identity or token is required,
-# including on pull requests from forks.
+# contents: read is enough. Signing uses the system security tool and
+# notarytool in this job. No third-party action sees the signing secrets.
+# Fork pull requests do not import the keychain and stay ad-hoc.
+# Same-repo pull requests and pushes to main use Developer ID when the
+# secrets exist. The workflow is not triggered for an untrusted pull request head.
 permissions:
   contents: read
 
@@ -62,16 +65,35 @@ jobs:
           xcodebuild -version
           swift --version
 
+      # Trusted refs only. Fork pull requests skip this step, so the Release
+      # build below stays ad-hoc and the job still goes green. Secrets are
+      # not passed to any other step.
+      - name: Import Developer ID keychain
+        if: >-
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          GITHUB_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          DEVELOPER_ID_P12_BASE64: ${{ secrets.DEVELOPER_ID_P12_BASE64 }}
+          DEVELOPER_ID_P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+        run: |
+          set -euo pipefail
+          set +x
+          bash scripts/developer-id.sh import
+
       - name: Build Debug and Release
         run: |
           set -euo pipefail
-          # Ad-hoc signature (CODE_SIGN_IDENTITY=-). WattHelper, WattMaintenance,
-          # and WattHelperInstaller enable the hardened runtime, so signing stays
-          # allowed. The WattHelperSigned scheme is the configuration that requires
-          # an Apple Development identity; this job does not build it.
-          # The Watt scheme depends on those three helper tools, so one app build
-          # per configuration produces them.
-          sign=(
+          set +x
+          # Debug stays ad-hoc so the test host can be attached. Release uses
+          # Developer ID when the temporary keychain was imported. Fork builds
+          # have no keychain and stay ad-hoc. The WattHelperSigned scheme is
+          # the local Apple Development configuration; this job does not build it.
+          ad_hoc_sign=(
             "CODE_SIGN_IDENTITY=-"
             "CODE_SIGN_STYLE=Manual"
             "AD_HOC_CODE_SIGNING_ALLOWED=YES"
@@ -80,7 +102,22 @@ jobs:
           )
           build_configuration() {
             local configuration="$1"
-            local -a update_settings=()
+            # bash 3.2 on the runner rejects `local -a name=()`.
+            sign=()
+            update_settings=()
+            if [[ "${configuration}" == "Release" && -f "${RUNNER_TEMP}/watt-developer-id/ready" ]]; then
+              bash scripts/developer-id.sh unlock
+              while IFS= read -r setting; do
+                sign+=("${setting}")
+              done < <(bash scripts/developer-id.sh xcode-settings)
+              sign+=(
+                "ENABLE_TESTABILITY=NO"
+                "CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO"
+                "COMPILER_INDEX_STORE_ENABLE=NO"
+              )
+            else
+              sign=("${ad_hoc_sign[@]}")
+            fi
             if [[ "${configuration}" == "Release" ]]; then
               while IFS= read -r setting; do
                 update_settings+=("${setting}")
@@ -186,21 +223,48 @@ jobs:
           set -euo pipefail
           swift test --configuration debug
 
+      # Same trusted-ref gate as the import step. Signs inside-out, notarises,
+      # staples, then checks codesign and spctl. Fork jobs skip this step.
+      - name: Notarise the Release app
+        if: >-
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          GITHUB_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          set +x
+          app="${GITHUB_WORKSPACE}/DerivedData/Build/Products/Release/Watt.app"
+          test -d "${app}"
+          if [[ ! -f "${RUNNER_TEMP}/watt-developer-id/ready" ]]; then
+            echo "BLOCKED: trusted ref is missing the Developer ID keychain." >&2
+            exit 1
+          fi
+          bash scripts/developer-id.sh sign-app "${app}"
+          bash scripts/developer-id.sh notarize-app "${app}"
+          bash scripts/developer-id.sh verify-app "${app}" --require-ticket
+
       # Pull-request runs only. This is a workflow artifact for a local Mac
-      # install, not a GitHub Release or a Pages publish. The Release app was
-      # already ad-hoc signed by the build step (CODE_SIGN_IDENTITY=-).
-      # The Release configuration keeps ENABLE_TESTABILITY, so Xcode adds
-      # com.apple.security.get-task-allow to this artifact on purpose and it
-      # can be attached in a debugger. scripts/release-archive.sh sets
-      # ENABLE_TESTABILITY=NO for a published build, which does not carry it.
+      # install, not a GitHub Release or a Pages publish. A trusted ref zips
+      # the stapled Developer ID app. A fork zips the ad-hoc build.
+      # Developer ID artifacts set ENABLE_TESTABILITY=NO, so they do not carry
+      # get-task-allow and cannot be attached in a debugger.
       - name: Zip the Release app
         if: github.event_name == 'pull_request'
         run: |
           set -euo pipefail
+          set +x
           app="${GITHUB_WORKSPACE}/DerivedData/Build/Products/Release/Watt.app"
           test -d "${app}"
           test -x "${app}/Contents/MacOS/Watt"
-          codesign --verify --verbose=2 "${app}"
+          if [[ -f "${RUNNER_TEMP}/watt-developer-id/ready" ]]; then
+            codesign --verify --deep --strict --all-architectures --verbose=2 "${app}"
+            /usr/sbin/spctl -a -vvv -t exec "${app}"
+          else
+            codesign --verify --verbose=2 "${app}"
+          fi
           python3 scripts/print_release_update_settings.py --check-plist "${app}/Contents/Info.plist"
           mkdir -p "${RUNNER_TEMP}/watt-app-pr"
           ditto -c -k --keepParent "${app}" "${RUNNER_TEMP}/watt-app-pr/Watt.app.zip"
@@ -214,3 +278,10 @@ jobs:
           retention-days: 7
           if-no-files-found: error
           compression-level: 0
+
+      - name: Delete signing material
+        if: always()
+        run: |
+          set -euo pipefail
+          set +x
+          bash scripts/developer-id.sh cleanup

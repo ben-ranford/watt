@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Print Release update build settings for an ad-hoc CI app.
+"""Print Release update build settings for a CI app.
 
 The URLs come from Resources/ReleaseIdentity.json. The public key is the
 published Ed25519 key in Resources/UpdatePublicKey.txt. Neither value is a

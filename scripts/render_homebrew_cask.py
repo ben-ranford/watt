@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """Render Casks/watt.rb for ben-ranford/homebrew-tap.
 
-The cask installs the GitHub Release zip. A postflight_steps block removes the
-quarantine attribute with xattr. Homebrew rejects --no-quarantine and the
-legacy postflight Ruby block, so the cask uses neither. The macOS requirement
-is a symbol (`depends_on macos: :ventura`), which already means that release
-or newer. Direct zip and disk-image downloads still need the Finder Open step;
-that text stays in the README, not in the cask caveats.
+The cask installs the GitHub Release zip. The app inside that zip is Developer
+ID signed and stapled, so Gatekeeper accepts it with the quarantine attribute
+Homebrew sets. The cask does not strip quarantine. The macOS requirement is a
+symbol (`depends_on macos: :ventura`), which already means that release or newer.
 """
 
 from __future__ import annotations
@@ -30,12 +28,6 @@ MACOS_CASK_SYMBOL = {
     15: 'sequoia',
     26: 'tahoe',
 }
-
-CAVEATS = """\
-Watt is ad-hoc signed and is not notarised.
-This cask removes the quarantine attribute so Gatekeeper does not block the first launch.
-"""
-
 
 def macos_dependency(minimum_system_version: str) -> str:
     release_lib.validate_minimum(minimum_system_version)
@@ -68,9 +60,6 @@ def render_cask(*, version: str, sha256: str, bundle_id: str, minimum_system_ver
     dependency = macos_dependency(minimum_system_version)
     trash = ',\n        '.join(zap_lines(bundle_id))
     helper = release_lib.validate_identity(bundle_id) + '.helper'
-    caveats = '\n'.join('    ' + line if line else '' for line in CAVEATS.splitlines())
-    # {{appdir}} is a Homebrew install-step token, not Ruby interpolation.
-    # An f-string needs four braces to emit one pair.
     return f"""cask "watt" do
   version "{version}"
   sha256 "{sha256}"
@@ -85,18 +74,10 @@ def render_cask(*, version: str, sha256: str, bundle_id: str, minimum_system_ver
 
   app "Watt.app"
 
-  postflight_steps do
-    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{{{appdir}}}}/Watt.app"]
-  end
-
   zap launchctl: "{helper}",
       trash:     [
         {trash},
       ]
-
-  caveats <<~EOS
-{caveats}
-  EOS
 end
 """
 

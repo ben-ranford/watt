@@ -28,7 +28,7 @@ enum HelperUnavailableReason: Equatable {
         case .missingBundle:
             return "This build does not include Watt? Helper. Install a complete build to enable CPU/GPU estimates."
         case .signingRequired:
-            return "This build selected certificate-based helper trust but has no signing team configured. Use the GitHub administrator installer for the ad-hoc build."
+            return "This build selected certificate-based helper trust but has no signing team configured. Release builds pin the helper by code hash."
         case .verificationFailed:
             return "Watt? Helper could not pass package or code-identity verification. Reinstall the verified GitHub build with the administrator installer."
         case .configurationFailed:

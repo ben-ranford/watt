@@ -22,7 +22,7 @@ Watt? sits in the menu bar and shows what the Mac is drawing or charging, in wat
 
 - [Security](#security)
   - [Privileged helper](#privileged-helper)
-  - [Ad-hoc signing](#ad-hoc-signing)
+  - [Developer ID signing](#developer-id-signing)
   - [Update verification](#update-verification)
   - [Reporting a vulnerability](#reporting-a-vulnerability)
 - [Background](#background)
@@ -40,7 +40,7 @@ Watt? sits in the menu bar and shows what the Mac is drawing or charging, in wat
 
 ## Security
 
-Releases are ad-hoc signed and are not notarised. A root helper supplies Apple's CPU and GPU power estimates. The app accepts an update only after it checks an Ed25519 signature and the archive digest.
+Releases are signed with Developer ID Application and notarised. A root helper supplies Apple's CPU and GPU power estimates. The app accepts an update only after it checks an Ed25519 signature and the archive digest. Apple's signature is not the update check.
 
 ### Privileged helper
 
@@ -48,17 +48,25 @@ Releases are ad-hoc signed and are not notarised. A root helper supplies Apple's
 
 The helper's sampler runs one fixed command, `/usr/bin/powermetrics` with `-f plist -n 1 -i 1000 -s cpu_power,gpu_power`. It does not accept an executable, arguments, or paths from the app. CPU and GPU estimates appear only when both are available. Display, SSD, and Other are unavailable. Battery delta, charger input, and system draw come from IOKit power sources and do not need the helper.
 
-A fresh install does not register the helper by itself. Setup and Settings offer **Install Helper…**, which runs the bundled `WattHelperInstaller` and asks for an administrator password. Release builds are ad-hoc signed. `SMAppService` daemon registration does not write the exact code-hash pins the helper requires, and it is not a reliable way to install a root daemon from an ad-hoc app, so the app does not use it for this path. The installer still checks the preflight digest against the staged bytes before it writes anything. Homebrew does not install the helper during `brew install`; the cask only places `Watt.app` in Applications.
+A fresh install does not register the helper by itself. Setup and Settings offer **Install Helper…**, which runs the bundled `WattHelperInstaller` and asks for an administrator password. `SMAppService` daemon registration does not write the exact code-hash pins the helper requires, so the app does not use that API for this path. The installer still checks the preflight digest against the staged bytes before it writes anything. Homebrew does not install the helper during `brew install`; the cask only places `Watt.app` in Applications.
 
 Release builds set `WATTHelperTrustMode` to `protected-installation` by expanding `$(WATT_HELPER_TRUST_MODE)` in the app and helper Info.plist before signing. The local Apple Development configuration sets that build setting to `certificate`. The app selects certificate trust only when the compiled value is exactly `certificate`. The helper's XPC requirement is the installed app's cdhash. It does not trust every ad-hoc signature that carries the bundle identifier. A missing or stale pin rejects the caller. It is not replaced with a team requirement or an identifier-only requirement. After an update, that pin changes only when the administrator installer has checked the Ed25519 manifest and the archive SHA-256, or through the reviewed helper-update flow. Both restart the helper with the new record. Certificate trust is the local Apple Development configuration. Distribution preflight rejects it.
 
 Administrator commands, protected paths, and recovery are in [HelperInstaller/README.md](HelperInstaller/README.md).
 
-### Ad-hoc signing
+### Developer ID signing
 
-Release archives are signed with `CODE_SIGN_IDENTITY=-` and the hardened runtime. They are not Developer ID signed and they are not notarised. Gatekeeper therefore blocks the first launch of a zip or disk image downloaded from GitHub Releases. The steps are under [Download](#download).
+Release archives are signed with the Developer ID Application certificate for team `GUT4TJFVQ2`, the hardened runtime, and a secure timestamp. Nested tools (`WattHelper`, `WattMaintenance`, `WattHelperInstaller`) are signed with that same identity before the app bundle. The app is notarised, and the ticket is stapled to `Watt.app` before the zip, the disk image, and the update tar are packed. The disk image is signed, notarised, and stapled as its own container. A zip cannot carry a staple of its own; the ticket travels inside the app.
 
-The Homebrew cask removes `com.apple.quarantine` from the installed `Watt.app` after install, so that first-launch block does not apply to a cask install.
+Gatekeeper accepts that download. There is no Control-click step.
+
+The Homebrew cask does not remove `com.apple.quarantine`. A stapled notarised app launches with that attribute set.
+
+Local Debug builds stay ad-hoc (`CODE_SIGN_IDENTITY=-`) so they can be built without the Developer ID certificate. The HelperSigned configuration is still the local Apple Development setup.
+
+The helper's XPC requirement stays the installed app's cdhash. It is not replaced with a team requirement. Developer ID puts the team in the code directory, so the cdhash changes on the first signed release even when the rest of the binary would have matched. The in-app updater already rotates that pin after the Ed25519 manifest and the archive SHA-256 check. Replacing `Watt.app` by hand, without that installer, leaves the helper rejecting the new hash until **Install Helper…** runs again.
+
+Open at login uses `SMAppService` on the main app. An ad-hoc designated requirement is the cdhash, and the Developer ID designated requirement is the team certificate, so the first launch of a signed build can ask you to allow Watt in Login Items. Later updates keep the same team, so that prompt is once. Notification permission is also tied to the signing identity and can be asked again once. Watt does not request Accessibility or any other TCC permission, and it does not store keychain items.
 
 ### Update verification
 
@@ -101,13 +109,11 @@ The cask `watt` is published from [ben-ranford/homebrew-tap](https://github.com/
 brew install --cask ben-ranford/tap/watt
 ```
 
-The cask downloads `Watt-X.Y.Z.zip` from GitHub Releases, installs `Watt.app`, and removes the quarantine attribute in `postflight_steps`. It sets `auto_updates true`, so Homebrew leaves upgrades to Watt. `brew upgrade` does not replace the app unless you pass `--greedy`. The cask moves when a rollout is complete or the release is critical, not while a staged rollout is still in progress. New installs during a rollout get the last complete version, then follow the in-app schedule.
+The cask downloads `Watt-X.Y.Z.zip` from GitHub Releases and installs `Watt.app`. It sets `auto_updates true`, so Homebrew leaves upgrades to Watt. `brew upgrade` does not replace the app unless you pass `--greedy`. The cask moves when a rollout is complete or the release is critical, not while a staged rollout is still in progress. New installs during a rollout get the last complete version, then follow the in-app schedule. The cask rendered for the next signed release does not strip quarantine. A cask published from an older ad-hoc release still has that step until this release replaces it.
 
 ### Download
 
-Download `Watt-X.Y.Z.zip` or `Watt-X.Y.Z.dmg` from the [GitHub Releases](https://github.com/ben-ranford/watt/releases) page and move Watt into Applications.
-
-Watt is ad-hoc signed and is not notarised, so Gatekeeper blocks the first launch of a zip or disk image. In Finder, Control-click Watt and choose Open, then choose Open. If macOS still blocks it, open System Settings → Privacy & Security and choose Open Anyway.
+Download `Watt-X.Y.Z.zip` or `Watt-X.Y.Z.dmg` from the [GitHub Releases](https://github.com/ben-ranford/watt/releases) page, move Watt into Applications, and open it. The build is Developer ID signed and notarised, so Gatekeeper accepts the first launch.
 
 ### Updating
 
