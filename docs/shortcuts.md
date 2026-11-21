@@ -54,7 +54,7 @@ Use the machine that can run the app. The last check was macOS 27.2.1 on a MacBo
 
 Pass looks like this:
 
-- **Get Power Reading.** No Settings window. The result has system draw, charger watts, battery percent, and battery state. A measured 0 W stays 0 W. The log contains `reading via=local` or `reading via=keeper` and the same summary. If the panel says No reading, the result is Unavailable, not 0 W.
+- **Get Power Reading.** No Settings window. The result is one plain sentence: system draw, charger watts, battery percent, and battery state. A measured 0 W stays 0 W. When the panel title is Not charging and the detail is Power source: AC, the battery state is `Not charging`, not `Unknown`. `shortcuts run` exits on its own and prints that sentence. The log contains `reading via=local` or `reading via=keeper` and the same summary. If the panel says No reading, the result is Unavailable, not 0 W.
 - **Open Status Panel.** The power panel opens and stays open. Settings does not open. The log contains `open via=local destination=statusPanel` or `open via=keeper destination=statusPanel`.
 - **Open Settings.** Settings comes forward. The shortcut still finishes.
 - **Set Menu Bar Display.** The menu-bar item changes to charger input. Settings does not open. The stored mode is the Settings value `Charger`, not the Shortcuts label `Charger Input`:
@@ -63,8 +63,8 @@ Pass looks like this:
   defaults export io.github.ben-ranford.watt - | plutil -extract preferences.v1 raw -o - -
   ```
 
-- **Check for Updates.** The existing Software Update window opens. The check uses the signed-manifest updater. A build without update configuration says updates aren’t configured. It does not download or install.
-- **Finder reopen.** In Finder, open the already-running `/Applications/Watt.app`. Settings opens on the same pid.
+- **Check for Updates.** The Software Update window opens and comes forward, the same window as Check for Updates… in the menu. A fresh check shows Checking, then You’re up to date or the available-update screen. If a check or an offer is already on screen, that status comes forward and the shortcut does not say it couldn’t check. A build without update configuration says updates aren’t configured. It does not download or install.
+- **Finder reopen.** In Finder, open the already-running `/Applications/Watt.app`. Settings opens on the same pid. The log may say `decision=waitForIntent` when the reopen has no sender and Finder is not the frontmost app. Settings still opens once that short wait ends. It opens immediately when the sender or the frontmost app is Finder.
 - **Dock icon.** Watt? is not in the Dock. `LSUIElement` stays 1.
 
 If linkd did start a second process, the log shows `satellite pid=… leaving <original pid> running; single-instance claim skipped` and does not show `yielded to running instance` during the action. The original pid is still alive when the shortcut finishes.
@@ -82,7 +82,7 @@ log show --last 10m --style compact --predicate 'subsystem == "io.github.ben-ran
 Phrases: “Get the power reading in Watt?”, “What's the power draw in Watt?”.
 
 1. Run Get Power Reading while the panel shows a live sample.
-2. The result has system draw, charger watts, battery percent, and battery state. A measured 0 W, such as an idle system draw, stays 0 W.
+2. The result is one sentence with system draw, charger watts, battery percent, and battery state. A measured 0 W, such as an idle system draw, stays 0 W. Not charging on AC is `Not charging`. `shortcuts run` prints the sentence and exits.
 3. Wait until the panel says No reading, then run the action again. The result is Unavailable. It is not 0 W. An unplugged charger is Unavailable for charger watts, not 0 W.
 
 ### Open the panel and Settings

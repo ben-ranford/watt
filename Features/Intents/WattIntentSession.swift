@@ -110,8 +110,10 @@ enum WattIntentSession {
             guard presenterReady else { return }
             router?.showSettings()
         case "updates":
-            guard presenterReady else { return }
-            _ = router?.checkForUpdatesNow()
+            guard presenterReady, let router else { return }
+            if router.checkForUpdatesNow() { return }
+            guard router.updateUnavailableReason == nil else { return }
+            _ = router.revealCurrentUpdateStatus()
         case "mode":
             guard let mode, let displayMode = WattDisplayMode(rawValue: mode), let preferences else { return }
             preferences.displayMode = displayMode
@@ -190,14 +192,18 @@ enum WattIntentSession {
             return WattUpdateIntentOutcome(started: true, message: "Checking for updates.")
         }
         activate()
-        let started = router.checkForUpdatesNow()
-        if started, !presenterReady {
-            pendingDestination = .softwareUpdate
-        }
-        if started {
+        if router.checkForUpdatesNow() {
+            if !presenterReady { pendingDestination = .softwareUpdate }
             return WattUpdateIntentOutcome(started: true, message: "Checking for updates.")
         }
-        let message = router.updateUnavailableReason ?? "Couldn’t check for updates."
+        // The menu item is disabled while a check, offer, or result is already
+        // on screen. The shortcut still opens that status. It does not report
+        // the check as failed just because a second one cannot start.
+        if let reason = router.updateUnavailableReason {
+            return WattUpdateIntentOutcome(started: false, message: reason)
+        }
+        let message = router.revealCurrentUpdateStatus()
+        if !presenterReady { pendingDestination = .softwareUpdate }
         return WattUpdateIntentOutcome(started: false, message: message)
     }
 
@@ -361,10 +367,12 @@ enum WattIntentSession {
            !isUserReopenSender(senderBundleIdentifier), !isExternalUserOpener(frontmost) {
             return .suppress
         }
-        // The reopen event often has no sender. Finder is still the frontmost
-        // app when someone opens Watt? from Finder; Shortcuts is frontmost when
-        // the Shortcuts editor runs an action. This process being frontmost is
-        // not that signal: an action can activate Watt? before the reopen runs.
+        // Finder, the Dock, and loginwindow open Settings immediately. A Finder
+        // open of this menu-bar app often has no sender and does not leave Finder
+        // frontmost, so it takes the quiet wait instead. The wait still opens
+        // Settings unless an intent starts or Shortcuts is in front when it ends.
+        // This process being frontmost is not a user open: an action can activate
+        // Watt? before the reopen runs.
         if isUserReopenSender(senderBundleIdentifier) || isExternalUserOpener(frontmost) { return .showSettings }
         _ = hasAppleEvent
         return .waitForIntent
@@ -577,7 +585,14 @@ struct WattPowerReading: Equatable, Sendable {
         case .chargingHold: return "Charging paused"
         case .full: return "Full"
         case .noBattery: return "No battery"
-        case .unknown: return "Unknown"
+        case .unknown:
+            // Idle on AC stays `.unknown`: IOPS has not called it charging,
+            // discharging, or full. The panel title for that reading is
+            // "Not charging", with detail "Power source: AC".
+            if reading.watts == 0, reading.capabilities.battery == .available {
+                return "Not charging"
+            }
+            return "Unknown"
         }
     }
 }
@@ -621,8 +636,8 @@ final class WattIntentHost: NSObject, @unchecked Sendable {
     }
 
     @MainActor
-    func readingEntity() -> WattPowerReadingEntity {
-        GetPowerReadingIntent.entity(from: WattIntentSession.currentReading(), precision: WattIntentSession.precision)
+    func readingSummary() -> String {
+        WattIntentSession.currentReading().summary(precision: WattIntentSession.precision)
     }
 
     @MainActor
@@ -784,17 +799,15 @@ enum WattIntentBridge {
         return (try? await exchange(WattIntentRequest(action: "probe"), timeout: 1))?.intentInFlight == true
     }
 
-    static func forwardReading() async throws -> WattPowerReadingEntity? {
+    static func forwardReading() async throws -> String? {
         guard liveKeeperPID() != nil else { return nil }
         let reply = try await exchange(WattIntentRequest(action: "reading"), timeout: 2)
-        guard reply.ok, let summary = reply.summary, let available = reply.available, let state = reply.batteryState else {
+        guard reply.ok, let summary = reply.summary, reply.available != nil, reply.batteryState != nil else {
             WattIntentLog.notice("reading forward failed pid=\(getpid())")
             throw WattIntentFailure.notRunning
         }
         WattIntentLog.notice("reading via=keeper summary=\(summary)")
-        return WattPowerReadingEntity(id: available ? "current" : "unavailable", available: available,
-                                      systemDrawWatts: reply.systemDrawWatts, chargerWatts: reply.chargerWatts,
-                                      batteryPercentage: reply.batteryPercentage, batteryState: state, summary: summary)
+        return summary
     }
 
     static func forwardOpen(_ destination: AppDestination) async throws -> Bool {

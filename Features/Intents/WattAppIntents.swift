@@ -8,42 +8,6 @@ extension WattIntentFailure: CustomLocalizedStringResourceConvertible {
     }
 }
 
-extension WattIntentSession {
-    static func readingEntity() -> WattPowerReadingEntity {
-        GetPowerReadingIntent.entity(from: currentReading(), precision: precision)
-    }
-}
-
-/// Shortcuts value for one panel snapshot. Missing watts stay nil.
-struct WattPowerReadingEntity: AppEntity, Equatable, Sendable {
-    static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Power Reading")
-    static let defaultQuery = WattPowerReadingQuery()
-
-    var id: String
-    var available: Bool
-    var systemDrawWatts: Double?
-    var chargerWatts: Double?
-    var batteryPercentage: Int?
-    var batteryState: String
-    var summary: String
-
-    var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(title: LocalizedStringResource(stringLiteral: summary))
-    }
-}
-
-struct WattPowerReadingQuery: EntityQuery {
-    func entities(for identifiers: [WattPowerReadingEntity.ID]) async throws -> [WattPowerReadingEntity] {
-        let entity = await WattIntentSession.readingEntity()
-        guard identifiers.contains(entity.id) else { return [] }
-        return [entity]
-    }
-
-    func suggestedEntities() async throws -> [WattPowerReadingEntity] {
-        []
-    }
-}
-
 /// The Settings "Show" choices. Raw values are the labels already used in the menu.
 enum WattMenuBarDisplay: String, AppEnum, CaseIterable {
     case batteryDelta = "Battery Delta"
@@ -104,25 +68,17 @@ struct GetPowerReadingIntent: AppIntent {
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
-    static func entity(from reading: WattPowerReading, precision: WattPrecision = .decimal) -> WattPowerReadingEntity {
-        WattPowerReadingEntity(id: reading.available ? "current" : "unavailable",
-                               available: reading.available,
-                               systemDrawWatts: reading.systemDrawWatts,
-                               chargerWatts: reading.chargerWatts,
-                               batteryPercentage: reading.batteryPercentage,
-                               batteryState: reading.batteryState,
-                               summary: reading.summary(precision: precision))
-    }
-
-    func perform() async throws -> some IntentResult & ReturnsValue<WattPowerReadingEntity> & ProvidesDialog {
+    /// A plain string. An `AppEntity` result makes `shortcuts run` wait for a
+    /// snippet the background runner never shows, so the process does not exit.
+    func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
         WattIntentHost.registerIfNeeded()
-        let entity = try await WattIntentSession.handlingIntent(action: "reading") {
+        let summary = try await WattIntentSession.handlingIntent(action: "reading") {
             if let forwarded = try await WattIntentBridge.forwardReading() { return forwarded }
-            let entity = WattIntentHost.shared.readingEntity()
-            WattIntentLog.notice("reading via=local summary=\(entity.summary)")
-            return entity
+            let summary = WattIntentHost.shared.readingSummary()
+            WattIntentLog.notice("reading via=local summary=\(summary)")
+            return summary
         }
-        return .result(value: entity, dialog: IntentDialog(stringLiteral: entity.summary))
+        return .result(value: summary, dialog: IntentDialog(stringLiteral: summary))
     }
 }
 
@@ -223,7 +179,7 @@ struct CheckForUpdatesIntent: AppIntent {
         let outcome = try await WattIntentSession.handlingIntent(action: "checkForUpdates") {
             if let forwarded = try await WattIntentBridge.forwardCheck() { return forwarded }
             let outcome = try WattIntentHost.shared.checkForUpdates()
-            WattIntentLog.notice("check for updates via=local started=\(outcome.started)")
+            WattIntentLog.notice("check for updates via=local started=\(outcome.started) status=\(outcome.message)")
             return outcome
         }
         return .result(dialog: IntentDialog(stringLiteral: outcome.message))

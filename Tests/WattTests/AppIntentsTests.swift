@@ -25,15 +25,8 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(reading.chargerWatts, 65)
         XCTAssertEqual(reading.batteryPercentage, 64)
         XCTAssertEqual(reading.batteryState, "Charging")
-        let entity = GetPowerReadingIntent.entity(from: reading)
-        XCTAssertEqual(entity.id, "current")
-        XCTAssertEqual(entity.systemDrawWatts, 22.9)
-        XCTAssertEqual(entity.chargerWatts, 65)
-        XCTAssertEqual(entity.batteryPercentage, 64)
-        XCTAssertEqual(entity.summary, "System draw 22.9 W, charger 65.0 W, battery 64%, Charging.")
+        XCTAssertEqual(reading.summary(), "System draw 22.9 W, charger 65.0 W, battery 64%, Charging.")
         _ = try await GetPowerReadingIntent().perform()
-        let resolved = try await WattPowerReadingQuery().entities(for: ["current"])
-        XCTAssertEqual(resolved.first?.summary, entity.summary)
         XCTAssertEqual(telemetry.samples, 0)
         XCTAssertFalse(store.isRefreshing)
     }
@@ -46,10 +39,6 @@ final class AppIntentsTests: XCTestCase {
         clock.advance(by: PowerReadingStore.statusMaximumAge + 0.01)
         assertUnavailable(WattIntentSession.currentReading())
         _ = try await GetPowerReadingIntent().perform()
-        let resolved = try await WattPowerReadingQuery().entities(for: ["unavailable"])
-        XCTAssertEqual(resolved.first?.summary, WattPowerReading.unavailableLabel)
-        XCTAssertNil(resolved.first?.systemDrawWatts)
-        XCTAssertNil(resolved.first?.chargerWatts)
         XCTAssertEqual(telemetry.samples, 0)
     }
 
@@ -102,6 +91,27 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertNil(zero.batteryPercentage)
         XCTAssertEqual(zero.batteryState, "No battery")
         XCTAssertEqual(zero.summary(), "System draw 0.0 W, charger Unavailable, battery Unavailable, No battery.")
+
+        let idleOnAC = PowerReading(mode: .chargerInput, watts: 0, batteryPercentage: 80,
+                                    detail: "Power source: AC",
+                                    timestamp: Date(timeIntervalSince1970: 1_700_000_000),
+                                    batteryState: .unknown,
+                                    capabilities: .init(battery: .available, charger: .available, systemDraw: .available),
+                                    freshness: .fresh, source: .system, chargerWatts: 24, systemWatts: 18)
+        XCTAssertEqual(StatusPanelModel(reading: idleOnAC).title, "Not charging")
+        let ac = WattPowerReading.make(from: idleOnAC)
+        XCTAssertEqual(ac.batteryState, "Not charging")
+        XCTAssertEqual(ac.systemDrawWatts, 18)
+        XCTAssertEqual(ac.chargerWatts, 24)
+        XCTAssertEqual(ac.batteryPercentage, 80)
+        XCTAssertEqual(ac.summary(), "System draw 18.0 W, charger 24.0 W, battery 80%, Not charging.")
+
+        let unclassified = PowerReading(mode: .chargerInput, watts: nil,
+                                        timestamp: Date(timeIntervalSince1970: 1_700_000_000),
+                                        batteryState: .unknown,
+                                        capabilities: .init(battery: .available, charger: .available, systemDraw: .available),
+                                        freshness: .fresh, source: .system, chargerWatts: 10, systemWatts: 10)
+        XCTAssertEqual(WattPowerReading.make(from: unclassified).batteryState, "Unknown")
         let idleStore = PowerReadingStore(currentReading: idle, clock: FakeWattClock(now: idle.timestamp))
         install(store: idleStore)
         XCTAssertEqual(WattIntentSession.currentReading().systemDrawWatts, 0)
@@ -292,6 +302,19 @@ final class AppIntentsTests: XCTestCase {
         WattIntentSession.endIntent()
     }
 
+    func testFinderReopenWithoutASenderOpensSettingsAfterTheQuietWait() async {
+        var shown = 0
+        WattIntentSession.reopenQuietNanoseconds = 20_000_000
+        WattIntentSession.reopenHasAppleEvent = { false }
+        WattIntentSession.reopenSenderLookup = { nil }
+        WattIntentSession.frontmostBundleIdentifier = { nil }
+        WattIntentSession.handleReopen { shown += 1 }
+        XCTAssertEqual(WattIntentSession.decision(for: nil, hasAppleEvent: false, frontmost: nil), .waitForIntent)
+        XCTAssertEqual(shown, 0)
+        try? await Task.sleep(nanoseconds: 80_000_000)
+        XCTAssertEqual(shown, 1)
+    }
+
     func testOpenStatusPanelShowsThePopoverAndLeavesItOpen() throws {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .runningDefaults
@@ -311,13 +334,59 @@ final class AppIntentsTests: XCTestCase {
 
     func testUpdateIntentWithoutAServiceDoesNotInventACheck() async throws {
         let router = AppRouter()
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
         install(router: router)
         let outcome = try WattIntentSession.checkForUpdates()
         XCTAssertFalse(outcome.started)
         XCTAssertEqual(outcome.message, "Updates aren’t configured in this build.")
         XCTAssertEqual(router.updates.state, .idle)
+        XCTAssertTrue(routes.isEmpty)
         _ = try await CheckForUpdatesIntent().perform()
         XCTAssertEqual(router.updates.state, .idle)
+        XCTAssertTrue(routes.isEmpty)
+    }
+
+    func testUpdateIntentShowsACheckThatIsAlreadyRunning() async throws {
+        let service = SuspendedUpdateSpy()
+        let router = AppRouter(updateService: service)
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
+        install(router: router)
+        WattIntentSession.notePresenterReady()
+        XCTAssertTrue(router.checkForUpdatesInBackground(isEnabled: { true }, finished: { _ in }))
+        routes.removeAll()
+        let outcome = try WattIntentSession.checkForUpdates()
+        XCTAssertFalse(outcome.started)
+        XCTAssertEqual(outcome.message, "Checking for updates.")
+        XCTAssertFalse(outcome.message.localizedCaseInsensitiveContains("couldn"))
+        XCTAssertEqual(routes, [.softwareUpdate])
+        XCTAssertEqual(router.updates.state, .checking)
+        service.resume()
+        for _ in 0..<50 where !router.upToDatePresented { await Task.yield() }
+        XCTAssertTrue(router.upToDatePresented)
+        XCTAssertEqual(service.downloads, 0)
+        XCTAssertEqual(service.installs, 0)
+    }
+
+    func testUpdateIntentBringsAnExistingOfferForward() async throws {
+        let service = IntentUpdateSpy()
+        service.nextCheck = .success(.some("9.9"))
+        let router = AppRouter(updateService: service)
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
+        install(router: router)
+        WattIntentSession.notePresenterReady()
+        XCTAssertTrue(router.checkForUpdatesNow())
+        for _ in 0..<50 where router.updates.state != .available(version: "9.9") { await Task.yield() }
+        XCTAssertEqual(router.updates.state, .available(version: "9.9"))
+        routes.removeAll()
+        let outcome = try WattIntentSession.checkForUpdates()
+        XCTAssertFalse(outcome.started)
+        XCTAssertEqual(outcome.message, "Watt? 9.9 is out")
+        XCTAssertEqual(routes, [.softwareUpdate])
+        XCTAssertEqual(service.downloads, 0)
+        XCTAssertEqual(service.installs, 0)
     }
 
     func testReopenDoesNotOpenSettingsWhileAnIntentIsRunning() {
@@ -576,12 +645,6 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(reading.batteryState, WattPowerReading.unavailableLabel, file: file, line: line)
         XCTAssertEqual(reading.summary(), WattPowerReading.unavailableLabel, file: file, line: line)
         XCTAssertFalse(reading.summary().contains("0"), file: file, line: line)
-        let entity = GetPowerReadingIntent.entity(from: reading)
-        XCTAssertFalse(entity.available, file: file, line: line)
-        XCTAssertNil(entity.systemDrawWatts, file: file, line: line)
-        XCTAssertNil(entity.chargerWatts, file: file, line: line)
-        XCTAssertNil(entity.batteryPercentage, file: file, line: line)
-        XCTAssertEqual(entity.summary, WattPowerReading.unavailableLabel, file: file, line: line)
     }
 
     private func repoRoot() -> URL {
@@ -661,15 +724,16 @@ private final class IntentUpdateSpy: UpdateService {
     var initiators: [UpdateCheckInitiator] = []
     var downloads = 0
     var installs = 0
+    var nextCheck: ServiceOutcome<String?> = .success(nil)
 
     func check() async -> ServiceOutcome<String?> {
         initiators.append(.automatic)
-        return .success(nil)
+        return nextCheck
     }
 
     func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?> {
         initiators.append(initiator)
-        return .success(nil)
+        return nextCheck
     }
 
     func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
