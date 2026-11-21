@@ -1668,10 +1668,16 @@ class PagesSiteTests(unittest.TestCase):
         self.assertIn(pitch, html)
         self.assertIn('brew install --cask ben-ranford/tap/watt', html)
         self.assertIn('https://github.com/ben-ranford/watt/releases/latest', html)
-        self.assertIn('Releases are Developer ID signed and notarised.', html)
-        self.assertNotIn('Control-click', html)
-        self.assertNotIn('Open Anyway', html)
-        self.assertNotIn('com.apple.quarantine', html)
+        self.assertIn('move Watt into Applications', html)
+        for jargon in (
+            'Developer ID', 'notaris', 'SwiftUI', 'Ed25519', 'powermetrics',
+            'SiteScreenshot', 'Control-click', 'Open Anyway', 'com.apple.quarantine',
+            'Gatekeeper', 'sample power', 'root helper',
+        ):
+            self.assertNotIn(jargon.lower(), html.lower(), jargon)
+        compare = pages['compare.html']
+        for jargon in ('Developer ID', 'SwiftUI', 'Ed25519', 'powermetrics', 'Gatekeeper'):
+            self.assertNotIn(jargon.lower(), compare.lower(), jargon)
         self.assertIn('https://github.com/ben-ranford/watt/blob/main/LICENSE', html)
         self.assertIn('https://github.com/ben-ranford/watt"', html)
         self.assertIn('og:image', html)
@@ -1697,9 +1703,27 @@ class PagesSiteTests(unittest.TestCase):
             'settings-light.png', 'settings-dark.png',
         ):
             self.assertIn(f'docs/screenshots/{name}', readme)
-        self.assertLess(readme.find('# watt'), readme.find('docs/screenshots/menu-bar-light.png'))
-        self.assertIn('## Security', readme)
+            self.assertTrue((ROOT / 'docs/screenshots' / name).is_file(), name)
+        self.assertIn('docs/icon.png', readme)
+        self.assertTrue((ROOT / 'docs/icon.png').is_file())
+        self.assertLess(readme.find('>Watt?</h1>'), readme.find('docs/screenshots/panel-light.png'))
+        self.assertIn(pitch, readme)
+        self.assertIn('## Support', readme)
+        self.assertIn('https://github.com/sponsors/ben-ranford', readme)
         self.assertIn('brew install --cask ben-ranford/tap/watt', readme)
+        self.assertIn('CONTRIBUTING.md', readme)
+        self.assertIn('prefers-color-scheme: dark', readme)
+        for jargon in (
+            'SwiftUI', 'SiteScreenshot', 'Developer ID', 'notaris', 'Ed25519',
+            'cdhash', 'powermetrics', 'IOKit', 'xcodebuild', 'hardened runtime',
+            'Gatekeeper', 'quarantine', 'LSUIElement',
+        ):
+            self.assertNotIn(jargon.lower(), readme.lower(), jargon)
+        contributing = (ROOT / 'CONTRIBUTING.md').read_text(encoding='utf-8')
+        self.assertIn('## Security', contributing)
+        self.assertIn('SiteScreenshotTests', contributing)
+        self.assertIn('Developer ID', contributing)
+        self.assertIn('security/advisories/new', contributing)
 
     def test_release_and_docs_deploys_both_keep_updates(self) -> None:
         import yaml
