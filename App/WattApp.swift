@@ -1614,7 +1614,7 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
         // popover shown yet. A retry can still bring it on screen.
         router.statusPanelPresented = true
         powerStore.refreshComponentSamplingNeed()
-        WattIntentLog.notice("status panel shown=true pid=\(getpid())")
+        WattIntentLog.notice("status panel shown=\(popover.isShown) pid=\(getpid())")
     }
 
     private func scheduleStatusPanelRetry(_ mayRetry: Bool) {
