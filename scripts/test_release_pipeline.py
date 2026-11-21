@@ -2042,6 +2042,9 @@ class DeveloperIDScriptTests(unittest.TestCase):
             if 'codesign --force' in line:
                 self.assertNotIn('--deep', line)
         self.assertIn('codesign --verify --deep --strict', text)
+        self.assertIn('readonly WATT_DEVELOPER_ID_TEAM=', text)
+        self.assertNotIn('WATT_DEVELOPER_ID_TEAM="${WATT_DEVELOPER_ID_TEAM}"', text)
+        self.assertIn('WATT_EXPECTED_TEAM="${WATT_DEVELOPER_ID_TEAM}"', text)
 
     def test_import_refuses_forks_and_pull_request_target_without_printing_secrets(self) -> None:
         secret = 'super-secret-password'

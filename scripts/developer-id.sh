@@ -185,13 +185,15 @@ PY
   # Search list only. Leave the login keychain as the default so ad-hoc test
   # builds in the same job do not start looking up the temporary keychain.
   security list-keychains -d user -s "${keychain}" ${previous} >/dev/null
-  WATT_KEYCHAIN_PATH="${keychain}" WATT_IDENTITY_FILE="${identity_file}" WATT_DEVELOPER_ID_TEAM="${WATT_DEVELOPER_ID_TEAM}" python3 - <<'PY'
+  # Do not prefix-assign WATT_DEVELOPER_ID_TEAM. It is readonly, and bash
+  # rejects that assignment before python starts.
+  WATT_KEYCHAIN_PATH="${keychain}" WATT_IDENTITY_FILE="${identity_file}" WATT_EXPECTED_TEAM="${WATT_DEVELOPER_ID_TEAM}" python3 - <<'PY'
 import os
 import subprocess
 import sys
 
 keychain = os.environ["WATT_KEYCHAIN_PATH"]
-team = os.environ["WATT_DEVELOPER_ID_TEAM"]
+team = os.environ["WATT_EXPECTED_TEAM"]
 found = subprocess.run(
     ["security", "find-identity", "-v", "-p", "codesigning", keychain],
     capture_output=True,
