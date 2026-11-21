@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.3.0](https://github.com/ben-ranford/watt/compare/v1.2.0...v1.3.0) (2026-11-21)
+
+
+### Features
+
+* show adapter wattage and time remaining in the panel ([#56](https://github.com/ben-ranford/watt/issues/56)) ([01a3681](https://github.com/ben-ranford/watt/commit/01a36818e320fbb0a90049e26e3bf518c31bca60))
+* stage update rollouts and show what changed once ([#54](https://github.com/ben-ranford/watt/issues/54)) ([9149256](https://github.com/ben-ranford/watt/commit/91492565926b0ebbbd18061cb81b6490eb9a1253))
+* subtle UI motion ([#53](https://github.com/ben-ranford/watt/issues/53)) ([b25e899](https://github.com/ben-ranford/watt/commit/b25e89979dec45439f685f42f51530ddb942fe1d))
+
+
+### Bug Fixes
+
+* render release note headings and bullets on separate lines ([#59](https://github.com/ben-ranford/watt/issues/59)) ([0573c4d](https://github.com/ben-ranford/watt/commit/0573c4d7bea6ac5302d1004571b23906f5bf3208))
+
+
+### Performance Improvements
+
+* cut idle sampling while the menu bar keeps its cadence ([#57](https://github.com/ben-ranford/watt/issues/57)) ([8f89387](https://github.com/ben-ranford/watt/commit/8f89387b38468f716e4f6bef6a23e53f4cdc279c))
+
 ## [1.2.0](https://github.com/ben-ranford/watt/compare/v1.1.1...v1.2.0) (2026-11-11)
 
 
