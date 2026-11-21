@@ -161,6 +161,9 @@ final class AppRouter: ObservableObject {
     private let updateService: (any UpdateService)?
     let updateConfigurationFailure: ServiceFailure?
     private var updateCheck: Task<Void, Never>?
+    /// Identifies the task in `updateCheck`. A cancelled check changes generation,
+    /// so the task clears itself by this token when it actually ends.
+    private var updateCheckToken: UUID?
     /// A check that has not finished by this deadline is failed, so the menu
     /// item and the Software Update window cannot sit on Checking forever.
     /// Tests shorten it. Zero disables the deadline.
@@ -844,18 +847,23 @@ final class AppRouter: ObservableObject {
         checkFailurePresentation = nil
         dismissUpToDate()
         inFlightCheckIsAutomatic = true
+        let token = UUID()
+        updateCheckToken = token
         updateCheck = Task { [weak self] in
             let outcome = await updateService.check(initiator: .automatic)
-            self?.finishBackgroundCheck(outcome, generation: generation, isEnabled: isEnabled, finished: finished)
+            self?.finishBackgroundCheck(outcome, generation: generation, token: token, isEnabled: isEnabled, finished: finished)
         }
         armUpdateCheckTimeout(generation: generation)
         return true
     }
 
-    private func finishBackgroundCheck(_ outcome: ServiceOutcome<String?>, generation: UUID,
+    private func finishBackgroundCheck(_ outcome: ServiceOutcome<String?>, generation: UUID, token: UUID,
                                        isEnabled: @MainActor () -> Bool,
                                        finished: @MainActor (ServiceOutcome<String?>) -> Void) {
-        if updates.generation == generation { updateCheck = nil }
+        if updateCheckToken == token {
+            updateCheck = nil
+            updateCheckToken = nil
+        }
         inFlightCheckIsAutomatic = false
         let surface = surfaceInFlightCheck
         surfaceInFlightCheck = false
@@ -1021,10 +1029,17 @@ final class AppRouter: ObservableObject {
         checkFailurePresentation = nil
         inFlightCheckIsAutomatic = false
         surfaceInFlightCheck = false
+        let token = UUID()
+        updateCheckToken = token
         updateCheck = Task { [weak self] in
             let outcome = await updateService.check(initiator: .manual)
             guard let self else { return }
-            defer { if self.updates.generation == generation { self.updateCheck = nil } }
+            defer {
+                if self.updateCheckToken == token {
+                    self.updateCheck = nil
+                    self.updateCheckToken = nil
+                }
+            }
             guard self.updates.generation == generation, !Task.isCancelled else { return }
             guard self.updates.state == .checking else { return }
             guard self.applyCheckedOffer(outcome, generation: generation) != nil else { return }
@@ -1061,6 +1076,7 @@ final class AppRouter: ObservableObject {
         let showResult = surfaceInFlightCheck || !inFlightCheckIsAutomatic
         updateCheck?.cancel()
         updateCheck = nil
+        updateCheckToken = nil
         inFlightCheckIsAutomatic = false
         surfaceInFlightCheck = false
         guard updates.accept(.failed(.timedOut, nil), generation: generation) else { return }
@@ -1075,9 +1091,6 @@ final class AppRouter: ObservableObject {
         guard updates.state == .checking else { return false }
         let saved = updates.cancel()
         updateCheck?.cancel()
-        // renewGeneration makes the task's own cleanup skip this property.
-        // Clear it here so another check can start once the cancelled state is saved.
-        updateCheck = nil
         return saved
     }
 
