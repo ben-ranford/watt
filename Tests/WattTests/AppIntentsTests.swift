@@ -389,6 +389,76 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(service.installs, 0)
     }
 
+    func testFinishedUpdateCheckIsNotExpired() async throws {
+        let service = IntentUpdateSpy()
+        let router = AppRouter(updateService: service)
+        router.updateCheckTimeoutNanoseconds = 200_000_000
+        install(router: router)
+        WattIntentSession.notePresenterReady()
+        XCTAssertTrue(router.checkForUpdatesNow())
+        for _ in 0..<50 where !router.upToDatePresented { await Task.yield() }
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        XCTAssertTrue(router.upToDatePresented)
+        XCTAssertEqual(router.updates.state, .idle)
+        XCTAssertFalse(router.couldntCheckPresented)
+    }
+
+    func testHungManualCheckTimesOutAndCanBeCheckedAgain() async throws {
+        let service = HangingUpdateSpy()
+        let router = AppRouter(updateService: service)
+        router.updateCheckTimeoutNanoseconds = 30_000_000
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
+        install(router: router)
+        WattIntentSession.notePresenterReady()
+        XCTAssertTrue(router.checkForUpdatesNow())
+        XCTAssertEqual(router.updates.state, .checking)
+        XCTAssertFalse(router.canCheckForUpdates)
+        routes.removeAll()
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        XCTAssertEqual(router.updates.state, .failed(.timedOut, nil))
+        XCTAssertTrue(router.couldntCheckPresented)
+        XCTAssertEqual(router.updateStatusSummary, CouldntCheckAlert.message(for: .timedOut))
+        XCTAssertFalse(router.updateStatusSummary.localizedCaseInsensitiveContains("checking for updates"))
+        XCTAssertTrue(router.canCheckForUpdates)
+        XCTAssertEqual(routes, [.softwareUpdate])
+        service.hang = false
+        let outcome = try WattIntentSession.checkForUpdates()
+        XCTAssertTrue(outcome.started)
+        XCTAssertEqual(outcome.message, "Checking for updates.")
+        for _ in 0..<50 where !router.upToDatePresented { await Task.yield() }
+        XCTAssertTrue(router.upToDatePresented)
+        XCTAssertEqual(service.downloads, 0)
+        XCTAssertEqual(service.installs, 0)
+    }
+
+    func testHungAutomaticCheckTimesOutWithoutOpeningAWindow() async throws {
+        let service = HangingUpdateSpy()
+        let router = AppRouter(updateService: service)
+        router.updateCheckTimeoutNanoseconds = 30_000_000
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
+        install(router: router)
+        XCTAssertTrue(router.checkForUpdatesInBackground(isEnabled: { true }, finished: { _ in }))
+        routes.removeAll()
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        XCTAssertEqual(router.updates.state, .failed(.timedOut, nil))
+        XCTAssertFalse(router.couldntCheckPresented)
+        XCTAssertTrue(routes.isEmpty)
+        XCTAssertTrue(router.canCheckForUpdates)
+        service.hang = false
+    }
+
+    func testStatusPanelRetriesUntilTheButtonIsOnScreen() {
+        XCTAssertEqual(StatusPanelShowPlan.beforeShow(hasButton: false, buttonOnScreen: false, mayRetry: true), .retry)
+        XCTAssertEqual(StatusPanelShowPlan.beforeShow(hasButton: true, buttonOnScreen: false, mayRetry: true), .retry)
+        XCTAssertEqual(StatusPanelShowPlan.beforeShow(hasButton: true, buttonOnScreen: true, mayRetry: false), .show)
+        XCTAssertEqual(StatusPanelShowPlan.beforeShow(hasButton: false, buttonOnScreen: false, mayRetry: false), .unavailable)
+        XCTAssertEqual(StatusPanelShowPlan.afterShow(shown: false, mayRetry: true), .retry)
+        XCTAssertEqual(StatusPanelShowPlan.afterShow(shown: true, mayRetry: false), .show)
+        XCTAssertEqual(StatusPanelShowPlan.afterShow(shown: false, mayRetry: false), .unavailable)
+    }
+
     func testReopenDoesNotOpenSettingsWhileAnIntentIsRunning() {
         let delegate = WattApplicationDelegate()
         var reopens = 0
@@ -682,6 +752,38 @@ private final class CountingTelemetry: TelemetryService {
         samples += 1
         return .failure(.disconnected)
     }
+}
+
+@MainActor
+private final class HangingUpdateSpy: UpdateService {
+    var hang = true
+    var downloads = 0
+    var installs = 0
+
+    func check() async -> ServiceOutcome<String?> { await check(initiator: .automatic) }
+
+    func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?> {
+        while hang {
+            if Task.isCancelled { return .failure(.cancelled) }
+            try? await Task.sleep(nanoseconds: 5_000_000)
+        }
+        if Task.isCancelled { return .failure(.cancelled) }
+        return .success(nil)
+    }
+
+    func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
+        downloads += 1
+        return .failure(.unknownStatus)
+    }
+
+    func install(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
+        installs += 1
+        return .failure(.unknownStatus)
+    }
+
+    func recover(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
+    func cancel(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
+    func discard(receipt: OperationReceipt) async -> ServiceOutcome<OperationReceipt> { .failure(.unknownStatus) }
 }
 
 @MainActor

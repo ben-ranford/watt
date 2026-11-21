@@ -68,9 +68,10 @@ struct GetPowerReadingIntent: AppIntent {
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
-    /// A plain string. An `AppEntity` result makes `shortcuts run` wait for a
-    /// snippet the background runner never shows, so the process does not exit.
-    func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
+    /// A plain string and no dialog. `shortcuts run` pauses until an alert or
+    /// a requested value is dismissed, and an `AppEntity` never produces that
+    /// dismissal in a headless run.
+    func perform() async throws -> some IntentResult & ReturnsValue<String> {
         WattIntentHost.registerIfNeeded()
         let summary = try await WattIntentSession.handlingIntent(action: "reading") {
             if let forwarded = try await WattIntentBridge.forwardReading() { return forwarded }
@@ -78,7 +79,7 @@ struct GetPowerReadingIntent: AppIntent {
             WattIntentLog.notice("reading via=local summary=\(summary)")
             return summary
         }
-        return .result(value: summary, dialog: IntentDialog(stringLiteral: summary))
+        return .result(value: summary)
     }
 }
 
@@ -174,7 +175,7 @@ struct CheckForUpdatesIntent: AppIntent {
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
+    func perform() async throws -> some IntentResult & ReturnsValue<String> {
         WattIntentHost.registerIfNeeded()
         let outcome = try await WattIntentSession.handlingIntent(action: "checkForUpdates") {
             if let forwarded = try await WattIntentBridge.forwardCheck() { return forwarded }
@@ -182,7 +183,7 @@ struct CheckForUpdatesIntent: AppIntent {
             WattIntentLog.notice("check for updates via=local started=\(outcome.started) status=\(outcome.message)")
             return outcome
         }
-        return .result(dialog: IntentDialog(stringLiteral: outcome.message))
+        return .result(value: outcome.message)
     }
 }
 

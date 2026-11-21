@@ -161,6 +161,10 @@ final class AppRouter: ObservableObject {
     private let updateService: (any UpdateService)?
     let updateConfigurationFailure: ServiceFailure?
     private var updateCheck: Task<Void, Never>?
+    /// A check that has not finished by this deadline is failed, so the menu
+    /// item and the Software Update window cannot sit on Checking forever.
+    /// Tests shorten it. Zero disables the deadline.
+    var updateCheckTimeoutNanoseconds: UInt64 = 75_000_000_000
     /// The in-flight check was started by the scheduler, which stays quiet.
     /// A shortcut can ask that result to use the menu's up-to-date or available UI.
     private var inFlightCheckIsAutomatic = false
@@ -844,13 +848,14 @@ final class AppRouter: ObservableObject {
             let outcome = await updateService.check(initiator: .automatic)
             self?.finishBackgroundCheck(outcome, generation: generation, isEnabled: isEnabled, finished: finished)
         }
+        armUpdateCheckTimeout(generation: generation)
         return true
     }
 
     private func finishBackgroundCheck(_ outcome: ServiceOutcome<String?>, generation: UUID,
                                        isEnabled: @MainActor () -> Bool,
                                        finished: @MainActor (ServiceOutcome<String?>) -> Void) {
-        updateCheck = nil
+        if updates.generation == generation { updateCheck = nil }
         inFlightCheckIsAutomatic = false
         let surface = surfaceInFlightCheck
         surfaceInFlightCheck = false
@@ -1019,8 +1024,9 @@ final class AppRouter: ObservableObject {
         updateCheck = Task { [weak self] in
             let outcome = await updateService.check(initiator: .manual)
             guard let self else { return }
-            defer { self.updateCheck = nil }
-            guard !Task.isCancelled else { return }
+            defer { if self.updates.generation == generation { self.updateCheck = nil } }
+            guard self.updates.generation == generation, !Task.isCancelled else { return }
+            guard self.updates.state == .checking else { return }
             guard self.applyCheckedOffer(outcome, generation: generation) != nil else { return }
             if case .success(let version?) = outcome, self.updates.installFutureUpdatesAutomatically,
                self.installOfferedUpdate(version: version, generation: self.updates.generation, automaticUpdates: true) {
@@ -1033,8 +1039,34 @@ final class AppRouter: ObservableObject {
                 self.checkFailurePresentation = CheckFailurePresentation(id: UUID(), generation: generation, reason: reason)
             }
         }
+        armUpdateCheckTimeout(generation: generation)
         present(.softwareUpdate)
         return true
+    }
+
+    private func armUpdateCheckTimeout(generation: UUID) {
+        let timeout = updateCheckTimeoutNanoseconds
+        guard timeout > 0 else { return }
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: timeout)
+            self?.expireUpdateCheck(generation: generation)
+        }
+    }
+
+    /// Moves a check that never finished out of `.checking`. A silent automatic
+    /// check stays quiet. A manual check, or one the user asked to see, shows
+    /// the existing couldn’t-check alert.
+    func expireUpdateCheck(generation: UUID) {
+        guard updates.generation == generation, updates.state == .checking else { return }
+        let showResult = surfaceInFlightCheck || !inFlightCheckIsAutomatic
+        updateCheck?.cancel()
+        updateCheck = nil
+        inFlightCheckIsAutomatic = false
+        surfaceInFlightCheck = false
+        guard updates.accept(.failed(.timedOut, nil), generation: generation) else { return }
+        guard showResult else { return }
+        checkFailurePresentation = CheckFailurePresentation(id: UUID(), generation: generation, reason: .timedOut)
+        present(.softwareUpdate)
     }
 
     /// Invalidate before signalling cancellation, including non-cooperative services.

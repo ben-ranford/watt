@@ -136,8 +136,13 @@ private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @un
         let session = self.session; self.session = nil
         timer?.cancel(); timer = nil
         lock.unlock()
-        session?.invalidateAndCancel()
+        // Resume before tearing the session down. invalidateAndCancel waits for
+        // the delegate queue, so calling it from a delegate method never returns
+        // and the check stays in .checking.
         continuation.resume(with: result)
+        if let session {
+            DispatchQueue.global().async { session.invalidateAndCancel() }
+        }
     }
     func urlSession(_ session: URLSession, task: URLSessionTask,
                     willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest,
