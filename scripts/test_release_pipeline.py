@@ -514,9 +514,21 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn('homebrew-tap-deploy-key', delete['run'])
         self.assertNotIn('HOMEBREW_TAP_DEPLOY_KEY', delete['run'])
         pages = workflow['jobs']['pages']
-        self.assertEqual(pages['permissions'], {'pages': 'write', 'id-token': 'write'})
-        self.assertEqual(pages['environment']['name'], 'github-pages')
+        self.assertEqual(pages['permissions'], {'actions': 'write', 'pages': 'write'})
+        self.assertNotIn('environment', pages)
+        self.assertNotIn('concurrency', pages)
         self.assertEqual(pages['needs'], ['release-please', 'build'])
+        self.assertEqual(pages['outputs']['deploy'], '${{ steps.stage.outputs.deploy }}')
+        pages_deploy = workflow['jobs']['pages-deploy']
+        self.assertEqual(pages_deploy['needs'], 'pages')
+        self.assertEqual(
+            pages_deploy['if'],
+            "needs.pages.outputs.deploy == 'true' && needs.pages.result == 'success'",
+        )
+        self.assertEqual(pages_deploy['permissions'], {'pages': 'write', 'id-token': 'write'})
+        self.assertEqual(pages_deploy['environment']['name'], 'github-pages')
+        self.assertEqual(pages_deploy['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
+        self.assertEqual([step.get('name') for step in pages_deploy['steps']], ['Deploy to GitHub Pages'])
         seen = set()
 
         def walk(node: object) -> None:
@@ -1733,9 +1745,9 @@ class PagesSiteTests(unittest.TestCase):
         self.assertLess(names.index('Stage manifest and tar'), names.index('Stage the landing page'))
         self.assertLess(names.index('Stage the landing page'), names.index('Check the Pages artifact'))
         self.assertLess(names.index('Check the Pages artifact'), names.index('Upload Pages artifact'))
-        self.assertLess(names.index('Upload Pages artifact'), names.index('Deploy to GitHub Pages'))
+        self.assertNotIn('Deploy to GitHub Pages', names)
         deploy_if = "steps.stage.outputs.deploy == 'true'"
-        for name in ('Stage the landing page', 'Check the Pages artifact', 'Upload Pages artifact', 'Deploy to GitHub Pages'):
+        for name in ('Stage the landing page', 'Check the Pages artifact', 'Upload Pages artifact'):
             step = next(step for step in pages['steps'] if step.get('name') == name)
             self.assertEqual(step.get('if'), deploy_if, name)
         stage = next(step for step in pages['steps'] if step.get('name') == 'Stage the landing page')
@@ -1746,7 +1758,11 @@ class PagesSiteTests(unittest.TestCase):
         self.assertNotIn('preserve-pages-updates.sh', '\n'.join(
             step.get('run', '') for step in pages['steps'] if isinstance(step.get('run'), str)
         ))
-        self.assertEqual(pages['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
+        pages_deploy = release['jobs']['pages-deploy']
+        self.assertEqual(pages_deploy['needs'], 'pages')
+        self.assertEqual(pages_deploy['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
+        self.assertEqual([step.get('uses', '') for step in pages_deploy['steps'] if 'uses' in step][0].split('@')[0], 'actions/deploy-pages')
+        self.assertNotIn('actions/upload-pages-artifact', '\n'.join(step.get('uses', '') for step in pages_deploy['steps']))
 
         workflow = yaml.safe_load((ROOT / '.github/workflows/pages.yml').read_text())
         triggers = workflow.get('on', workflow.get(True))
@@ -1755,19 +1771,30 @@ class PagesSiteTests(unittest.TestCase):
         self.assertEqual(workflow['permissions'], {'contents': 'read'})
         self.assertEqual(workflow['jobs']['verify']['name'], 'Pages artifact')
         self.assertEqual(workflow['jobs']['verify']['steps'][-1]['run'], 'bash scripts/check-pages-artifact.sh')
-        deploy = workflow['jobs']['deploy']
-        self.assertEqual(deploy['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
-        self.assertEqual(deploy['if'], "github.event_name == 'push' && github.ref == 'refs/heads/main'")
-        self.assertEqual(deploy['permissions'], {'contents': 'read', 'pages': 'write', 'id-token': 'write'})
-        self.assertEqual(deploy['environment']['name'], 'github-pages')
-        deploy_names = [step.get('name') for step in deploy['steps']]
-        self.assertLess(deploy_names.index('Preserve published updates'), deploy_names.index('Stage the landing page'))
-        self.assertLess(deploy_names.index('Stage the landing page'), deploy_names.index('Check the Pages artifact'))
-        self.assertLess(deploy_names.index('Check the Pages artifact'), deploy_names.index('Upload Pages artifact'))
-        preserve = next(step for step in deploy['steps'] if step.get('name') == 'Preserve published updates')
+        upload = workflow['jobs']['upload']
+        self.assertEqual(upload['needs'], 'verify')
+        self.assertEqual(upload['if'], "github.event_name == 'push' && github.ref == 'refs/heads/main'")
+        self.assertEqual(upload['permissions'], {'contents': 'read', 'actions': 'write', 'pages': 'write'})
+        self.assertNotIn('environment', upload)
+        upload_names = [step.get('name') for step in upload['steps']]
+        self.assertLess(upload_names.index('Preserve published updates'), upload_names.index('Stage the landing page'))
+        self.assertLess(upload_names.index('Stage the landing page'), upload_names.index('Check the Pages artifact'))
+        self.assertLess(upload_names.index('Check the Pages artifact'), upload_names.index('Upload Pages artifact'))
+        self.assertNotIn('Deploy to GitHub Pages', upload_names)
+        preserve = next(step for step in upload['steps'] if step.get('name') == 'Preserve published updates')
         self.assertEqual(preserve['env']['PAGES_UPDATES_BASE'], 'https://ben-ranford.github.io/watt/updates')
         self.assertNotIn('PAGES_ALLOW_ABSENT', preserve.get('env', {}))
-        for step in workflow['jobs']['verify']['steps'] + deploy['steps']:
+        deploy = workflow['jobs']['deploy']
+        self.assertEqual(deploy['needs'], 'upload')
+        self.assertEqual(
+            deploy['if'],
+            "github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.upload.result == 'success'",
+        )
+        self.assertEqual(deploy['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
+        self.assertEqual(deploy['permissions'], {'pages': 'write', 'id-token': 'write'})
+        self.assertEqual(deploy['environment']['name'], 'github-pages')
+        self.assertEqual([step.get('name') for step in deploy['steps']], ['Deploy to GitHub Pages'])
+        for step in workflow['jobs']['verify']['steps'] + upload['steps'] + deploy['steps']:
             if 'run' in step:
                 self.assertNotIn('${{', step['run'])
             if 'uses' in step:
@@ -2377,14 +2404,25 @@ class RolloutWorkflowTests(unittest.TestCase):
         self.assertNotIn('pull_request_target', triggers)
         self.assertEqual(workflow['permissions'], {'contents': 'read'})
         publish = workflow['jobs']['publish']
-        self.assertEqual(publish['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
-        self.assertEqual(publish['permissions'], {'contents': 'read', 'pages': 'write', 'id-token': 'write'})
+        self.assertNotIn('concurrency', publish)
+        self.assertEqual(publish['permissions'], {'contents': 'read', 'actions': 'write', 'pages': 'write'})
         self.assertEqual(publish['environment']['name'], 'github-pages')
+        self.assertNotIn('url', publish['environment'])
+        self.assertEqual(publish['outputs']['deploy'], '${{ steps.rollout.outputs.deploy }}')
         names = [step.get('name') for step in publish['steps']]
         self.assertLess(names.index('Preserve published updates'), names.index('Re-sign the rollout'))
         self.assertLess(names.index('Re-sign the rollout'), names.index('Stage the landing page'))
         self.assertLess(names.index('Check the Pages artifact'), names.index('Upload Pages artifact'))
-        self.assertLess(names.index('Upload Pages artifact'), names.index('Deploy to GitHub Pages'))
+        self.assertNotIn('Deploy to GitHub Pages', names)
+        rollout_deploy = workflow['jobs']['deploy']
+        self.assertEqual(rollout_deploy['needs'], 'publish')
+        self.assertEqual(
+            rollout_deploy['if'],
+            "needs.publish.outputs.deploy == 'true' && needs.publish.result == 'success'",
+        )
+        self.assertEqual(rollout_deploy['concurrency'], {'group': 'pages', 'cancel-in-progress': False})
+        self.assertEqual(rollout_deploy['environment']['name'], 'github-pages')
+        self.assertEqual([step.get('name') for step in rollout_deploy['steps']], ['Deploy to GitHub Pages'])
         preserve = next(step for step in publish['steps'] if step.get('name') == 'Preserve published updates')
         self.assertEqual(preserve['env']['PAGES_ALLOW_ABSENT'], 'true')
         self.assertEqual(preserve['env']['PAGES_UPDATES_BASE'], 'https://ben-ranford.github.io/watt/updates')
@@ -2393,7 +2431,7 @@ class RolloutWorkflowTests(unittest.TestCase):
         self.assertEqual(resign['env']['WATT_UPDATE_SIGNING_KEY'], '${{ secrets.WATT_UPDATE_SIGNING_KEY }}')
         self.assertNotIn('WATT_UPDATE_SIGNING_KEY', resign['run'])
         self.assertNotIn('${{', resign['run'])
-        for name in ('Stage the landing page', 'Check the Pages artifact', 'Upload Pages artifact', 'Deploy to GitHub Pages'):
+        for name in ('Stage the landing page', 'Check the Pages artifact', 'Upload Pages artifact'):
             step = next(step for step in publish['steps'] if step.get('name') == name)
             self.assertEqual(step.get('if'), "steps.rollout.outputs.deploy == 'true'")
         verify = next(step for step in publish['steps'] if step.get('name') == 'Check the Pages artifact')
