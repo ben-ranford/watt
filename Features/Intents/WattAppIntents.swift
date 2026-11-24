@@ -68,9 +68,9 @@ struct GetPowerReadingIntent: AppIntent {
     static var allowedExecutionTargets: IntentExecutionTargets { .main }
     #endif
 
-    /// A plain string and no dialog. `shortcuts run` pauses until an alert or
-    /// a requested value is dismissed, and an `AppEntity` never produces that
-    /// dismissal in a headless run.
+    /// A plain string and no dialog. A dialog or an `AppEntity` makes
+    /// `shortcuts run` wait for a dismissal a headless run never sends.
+    /// Terminal can still keep the command open after this string is returned.
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
         WattIntentHost.registerIfNeeded()
         let summary = try await WattIntentSession.handlingIntent(action: "reading") {
@@ -164,29 +164,6 @@ struct SetMenuBarDisplayIntent: AppIntent {
     }
 }
 
-struct CheckForUpdatesIntent: AppIntent {
-    static let title: LocalizedStringResource = "Check for Updates"
-    static let description = IntentDescription("Check for an update. Signature and hash verification stay on.")
-    static var openAppWhenRun: Bool { WattIntentActivation.openAppWhenRun }
-    #if compiler(>=6.2)
-    @available(macOS 26.0, *)
-    static var supportedModes: IntentModes { .background }
-    @available(macOS 27.0, *)
-    static var allowedExecutionTargets: IntentExecutionTargets { .main }
-    #endif
-
-    func perform() async throws -> some IntentResult & ReturnsValue<String> {
-        WattIntentHost.registerIfNeeded()
-        let outcome = try await WattIntentSession.handlingIntent(action: "checkForUpdates") {
-            if let forwarded = try await WattIntentBridge.forwardCheck() { return forwarded }
-            let outcome = try WattIntentHost.shared.checkForUpdates()
-            WattIntentLog.notice("check for updates via=local started=\(outcome.started) status=\(outcome.message)")
-            return outcome
-        }
-        return .result(value: outcome.message)
-    }
-}
-
 struct WattShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(intent: GetPowerReadingIntent(), phrases: [
@@ -204,8 +181,5 @@ struct WattShortcuts: AppShortcutsProvider {
             "Set \(.applicationName) menu bar to \(\.$mode)",
             "Show \(\.$mode) in \(.applicationName)"
         ], shortTitle: "Menu Bar Display", systemImageName: "rectangle.split.3x1")
-        AppShortcut(intent: CheckForUpdatesIntent(), phrases: [
-            "Check for \(.applicationName) updates"
-        ], shortTitle: "Check for Updates", systemImageName: "arrow.clockwise")
     }
 }

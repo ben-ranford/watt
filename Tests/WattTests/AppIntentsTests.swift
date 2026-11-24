@@ -181,51 +181,10 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertGreaterThan(activations, 0)
     }
 
-    func testUpdateIntentCallsTheManualCheckAndDoesNotInstall() async throws {
-        let service = IntentUpdateSpy()
-        let router = AppRouter(updateService: service)
-        var routes: [AppDestination] = []
-        router.present = { routes.append($0) }
-        var removals = 0
-        router.removeFromSettings = { _ in
-            removals += 1
-            return .failed(.unknownStatus)
-        }
-        install(router: router)
-        WattIntentSession.notePresenterReady()
-        _ = try await CheckForUpdatesIntent().perform()
-        XCTAssertEqual(routes, [.softwareUpdate])
-        for _ in 0..<30 { await Task.yield() }
-        XCTAssertEqual(service.initiators, [.manual])
-        XCTAssertEqual(service.downloads, 0)
-        XCTAssertEqual(service.installs, 0)
-        XCTAssertEqual(router.updates.state, .idle)
-        XCTAssertEqual(removals, 0)
-        XCTAssertFalse(CheckForUpdatesIntent.openAppWhenRun)
-    }
-
-    func testUpdateIntentReturnsTheDialogBeforeTheCheckFinishes() async throws {
-        let service = SuspendedUpdateSpy()
-        let router = AppRouter(updateService: service)
-        var routes: [AppDestination] = []
-        router.present = { routes.append($0) }
-        install(router: router)
-        WattIntentSession.notePresenterReady()
-        defer { service.resume() }
-        let outcome = try WattIntentSession.checkForUpdates()
-        XCTAssertTrue(outcome.started)
-        XCTAssertEqual(outcome.message, "Checking for updates.")
-        XCTAssertEqual(routes, [.softwareUpdate])
-        XCTAssertEqual(router.updates.state, .checking)
-        XCTAssertEqual(service.downloads, 0)
-        XCTAssertEqual(service.installs, 0)
-    }
-
     func testActionsRunInTheOpenProcessWithoutAForegroundLaunch() {
         for openAppWhenRun in [
             GetPowerReadingIntent.openAppWhenRun, OpenStatusPanelIntent.openAppWhenRun,
-            OpenSettingsIntent.openAppWhenRun, SetMenuBarDisplayIntent.openAppWhenRun,
-            CheckForUpdatesIntent.openAppWhenRun
+            OpenSettingsIntent.openAppWhenRun, SetMenuBarDisplayIntent.openAppWhenRun
         ] {
             XCTAssertFalse(openAppWhenRun)
         }
@@ -233,8 +192,7 @@ final class AppIntentsTests: XCTestCase {
         if #available(macOS 26, *) {
             for modes in [
                 GetPowerReadingIntent.supportedModes, OpenStatusPanelIntent.supportedModes,
-                OpenSettingsIntent.supportedModes, SetMenuBarDisplayIntent.supportedModes,
-                CheckForUpdatesIntent.supportedModes
+                OpenSettingsIntent.supportedModes, SetMenuBarDisplayIntent.supportedModes
             ] {
                 XCTAssertEqual(modes, .background)
             }
@@ -242,8 +200,7 @@ final class AppIntentsTests: XCTestCase {
         if #available(macOS 27, *) {
             for targets in [
                 GetPowerReadingIntent.allowedExecutionTargets, OpenStatusPanelIntent.allowedExecutionTargets,
-                OpenSettingsIntent.allowedExecutionTargets, SetMenuBarDisplayIntent.allowedExecutionTargets,
-                CheckForUpdatesIntent.allowedExecutionTargets
+                OpenSettingsIntent.allowedExecutionTargets, SetMenuBarDisplayIntent.allowedExecutionTargets
             ] {
                 XCTAssertEqual(targets, .main)
             }
@@ -332,123 +289,6 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertTrue(router.statusPanelPresented)
     }
 
-    func testUpdateIntentWithoutAServiceDoesNotInventACheck() async throws {
-        let router = AppRouter()
-        var routes: [AppDestination] = []
-        router.present = { routes.append($0) }
-        install(router: router)
-        let outcome = try WattIntentSession.checkForUpdates()
-        XCTAssertFalse(outcome.started)
-        XCTAssertEqual(outcome.message, "Updates aren’t configured in this build.")
-        XCTAssertEqual(router.updates.state, .idle)
-        XCTAssertTrue(routes.isEmpty)
-        _ = try await CheckForUpdatesIntent().perform()
-        XCTAssertEqual(router.updates.state, .idle)
-        XCTAssertTrue(routes.isEmpty)
-    }
-
-    func testUpdateIntentShowsACheckThatIsAlreadyRunning() async throws {
-        let service = SuspendedUpdateSpy()
-        let router = AppRouter(updateService: service)
-        var routes: [AppDestination] = []
-        router.present = { routes.append($0) }
-        install(router: router)
-        WattIntentSession.notePresenterReady()
-        XCTAssertTrue(router.checkForUpdatesInBackground(isEnabled: { true }, finished: { _ in }))
-        routes.removeAll()
-        let outcome = try WattIntentSession.checkForUpdates()
-        XCTAssertFalse(outcome.started)
-        XCTAssertEqual(outcome.message, "Checking for updates.")
-        XCTAssertFalse(outcome.message.localizedCaseInsensitiveContains("couldn"))
-        XCTAssertEqual(routes, [.softwareUpdate])
-        XCTAssertEqual(router.updates.state, .checking)
-        service.resume()
-        for _ in 0..<50 where !router.upToDatePresented { await Task.yield() }
-        XCTAssertTrue(router.upToDatePresented)
-        XCTAssertEqual(service.downloads, 0)
-        XCTAssertEqual(service.installs, 0)
-    }
-
-    func testUpdateIntentBringsAnExistingOfferForward() async throws {
-        let service = IntentUpdateSpy()
-        service.nextCheck = .success(.some("9.9"))
-        let router = AppRouter(updateService: service)
-        var routes: [AppDestination] = []
-        router.present = { routes.append($0) }
-        install(router: router)
-        WattIntentSession.notePresenterReady()
-        XCTAssertTrue(router.checkForUpdatesNow())
-        for _ in 0..<50 where router.updates.state != .available(version: "9.9") { await Task.yield() }
-        XCTAssertEqual(router.updates.state, .available(version: "9.9"))
-        routes.removeAll()
-        let outcome = try WattIntentSession.checkForUpdates()
-        XCTAssertFalse(outcome.started)
-        XCTAssertEqual(outcome.message, "Watt? 9.9 is out")
-        XCTAssertEqual(routes, [.softwareUpdate])
-        XCTAssertEqual(service.downloads, 0)
-        XCTAssertEqual(service.installs, 0)
-    }
-
-    func testFinishedUpdateCheckIsNotExpired() async throws {
-        let service = IntentUpdateSpy()
-        let router = AppRouter(updateService: service)
-        router.updateCheckTimeoutNanoseconds = 200_000_000
-        install(router: router)
-        WattIntentSession.notePresenterReady()
-        XCTAssertTrue(router.checkForUpdatesNow())
-        for _ in 0..<50 where !router.upToDatePresented { await Task.yield() }
-        try? await Task.sleep(nanoseconds: 400_000_000)
-        XCTAssertTrue(router.upToDatePresented)
-        XCTAssertEqual(router.updates.state, .idle)
-        XCTAssertFalse(router.couldntCheckPresented)
-    }
-
-    func testHungManualCheckTimesOutAndCanBeCheckedAgain() async throws {
-        let service = HangingUpdateSpy()
-        let router = AppRouter(updateService: service)
-        router.updateCheckTimeoutNanoseconds = 30_000_000
-        var routes: [AppDestination] = []
-        router.present = { routes.append($0) }
-        install(router: router)
-        WattIntentSession.notePresenterReady()
-        XCTAssertTrue(router.checkForUpdatesNow())
-        XCTAssertEqual(router.updates.state, .checking)
-        XCTAssertFalse(router.canCheckForUpdates)
-        routes.removeAll()
-        try? await Task.sleep(nanoseconds: 400_000_000)
-        XCTAssertEqual(router.updates.state, .failed(.timedOut, nil))
-        XCTAssertTrue(router.couldntCheckPresented)
-        XCTAssertEqual(router.updateStatusSummary, CouldntCheckAlert.message(for: .timedOut))
-        XCTAssertFalse(router.updateStatusSummary.localizedCaseInsensitiveContains("checking for updates"))
-        XCTAssertTrue(router.canCheckForUpdates)
-        XCTAssertEqual(routes, [.softwareUpdate])
-        service.hang = false
-        let outcome = try WattIntentSession.checkForUpdates()
-        XCTAssertTrue(outcome.started)
-        XCTAssertEqual(outcome.message, "Checking for updates.")
-        for _ in 0..<50 where !router.upToDatePresented { await Task.yield() }
-        XCTAssertTrue(router.upToDatePresented)
-        XCTAssertEqual(service.downloads, 0)
-        XCTAssertEqual(service.installs, 0)
-    }
-
-    func testHungAutomaticCheckTimesOutWithoutOpeningAWindow() async throws {
-        let service = HangingUpdateSpy()
-        let router = AppRouter(updateService: service)
-        router.updateCheckTimeoutNanoseconds = 30_000_000
-        var routes: [AppDestination] = []
-        router.present = { routes.append($0) }
-        install(router: router)
-        XCTAssertTrue(router.checkForUpdatesInBackground(isEnabled: { true }, finished: { _ in }))
-        routes.removeAll()
-        try? await Task.sleep(nanoseconds: 400_000_000)
-        XCTAssertEqual(router.updates.state, .failed(.timedOut, nil))
-        XCTAssertFalse(router.couldntCheckPresented)
-        XCTAssertTrue(routes.isEmpty)
-        XCTAssertTrue(router.canCheckForUpdates)
-        service.hang = false
-    }
-
     func testStatusPanelRetriesUntilTheButtonIsOnScreen() {
         XCTAssertEqual(StatusPanelShowPlan.beforeShow(hasButton: false, buttonOnScreen: false, mayRetry: true), .retry)
         XCTAssertEqual(StatusPanelShowPlan.beforeShow(hasButton: true, buttonOnScreen: false, mayRetry: true), .retry)
@@ -494,16 +334,14 @@ final class AppIntentsTests: XCTestCase {
         assertUnavailable(WattIntentSession.currentReading())
         await XCTAssertThrowsErrorAsync(try WattIntentSession.setDisplayMode(.draw), WattIntentFailure.notRunning)
         await XCTAssertThrowsErrorAsync(try WattIntentSession.open(.settings), WattIntentFailure.notRunning)
-        await XCTAssertThrowsErrorAsync(try WattIntentSession.checkForUpdates(), WattIntentFailure.notRunning)
     }
 
     func testShortcutSurfaceDoesNotExposeHelperOrBypassVerification() throws {
-        XCTAssertEqual(WattShortcuts.appShortcuts.count, 5)
+        XCTAssertEqual(WattShortcuts.appShortcuts.count, 4)
         XCTAssertFalse(GetPowerReadingIntent.openAppWhenRun)
         XCTAssertFalse(OpenStatusPanelIntent.openAppWhenRun)
         XCTAssertFalse(OpenSettingsIntent.openAppWhenRun)
         XCTAssertFalse(SetMenuBarDisplayIntent.openAppWhenRun)
-        XCTAssertFalse(CheckForUpdatesIntent.openAppWhenRun)
         let root = repoRoot()
         let folder = root.appendingPathComponent("Features/Intents")
         let sources = try FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)
@@ -511,9 +349,8 @@ final class AppIntentsTests: XCTestCase {
             .sorted { $0.lastPathComponent < $1.lastPathComponent }
         XCTAssertEqual(sources.map(\.lastPathComponent), ["WattAppIntents.swift", "WattIntentSession.swift"])
         let source = try sources.map { try String(contentsOf: $0, encoding: .utf8) }.joined(separator: "\n")
-        XCTAssertTrue(source.contains("checkForUpdatesNow"))
-        XCTAssertTrue(source.contains("WattIntentSession.checkForUpdates()"))
-        XCTAssertTrue(source.contains("Checking for updates."))
+        XCTAssertFalse(source.contains("CheckForUpdatesIntent"))
+        XCTAssertFalse(source.contains("checkForUpdates"))
         XCTAssertTrue(source.contains("hasCurrentSample"))
         XCTAssertTrue(source.contains("NSApp.activate(ignoringOtherApps: true)"))
         XCTAssertTrue(source.contains("NSApp.setActivationPolicy(.accessory)"))
@@ -540,7 +377,12 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertFalse(app.contains("AppShortcut"))
         let exercise = try String(contentsOf: root.appendingPathComponent("docs/shortcuts.md"), encoding: .utf8)
         XCTAssertTrue(exercise.contains("Unavailable"))
-        XCTAssertTrue(exercise.contains("Check for"))
+        XCTAssertTrue(exercise.contains("Get Power Reading"))
+        XCTAssertTrue(exercise.contains("Open Status Panel"))
+        XCTAssertTrue(exercise.contains("Open Settings"))
+        XCTAssertTrue(exercise.contains("Set Menu Bar Display"))
+        XCTAssertTrue(exercise.contains("may not exit"))
+        XCTAssertFalse(exercise.contains("Check for Updates"))
         XCTAssertTrue(exercise.contains("no Dock icon"))
         XCTAssertFalse(exercise.contains("install the helper"))
         XCTAssertTrue(exercise.contains("log stream --level debug --style compact --predicate 'subsystem == \"io.github.ben-ranford.watt\" AND category == \"intents\"'"))
@@ -754,101 +596,3 @@ private final class CountingTelemetry: TelemetryService {
     }
 }
 
-@MainActor
-private final class HangingUpdateSpy: UpdateService {
-    var hang = true
-    var downloads = 0
-    var installs = 0
-
-    func check() async -> ServiceOutcome<String?> { await check(initiator: .automatic) }
-
-    func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?> {
-        while hang {
-            if Task.isCancelled { return .failure(.cancelled) }
-            try? await Task.sleep(nanoseconds: 5_000_000)
-        }
-        if Task.isCancelled { return .failure(.cancelled) }
-        return .success(nil)
-    }
-
-    func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
-        downloads += 1
-        return .failure(.unknownStatus)
-    }
-
-    func install(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
-        installs += 1
-        return .failure(.unknownStatus)
-    }
-
-    func recover(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
-    func cancel(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
-    func discard(receipt: OperationReceipt) async -> ServiceOutcome<OperationReceipt> { .failure(.unknownStatus) }
-}
-
-@MainActor
-private final class SuspendedUpdateSpy: UpdateService {
-    var downloads = 0
-    var installs = 0
-    private var resumed = false
-    private var continuation: CheckedContinuation<ServiceOutcome<String?>, Never>?
-
-    func check() async -> ServiceOutcome<String?> { await check(initiator: .automatic) }
-
-    func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?> {
-        if resumed { return .success(nil) }
-        return await withCheckedContinuation { continuation = $0 }
-    }
-
-    func resume() {
-        resumed = true
-        continuation?.resume(returning: .success(nil))
-        continuation = nil
-    }
-
-    func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
-        downloads += 1
-        return .failure(.unknownStatus)
-    }
-
-    func install(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
-        installs += 1
-        return .failure(.unknownStatus)
-    }
-
-    func recover(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
-    func cancel(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
-    func discard(receipt: OperationReceipt) async -> ServiceOutcome<OperationReceipt> { .failure(.unknownStatus) }
-}
-
-@MainActor
-private final class IntentUpdateSpy: UpdateService {
-    var initiators: [UpdateCheckInitiator] = []
-    var downloads = 0
-    var installs = 0
-    var nextCheck: ServiceOutcome<String?> = .success(nil)
-
-    func check() async -> ServiceOutcome<String?> {
-        initiators.append(.automatic)
-        return nextCheck
-    }
-
-    func check(initiator: UpdateCheckInitiator) async -> ServiceOutcome<String?> {
-        initiators.append(initiator)
-        return nextCheck
-    }
-
-    func download(version: String, receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
-        downloads += 1
-        return .failure(.unknownStatus)
-    }
-
-    func install(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> {
-        installs += 1
-        return .failure(.unknownStatus)
-    }
-
-    func recover(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
-    func cancel(receipt: OperationReceipt) async -> ServiceOutcome<UpdateState> { .failure(.unknownStatus) }
-    func discard(receipt: OperationReceipt) async -> ServiceOutcome<OperationReceipt> { .failure(.unknownStatus) }
-}

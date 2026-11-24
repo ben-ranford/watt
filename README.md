@@ -70,7 +70,7 @@ No. Watt just shows the numbers. If you want to cap your charge, use AlDente or 
 
 ### Can I use it from Shortcuts?
 
-Yes. Shortcuts can read the current sample, open the panel or Settings, change the menu-bar display, and check for updates. The manual check is [docs/shortcuts.md](docs/shortcuts.md).
+Yes. Shortcuts can read the current sample, open the panel or Settings, and change the menu-bar display. The manual check is [docs/shortcuts.md](docs/shortcuts.md).
 
 ### Why does it ask for a helper?
 

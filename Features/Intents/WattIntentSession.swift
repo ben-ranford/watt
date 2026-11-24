@@ -109,11 +109,6 @@ enum WattIntentSession {
         case "settings":
             guard presenterReady else { return }
             router?.showSettings()
-        case "updates":
-            guard presenterReady, let router else { return }
-            if router.checkForUpdatesNow() { return }
-            guard router.updateUnavailableReason == nil else { return }
-            _ = router.revealCurrentUpdateStatus()
         case "mode":
             guard let mode, let displayMode = WattDisplayMode(rawValue: mode), let preferences else { return }
             preferences.displayMode = displayMode
@@ -126,7 +121,6 @@ enum WattIntentSession {
         switch destination {
         case .statusPanel: return "panel"
         case .settings: return "settings"
-        case .softwareUpdate: return "updates"
         default: return nil
         }
     }
@@ -182,31 +176,6 @@ enum WattIntentSession {
         }
     }
 
-    /// Settings and the menu both enter here. The adapter's check still verifies
-    /// the detached signature. Download hash verification stays on that same path
-    /// and is not reachable from this intent.
-    static func checkForUpdates() throws -> WattUpdateIntentOutcome {
-        guard let router else { throw WattIntentFailure.notRunning }
-        if role != .keeper, otherCopies() {
-            postRelay("updates")
-            return WattUpdateIntentOutcome(started: true, message: "Checking for updates.")
-        }
-        activate()
-        if router.checkForUpdatesNow() {
-            if !presenterReady { pendingDestination = .softwareUpdate }
-            return WattUpdateIntentOutcome(started: true, message: "Checking for updates.")
-        }
-        // The menu item is disabled while a check, offer, or result is already
-        // on screen. The shortcut still opens that status. It does not report
-        // the check as failed just because a second one cannot start.
-        if let reason = router.updateUnavailableReason {
-            return WattUpdateIntentOutcome(started: false, message: reason)
-        }
-        let message = router.revealCurrentUpdateStatus()
-        if !presenterReady { pendingDestination = .softwareUpdate }
-        return WattUpdateIntentOutcome(started: false, message: message)
-    }
-
     /// `openAppWhenRun` can promote an accessory app. Put the Dock policy back
     /// before activating so the panel can come forward without a Dock icon.
     private static func defaultActivation() {
@@ -227,8 +196,6 @@ enum WattIntentSession {
             router.showStatusPanel()
         case .settings:
             router.showSettings()
-        case .softwareUpdate:
-            router.present(.softwareUpdate)
         default:
             router.present(destination)
         }
@@ -537,11 +504,6 @@ enum WattIntentFailure: Error, Equatable {
     case notRunning
 }
 
-struct WattUpdateIntentOutcome: Equatable, Sendable {
-    var started: Bool
-    var message: String
-}
-
 /// Numbers the panel would show. Nil is an unmeasured channel, never a stand-in zero.
 struct WattPowerReading: Equatable, Sendable {
     var available: Bool
@@ -649,11 +611,6 @@ final class WattIntentHost: NSObject, @unchecked Sendable {
     func open(_ destination: AppDestination) throws {
         try WattIntentSession.open(destination)
     }
-
-    @MainActor
-    func checkForUpdates() throws -> WattUpdateIntentOutcome {
-        try WattIntentSession.checkForUpdates()
-    }
 }
 
 struct WattIntentRequest: Codable, Equatable, Sendable {
@@ -672,8 +629,6 @@ struct WattIntentReply: Codable, Equatable, Sendable {
     var batteryPercentage: Int? = nil
     var batteryState: String? = nil
     var displayTitle: String? = nil
-    var updateStarted: Bool? = nil
-    var updateMessage: String? = nil
     var failure: String? = nil
 }
 
@@ -832,17 +787,6 @@ enum WattIntentBridge {
         return title
     }
 
-    static func forwardCheck() async throws -> WattUpdateIntentOutcome? {
-        guard liveKeeperPID() != nil else { return nil }
-        let reply = try await exchange(WattIntentRequest(action: "checkUpdates"), timeout: 2)
-        guard reply.ok, let message = reply.updateMessage, let started = reply.updateStarted else {
-            WattIntentLog.notice("check for updates forward failed pid=\(getpid())")
-            throw WattIntentFailure.notRunning
-        }
-        WattIntentLog.notice("check for updates via=keeper started=\(started)")
-        return WattUpdateIntentOutcome(started: started, message: message)
-    }
-
     static func exchange(_ request: WattIntentRequest, timeout: Int = 2) async throws -> WattIntentReply {
         let path = directory.appendingPathComponent("host.sock").path
         let body = try JSONEncoder().encode(request)
@@ -908,14 +852,6 @@ enum WattIntentBridge {
             do {
                 let title = try SetMenuBarDisplayIntent.apply(WattMenuBarDisplay(mode))
                 return WattIntentReply(ok: true, intentInFlight: true, displayTitle: title)
-            } catch {
-                return WattIntentReply(ok: false, intentInFlight: true, failure: "notRunning")
-            }
-        case "checkUpdates":
-            WattIntentSession.noteIntentActivity()
-            do {
-                let outcome = try WattIntentSession.checkForUpdates()
-                return WattIntentReply(ok: true, intentInFlight: true, updateStarted: outcome.started, updateMessage: outcome.message)
             } catch {
                 return WattIntentReply(ok: false, intentInFlight: true, failure: "notRunning")
             }

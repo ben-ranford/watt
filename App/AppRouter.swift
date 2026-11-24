@@ -161,17 +161,6 @@ final class AppRouter: ObservableObject {
     private let updateService: (any UpdateService)?
     let updateConfigurationFailure: ServiceFailure?
     private var updateCheck: Task<Void, Never>?
-    /// Identifies the task in `updateCheck`. A cancelled check changes generation,
-    /// so the task clears itself by this token when it actually ends.
-    private var updateCheckToken: UUID?
-    /// A check that has not finished by this deadline is failed, so the menu
-    /// item and the Software Update window cannot sit on Checking forever.
-    /// Tests shorten it. Zero disables the deadline.
-    var updateCheckTimeoutNanoseconds: UInt64 = 75_000_000_000
-    /// The in-flight check was started by the scheduler, which stays quiet.
-    /// A shortcut can ask that result to use the menu's up-to-date or available UI.
-    private var inFlightCheckIsAutomatic = false
-    private var surfaceInFlightCheck = false
     private var automaticUpdateCoordinator: AutomaticUpdateCoordinator?
     private var unattendedInstallReceipt: OperationReceipt?
     /// True only while a fresh automatic check in this process opted into install.
@@ -846,27 +835,17 @@ final class AppRouter: ObservableObject {
         offeredUpdateNotes = nil
         checkFailurePresentation = nil
         dismissUpToDate()
-        inFlightCheckIsAutomatic = true
-        let token = UUID()
-        updateCheckToken = token
         updateCheck = Task { [weak self] in
             let outcome = await updateService.check(initiator: .automatic)
-            self?.finishBackgroundCheck(outcome, generation: generation, token: token, isEnabled: isEnabled, finished: finished)
+            self?.finishBackgroundCheck(outcome, generation: generation, isEnabled: isEnabled, finished: finished)
         }
-        armUpdateCheckTimeout(generation: generation)
         return true
     }
 
-    private func finishBackgroundCheck(_ outcome: ServiceOutcome<String?>, generation: UUID, token: UUID,
+    private func finishBackgroundCheck(_ outcome: ServiceOutcome<String?>, generation: UUID,
                                        isEnabled: @MainActor () -> Bool,
                                        finished: @MainActor (ServiceOutcome<String?>) -> Void) {
-        if updateCheckToken == token {
-            updateCheck = nil
-            updateCheckToken = nil
-        }
-        inFlightCheckIsAutomatic = false
-        let surface = surfaceInFlightCheck
-        surfaceInFlightCheck = false
+        updateCheck = nil
         var reported = outcome
         defer { finished(reported) }
         guard updates.generation == generation else {
@@ -879,18 +858,6 @@ final class AppRouter: ObservableObject {
             return
         }
         guard let next = applyCheckedOffer(outcome, generation: generation) else { return }
-        if surface {
-            switch outcome {
-            case .success(nil):
-                upToDateGeneration = generation
-                present(.softwareUpdate)
-            case .failure(let reason) where reason != .cancelled:
-                checkFailurePresentation = CheckFailurePresentation(id: UUID(), generation: generation, reason: reason)
-                present(.softwareUpdate)
-            default:
-                break
-            }
-        }
         guard case .available(let version) = next else { return }
         if updates.installFutureUpdatesAutomatically,
            installOfferedUpdate(version: version, generation: updates.generation, automaticUpdates: true) {
@@ -970,47 +937,6 @@ final class AppRouter: ObservableObject {
         return beginUpdateCheck()
     }
 
-    /// The sentence the Software Update window or its alert is showing.
-    /// A shortcut uses this when a new check cannot start.
-    var updateStatusSummary: String {
-        if let reason = updateUnavailableReason { return reason }
-        if upToDatePresented { return "You’re up to date. \(upToDateMessage)" }
-        if couldntCheckPresented, let token = checkFailurePresentation {
-            return CouldntCheckAlert.message(for: token.reason)
-        }
-        if case .adminRequired = updates.state {
-            return "The update is ready. Administrator installation is required."
-        }
-        switch updates.state {
-        case .completed, .handoffAccepted, .awaitingRelaunch, .installing:
-            return "Watt? will close while the update finishes."
-        default:
-            break
-        }
-        if isUnattendedInstall, let version = downloadVersion {
-            return "Downloading Watt? \(version)."
-        }
-        if pendingProtectedReceipt != nil { return "An update needs recovery." }
-        if readyReceipt != nil { return "Ready to install." }
-        if let version = downloadVersion { return "Downloading Watt? \(version)." }
-        if case .available(let version) = updates.state {
-            return UpdateAvailableContent.headline(version: version)
-        }
-        return "Checking for updates."
-    }
-
-    /// Brings the existing check, offer, or result forward. Does not start a second check.
-    /// An automatic check that is still running then uses the menu's result UI.
-    @discardableResult
-    func revealCurrentUpdateStatus() -> String {
-        if inFlightCheckIsAutomatic {
-            surfaceInFlightCheck = true
-        }
-        menuSetupPresentationID = nil
-        present(.softwareUpdate)
-        return updateStatusSummary
-    }
-
     /// Synchronous admission prevents two native actions from scheduling duplicate checks.
     /// A retained item from a closed/replaced menu is not a fresh user intent.
     @discardableResult
@@ -1027,21 +953,11 @@ final class AppRouter: ObservableObject {
         updateOfferIntent = nil
         offeredUpdateNotes = nil
         checkFailurePresentation = nil
-        inFlightCheckIsAutomatic = false
-        surfaceInFlightCheck = false
-        let token = UUID()
-        updateCheckToken = token
         updateCheck = Task { [weak self] in
             let outcome = await updateService.check(initiator: .manual)
             guard let self else { return }
-            defer {
-                if self.updateCheckToken == token {
-                    self.updateCheck = nil
-                    self.updateCheckToken = nil
-                }
-            }
-            guard self.updates.generation == generation, !Task.isCancelled else { return }
-            guard self.updates.state == .checking else { return }
+            defer { self.updateCheck = nil }
+            guard !Task.isCancelled else { return }
             guard self.applyCheckedOffer(outcome, generation: generation) != nil else { return }
             if case .success(let version?) = outcome, self.updates.installFutureUpdatesAutomatically,
                self.installOfferedUpdate(version: version, generation: self.updates.generation, automaticUpdates: true) {
@@ -1054,35 +970,8 @@ final class AppRouter: ObservableObject {
                 self.checkFailurePresentation = CheckFailurePresentation(id: UUID(), generation: generation, reason: reason)
             }
         }
-        armUpdateCheckTimeout(generation: generation)
         present(.softwareUpdate)
         return true
-    }
-
-    private func armUpdateCheckTimeout(generation: UUID) {
-        let timeout = updateCheckTimeoutNanoseconds
-        guard timeout > 0 else { return }
-        Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: timeout)
-            self?.expireUpdateCheck(generation: generation)
-        }
-    }
-
-    /// Moves a check that never finished out of `.checking`. A silent automatic
-    /// check stays quiet. A manual check, or one the user asked to see, shows
-    /// the existing couldn’t-check alert.
-    func expireUpdateCheck(generation: UUID) {
-        guard updates.generation == generation, updates.state == .checking else { return }
-        let showResult = surfaceInFlightCheck || !inFlightCheckIsAutomatic
-        updateCheck?.cancel()
-        updateCheck = nil
-        updateCheckToken = nil
-        inFlightCheckIsAutomatic = false
-        surfaceInFlightCheck = false
-        guard updates.accept(.failed(.timedOut, nil), generation: generation) else { return }
-        guard showResult else { return }
-        checkFailurePresentation = CheckFailurePresentation(id: UUID(), generation: generation, reason: .timedOut)
-        present(.softwareUpdate)
     }
 
     /// Invalidate before signalling cancellation, including non-cooperative services.
