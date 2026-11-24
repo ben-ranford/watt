@@ -159,6 +159,7 @@ final class J107CouldntCheckTests: XCTestCase {
         XCTAssertTrue(router.couldntCheckPresented)
         router.updateCheckTimeout = 0
         XCTAssertTrue(start(router))
+        await settle()
         XCTAssertEqual(router.updates.state, .checking)
         service.finish(.success(nil))
         await settle()
@@ -188,12 +189,13 @@ final class J107CouldntCheckTests: XCTestCase {
     func testFinishedCheckIsNotExpired() async {
         let service = J107Service()
         let router = AppRouter(updateService: service)
-        router.updateCheckTimeout = 0.2
+        router.updateCheckTimeout = 2
         XCTAssertTrue(start(router))
+        await settle()
         service.finish(.success(nil))
-        for _ in 0..<50 where !router.upToDatePresented { await Task.yield() }
+        await settle()
         XCTAssertTrue(router.upToDatePresented)
-        try? await Task.sleep(nanoseconds: 500_000_000)
+        try? await Task.sleep(nanoseconds: 2_200_000_000)
         XCTAssertTrue(router.upToDatePresented)
         XCTAssertFalse(router.couldntCheckPresented)
         XCTAssertEqual(router.updates.state, .idle)
