@@ -1,8 +1,10 @@
 """Distribution checks that do not need codesign or a Mac.
 
-Release builds are ad-hoc signed. Distribution preflight does not ask for a
-Developer ID, a Team ID, or a notarisation ticket. It still rejects the
-placeholder bundle id, a non-HTTPS update endpoint, and a missing Ed25519 key.
+Release builds are Developer ID signed for team GUT4TJFVQ2. The designated
+requirement is the Developer ID certificate, not a cdhash pin. The privileged
+helper still pins cdhash separately. This module rejects the placeholder
+bundle id, a non-HTTPS update endpoint, and a missing Ed25519 key. The Mac
+verifier also requires a stapled notarisation ticket.
 
 Custom Info.plist keys are not INFOPLIST_KEY_* build settings. Xcode only
 copies that prefix for keys it already knows. The app Info.plist expands
@@ -17,6 +19,8 @@ from urllib.parse import urlsplit
 
 PLACEHOLDER_PREFIX = 'dev.watt.verification'
 PROTECTED_TRUST = 'protected-installation'
+# Public Developer ID team. Distribution rejects any other team.
+DISTRIBUTION_TEAM_ID = 'GUT4TJFVQ2'
 
 
 def distribution_plist_failures(info: dict, endpoints: tuple[str, str] | None = None) -> list[str]:
@@ -124,11 +128,23 @@ def codesign_identity_failures(detail: str, requirement: str, name: str, *, dist
 
     require('runtime' in detail, 'hardened runtime required: ' + name)
     if distribution:
-        require('Signature=adhoc' in detail, 'release builds are ad-hoc signed: ' + name)
-        require('Authority=' not in detail, 'Developer ID authority is not a release identity: ' + name)
-        require('cdhash H"' in requirement, 'release code requirement must pin cdhash: ' + name)
-        require('anchor apple generic' not in requirement or 'cdhash H"' in requirement,
-                'release code requirement must pin cdhash: ' + name)
+        require(
+            'Authority=Developer ID Application:' in detail and 'Signature=adhoc' not in detail,
+            'release builds are Developer ID signed: ' + name,
+        )
+        require(
+            'TeamIdentifier=' + DISTRIBUTION_TEAM_ID in detail,
+            'release team must be the Developer ID team: ' + name,
+        )
+        require('anchor apple generic' in requirement, 'release designated requirement must be Developer ID: ' + name)
+        require(
+            'subject.OU' in requirement and DISTRIBUTION_TEAM_ID in requirement,
+            'release designated requirement must pin the Developer ID team: ' + name,
+        )
+        require(
+            'cdhash H"' not in requirement,
+            'release designated requirement is the Developer ID certificate, not a cdhash pin: ' + name,
+        )
     else:
         require('Signature=adhoc' in detail or 'Authority=' in detail, 'missing code identity: ' + name)
         require('cdhash H"' in requirement or 'anchor apple' in requirement, 'missing code requirement: ' + name)

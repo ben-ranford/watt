@@ -91,6 +91,12 @@ def main(argv: list[str] | None = None) -> None:
             failures.extend(release_readiness.codesign_identity_failures(
                 detail, requirement, name, distribution=args.mode == 'distribution-preflight'))
         run(['/usr/bin/codesign', '--verify', '--deep', '--strict', '--all-architectures', str(application)])
+        if args.mode == 'distribution-preflight':
+            assessment = run(['/usr/sbin/spctl', '-a', '-vvv', '-t', 'exec', str(application)])
+            lowered = assessment.lower()
+            require('accepted' in lowered and 'notarized developer id' in lowered,
+                    'Gatekeeper must accept a notarised Developer ID app')
+            run(['xcrun', 'stapler', 'validate', str(application)])
         symbols = run(['/usr/bin/nm', '-gj', str(executable)])
         require(not re.search(r'J[0-9]+FixtureLaunch|StoryFixtures|FixtureLaunchSelection', symbols), 'debug fixture symbols present')
         require((application / 'Contents/Library/LaunchDaemons' / (identity + '.helper.plist')).is_file(), 'missing bundled daemon plist')
@@ -119,7 +125,7 @@ def main(argv: list[str] | None = None) -> None:
                 raise
             print('Validated USTAR archive:', output)
         if args.mode == 'distribution-preflight':
-            passed = 'ad-hoc cdhash identity'
+            passed = 'Developer ID identity and notarisation ticket'
         else:
             passed = 'ad-hoc/certificate identities'
         print('PASS:', args.mode, 'bundle, embedded tools,', passed, 'and fixture exclusion verified')

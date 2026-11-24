@@ -94,10 +94,10 @@
         <p>Watt? shows the same split as three rows. If system draw stays above charger input, the battery number goes negative. Once that has lasted for the duration in Settings, 5 minutes by default, the panel title becomes “Charger can’t keep up”. The note fills in the live readings, rounded to whole watts: “Because your Mac draws [system] and this charger gives [charger]. The battery covers the rest.” Settings can change that duration. An idle battery on AC, when it is not the Optimised Battery Charging hold described below, shows 0.0&nbsp;W and the title “Not charging”. That is a reading, not a gap.</p>
         <p>While the battery is charging, the line under the title adds the percentage and macOS’s time-to-full estimate, in the form “full in about 38 min”. Watt? does not calculate that from the watts on screen. It shows the system’s time-to-full when the value is a real duration from 1 minute through 48 hours. A missing value, a zero, and “still calculating” are left off, so the line stays at the percentage.</p>
         <figure class="shot panel">
-          <img src="screenshots/panel-light.png" width="640" height="946" alt="Sample power panel in light appearance. Charging at plus 42.1 watts, 64 percent, full in about 38 minutes. Charger input 65.0 watts from a 96 watt USB-C charger, system draw 22.9 watts, battery plus 42.1 watts.">
-          <figcaption>Sample panel, light appearance. The watts and the “full in about 38 min” line are sample readings, rendered from the SwiftUI views for the home page. They are not a measurement of a particular Mac.</figcaption>
+          <img src="screenshots/panel-light.png" width="640" height="946" alt="Power panel in light appearance. Charging at plus 42.1 watts, 64 percent, full in about 38 minutes. Charger input 65.0 watts from a 96 watt USB-C charger, system draw 22.9 watts, battery plus 42.1 watts.">
+          <figcaption>An example panel. The watts in the picture are not from a particular Mac.</figcaption>
         </figure>
-        <p>The secondary-click menu can put charger input in the menu bar, if you want the incoming watts without opening the panel. System draw is the default for a new install.</p>
+        <p>The menu on the menu-bar item can show charger input, if you want the incoming watts without opening the panel. System draw is the default for a new install.</p>
       </section>
 
       <section aria-labelledby="hold">
