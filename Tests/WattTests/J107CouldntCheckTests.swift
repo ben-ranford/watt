@@ -115,6 +115,89 @@ final class J107CouldntCheckTests: XCTestCase {
         XCTAssertFalse(router.dismissCouldntCheck(token))
         XCTAssertEqual(service.checks, 1)
     }
+    func testCheckingTimesOutToAFailedCheckThatCanStartAgain() {
+        let store = UpdateStore()
+        XCTAssertTrue(store.accept(.checking, generation: store.generation))
+        let generation = store.renewGeneration()
+        XCTAssertEqual(store.state.updateLogPhase, "checking")
+        XCTAssertTrue(store.accept(.failed(.timedOut, nil), generation: generation))
+        XCTAssertEqual(store.state, .failed(.timedOut, nil))
+        XCTAssertEqual(store.state.updateLogPhase, "failed.timedOut")
+        XCTAssertTrue(store.accept(.checking, generation: store.generation))
+    }
+    func testStaleCheckTimeoutDoesNotResetChecking() async {
+        let service = J107Service()
+        let router = AppRouter(updateService: service)
+        router.updateCheckTimeout = 0
+        XCTAssertTrue(start(router))
+        let generation = router.updates.generation
+        router.updates.renewGeneration()
+        router.expireUpdateCheck(generation: generation)
+        XCTAssertEqual(router.updates.state, .checking)
+        XCTAssertFalse(router.canCheckForUpdates)
+        service.finish(.failure(.cancelled))
+        await settle()
+        XCTAssertEqual(router.updates.state, .checking)
+    }
+    func testHungManualCheckTimesOutAndResetsTheBlankWindow() async {
+        let service = J107Service()
+        let router = AppRouter(updateService: service)
+        router.updateCheckTimeout = 0.05
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
+        XCTAssertTrue(start(router))
+        XCTAssertEqual(router.updates.state, .checking)
+        XCTAssertFalse(router.canCheckForUpdates)
+        try? await Task.sleep(nanoseconds: 1_500_000_000)
+        XCTAssertEqual(router.updates.state, .failed(.timedOut, nil))
+        XCTAssertTrue(router.couldntCheckPresented)
+        XCTAssertTrue(router.canCheckForUpdates)
+        XCTAssertEqual(routes, [.softwareUpdate, .softwareUpdate])
+        service.finish(.success(nil))
+        await settle()
+        XCTAssertEqual(router.updates.state, .failed(.timedOut, nil))
+        XCTAssertTrue(router.couldntCheckPresented)
+        router.updateCheckTimeout = 0
+        XCTAssertTrue(start(router))
+        XCTAssertEqual(router.updates.state, .checking)
+        service.finish(.success(nil))
+        await settle()
+        XCTAssertTrue(router.upToDatePresented)
+    }
+    func testHungAutomaticCheckTimesOutWithoutOpeningAWindow() async {
+        let service = J107Service()
+        let router = AppRouter(updateService: service)
+        router.updateCheckTimeout = 0.05
+        var routes: [AppDestination] = []
+        router.present = { routes.append($0) }
+        var reported: ServiceOutcome<String?>?
+        XCTAssertTrue(router.checkForUpdatesInBackground(isEnabled: { true }, finished: { reported = $0 }))
+        XCTAssertTrue(routes.isEmpty)
+        try? await Task.sleep(nanoseconds: 1_500_000_000)
+        XCTAssertEqual(router.updates.state, .failed(.timedOut, nil))
+        XCTAssertFalse(router.couldntCheckPresented)
+        XCTAssertTrue(routes.isEmpty)
+        XCTAssertTrue(router.canCheckForUpdates)
+        service.finish(.failure(.cancelled))
+        await settle()
+        XCTAssertEqual(router.updates.state, .failed(.timedOut, nil))
+        guard case .failure(.timedOut) = reported else {
+            return XCTFail("automatic timeout must report timedOut")
+        }
+    }
+    func testFinishedCheckIsNotExpired() async {
+        let service = J107Service()
+        let router = AppRouter(updateService: service)
+        router.updateCheckTimeout = 0.2
+        XCTAssertTrue(start(router))
+        service.finish(.success(nil))
+        for _ in 0..<50 where !router.upToDatePresented { await Task.yield() }
+        XCTAssertTrue(router.upToDatePresented)
+        try? await Task.sleep(nanoseconds: 500_000_000)
+        XCTAssertTrue(router.upToDatePresented)
+        XCTAssertFalse(router.couldntCheckPresented)
+        XCTAssertEqual(router.updates.state, .idle)
+    }
     func testCancellationAndOfferDoNotShowError() async {
         for outcome: ServiceOutcome<String?> in [.failure(.cancelled), .success("1.1"), .success(nil)] {
             let service = J107Service()

@@ -49,6 +49,7 @@ struct SoftwareUpdateContent: View {
     @Environment(\.dismiss) private var dismiss
     var body: some View {
         content
+            .frame(minWidth: 420, minHeight: 146)
             .background(UpToDatePresentation(router: router) { dismiss() })
             .background(CouldntCheckPresentation(router: router) { dismiss() })
             .onDisappear { router.closeUpdatePresentation() }
@@ -406,6 +407,7 @@ private struct UpToDatePresentation: NSViewRepresentable {
 
     final class Coordinator {
         var scheduled = false
+        var attempts = 0
     }
     func makeCoordinator() -> Coordinator { Coordinator() }
     func makeNSView(context: Context) -> NSView { NSView() }
@@ -415,8 +417,14 @@ private struct UpToDatePresentation: NSViewRepresentable {
         let generation = router.upToDateGeneration
         DispatchQueue.main.async {
             defer { context.coordinator.scheduled = false }
-            guard router.upToDatePresented, router.upToDateGeneration == generation,
-                  let window = view.window, window.isVisible else { return }
+            guard router.upToDatePresented, router.upToDateGeneration == generation else { return }
+            guard let window = view.window, window.isVisible else {
+                context.coordinator.attempts += 1
+                guard context.coordinator.attempts < 30 else { return }
+                DispatchQueue.main.async { self.updateNSView(view, context: context) }
+                return
+            }
+            context.coordinator.attempts = 0
             let alert = UpToDateAlert.make(message: router.upToDateMessage)
             window.orderOut(nil)
             _ = alert.runModal()
@@ -472,7 +480,10 @@ enum CouldntCheckAlert {
 private struct CouldntCheckPresentation: NSViewRepresentable {
     @ObservedObject var router: AppRouter
     let dismiss: () -> Void
-    final class Coordinator { var scheduled = false }
+    final class Coordinator {
+        var scheduled = false
+        var attempts = 0
+    }
     func makeCoordinator() -> Coordinator { Coordinator() }
     func makeNSView(context: Context) -> NSView { NSView() }
     func updateNSView(_ view: NSView, context: Context) {
@@ -481,8 +492,14 @@ private struct CouldntCheckPresentation: NSViewRepresentable {
         context.coordinator.scheduled = true
         DispatchQueue.main.async {
             defer { context.coordinator.scheduled = false }
-            guard router.couldntCheckPresented, router.checkFailurePresentation == token,
-                  let window = view.window, window.isVisible else { return }
+            guard router.couldntCheckPresented, router.checkFailurePresentation == token else { return }
+            guard let window = view.window, window.isVisible else {
+                context.coordinator.attempts += 1
+                guard context.coordinator.attempts < 30 else { return }
+                DispatchQueue.main.async { self.updateNSView(view, context: context) }
+                return
+            }
+            context.coordinator.attempts = 0
             window.orderOut(nil)
             let response = CouldntCheckAlert.make(reason: token.reason).runModal()
             guard router.couldntCheckPresented, router.checkFailurePresentation == token else { return }
