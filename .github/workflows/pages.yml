@@ -6,7 +6,7 @@ name: Pages site
     branches:
       - main
 
-# Read-only except the deploy job, which publishes the landing page.
+# Read-only except the upload and deploy jobs, which publish the landing page.
 permissions:
   contents: read
 
@@ -23,22 +23,23 @@ jobs:
       - name: Build the Pages artifact
         run: bash scripts/check-pages-artifact.sh
 
-  deploy:
-    name: Publish site
+  # Upload and deploy are separate jobs. deploy-pages lists artifacts for this
+  # run and can see zero of them when it starts in the same job, a fraction of
+  # a second after upload-pages-artifact finalizes the github-pages artifact.
+  # The pins match (upload-pages-artifact v5.0.0, deploy-pages v5.0.1) and the
+  # previous main push found the artifact; run 44890403994 found 0. A later
+  # job in the same run sees the artifact. Re-running one combined job would
+  # upload a second github-pages artifact and fail a different way.
+  upload:
+    name: Upload site
     needs: verify
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: pages
-      cancel-in-progress: false
     permissions:
       contents: read
+      actions: write
       pages: write
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -65,6 +66,23 @@ jobs:
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: site
+
+  deploy:
+    name: Publish site
+    needs: upload
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.upload.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
