@@ -34,6 +34,125 @@ final class TolerantRefreshScheduler: RefreshScheduling {
     }
 }
 
+/// Ends one App Nap exemption. `end` is safe to call more than once.
+protocol MenuBarSamplingActivityToken: AnyObject {
+    func end()
+}
+
+/// Holds menu-bar sampling out of App Nap for as long as the sampler runs.
+@MainActor
+protocol MenuBarSamplingActivity: AnyObject {
+    func begin() -> any MenuBarSamplingActivityToken
+}
+
+/// `userInitiatedAllowingIdleSystemSleep` keeps the process out of App Nap and
+/// still allows idle system sleep. It does not include display-sleep or
+/// latency-critical bits. The token is retained until sampling stops.
+@MainActor
+final class ProcessMenuBarSamplingActivity: MenuBarSamplingActivity {
+    static let options: ProcessInfo.ActivityOptions = .userInitiatedAllowingIdleSystemSleep
+    static let reason = "Updating the Watt menu-bar reading"
+
+    func begin() -> any MenuBarSamplingActivityToken {
+        ProcessActivityToken(ProcessInfo.processInfo.beginActivity(options: Self.options, reason: Self.reason))
+    }
+}
+
+private final class ProcessActivityToken: MenuBarSamplingActivityToken, @unchecked Sendable {
+    private let lock = NSLock()
+    private var activity: NSObjectProtocol?
+
+    init(_ activity: NSObjectProtocol) { self.activity = activity }
+
+    func end() {
+        lock.lock()
+        let activity = self.activity
+        self.activity = nil
+        lock.unlock()
+        if let activity { ProcessInfo.processInfo.endActivity(activity) }
+    }
+
+    deinit { end() }
+}
+
+/// The last five seconds of system samples, matching Settings → Smooth readings.
+/// Battery, charger, and system watts are averaged. Component estimates are a
+/// separate sampler and stay on their own sample. Turning the setting off
+/// publishes the raw reading and leaves the window in place.
+struct ReadingSmoother {
+    static let window: TimeInterval = 5
+    private var samples: [PowerReading] = []
+
+    mutating func reset() { samples.removeAll() }
+
+    mutating func discard(timestamp: Date) {
+        guard samples.last?.timestamp == timestamp else { return }
+        samples.removeLast()
+    }
+
+    mutating func apply(_ reading: PowerReading, enabled: Bool) -> PowerReading {
+        let now = reading.timestamp
+        // A late sample older than the window must not evict newer ones.
+        // The store discards it when accept rejects the timestamp.
+        if let latest = samples.last?.timestamp, now < latest {
+            samples.append(reading)
+            return reading
+        }
+        samples.append(reading)
+        if now.timeIntervalSince1970.isFinite {
+            samples.removeAll { sample in
+                let age = now.timeIntervalSince(sample.timestamp)
+                return !age.isFinite || age < 0 || age > Self.window
+            }
+        }
+        // The settings cadence is at least one second, so a five-second window
+        // holds a handful of samples. The cap only stops a timestamp that never
+        // advances from retaining every later sample.
+        if samples.count > 32 { samples.removeFirst(samples.count - 32) }
+        guard enabled else { return reading }
+        let comparable = samples.filter { $0.batteryState == reading.batteryState }
+        guard comparable.count > 1 else { return reading }
+        let watts = Self.average(comparable.map(\.watts), latest: reading.watts, signed: true)
+        let charger = Self.average(comparable.map(\.chargerWatts), latest: reading.chargerWatts, signed: false)
+        let system = Self.average(comparable.map(\.systemWatts), latest: reading.systemWatts, signed: false)
+        guard watts != reading.watts || charger != reading.chargerWatts || system != reading.systemWatts else {
+            return reading
+        }
+        return PowerReading(
+            mode: reading.mode, watts: watts, batteryPercentage: reading.batteryPercentage,
+            detail: reading.detail, components: reading.components, timestamp: reading.timestamp,
+            batteryState: reading.batteryState, capabilities: reading.capabilities,
+            freshness: reading.freshness, source: reading.source, chargerWatts: charger,
+            systemWatts: system, chargingHoldReason: reading.chargingHoldReason,
+            chargerThreshold: reading.chargerThreshold, componentEstimate: reading.componentEstimate,
+            adapterRatedWatts: reading.adapterRatedWatts, adapterName: reading.adapterName)
+    }
+
+    /// A nil latest value stays nil. Unsigned channels drop negatives. Signed
+    /// battery watts keep the latest sign, so a charge and a discharge in one
+    /// window do not cancel toward zero.
+    private static func average(_ values: [Double?], latest: Double?, signed: Bool) -> Double? {
+        guard let latest, latest.isFinite else { return nil }
+        let finite = values.compactMap { $0 }.filter(\.isFinite)
+        let chosen: [Double]
+        if signed {
+            if latest == 0 {
+                chosen = finite.filter { $0 == 0 }
+            } else {
+                chosen = finite.filter { $0 == 0 || ($0 < 0) == (latest < 0) }
+            }
+        } else {
+            chosen = finite.filter { $0 >= 0 }
+        }
+        guard !chosen.isEmpty else { return latest }
+        let mean = chosen.reduce(0, +) / Double(chosen.count)
+        guard mean.isFinite, signed || mean >= 0 else { return latest }
+        if signed && latest < 0 && mean > 0 { return latest }
+        if signed && latest > 0 && mean < 0 { return latest }
+        return mean
+    }
+}
+
 /// Resumes a hidden-panel wait at most once, including from a cancellation hop.
 private final class OnceResume: @unchecked Sendable {
     private let lock = NSLock()
@@ -106,6 +225,10 @@ final class PowerReadingStore: ObservableObject {
     /// An injected scheduler drives tests without a host clock. Production leaves
     /// this false and keeps sampling tied to the system clock.
     private let samplesWithInjectedScheduler: Bool
+    private let samplingActivity: any MenuBarSamplingActivity
+    private var smoother = ReadingSmoother()
+    /// Off until the app installs the Settings preference. Fixtures stay raw.
+    private var smoothReadingsEnabled: @MainActor () -> Bool = { false }
     var observesSystemWake: Bool { clock is SystemWattClock && telemetry != nil }
     private var refreshRequest: UUID?
     /// Nil keeps the historical behaviour: component estimates sample whenever
@@ -118,12 +241,14 @@ final class PowerReadingStore: ObservableObject {
     private var onBatteryExpiry: Task<Void, Never>?
     private(set) var generation = UUID()
     init(currentReading: PowerReading, clock: (any WattClock)? = nil, telemetry: (any TelemetryService)? = nil,
-         componentTelemetry: (any ComponentTelemetryService)? = nil, scheduler: (any RefreshScheduling)? = nil) {
+         componentTelemetry: (any ComponentTelemetryService)? = nil, scheduler: (any RefreshScheduling)? = nil,
+         samplingActivity: (any MenuBarSamplingActivity)? = nil) {
         self.clock = clock ?? SystemWattClock()
         self.telemetry = telemetry
         self.componentTelemetry = componentTelemetry
         self.scheduler = scheduler ?? TolerantRefreshScheduler()
         self.samplesWithInjectedScheduler = scheduler != nil
+        self.samplingActivity = samplingActivity ?? ProcessMenuBarSamplingActivity()
         do {
             try currentReading.validate()
             guard currentReading.timestamp <= self.clock.now else { throw ServiceFailure.invalidData }
@@ -163,7 +288,13 @@ final class PowerReadingStore: ObservableObject {
         invalidateComponents()
         refreshRequest = nil
         isRefreshing = false
+        smoother.reset()
         return generation
+    }
+
+    /// Settings → Smooth readings. The closure is read on each sample.
+    func setSmoothReadings(_ enabled: @escaping @MainActor () -> Bool) {
+        smoothReadingsEnabled = enabled
     }
     /// Wake invalidates pre-sleep observations and any request still in flight.
     func handleWake() {
@@ -187,7 +318,11 @@ final class PowerReadingStore: ObservableObject {
         guard !Task.isCancelled, expectedGeneration == generation, refreshRequest == request else { return }
         switch outcome {
         case .success(let reading):
-            _ = accept(reading, generation: expectedGeneration)
+            let smoothed = smoother.apply(reading, enabled: smoothReadingsEnabled())
+            let published = (try? smoothed.validate()) != nil ? smoothed : reading
+            if !accept(published, generation: expectedGeneration) {
+                smoother.discard(timestamp: reading.timestamp)
+            }
         case .failure(let reason):
             failure = reason
         }
@@ -198,8 +333,11 @@ final class PowerReadingStore: ObservableObject {
     /// IOPS power-source notifications fire on adapter and charge-state changes.
     /// They do not carry `PowerTelemetryData`, which is the menu-bar wattage, so
     /// this deadline stays. Tolerance is leeway on that deadline, not a slower one.
+    /// The activity ends when this task does, including when the status item is removed.
     func runSampling(interval: @escaping @MainActor () -> TimeInterval = { PowerReadingStore.retryInterval }) async {
         guard observesSystemWake || samplesWithInjectedScheduler else { return }
+        let activity = samplingActivity.begin()
+        defer { activity.end() }
         async let components: Void = runComponentSampling()
         while !Task.isCancelled {
             await refresh()

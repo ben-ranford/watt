@@ -26,13 +26,17 @@ Read from `PowerReadingStore`, `SystemPowerSourceTelemetryService`, and `WattFal
 
 Fixtures do not install the component policy. With no policy, helper sampling stays on, which is the previous behaviour.
 
+The per-key registry read later gained `Voltage`, `InstantAmperage`, and `Amperage`. A missing key is still skipped. The sampler does not copy the rest of the entry.
+
 The stale-status task is unchanged. After a fresh system sample it sleeps until the 5s window and then invalidates the status item if nothing newer arrived. Each successful sample cancels and rearms it. It is not a second power-source poll.
 
-`smoothReadings` is stored and shown in Settings. The sampler does not read it, so this change does not touch that control.
+`smoothReadings` is stored and shown in Settings. The sampler averages battery, charger, and system watts over the last five seconds when that switch is on. Component estimates are not part of that average.
 
 ### Why the menu bar still polls
 
-`IOPSNotificationCreateRunLoopSource` reports power-source changes such as plug, unplug, and charge state. The watts in the status item come from `AppleSmartBattery`'s `PowerTelemetryData` (`SystemLoad`, `SystemPowerIn`, `BatteryPower`). That dictionary is not part of the IOPS notification. Replacing the poll with the notification would leave the status item on the last wattage until the adapter state changed. The visible cadence stays the Settings interval.
+`IOPSNotificationCreateRunLoopSource` reports power-source changes such as plug, unplug, and charge state. Charger input and battery watts still come from `AppleSmartBattery`'s `PowerTelemetryData` (`SystemPowerIn`, `BatteryPower`). That dictionary is not part of the IOPS notification, and on an M5 Pro running macOS 27.2.1 `SystemLoad` sat unchanged for about 56 seconds. On battery the menu bar uses the gas gauge instead (`Voltage` times `InstantAmperage`, or `Amperage` when instant current is missing or zero) and falls back to `SystemLoad`. AC system draw stays on `SystemLoad`, because pack current there is charge current. Replacing the poll with the IOPS notification would still leave charger and battery watts on the last value until the adapter state changed. The visible cadence stays the Settings interval.
+
+The menu-bar sampler holds a `userInitiatedAllowingIdleSystemSleep` activity while it runs, so App Nap does not delay the next sample. That option does not disable idle system sleep.
 
 ## Regression guard
 
@@ -43,7 +47,7 @@ The stale-status task is unchanged. After a fresh system sample it sleeps until 
 - `testHiddenPanelStillSamplesComponentsWhenTheMenuBarShowsThem` asserts the 3s helper sleep is armed when the status item is in Per Component mode, even if the panel is hidden.
 - `testOpeningThePanelSchedulesComponentSamplingAndClosingCancelsIt` asserts one helper sample when the panel opens and no further helper sleep after it closes, while menu-bar sampling continues.
 - `testUnsetComponentPolicyKeepsTheHelperSampler` locks the fixture default.
-- `testProductionIdlePathReleasesTheHiddenPanelAndReadsNamedRegistryKeys` checks the production call sites: the policy is installed before `startSampling()`, the popover drops its content view, and the registry read is `PowerTelemetryData`, `AdapterDetails`, and `AppleRawAdapterDetails`.
+- `testProductionIdlePathReleasesTheHiddenPanelAndReadsNamedRegistryKeys` checks the production call sites: the policy is installed before `startSampling()`, the popover drops its content view, and the registry read is `PowerTelemetryData`, `AdapterDetails`, `AppleRawAdapterDetails`, `Voltage`, `InstantAmperage`, and `Amperage`.
 
 ## How to measure on a Mac
 

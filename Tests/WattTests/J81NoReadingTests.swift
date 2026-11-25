@@ -308,6 +308,36 @@ final class J81NoReadingTests: XCTestCase {
             componentPauses)
     }
 
+    func testMenuBarSamplingHoldsAndReleasesTheAppNapExemption() async {
+        let activity = RecordingSamplingActivity()
+        let scheduler = ScriptedRefreshScheduler()
+        let store = PowerReadingStore(currentReading: .unavailable, clock: FakeWattClock(),
+                                      telemetry: CountingTelemetry(), scheduler: scheduler,
+                                      samplingActivity: activity)
+        let task = Task { await store.runSampling(interval: { 2 }) }
+        defer { task.cancel() }
+        for _ in 0..<200 {
+            if activity.began == 1, scheduler.pauses.count >= 1 { break }
+            await Task.yield()
+        }
+        XCTAssertEqual(activity.began, 1)
+        XCTAssertEqual(activity.ended, 0)
+        task.cancel()
+        scheduler.resumeAll()
+        await task.value
+        XCTAssertEqual(activity.began, 1)
+        XCTAssertEqual(activity.ended, 1)
+    }
+
+    func testIdleFixtureClockDoesNotTakeAnAppNapExemption() async {
+        let activity = RecordingSamplingActivity()
+        let store = PowerReadingStore(currentReading: .unavailable, clock: FakeWattClock(),
+                                      samplingActivity: activity)
+        await store.runSampling()
+        XCTAssertEqual(activity.began, 0)
+        XCTAssertEqual(activity.ended, 0)
+    }
+
     func testUnsetComponentPolicyKeepsTheHelperSampler() async {
         let system = CountingTelemetry()
         let components = CountingComponentTelemetry()
@@ -331,10 +361,13 @@ final class J81NoReadingTests: XCTestCase {
     func testProductionIdlePathReleasesTheHiddenPanelAndReadsNamedRegistryKeys() throws {
         let telemetry = try source("Services/SystemPowerSourceTelemetryService.swift")
         XCTAssertTrue(telemetry.contains("IORegistryEntryCreateCFProperty"))
-        for key in ["PowerTelemetryData", "AdapterDetails", "AppleRawAdapterDetails"] {
+        for key in ["PowerTelemetryData", "AdapterDetails", "AppleRawAdapterDetails",
+                    "Voltage", "InstantAmperage", "Amperage"] {
             XCTAssertTrue(telemetry.contains("\"\(key)\""), key)
         }
         XCTAssertFalse(telemetry.contains("IORegistryEntryCreateCFProperties"))
+        XCTAssertFalse(telemetry.contains("IOServiceOpen"))
+        XCTAssertFalse(telemetry.contains("AppleSMC"))
         let storeSource = try source("Services/PowerReadingStore.swift")
         XCTAssertTrue(storeSource.contains("try await Task.sleep(for: duration, tolerance: leeway)"))
         XCTAssertTrue(storeSource.contains("func setComponentSamplingPolicy"))
@@ -591,6 +624,42 @@ final class J81NoReadingTests: XCTestCase {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
             .deletingLastPathComponent().deletingLastPathComponent()
         return try String(contentsOf: root.appendingPathComponent(path), encoding: .utf8)
+    }
+}
+
+private final class SamplingActivityCounts: @unchecked Sendable {
+    private let lock = NSLock()
+    private var beganCount = 0
+    private var endedCount = 0
+    var began: Int { lock.lock(); defer { lock.unlock() }; return beganCount }
+    var ended: Int { lock.lock(); defer { lock.unlock() }; return endedCount }
+    func beganOnce() { lock.lock(); beganCount += 1; lock.unlock() }
+    func endedOnce() { lock.lock(); endedCount += 1; lock.unlock() }
+}
+
+@MainActor
+private final class RecordingSamplingActivity: MenuBarSamplingActivity {
+    let counts = SamplingActivityCounts()
+    var began: Int { counts.began }
+    var ended: Int { counts.ended }
+
+    func begin() -> any MenuBarSamplingActivityToken {
+        counts.beganOnce()
+        return RecordingSamplingActivityToken(counts)
+    }
+}
+
+private final class RecordingSamplingActivityToken: MenuBarSamplingActivityToken {
+    private let counts: SamplingActivityCounts
+    private let lock = NSLock()
+    private var open = true
+    init(_ counts: SamplingActivityCounts) { self.counts = counts }
+    func end() {
+        lock.lock()
+        let shouldCount = open
+        open = false
+        lock.unlock()
+        if shouldCount { counts.endedOnce() }
     }
 }
 
