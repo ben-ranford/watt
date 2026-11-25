@@ -52,8 +52,8 @@ def target_entry(name: str, files: list[dict], *, product_path: str = '') -> dic
     return entry
 
 
-def write_floor(path: Path, overall: int, **targets: int) -> None:
-    document = {'overall': overall, 'targets': targets}
+def write_floor(path: Path, overall: int, *, enforce: bool = True, **targets: int) -> None:
+    document = {'enforce': enforce, 'overall': overall, 'targets': targets}
     path.write_text(json.dumps(document, indent=2) + '\n', encoding='utf-8')
 
 
@@ -239,10 +239,14 @@ class ComparisonTests(unittest.TestCase):
 
 
 class FloorFileTests(unittest.TestCase):
-    def test_repository_floor_lists_the_app_and_helpers(self) -> None:
+    def test_repository_floor_is_ninety_and_not_enforced(self) -> None:
         floor = check_coverage_floor.load_floor(ROOT / '.github/coverage-floor.json')
-        self.assertEqual(set(floor.targets), set(check_coverage_floor.PRODUCT_TARGETS))
-        self.assertIsInstance(floor.overall, int)
+        self.assertFalse(floor.enforce)
+        self.assertEqual(floor.overall, 90)
+        self.assertEqual(
+            floor.targets,
+            {name: 90 for name in check_coverage_floor.PRODUCT_TARGETS},
+        )
 
     def test_floor_file_rejects_partial_and_non_integer_values(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -257,6 +261,12 @@ class FloorFileTests(unittest.TestCase):
             with self.assertRaises(check_coverage_floor.CoverageError):
                 check_coverage_floor.load_floor(path)
             path.write_text('{"overall": 1, "targets": {"Watt": 101}}\n', encoding='utf-8')
+            with self.assertRaises(check_coverage_floor.CoverageError):
+                check_coverage_floor.load_floor(path)
+            path.write_text(
+                '{"enforce": "false", "overall": 90, "targets": {"Watt": 90}}\n',
+                encoding='utf-8',
+            )
             with self.assertRaises(check_coverage_floor.CoverageError):
                 check_coverage_floor.load_floor(path)
 
@@ -305,6 +315,41 @@ class CommandTests(unittest.TestCase):
             self.assertTrue(summary.read_text(encoding='utf-8').startswith('existing\n'))
             self.assertIn('### Coverage floor', summary.read_text(encoding='utf-8'))
             self.assertIn('| Watt |', summary.read_text(encoding='utf-8'))
+            self.assertEqual(floor.read_bytes(), floor_bytes)
+
+    def test_cli_warns_without_failing_when_enforcement_is_off(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            report = root / 'coverage.json'
+            floor = root / 'floor.json'
+            summary = root / 'summary.md'
+            report.write_text(json.dumps(self.report(66, 100)), encoding='utf-8')
+            write_floor(
+                floor,
+                90,
+                enforce=False,
+                **{name: 90 for name in check_coverage_floor.PRODUCT_TARGETS},
+            )
+            floor_bytes = floor.read_bytes()
+            result = run([
+                sys.executable,
+                'scripts/check_coverage_floor.py',
+                '--report',
+                str(report),
+                '--floor',
+                str(floor),
+                '--summary',
+                str(summary),
+            ])
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('warning: coverage is below the floor; enforcement is off', result.stdout)
+            self.assertIn('::warning::Watt: 66.0% (66/100 lines, floor 90%) below floor', result.stdout)
+            self.assertIn('::warning::overall:', result.stdout)
+            self.assertNotIn('::error::', result.stdout)
+            self.assertNotIn('error:', result.stderr)
+            text = summary.read_text(encoding='utf-8')
+            self.assertIn('Enforcement is off', text)
+            self.assertIn('| Watt | 66/100 | 66.0% | 90% | warning |', text)
             self.assertEqual(floor.read_bytes(), floor_bytes)
 
     def test_cli_passes_and_notices_without_editing_the_floor(self) -> None:

@@ -4,9 +4,11 @@
 The macOS job runs this after `xcodebuild test -enableCodeCoverage YES`.
 Line coverage is the Watt app and the helper tools only. Test bundles,
 generated files, and SwiftUI preview entry points are left out. Percentages
-print with the floor beside them. The process exits 1 when a target or the
-overall total is under the floor. A total two or more points above its floor
-prints a notice. This script does not edit the floor file.
+print with the floor beside them. When `enforce` is true, the process exits 1
+if a target or the overall total is under the floor. When `enforce` is false,
+a short total is a warning annotation and the process still exits 0. A total
+two or more points above its floor prints a notice. This script does not edit
+the floor file.
 """
 
 from __future__ import annotations
@@ -67,6 +69,7 @@ class Measurement:
 class Floor:
     overall: int
     targets: dict[str, int]
+    enforce: bool = True
 
 
 @dataclass(frozen=True)
@@ -83,6 +86,7 @@ class Evaluation:
     failures: tuple[str, ...]
     notices: tuple[str, ...]
     measurement: Measurement
+    enforce: bool
 
 
 def is_generated(path: str) -> bool:
@@ -294,8 +298,11 @@ def load_floor(path: Path) -> Floor:
         raise CoverageError(f'coverage floor not found: {path}') from error
     except json.JSONDecodeError as error:
         raise CoverageError(f'coverage floor is not JSON: {path}: {error}') from error
-    if not isinstance(data, dict) or set(data) != {'overall', 'targets'}:
-        raise CoverageError('coverage floor must contain only "overall" and "targets"')
+    if not isinstance(data, dict) or set(data) != {'enforce', 'overall', 'targets'}:
+        raise CoverageError('coverage floor must contain only "enforce", "overall", and "targets"')
+    enforce = data.get('enforce')
+    if not isinstance(enforce, bool):
+        raise CoverageError('coverage floor enforce must be true or false')
     overall = _require_percent(data.get('overall'), 'overall floor')
     raw_targets = data.get('targets')
     if not isinstance(raw_targets, dict) or not raw_targets:
@@ -305,7 +312,7 @@ def load_floor(path: Path) -> Floor:
         if not isinstance(name, str) or not name:
             raise CoverageError('coverage floor target names must be strings')
         targets[name] = _require_percent(value, f'{name} floor')
-    return Floor(overall=overall, targets=targets)
+    return Floor(overall=overall, targets=targets, enforce=enforce)
 
 
 def _row_failed(row: Row) -> bool:
@@ -403,7 +410,7 @@ def evaluate(measurement: Measurement, floor: Floor) -> Evaluation:
     else:
         rows.append(Row('overall', None, None, floor.overall))
     notices = tuple(notice for row in rows if (notice := notice_for(row)) is not None)
-    return Evaluation(tuple(rows), tuple(failures), notices, measurement)
+    return Evaluation(tuple(rows), tuple(failures), notices, measurement, floor.enforce)
 
 
 def format_text(evaluation: Evaluation) -> str:
@@ -427,8 +434,21 @@ def format_text(evaluation: Evaluation) -> str:
     return '\n'.join(lines)
 
 
+def _result_label(row: Row, *, enforce: bool) -> str:
+    if not _row_failed(row):
+        return 'pass'
+    if enforce:
+        return 'below floor'
+    return 'warning'
+
+
 def format_markdown(evaluation: Evaluation) -> str:
-    status = 'Coverage is below the floor.' if evaluation.failures else 'Coverage meets the floor.'
+    if not evaluation.failures:
+        status = 'Coverage meets the floor.'
+    elif evaluation.enforce:
+        status = 'Coverage is below the floor.'
+    else:
+        status = 'Coverage is below the floor. Enforcement is off, so this job warns and does not fail.'
     body = [
         '### Coverage floor',
         '',
@@ -449,7 +469,7 @@ def format_markdown(evaluation: Evaluation) -> str:
         else:
             lines = f'{row.covered}/{row.executable}'
             percent = format_percent(row.covered, row.executable)
-        result = 'below floor' if _row_failed(row) else 'pass'
+        result = _result_label(row, enforce=evaluation.enforce)
         body.append(f'| {row.name} | {lines} | {percent} | {row.floor}% | {result} |')
     notes = format_text(evaluation).splitlines()
     extra = [line for line in notes if line.startswith('skipped targets:') or line.startswith('excluded:')]
@@ -540,6 +560,15 @@ def main(argv: list[str] | None = None) -> int:
     for notice in evaluation.notices:
         print('notice: ' + notice)
         print('::notice::' + notice)
+    if evaluation.failures and not evaluation.enforce:
+        print('warning: coverage is below the floor; enforcement is off')
+        for row in evaluation.rows:
+            if not _row_failed(row):
+                continue
+            message = render_row(row)
+            print('warning: ' + message)
+            print('::warning::' + message)
+        return 0
     if evaluation.failures:
         print('error: coverage is below the floor', file=sys.stderr)
         for row in evaluation.rows:

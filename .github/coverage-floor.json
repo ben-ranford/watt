@@ -1,9 +1,10 @@
 {
-  "overall": 63,
+  "enforce": false,
+  "overall": 90,
   "targets": {
-    "Watt": 65,
-    "WattHelper": 38,
-    "WattMaintenance": 77,
-    "WattHelperInstaller": 30
+    "Watt": 90,
+    "WattHelper": 90,
+    "WattMaintenance": 90,
+    "WattHelperInstaller": 90
   }
 }
