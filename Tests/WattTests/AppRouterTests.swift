@@ -387,6 +387,17 @@ final class ReadingPickerTests: XCTestCase {
         XCTAssertEqual(picker.unavailableModes, [.charger])
     }
 
+    /// The reading step follows the taller helper step. A picker with an unavailable
+    /// option must keep its fitted height, not spread its rows over the extra space.
+    func testPickerWithUnavailableOptionKeepsItsFittedHeight() {
+        let picker = ReadingPicker(selection: .constant(.draw), unavailableModes: [.components])
+        let host = NSHostingController(rootView: picker)
+        let short = host.sizeThatFits(in: CGSize(width: 416, height: 300)).height
+        let tall = host.sizeThatFits(in: CGSize(width: 416, height: 2_000)).height
+        XCTAssertGreaterThan(short, 0)
+        XCTAssertEqual(tall, short, accuracy: 1)
+    }
+
     #if DEBUG
     func testReferenceReadingHasExactlyFourEnabledOptions() {
         let picker = ReadingPicker(selection: .constant(.delta), options: WattReferenceSpecimen.readingOptions)
