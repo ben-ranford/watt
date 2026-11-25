@@ -85,7 +85,7 @@ final class FirstRunPolishTests: XCTestCase {
         let description = try XCTUnwrap(offered.last?.description)
         XCTAssertEqual(description, "The helper isn’t installed. Go back to install it.")
         XCTAssertFalse(description.contains("unavailable in this build"))
-        XCTAssertEqual(OfferComponentReadingsView.installMessage.contains("isn’t installed"), true)
+        XCTAssertTrue(OfferComponentReadingsView.installMessage.hasPrefix(HelperPurpose.explanation))
 
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .picker
@@ -118,6 +118,59 @@ final class FirstRunPolishTests: XCTestCase {
         let configured = AppRouter(updateService: FakeUpdateService(), updates: UpdateStore(storage: InMemoryStorage()))
         XCTAssertNil(configured.updateUnavailableReason)
         XCTAssertTrue(configured.canCheckForUpdates)
+    }
+
+    func testHelperExplanationSaysWhatTheHelperIsFor() {
+        let text = HelperPurpose.explanation
+        for needed in ["CPU", "GPU", "Neural Engine", "administrator access", "password", "updates"] {
+            XCTAssertTrue(text.contains(needed), "explanation should mention \(needed)")
+        }
+        for banned in ["\u{2014}", "Developer ID", "code hash", "launchd", "cdhash", "daemon"] {
+            XCTAssertFalse(text.contains(banned), "explanation should not contain \(banned)")
+        }
+    }
+
+    func testFailedInstallAlwaysEndsWithAMessage() async {
+        for (failure, expected) in [
+            (ServiceFailure.timedOut, "Installing the helper took too long, so Watt? stopped waiting. Try again."),
+            (.cancelled, "Helper installation was cancelled."),
+            (.adminRequired, "Watt? couldn’t install the helper. Try again."),
+            (.unknownStatus, "Watt? couldn’t install the helper. Try again.")
+        ] {
+            let setup = SettingsHelperSetup()
+            setup.unavailableReason = .installationRequired
+            setup.installHelper = { failure }
+            let result = await setup.installFromInterface()
+            XCTAssertEqual(result, failure)
+            XCTAssertFalse(setup.isInstalling, "the install button comes back after \(failure)")
+            XCTAssertEqual(setup.installResult, expected)
+            XCTAssertEqual(setup.message, expected)
+        }
+    }
+
+    func testInstallToolThatNeverFinishesIsStoppedAtTheTimeout() async {
+        let started = Date()
+        let run = HelperBundleInstall.execute("/bin/sleep", ["30"], timeout: 0.5)
+        XCTAssertEqual(run, .timedOut)
+        XCTAssertLessThan(Date().timeIntervalSince(started), 10)
+        let direct = await Task.detached {
+            HelperBundleInstall.runDirect(.init(executable: "/bin/sleep", arguments: ["30"], privileged: false), timeout: 0.5)
+        }.value
+        XCTAssertEqual(direct, .failure(.timedOut))
+        XCTAssertEqual(HelperBundleInstall.execute("/bin/echo", ["Approval: ok"], timeout: 10),
+                       .exited(status: 0, output: "Approval: ok\n", errors: ""))
+        XCTAssertEqual(HelperBundleInstall.execute("/nonexistent/tool", [], timeout: 1), .launchFailed)
+    }
+
+    func testAdministratorPromptOutcomesMapToDistinctFailures() {
+        XCTAssertEqual(HelperBundleInstall.privilegedOutcome(.exited(status: 0, output: "Installed\n", errors: "")), .success("Installed\n"))
+        XCTAssertEqual(HelperBundleInstall.privilegedOutcome(.exited(status: 1, output: "", errors: "execution error: User canceled. (-128)")),
+                       .failure(.cancelled))
+        XCTAssertEqual(HelperBundleInstall.privilegedOutcome(.exited(status: 1, output: "", errors: "execution error: interrupted (1)")),
+                       .failure(.adminRequired))
+        XCTAssertEqual(HelperBundleInstall.privilegedOutcome(.timedOut), .failure(.timedOut))
+        XCTAssertEqual(HelperBundleInstall.privilegedOutcome(.launchFailed), .failure(.unknownStatus))
+        XCTAssertGreaterThanOrEqual(HelperBundleInstall.administratorTimeout, 120, "the password prompt needs time")
     }
 
     func testReviewedInstallCommandUsesThePreflightDigest() async {

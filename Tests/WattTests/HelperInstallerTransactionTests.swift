@@ -134,6 +134,66 @@ final class HelperInstallerTransactionTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: installerEnvironment.root.path))
     }
 
+    func testAbsentServiceBootoutCountsAsAbsentOnEveryMacOS() {
+        XCTAssertTrue(launchctlSucceeded(status: 0, allowAbsent: false))
+        XCTAssertTrue(launchctlSucceeded(status: 3, allowAbsent: true))
+        XCTAssertTrue(launchctlSucceeded(status: 113, allowAbsent: true), "current macOS reports a missing service as 113")
+        XCTAssertFalse(launchctlSucceeded(status: 113, allowAbsent: false))
+        XCTAssertFalse(launchctlSucceeded(status: 5, allowAbsent: true))
+    }
+
+    func testRetriedInstallFinishesAFirstInstallThatStoppedPartWay() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        let source = try app(directory, build: 1)
+        let approval = try approve(source, in: directory)
+        installerEnvironment.launchd = { arguments in
+            if arguments.first == "bootout" { throw Simulated.interruption }
+        }
+        XCTAssertThrowsError(try install(source: source, approval: approval, rotate: false))
+        let journalURL = installerEnvironment.root.appendingPathComponent("installer-journal.json")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: journalURL.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: installerEnvironment.helperURL.path))
+
+        installerEnvironment.launchd = { _ in }
+        try install(source: source, approval: approval, rotate: false)
+        let installed = try record()
+        XCTAssertEqual(installed.generation, 1)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: journalURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: installerEnvironment.helperURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: installerEnvironment.plistURL.path))
+        let generations = try FileManager.default.contentsOfDirectory(atPath: installerEnvironment.root.appendingPathComponent("generations").path)
+        XCTAssertEqual(generations, ["\(installed.installationID.uuidString)-1"], "the retry adds no second copy of the same build")
+    }
+
+    func testRetriedInstallOfANewerBuildFinishesTheStoppedInstallThenRotates() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        let first = try app(directory, build: 1)
+        installerEnvironment.journalCheckpoint = { if $0 == "stopped" { throw Simulated.interruption } }
+        XCTAssertThrowsError(try install(source: first, approval: approve(first, in: directory), rotate: false))
+        installerEnvironment.journalCheckpoint = nil
+        let second = try app(directory, build: 2)
+        try install(source: second, approval: approve(second, in: directory), rotate: false)
+        let installed = try record()
+        XCTAssertEqual(installed.generation, 2)
+        XCTAssertEqual(installed.build, 2)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: installerEnvironment.root.appendingPathComponent("installer-journal.json").path))
+    }
+
+    func testInterruptedRemovalIsNotResumedByAnInstall() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        let source = try app(directory, build: 1)
+        let approval = try approve(source, in: directory)
+        try install(source: source, approval: approval, rotate: false)
+        let installed = try record()
+        installerEnvironment.journalCheckpoint = { if $0 == "removed" { throw Simulated.interruption } }
+        XCTAssertThrowsError(try removeHelper(installation: installed.installationID, generation: 1))
+        installerEnvironment.journalCheckpoint = nil
+        XCTAssertThrowsError(try install(source: source, approval: approval, rotate: true), "a removal needs explicit recovery")
+    }
+
     func testChangedInstalledHelperIsPreservedAndRefused() throws {
         let directory = try fixture()
         defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }

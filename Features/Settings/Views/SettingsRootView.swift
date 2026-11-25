@@ -5,6 +5,12 @@ import Combine
 import WattHelperShared
 #endif
 
+/// What the helper is for, in the words the install button sits beside.
+enum HelperPurpose {
+    static let explanation = "The helper lets Watt? show how much power your CPU, GPU and Neural Engine use. macOS only shares those readings with tools that have administrator access, so it asks for your password once. It also keeps Watt? in a protected folder, so only genuine Watt? updates can replace it."
+    static let installing = "Installing the helper…"
+}
+
 enum HelperUnavailableReason: Equatable {
     case missingBundle, signingRequired, verificationFailed, configurationFailed, installationRequired
 
@@ -576,6 +582,9 @@ struct SettingsHelperRows: View {
                 Text(Self.reconnectNote).font(.footnote).foregroundStyle(.secondary)
                     .accessibilityIdentifier("settings.helper.reconnected")
                     .wattFade(.reveal, when: setup.reconnectedFromLastInstall, enabled: motionEnabled)
+            } else if setup.canInstallHelper {
+                Text(HelperPurpose.explanation)
+                    .accessibilityIdentifier("settings.helper.purpose")
             } else if setup.helperServiceAvailable && !setup.wasRemoved && !setup.helperOn
                         && setup.state != .requiresApproval {
                 Text(Self.approvalNote)
@@ -699,12 +708,16 @@ final class SettingsHelperSetup: ObservableObject {
         installResult = nil
         let failure = await installHelper()
         isInstalling = false
-        if let failure {
-            installResult = failure == .cancelled
-                ? "Helper installation was cancelled."
-                : "Couldn’t install the helper. Try again."
-        }
+        if let failure { installResult = Self.installFailureMessage(failure) }
         return failure
+    }
+    /// Every failed install ends with a message, so the button never just resets.
+    static func installFailureMessage(_ failure: ServiceFailure) -> String {
+        switch failure {
+        case .cancelled: return "Helper installation was cancelled."
+        case .timedOut: return "Installing the helper took too long, so Watt? stopped waiting. Try again."
+        default: return "Watt? couldn’t install the helper. Try again."
+        }
     }
     var captureDiagnostic: (() async -> Void)?
     private var repairReceipt: (() -> OperationReceipt)?
