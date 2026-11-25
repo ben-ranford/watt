@@ -45,7 +45,12 @@ final class HelperInstallerHostTests: XCTestCase {
 
     /// A local ad-hoc app with the identifiers and positive build the installer requires.
     private func signedApp(build: UInt64) throws -> URL {
-        let root = FileManager.default.temporaryDirectory.appendingPathComponent("watt-installer-host-" + UUID().uuidString)
+        // The installer refuses a symlink anywhere in the source path. The
+        // temporary directory is often reached through one, so start from the
+        // home directory and use the resolved path.
+        let root = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".watt-installer-host-" + UUID().uuidString)
+            .resolvingSymlinksInPath()
         let app = root.appendingPathComponent("Watt.app")
         let binaries = app.appendingPathComponent("Contents/MacOS")
         try FileManager.default.createDirectory(at: binaries, withIntermediateDirectories: true)
