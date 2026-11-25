@@ -1326,7 +1326,8 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     private var panel: NSPopover?
     private var fallbackWindow: NSWindow?
     private var contextMenuMonitor: Any?
-    private var wakeObserver: NSObjectProtocol?
+        private var wakeObserver: NSObjectProtocol?
+        private var powerStateObserver: NSObjectProtocol?
     private var observations = Set<AnyCancellable>()
     private var samplingTask: Task<Void, Never>?
     private var buttonUpdateScheduled = false
@@ -1373,6 +1374,13 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
                 guard let self, self.powerStore.observesSystemWake else { return }
                 self.powerStore.handleWake()
                 await self.powerStore.refresh()
+            }
+        }
+        powerStateObserver = NotificationCenter.default.addObserver(
+            forName: .NSProcessInfoPowerStateDidChange, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.scheduleButtonUpdate()
             }
         }
 
@@ -1489,6 +1497,8 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
         observations.removeAll()
         if let wakeObserver { NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver) }
         wakeObserver = nil
+        if let powerStateObserver { NotificationCenter.default.removeObserver(powerStateObserver) }
+        powerStateObserver = nil
         if let contextMenuMonitor { NSEvent.removeMonitor(contextMenuMonitor) }
         contextMenuMonitor = nil
         panel?.close()
@@ -1554,13 +1564,30 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
         let label = MenuBarStatusLabel(reading: powerStore.statusReading,
                                        preferences: preferences,
                                        helperSwitchedOff: router.settingsHelperSetup.helperSwitchedOff)
-        button.image = NSImage(systemSymbolName: label.symbolName, accessibilityDescription: nil)
-        button.imagePosition = label.showsSymbol ? (label.text == nil ? .imageOnly : .imageLeading) : .noImage
+        if let image = label.batteryStatusBarImage() {
+            button.image = image
+        } else {
+            button.image = NSImage(systemSymbolName: label.symbolName, accessibilityDescription: nil)
+        }
+        let showsTitle = label.text != nil || label.percentagePlainTitle != nil
+        button.imagePosition = label.showsSymbol ? (showsTitle ? .imageLeading : .imageOnly) : .noImage
+        let pointSize = button.font?.pointSize ?? 13
+        if label.percentagePlainTitle != nil {
+            button.font = NSFont.monospacedDigitSystemFont(ofSize: pointSize, weight: .semibold)
+        } else {
+            button.font = NSFont.systemFont(ofSize: pointSize, weight: .semibold)
+        }
         button.title = label.text ?? ""
+        if let percentTitle = label.percentagePlainTitle {
+            button.title = percentTitle
+        }
         button.toolTip = label.accessibilityAnnouncement
         MenuBarStatusAccessibility.apply(to: button, label: label)
         button.sizeToFit()
-        item?.length = max(42, button.intrinsicContentSize.width + 12)
+        // The percent keeps its own slot, wide enough for "100%". This slack is
+        // separate from any watt-reading reserve, so 9%, 87% and 100% stay the same width.
+        let percentSlack = label.percentageSlotSlack(font: button.font ?? NSFont.systemFont(ofSize: pointSize, weight: .semibold))
+        item?.length = max(42, button.intrinsicContentSize.width + 12 + percentSlack)
     }
 
     private func startSampling() {

@@ -162,6 +162,22 @@ struct SettingsRootView: View {
                             ForEach(WattPrecision.allCases, id: \.self) { Text($0.rawValue).tag($0) }
                         }
                         .accessibilityIdentifier("settings.precision")
+                        if !menuBarExcerpt && MenuBarBatteryAvailability.isPresent(powerStore.currentReading) {
+                            Picker("Show battery percentage", selection: $preferences.batteryPercentageStyle) {
+                                ForEach(MenuBarBatteryPercentageStyle.allCases, id: \.self) { style in
+                                    Text(style.title).tag(style)
+                                }
+                            }
+                            .accessibilityIdentifier("settings.batteryPercentage")
+                            .accessibilityHint("Adds the charge next to the reading, or shows only the charge.")
+                            Picker("Menu bar icon", selection: $preferences.menuBarIcon) {
+                                ForEach(MenuBarIconChoice.allCases, id: \.self) { choice in
+                                    Text(choice.title).tag(choice)
+                                }
+                            }
+                            .accessibilityIdentifier("settings.menuBarIcon")
+                            .accessibilityHint("Battery follows the charge. It turns red when the battery is low and unplugged, and yellow in Low Power Mode.")
+                        }
                     }
                     if !menuBarExcerpt && (!helperExcerpt || componentsExcerpt) {
                         LabeledContent {
