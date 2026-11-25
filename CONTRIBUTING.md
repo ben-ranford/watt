@@ -28,19 +28,23 @@ A feature request needs the problem, the proposed behavior, and the acceptance c
 
 ## Pull requests
 
-Use the template in `.github/pull_request_template.md`. The description has a summary, a linked issue (`Closes #`), the change type, the validation checklist, and a note on docs and the changelog.
+Use the template in `.github/pull_request_template.md`. Keep these headings, in this order: Summary, Linked issue, Change type, Validation, Test plan, and Docs and changelog. `Assumptions to confirm` is optional. When you include it, every line is a checkbox.
 
-Delete the `Closes #` line when there is no issue.
+Summary says what changed and why, in your own words. Tick one change type, and make it the bump the title uses (`fix` patch, `feat` minor, `!` or `BREAKING CHANGE` major, anything else no bump). Test plan is a checkbox list. Put a Mac check there, under `## Test plan`.
+
+Delete the `Closes #` line when there is no issue. Leave Mac serial numbers, hardware UUIDs, and notes such as "mac time" out of the title and the description.
 
 ## Conventional commits
 
-This repository uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) because [Release Please](https://github.com/googleapis/release-please) cuts releases from the pull request title. The title check on every pull request rejects a title that Release Please cannot read.
+This repository uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) because [Release Please](https://github.com/googleapis/release-please) cuts releases from the pull request title. The pull request check rejects a title Release Please cannot read, and it checks the description against the template. Release Please's own pull request is checked on the title only.
 
 `fix:` is a patch. `feat:` is a minor. `feat!:` or a `BREAKING CHANGE` footer is a major. These types do not bump the version: `build:`, `chore:`, `ci:`, `deps:`, `docs:`, `perf:`, `refactor:`, `revert:`, `style:`, and `test:`.
 
 ```text
-type(optional-scope)!: description
+type(optional-scope)!: subject
 ```
+
+The scope is lowercase kebab-case, such as `menu-bar`. The subject starts with a lowercase letter and does not end with a period. The whole title is 72 characters or fewer.
 
 `chore(main): release 1.0.1` is the title Release Please uses for its own pull request. The release steps are in [RELEASING.md](RELEASING.md).
 
@@ -53,7 +57,7 @@ These checks run on every pull request, including every pull request into `main`
 | `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. A pull request also uploads the Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. Same-repo pull requests sign that app with Developer ID and notarise it. Fork pull requests, which cannot read the signing secrets, upload an ad-hoc build instead. That Release build compiles the public update URLs from `Resources/ReleaseIdentity.json` and the public key in `Resources/UpdatePublicKey.txt`. |
 | `Release config` | Release | `python3 scripts/test_release_pipeline.py` |
 | `gitleaks` | Secret scan | Working-tree secret scan. The same scanner is the optional pre-commit hook in `.pre-commit-config.yaml`. |
-| `Conventional commit` | PR title | The pull request title matches the types above |
+| `Conventional commit` | PR title | The pull request title is a Conventional Commit, and the description follows the template. Release Please is title-only. Editing the description re-runs this check. |
 
 Require those four checks. `Release Please`, `Build and publish`, `Update Homebrew cask`, and `Publish update endpoints` stay in the Release workflow and are skipped on a pull request that does not publish. A skipped required check blocks the merge.
 
