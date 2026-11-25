@@ -19,9 +19,9 @@ final class J42ReadingBatteryUnavailableTests: XCTestCase {
         XCTAssertEqual(options.map(\.mode), [.draw, .components, .delta, .charger])
         XCTAssertEqual(options.map(\.description), [
             "What your Mac uses right now. 38.2 W",
-            "CPU/GPU estimates. Needs administrator approval.",
-            "Needs a battery. This Mac doesn’t have one.",
-            "Needs a battery. This Mac doesn’t have one."
+            "Optional CPU and GPU readings.",
+            "This Mac doesn’t have a battery.",
+            "This Mac doesn’t have a battery."
         ])
         XCTAssertEqual(ChooseMenuReadingView.unavailableModes(reading: reading), [.components, .delta, .charger])
         XCTAssertNil(reading.value(for: .delta))
@@ -67,9 +67,11 @@ final class J42ReadingBatteryUnavailableTests: XCTestCase {
         ChooseMenuReadingView.back(preferences: preferences)
         XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .welcome)
         OnboardingFlowView.continueWelcome(preferences: preferences)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
+        OfferComponentReadingsView.perform(.notNow, preferences: preferences)
         ChooseMenuReadingView.advance(preferences: preferences)
         let restored = PreferencesStore(storage: storage)
-        XCTAssertEqual(restored.onboarding.checkpoint, .helperOffer)
+        XCTAssertEqual(restored.onboarding.checkpoint, .allSet)
         XCTAssertEqual(restored.displayMode, .draw)
         XCTAssertFalse(restored.onboarding.helperOptIn)
         XCTAssertFalse(restored.onboarding.completed)

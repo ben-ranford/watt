@@ -757,7 +757,7 @@ final class AppRouter: ObservableObject {
     private func resumeIncompleteSetup(preferences: PreferencesStore, expected previous: OnboardingState) -> Bool {
         guard !previous.completed, preferences.onboarding == previous else { return false }
         var next = previous
-        next.checkpoint = .picker
+        next.checkpoint = .helperOffer
         next.deferredSetupID = nil
         guard preferences.transitionOnboarding(from: previous, to: next) else { return false }
         statusPanelPresented = false

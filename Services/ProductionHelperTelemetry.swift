@@ -21,10 +21,9 @@ final class ProductionHelperTelemetry: ComponentTelemetryService {
         do {
             _ = try await transport.connect()
             guard !Task.isCancelled else { return .failure(.cancelled) }
-            _ = try await transport.request(.init(command: .sample, generation: UUID()))
-            // G005 must establish the host schema and units from an authenticated capture
-            // before a decoder may turn the daemon reply into an estimate pair.
-            return .failure(.unknownStatus)
+            let reply = try await transport.request(.init(command: .sample, generation: UUID()))
+            guard !Task.isCancelled else { return .failure(.cancelled) }
+            return PowerMetricsComponentDecoder.estimate(from: reply)
         } catch { return .failure(.disconnected) }
     }
 }
