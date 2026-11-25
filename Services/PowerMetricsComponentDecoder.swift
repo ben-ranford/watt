@@ -12,7 +12,7 @@ import WattHelperShared
 /// or above the rail ceiling is not an estimate.
 enum PowerMetricsComponentDecoder {
     static let provenance = "powermetrics processor cpu_power/gpu_power mW"
-    /// One SoC rail. M2 Ultra GPU samples sit near 71 W. Anything above this is rejected.
+    /// One SoC rail. The largest loaded GPU samples sit near 71 W. Anything above this is rejected.
     static let maximumRailMilliwatts = 200_000.0
 
     static func estimate(from reply: HelperReply) -> ServiceOutcome<ComponentEstimatePair> {

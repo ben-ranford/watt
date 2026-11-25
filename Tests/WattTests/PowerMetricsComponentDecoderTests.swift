@@ -5,7 +5,7 @@ import WattHelperShared
 @testable import Watt
 
 /// Reduced Apple Silicon `powermetrics -f plist` documents. Power, energy, and `elapsed_ns`
-/// match captured M1 and M2 Ultra samples. Cluster and DVFM tables are omitted because the
+/// match earlier Apple silicon captures. Cluster and DVFM tables are omitted because the
 /// decoder must not depend on them.
 enum PowerMetricsFixture {
     static let acquisition = UUID(uuidString: "E4B1C0DE-0000-4000-8000-000000000001")!
@@ -35,13 +35,13 @@ enum PowerMetricsFixture {
         """.utf8)
     }
 
-    /// Idle M1 window (`elapsed_ns` 2019178750). cpu 44.0773 mW and gpu 15.3528 mW.
-    static func m1Idle() -> Data {
+    /// Idle low-power window (`elapsed_ns` 2019178750). cpu 44.0773 mW and gpu 15.3528 mW.
+    static func lowPowerIdle() -> Data {
         plist("""
         <key>elapsed_ns</key>
         <integer>2019178750</integer>
         <key>hw_model</key>
-        <string>MacBookPro17,1</string>
+        <string>Mac</string>
         <key>is_delta</key>
         <true/>
         <key>thermal_pressure</key>
@@ -58,13 +58,13 @@ enum PowerMetricsFixture {
         """)
     }
 
-    /// Loaded M2 Ultra window (`elapsed_ns` 1023721416). GPU average 70924.6 mW.
-    static func m2UltraLoaded() -> Data {
+    /// Loaded high-GPU window (`elapsed_ns` 1023721416). GPU average 70924.6 mW.
+    static func highGPULoaded() -> Data {
         plist("""
         <key>elapsed_ns</key>
         <integer>1023721416</integer>
         <key>hw_model</key>
-        <string>Mac14,14</string>
+        <string>Mac</string>
         <key>is_delta</key>
         <true/>
         \(processor(cpuPower: "835.188", gpuPower: "70924.6", anePower: "0.0", combined: "71759.8",
@@ -79,7 +79,7 @@ enum PowerMetricsFixture {
         <key>elapsed_ns</key>
         <integer>1000000000</integer>
         <key>hw_model</key>
-        <string>Mac16,1</string>
+        <string>Mac</string>
         \(processor(cpuPower: "\(cpu)", gpuPower: "\(gpu)", anePower: "\(ane)", combined: "\(combined)",
                     cpuEnergy: "\(cpu)", gpuEnergy: "\(gpu)", aneEnergy: "\(ane)", realPower: false))
         """)
@@ -163,10 +163,10 @@ final class PowerMetricsComponentDecoderTests: XCTestCase {
         guard case .failure(.invalidData) = outcome else { return XCTFail("Two frames are not one sample") }
     }
 
-    func testM1IdleCaptureDecodesMilliwattsToWatts() throws {
-        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsFixture.m1Idle(), duration: 2.2)
+    func testLowPowerIdleCaptureDecodesMilliwattsToWatts() throws {
+        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsFixture.lowPowerIdle(), duration: 2.2)
         guard case .success(let pair) = PowerMetricsComponentDecoder.estimate(from: PowerMetricsFixture.reply(capture)) else {
-            return XCTFail("M1 idle sample must decode")
+            return XCTFail("Low-power idle sample must decode")
         }
         XCTAssertEqual(pair.cpuWatts, 0.0440773, accuracy: 0.000_000_1)
         XCTAssertEqual(pair.gpuWatts, 0.0153528, accuracy: 0.000_000_1)
@@ -177,10 +177,10 @@ final class PowerMetricsComponentDecoderTests: XCTestCase {
         try pair.validate()
     }
 
-    func testM2UltraLoadedGPUStaysInsideTheRailCeiling() throws {
-        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsFixture.m2UltraLoaded(), duration: 1.2)
+    func testHighGPULoadStaysInsideTheRailCeiling() throws {
+        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsFixture.highGPULoaded(), duration: 1.2)
         guard case .success(let pair) = PowerMetricsComponentDecoder.estimate(from: PowerMetricsFixture.reply(capture)) else {
-            return XCTFail("M2 Ultra sample must decode")
+            return XCTFail("High-GPU sample must decode")
         }
         XCTAssertEqual(pair.cpuWatts, 0.835188, accuracy: 0.000_000_1)
         XCTAssertEqual(pair.gpuWatts, 70.9246, accuracy: 0.000_000_1)
@@ -399,7 +399,7 @@ final class PowerMetricsComponentDecoderTests: XCTestCase {
     }
 
     func testSampleShorterThanItsElapsedWindowFailsClosed() {
-        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsFixture.m1Idle(), duration: 0.5)
+        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsFixture.lowPowerIdle(), duration: 0.5)
         assertInvalidOutcome(PowerMetricsComponentDecoder.estimate(from: PowerMetricsFixture.reply(capture)))
     }
 
