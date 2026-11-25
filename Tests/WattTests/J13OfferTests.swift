@@ -83,7 +83,7 @@ final class J13OfferTests: XCTestCase {
             preferences.onboarding.checkpoint = .helperOffer
             OfferComponentReadingsView.perform(action, preferences: preferences)
             let restored = PreferencesStore(storage: storage)
-            XCTAssertEqual(restored.onboarding.checkpoint, action == .notNow ? .allSet : .approval)
+            XCTAssertEqual(restored.onboarding.checkpoint, action == .notNow ? .picker : .approval)
             XCTAssertEqual(restored.onboarding.helperOptIn, action == .turnOn)
             XCTAssertFalse(restored.onboarding.completed)
             XCTAssertEqual(restored.displayMode, .components)
@@ -102,7 +102,7 @@ final class J13OfferTests: XCTestCase {
         }
     }
 
-    func testMissingHelperCannotEnterApprovalAndPickerSkipsOffer() {
+    func testMissingHelperCannotEnterApprovalAndSkipStillReachesTheReading() {
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .picker
         preferences.displayMode = .components
@@ -114,7 +114,7 @@ final class J13OfferTests: XCTestCase {
         ChooseMenuReadingView.prepareSelection(preferences: preferences, reading: .sampleCharging,
                                                helperAvailable: false)
         XCTAssertEqual(preferences.displayMode, .draw)
-        ChooseMenuReadingView.advance(preferences: preferences, helperAvailable: false)
+        ChooseMenuReadingView.advance(preferences: preferences)
         XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
         XCTAssertFalse(preferences.onboarding.helperOptIn)
 
@@ -124,9 +124,62 @@ final class J13OfferTests: XCTestCase {
             OfferComponentReadingsView.perform(.turnOn, preferences: preferences, helperAvailable: false)
             XCTAssertEqual(preferences.onboarding.checkpoint, checkpoint)
             OfferComponentReadingsView.perform(.notNow, preferences: preferences, helperAvailable: false)
-            XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
+            XCTAssertEqual(preferences.onboarding.checkpoint, checkpoint == .helperOffer ? .picker : .allSet)
             XCTAssertFalse(preferences.onboarding.helperOptIn)
         }
+    }
+
+    func testSkipLeavesComponentsUnavailableWithAWayBackToInstall() {
+        let storage = InMemoryStorage()
+        let preferences = PreferencesStore(storage: storage)
+        preferences.onboarding.checkpoint = .helperOffer
+        preferences.displayMode = .components
+        OfferComponentReadingsView.perform(.notNow, preferences: preferences)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
+        XCTAssertFalse(preferences.onboarding.completed)
+        XCTAssertFalse(preferences.onboarding.helperOptIn)
+        XCTAssertEqual(ChooseMenuReadingView.unavailableModes(reading: .sampleCharging, helperAvailable: false), [.components])
+        ChooseMenuReadingView.prepareSelection(preferences: preferences, reading: .sampleCharging, helperAvailable: false)
+        XCTAssertEqual(preferences.displayMode, .draw)
+        ChooseMenuReadingView.back(preferences: preferences, returnToInstall: true)
+        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .helperOffer)
+        OfferComponentReadingsView.perform(.notNow, preferences: preferences)
+        ChooseMenuReadingView.advance(preferences: preferences)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
+        XCTAssertFalse(preferences.onboarding.completed)
+    }
+
+    func testInstalledHelperMakesComponentsSelectableThenContinues() {
+        let connected = PreferencesStore(storage: InMemoryStorage())
+        connected.onboarding.checkpoint = .helperOffer
+        OfferComponentReadingsView.finishInstall(preferences: connected, helperOn: true, requiresApproval: false)
+        XCTAssertEqual(connected.onboarding.checkpoint, .picker)
+        XCTAssertTrue(connected.onboarding.helperOptIn)
+        XCTAssertFalse(connected.onboarding.completed)
+        XCTAssertTrue(ChooseMenuReadingView.unavailableModes(reading: .sampleCharging, helperAvailable: true).isEmpty)
+        connected.displayMode = .components
+        ChooseMenuReadingView.prepareSelection(preferences: connected, reading: .sampleCharging, helperAvailable: true)
+        XCTAssertEqual(connected.displayMode, .components)
+        ChooseMenuReadingView.advance(preferences: connected, helperOn: true)
+        XCTAssertEqual(connected.onboarding.checkpoint, .preview)
+
+        let pending = PreferencesStore(storage: InMemoryStorage())
+        pending.onboarding.checkpoint = .helperOffer
+        OfferComponentReadingsView.finishInstall(preferences: pending, helperOn: false, requiresApproval: true)
+        XCTAssertEqual(pending.onboarding.checkpoint, .picker)
+        XCTAssertTrue(ChooseMenuReadingView.unavailableModes(reading: .sampleCharging, helperAvailable: true).isEmpty)
+        ChooseMenuReadingView.advance(preferences: pending, requiresApproval: true)
+        XCTAssertEqual(pending.onboarding.checkpoint, .approval)
+        XCTAssertFalse(pending.onboarding.completed)
+
+        let unchanged = PreferencesStore(storage: InMemoryStorage())
+        unchanged.onboarding.checkpoint = .helperOffer
+        OfferComponentReadingsView.finishInstall(preferences: unchanged, helperOn: false, requiresApproval: false)
+        XCTAssertEqual(unchanged.onboarding.checkpoint, .helperOffer)
+        XCTAssertTrue(unchanged.onboarding.helperOptIn)
+        unchanged.onboarding.checkpoint = .picker
+        OfferComponentReadingsView.finishInstall(preferences: unchanged, helperOn: true, requiresApproval: false)
+        XCTAssertEqual(unchanged.onboarding.checkpoint, .picker)
     }
 
     #if DEBUG || SWIFT_PACKAGE

@@ -186,7 +186,7 @@ final class AppRouterTests: XCTestCase {
         }
     }
 
-    func testFinishSetupPersistsPickerBeforeRequestingOnboardingWithoutCompleting() throws {
+    func testFinishSetupPersistsHelperOfferBeforeRequestingOnboardingWithoutCompleting() throws {
         let storage = InMemoryStorage()
         let preferences = PreferencesStore(storage: storage)
         preferences.onboarding.checkpoint = .approval
@@ -195,14 +195,14 @@ final class AppRouterTests: XCTestCase {
         var requests: [AppDestination] = []
         router.present = {
             requests.append($0)
-            XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .picker)
+            XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .helperOffer)
         }
         let menu = StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { true })
 
         try invoke("Finish Setup…", in: menu)
 
         XCTAssertEqual(requests, [.onboarding])
-        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
         XCTAssertFalse(preferences.onboarding.completed)
         XCTAssertTrue(preferences.onboarding.helperOptIn)
         XCTAssertEqual(PreferencesStore(storage: storage).onboarding, preferences.onboarding)
@@ -385,6 +385,17 @@ final class ReadingPickerTests: XCTestCase {
         let picker = ReadingPicker(selection: .constant(.charger), unavailableModes: [.charger], options: options)
         XCTAssertEqual(picker.options, options)
         XCTAssertEqual(picker.unavailableModes, [.charger])
+    }
+
+    /// The reading step follows the taller helper step. A picker with an unavailable
+    /// option must keep its fitted height, not spread its rows over the extra space.
+    func testPickerWithUnavailableOptionKeepsItsFittedHeight() {
+        let picker = ReadingPicker(selection: .constant(.draw), unavailableModes: [.components])
+        let host = NSHostingController(rootView: picker)
+        let short = host.sizeThatFits(in: CGSize(width: 416, height: 300)).height
+        let tall = host.sizeThatFits(in: CGSize(width: 416, height: 2_000)).height
+        XCTAssertGreaterThan(short, 0)
+        XCTAssertEqual(tall, short, accuracy: 1)
     }
 
     #if DEBUG
@@ -1876,17 +1887,17 @@ final class P03NotificationLoginTests: XCTestCase {
 
 @MainActor
 final class J11WelcomeTests: XCTestCase {
-    func testContinuePersistsPickerWithoutCompletingSetupOrChangingDefaults() {
+    func testContinuePersistsHelperOfferWithoutCompletingSetupOrChangingDefaults() {
         let storage = InMemoryStorage()
         let preferences = PreferencesStore(storage: storage)
         OnboardingFlowView.continueWelcome(preferences: preferences)
-        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
         XCTAssertFalse(preferences.onboarding.completed)
         XCTAssertEqual(preferences.displayMode, .draw)
-        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .picker)
-        preferences.onboarding.checkpoint = .helperOffer
+        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .helperOffer)
+        preferences.onboarding.checkpoint = .picker
         OnboardingFlowView.continueWelcome(preferences: preferences)
-        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
     }
 
     func testExactCopy() {
@@ -1964,16 +1975,19 @@ final class J12ReadingTests: XCTestCase {
             ChooseMenuReadingView.back(preferences: preferences)
             XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .welcome)
             OnboardingFlowView.continueWelcome(preferences: preferences)
+            XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
+            XCTAssertEqual(preferences.displayMode, mode)
+            OfferComponentReadingsView.perform(.notNow, preferences: preferences)
             XCTAssertEqual(preferences.displayMode, mode)
             ChooseMenuReadingView.advance(preferences: preferences)
             let restored = PreferencesStore(storage: storage)
-            XCTAssertEqual(restored.onboarding.checkpoint, .helperOffer)
+            XCTAssertEqual(restored.onboarding.checkpoint, .allSet)
             XCTAssertEqual(restored.displayMode, mode)
             XCTAssertFalse(restored.onboarding.completed)
             XCTAssertFalse(restored.onboarding.helperOptIn)
             ChooseMenuReadingView.back(preferences: preferences)
             ChooseMenuReadingView.advance(preferences: preferences)
-            XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
+            XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
         }
     }
 
