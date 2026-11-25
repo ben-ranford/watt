@@ -97,7 +97,7 @@ final class HelperInstallerHostTests: XCTestCase {
         XCTAssertEqual(uppercase.status, 78)
     }
 
-    func testPreflightPrintsTheApprovalAndRefusesADifferentTree() throws {
+    func testPreflightPrintsTheApprovalAndRefusesABrokenSignature() throws {
         let app = try signedApp(build: 7)
         defer { try? FileManager.default.removeItem(at: app.deletingLastPathComponent()) }
         let first = try runInstaller(["--preflight", "--source", app.path])
@@ -106,11 +106,13 @@ final class HelperInstallerHostTests: XCTestCase {
         XCTAssertEqual(digest.count, 64)
         XCTAssertTrue(digest.allSatisfy { $0.isHexDigit })
         XCTAssertTrue(first.output.contains("\"build\":7"))
-        let note = app.appendingPathComponent("Contents/MacOS/note.txt")
-        try Data("changed".utf8).write(to: note)
+        // A new file inside the bundle changes the sealed contents. Preflight
+        // must refuse that bundle instead of printing a replacement approval.
+        try Data("changed".utf8).write(to: app.appendingPathComponent("Contents/MacOS/note.txt"))
         let second = try runInstaller(["--preflight", "--source", app.path])
-        XCTAssertEqual(second.status, 0, second.error)
-        XCTAssertNotEqual(try approval(in: second.output), digest)
+        XCTAssertEqual(second.status, 78, second.error)
+        XCTAssertTrue(second.error.contains("invalidCode"))
+        XCTAssertFalse(second.output.contains("Approval:"))
     }
 
     func testBootstrapWithoutAdministratorLeavesTheReviewedAppUntouched() throws {
