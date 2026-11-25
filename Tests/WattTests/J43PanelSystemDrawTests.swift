@@ -78,13 +78,16 @@ final class J43PanelSystemDrawTests: XCTestCase {
         XCTAssertEqual(preferences.displayMode, .draw)
     }
 
-    func testDesktopOnboardingRetainsHelperOfferThenEntersSharedPanel() {
+    func testDesktopOnboardingOffersHelperBeforeTheReadingThenEntersSharedPanel() {
         let preferences = PreferencesStore(storage: InMemoryStorage())
-        preferences.onboarding.checkpoint = .picker
-        ChooseMenuReadingView.prepareSelection(preferences: preferences, reading: J42FixtureLaunch.reading)
-        ChooseMenuReadingView.advance(preferences: preferences)
+        preferences.onboarding.checkpoint = .welcome
+        OnboardingFlowView.continueWelcome(preferences: preferences)
         XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
+        OfferComponentReadingsView.perform(.notNow, preferences: preferences)
+        ChooseMenuReadingView.prepareSelection(preferences: preferences, reading: J42FixtureLaunch.reading)
         XCTAssertEqual(preferences.displayMode, .draw)
+        ChooseMenuReadingView.advance(preferences: preferences)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
         XCTAssertFalse(preferences.onboarding.completed)
         // Completion remains the existing setup/coach-mark flow, never fabricated helper approval.
         preferences.onboarding = .init(checkpoint: .coachMark, completed: true)

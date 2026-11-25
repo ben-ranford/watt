@@ -51,7 +51,7 @@ final class J52FinishSetupTests: XCTestCase {
         XCTAssertEqual(StatusPanelModel(reading: .sampleCharging).panelHeight, 473)
     }
 
-    func testContinuePersistsPickerBeforeNavigationPreservesPreferencesAndRestartsIncomplete() {
+    func testContinuePersistsHelperOfferBeforeNavigationPreservesPreferencesAndRestartsIncomplete() {
         for checkpoint in [OnboardingCheckpoint.welcomeClosed, .runningDefaults] {
             let storage = CountingStorage()
             let preferences = PreferencesStore(storage: storage)
@@ -69,7 +69,7 @@ final class J52FinishSetupTests: XCTestCase {
                 routes.append($0)
                 let disk = PreferencesStore(storage: storage)
                 XCTAssertEqual(disk.onboarding, preferences.onboarding)
-                XCTAssertEqual(disk.onboarding.checkpoint, .picker)
+                XCTAssertEqual(disk.onboarding.checkpoint, .helperOffer)
                 XCTAssertFalse(disk.onboarding.completed)
                 XCTAssertNil(disk.onboarding.deferredSetupID)
                 XCTAssertTrue(disk.onboarding.helperOptIn)
@@ -200,7 +200,7 @@ final class J52FinishSetupTests: XCTestCase {
         XCTAssertFalse(router.continuePanelSetup(preferences: preferences, expected: expected, presentationID: panelID))
         XCTAssertEqual(storage.writes, writes)
         XCTAssertEqual(routes, [.onboarding])
-        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
         XCTAssertFalse(preferences.onboarding.completed)
     }
 

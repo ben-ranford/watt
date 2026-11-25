@@ -8,8 +8,8 @@ import WattFixtures
 @MainActor
 final class J15PreviewTests: XCTestCase {
     func testExactSuccessCopy() {
-        XCTAssertEqual(ComponentPreviewView.title, "Helper’s on")
-        XCTAssertEqual(ComponentPreviewView.message, "CPU/GPU estimates appear when both are available. Display, SSD and Other are unavailable.")
+        XCTAssertEqual(ComponentPreviewView.title, "The helper is on")
+        XCTAssertEqual(ComponentPreviewView.message, "CPU and GPU show up together.")
     }
 
     #if DEBUG || SWIFT_PACKAGE

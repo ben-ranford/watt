@@ -11,7 +11,7 @@ public enum HelperIdentity {
     public static let machService = helperIdentifier
     public static let daemonPlist = helperIdentifier + ".plist"
     public static let executableName = "WattHelper"
-    public static let build = "1002000"
+    public static let build = "1003000"
 }
 
 public enum HelperSigningError: Error, Sendable { case missingTeam, invalidRequirement, invalidSignature }

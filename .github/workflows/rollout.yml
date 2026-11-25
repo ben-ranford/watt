@@ -23,30 +23,30 @@ name: Rollout
         required: false
         type: string
 
-# Read-only except the publish job, which replaces the Pages site, and the
-# cask job, which only pushes the tap when the signed rollout is complete.
+# Read-only except publish, which re-signs the manifest, deploy, which
+# replaces the Pages site, and the cask job, which pushes the tap only when
+# the signed rollout is complete.
 permissions:
   contents: read
 
 jobs:
   publish:
-    name: Re-sign and publish the manifest
+    name: Re-sign the manifest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Keep the environment so the signing secret stays available. Publication
+    # is the deploy job, after the artifact can be listed.
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: pages
-      cancel-in-progress: false
     permissions:
       contents: read
+      actions: write
       pages: write
-      id-token: write
     outputs:
       cask: ${{ steps.rollout.outputs.cask }}
       tag: ${{ steps.rollout.outputs.tag }}
+      deploy: ${{ steps.rollout.outputs.deploy }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -86,9 +86,27 @@ jobs:
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: site
+
+  # Deploy in a later job so the github-pages artifact is visible. The signing
+  # secret stays on publish, which keeps the github-pages environment.
+  deploy:
+    name: Publish rollout manifest
+    needs: publish
+    if: needs.publish.outputs.deploy == 'true' && needs.publish.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        if: steps.rollout.outputs.deploy == 'true'
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
   cask:

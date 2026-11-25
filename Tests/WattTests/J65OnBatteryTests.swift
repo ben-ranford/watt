@@ -70,7 +70,21 @@ final class J65OnBatteryTests: XCTestCase {
         let missing = StatusPanelModel(reading: reading(percentage: nil, detail: nil))
         XCTAssertTrue(missing.subtitle?.isEmpty ?? true)
         XCTAssertEqual(StatusPanelModel(reading: reading(batteryCapability: .unknown)).subtitle, "Usually right after wake. Watt? tries again every few seconds.")
-        XCTAssertEqual(StatusPanelModel(reading: reading(watts: nil)).subtitle, "Usually right after wake. Watt? tries again every few seconds.")
+        let batteryRateMissing = StatusPanelModel(reading: reading(watts: nil))
+        XCTAssertEqual(batteryRateMissing.state, .standard)
+        XCTAssertEqual(batteryRateMissing.title, "On battery")
+        XCTAssertEqual(batteryRateMissing.system, "18.4 W")
+        XCTAssertEqual(batteryRateMissing.battery, "—")
+        XCTAssertEqual(batteryRateMissing.charger, "Unplugged")
+        XCTAssertTrue(batteryRateMissing.subtitle?.isEmpty ?? true)
+        XCTAssertNotEqual(batteryRateMissing.subtitle, "Usually right after wake. Watt? tries again every few seconds.")
+        let empty = StatusPanelModel(reading: reading(watts: nil, system: nil))
+        XCTAssertEqual(empty.state, .noReading)
+        XCTAssertEqual(empty.title, "No reading")
+        XCTAssertEqual(empty.headlineValue, "− − W")
+        XCTAssertEqual(empty.subtitle, "Usually right after wake. Watt? tries again every few seconds.")
+        XCTAssertEqual([empty.battery, empty.system], ["—", "—"])
+        XCTAssertEqual(empty.charger, "Unplugged")
     }
 
     func testSystemClockPublishesExpiryWithoutAnotherSample() {
