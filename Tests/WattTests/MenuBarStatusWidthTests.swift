@@ -305,7 +305,8 @@ final class MenuBarStatusWidthTests: XCTestCase {
         XCTAssertFalse(update.contains("+ 12"))
         XCTAssertFalse(update.contains("max(42"))
         let label = try String(contentsOf: root.appendingPathComponent("Features/MenuBar/Components/MenuBarStatusLabel.swift"), encoding: .utf8)
-        XCTAssertTrue(label.contains(".font(WattTypography.bodyEmphasized.monospacedDigit())"))
+        XCTAssertTrue(label.contains(".font(WattTypography.bodyEmphasized)"))
+        XCTAssertTrue(label.contains(".monospacedDigit()"))
         XCTAssertTrue(label.contains("ZStack(alignment: .center)"))
         XCTAssertFalse(label.contains(".padding("))
         for forbidden in ["contentTransition", ".animation(", "withAnimation", "TimelineView"] {

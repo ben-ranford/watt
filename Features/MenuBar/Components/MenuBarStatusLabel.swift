@@ -269,7 +269,8 @@ struct MenuBarStatusLabel: View {
                         .fixedSize(horizontal: true, vertical: false)
                     }
                 }
-                .font(WattTypography.bodyEmphasized.monospacedDigit())
+                .font(WattTypography.bodyEmphasized)
+                .monospacedDigit()
                 .onAppear(perform: rememberStatusWidth)
                 .onChange(of: statusWidthToken) { _ in rememberStatusWidth() }
             }
