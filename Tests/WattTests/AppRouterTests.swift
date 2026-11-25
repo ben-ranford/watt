@@ -1901,8 +1901,8 @@ final class J11WelcomeTests: XCTestCase {
     }
 
     func testExactCopy() {
-        XCTAssertEqual(WelcomeView.title, "Know your watts")
-        XCTAssertEqual(WelcomeView.message, "Watt? sits in your menu bar and shows what your Mac draws and what it’s charging with. Nothing more.")
+        XCTAssertEqual(WelcomeView.title, "Welcome to Watt?")
+        XCTAssertEqual(WelcomeView.message, "Watt? sits in your menu bar and shows what your Mac is using and what the charger is giving.")
     }
 
     #if DEBUG
@@ -1954,7 +1954,7 @@ final class J12ReadingTests: XCTestCase {
             "How fast the battery fills or drains. +42.1 W",
             "What the charger is giving. 65 W",
             "What your Mac uses right now. 22.9 W",
-            "CPU/GPU estimates. Needs administrator approval."
+            "Optional CPU and GPU readings."
         ])
         XCTAssertEqual(ChooseMenuReadingView.title, "Pick one number for the menu bar")
         XCTAssertEqual(ChooseMenuReadingView.message, "Change it any time. Right-click Watt? or open Settings.")

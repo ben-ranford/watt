@@ -83,7 +83,7 @@ final class FirstRunPolishTests: XCTestCase {
         let offered = ChooseMenuReadingView.options(reading: .sampleCharging, helperAvailable: false, installOffered: true)
         XCTAssertEqual(offered.last?.mode, .components)
         let description = try XCTUnwrap(offered.last?.description)
-        XCTAssertEqual(description, "The helper isn’t installed. Install it on the next step.")
+        XCTAssertEqual(description, "The helper isn’t installed. Go back to install it.")
         XCTAssertFalse(description.contains("unavailable in this build"))
         XCTAssertEqual(OfferComponentReadingsView.installMessage.contains("isn’t installed"), true)
 

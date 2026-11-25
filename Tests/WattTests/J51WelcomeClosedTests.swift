@@ -11,7 +11,7 @@ final class J51WelcomeClosedTests: XCTestCase {
     func testExactCopyAndFixtureRegistration() throws {
         XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.title, "Watt? is on, showing System Draw.")
         XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.message,
-                       "Setup can wait. Two steps, whenever you’re ready.")
+                       "Setup can wait. It’s two steps whenever you’re ready.")
         XCTAssertEqual(CoachMarkView.Variant.standard.title, CoachMarkView.title)
         XCTAssertEqual(CoachMarkView.Variant.standard.message, CoachMarkView.message)
         let fixture = try ScenarioRegistry.resolve("J5.1")
