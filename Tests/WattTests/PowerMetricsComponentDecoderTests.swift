@@ -120,30 +120,30 @@ enum PowerMetricsFixture {
 }
 
 final class PowerMetricsComponentDecoderTests: XCTestCase {
-    /// Real M5 Pro capture on macOS 27. Same `processor` keys and units as M1 and M2 Ultra:
-    /// power in mW, energy in mJ over `elapsed_ns`, and `combined_power` equal to cpu + gpu + ane.
-    func testRealM5IdleCaptureDecodes() throws {
-        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsM5Capture.idle, duration: 1.547)
+    /// Real current-generation Apple silicon capture on macOS 27. Same `processor` keys and units as the
+    /// reduced fixtures above: power in mW, energy in mJ over `elapsed_ns`, and `combined_power` equal to cpu + gpu + ane.
+    func testRealIdleCaptureDecodes() throws {
+        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsRealCapture.idle, duration: 1.547)
         guard case .success(let pair) = PowerMetricsComponentDecoder.estimate(from: PowerMetricsFixture.reply(capture)) else {
-            return XCTFail("A real M5 idle capture must decode")
+            return XCTFail("A real idle capture must decode")
         }
         XCTAssertEqual(pair.cpuWatts, 1.23097, accuracy: 0.000_000_1)
         XCTAssertEqual(pair.gpuWatts, 0.594923, accuracy: 0.000_000_1)
     }
 
-    func testRealM5LoadedCaptureDecodesInsideTheRailCeiling() throws {
-        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsM5Capture.loaded, duration: 1.653)
+    func testRealLoadedCaptureDecodesInsideTheRailCeiling() throws {
+        let capture = PowerMetricsFixture.capture(stdout: PowerMetricsRealCapture.loaded, duration: 1.653)
         guard case .success(let pair) = PowerMetricsComponentDecoder.estimate(from: PowerMetricsFixture.reply(capture)) else {
-            return XCTFail("A real M5 loaded capture must decode")
+            return XCTFail("A real loaded capture must decode")
         }
         XCTAssertEqual(pair.cpuWatts, 15.8682, accuracy: 0.000_000_1)
         XCTAssertEqual(pair.gpuWatts, 30.5204, accuracy: 0.000_000_1)
         XCTAssertLessThan(pair.gpuWatts, PowerMetricsComponentDecoder.maximumRailMilliwatts / 1_000)
     }
 
-    func testRealM5CaptureMatchesTheDecoderSchema() throws {
-        for data in [PowerMetricsM5Capture.idle, PowerMetricsM5Capture.loaded] {
-            XCTAssertFalse(data.contains(0), "-n 1 on M5 is one plist with no NUL")
+    func testRealCaptureMatchesTheDecoderSchema() throws {
+        for data in [PowerMetricsRealCapture.idle, PowerMetricsRealCapture.loaded] {
+            XCTAssertFalse(data.contains(0), "-n 1 on macOS 27 is one plist with no NUL")
             let root = try XCTUnwrap(PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any])
             let processor = try XCTUnwrap(root["processor"] as? [String: Any])
             let elapsed = try XCTUnwrap(root["elapsed_ns"] as? NSNumber).doubleValue / 1_000_000_000
@@ -156,9 +156,9 @@ final class PowerMetricsComponentDecoderTests: XCTestCase {
         }
     }
 
-    /// Two real M5 frames in one capture are not one sample.
-    func testTwoRealM5FramesFailClosed() {
-        let stdout = PowerMetricsM5Capture.idle + Data([0]) + PowerMetricsM5Capture.loaded
+    /// Two real frames in one capture are not one sample.
+    func testTwoRealFramesFailClosed() {
+        let stdout = PowerMetricsRealCapture.idle + Data([0]) + PowerMetricsRealCapture.loaded
         let outcome = PowerMetricsComponentDecoder.estimate(from: PowerMetricsFixture.reply(PowerMetricsFixture.capture(stdout: stdout)))
         guard case .failure(.invalidData) = outcome else { return XCTFail("Two frames are not one sample") }
     }

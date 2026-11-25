@@ -1,10 +1,10 @@
 import Foundation
 
-/// Real `powermetrics -f plist -n 1 -i 1000 -s cpu_power,gpu_power` output from an M5 Pro
-/// (`Mac17,8`) on macOS 27.2.1 (`26B131`), captured through the helper's diagnostic export.
-/// Unchanged except `kern_boottime` and `timestamp`, which are replaced with fixed values.
+/// Real `powermetrics -f plist -n 1 -i 1000 -s cpu_power,gpu_power` output from a current-generation
+/// Apple silicon Mac on macOS 27.2.1 (`26B131`), captured through the helper's diagnostic export.
+/// Unchanged except `hw_model`, `kern_boottime`, and `timestamp`, which are replaced with fixed values.
 /// Captured stdout had no trailing NUL.
-enum PowerMetricsM5Capture {
+enum PowerMetricsRealCapture {
     /// Near idle. cpu 1230.97 mW, gpu 594.923 mW, ane 0, combined 1825.89 mW over 1094259458 ns.
     static let idle = Data(#"""
 <?xml version="1.0" encoding="UTF-8"?>
@@ -13,7 +13,7 @@ enum PowerMetricsM5Capture {
 <dict>
 <key>is_delta</key><true/>
 <key>elapsed_ns</key><integer>1094259458</integer>
-<key>hw_model</key><string>Mac17,8</string>
+<key>hw_model</key><string>Mac</string>
 <key>kern_osversion</key><string>26B131</string>
 <key>kern_bootargs</key><string></string>
 <key>kern_boottime</key><integer>1700000000</integer>
@@ -2186,7 +2186,7 @@ enum PowerMetricsM5Capture {
 <dict>
 <key>is_delta</key><true/>
 <key>elapsed_ns</key><integer>1093761958</integer>
-<key>hw_model</key><string>Mac17,8</string>
+<key>hw_model</key><string>Mac</string>
 <key>kern_osversion</key><string>26B131</string>
 <key>kern_bootargs</key><string></string>
 <key>kern_boottime</key><integer>1700000000</integer>

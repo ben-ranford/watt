@@ -118,7 +118,7 @@
 		F1A0DEC0DE00000000000002 = { isa = PBXBuildFile; fileRef = F1A0DEC0DE00000000000001; };
 		F1A0DEC0DE00000000000003 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/WattTests/PowerMetricsComponentDecoderTests.swift"; sourceTree = SOURCE_ROOT; };
 		F1A0DEC0DE00000000000004 = { isa = PBXBuildFile; fileRef = F1A0DEC0DE00000000000003; };
-		F1A0DEC0DE00000000000005 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/WattTests/PowerMetricsM5Capture.swift"; sourceTree = SOURCE_ROOT; };
+		F1A0DEC0DE00000000000005 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/WattTests/PowerMetricsRealCapture.swift"; sourceTree = SOURCE_ROOT; };
 		F1A0DEC0DE00000000000006 = { isa = PBXBuildFile; fileRef = F1A0DEC0DE00000000000005; };
 		2D39B51A81E2C85C6D340FE3 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/WattTests/ProductionHelperLifecycleTests.swift"; sourceTree = SOURCE_ROOT; };
 		1263FD7473E17E895EEB0403 = { isa = PBXBuildFile; fileRef = 2D39B51A81E2C85C6D340FE3; };
