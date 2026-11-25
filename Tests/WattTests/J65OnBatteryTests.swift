@@ -81,8 +81,10 @@ final class J65OnBatteryTests: XCTestCase {
         let empty = StatusPanelModel(reading: reading(watts: nil, system: nil))
         XCTAssertEqual(empty.state, .noReading)
         XCTAssertEqual(empty.title, "No reading")
+        XCTAssertEqual(empty.headlineValue, "− − W")
         XCTAssertEqual(empty.subtitle, "Usually right after wake. Watt? tries again every few seconds.")
-        XCTAssertEqual([empty.battery, empty.system, empty.charger], ["—", "—", "—"])
+        XCTAssertEqual([empty.battery, empty.system], ["—", "—"])
+        XCTAssertEqual(empty.charger, "Unplugged")
     }
 
     func testSystemClockPublishesExpiryWithoutAnotherSample() {
