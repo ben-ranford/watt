@@ -247,5 +247,26 @@ final class HelperInstallerHostTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("protected/helper-trust.json").path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: kept.path))
         XCTAssertEqual(try Data(contentsOf: root.appendingPathComponent("keep.txt")), Data("preserve".utf8))
+
+        // Helper removal kept the generations. Uninstall of an older generation
+        // must refuse while a newer generation is still present, and must not
+        // delete that newer generation.
+        let staleUninstall = try runInstaller([
+            "--uninstall", "--installation", record.installation, "--generation", "1"
+        ], environment: environment)
+        XCTAssertEqual(staleUninstall.status, 78, staleUninstall.error)
+        XCTAssertTrue(staleUninstall.error.contains("refused"))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: kept.path))
+        let currentGeneration = root.appendingPathComponent("protected/generations/\(record.installation)-2/Watt.app")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: currentGeneration.path))
+
+        let uninstalled = try runInstaller([
+            "--uninstall", "--installation", record.installation, "--generation", "2"
+        ], environment: environment)
+        XCTAssertEqual(uninstalled.status, 0, uninstalled.error)
+        XCTAssertTrue(uninstalled.output.contains("Protected application generations and helper removed after process cessation."))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("protected").path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: kept.path))
+        XCTAssertEqual(try Data(contentsOf: root.appendingPathComponent("keep.txt")), Data("preserve".utf8))
     }
 }
