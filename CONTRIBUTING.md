@@ -54,7 +54,7 @@ These checks run on every pull request, including every pull request into `main`
 
 | Check | Workflow | What it runs |
 | --- | --- | --- |
-| `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. A pull request also uploads the Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. Same-repo pull requests sign that app with Developer ID and notarise it. Fork pull requests, which cannot read the signing secrets, upload an ad-hoc build instead. That Release build compiles the public update URLs from `Resources/ReleaseIdentity.json` and the public key in `Resources/UpdatePublicKey.txt`. |
+| `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. That `xcodebuild test` records line coverage and compares the app and helper targets with `.github/coverage-floor.json`. While `enforce` is false the job warns; while `enforce` is true it fails. A pull request also uploads the Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. Same-repo pull requests sign that app with Developer ID and notarise it. Fork pull requests, which cannot read the signing secrets, upload an ad-hoc build instead. That Release build compiles the public update URLs from `Resources/ReleaseIdentity.json` and the public key in `Resources/UpdatePublicKey.txt`. |
 | `Release config` | Release | `python3 scripts/test_release_pipeline.py`, including `scripts/check_user_facing_copy.py`, which fails if an em dash appears in user-facing copy. |
 | `gitleaks` | Secret scan | Working-tree secret scan. The same scanner is the optional pre-commit hook in `.pre-commit-config.yaml`. |
 | `Conventional commit` | PR title | The pull request title is a Conventional Commit, and the description follows the template. Release Please is title-only. Editing the description re-runs this check. |
@@ -76,6 +76,7 @@ If you change `scripts/` or `.github/workflows/`:
 
 ```sh
 python3 scripts/test_release_pipeline.py
+python3 scripts/test_coverage_floor.py
 ```
 
 If you change user-facing copy in the app, README, landing pages, or templates:
@@ -87,6 +88,8 @@ python3 scripts/check_user_facing_copy.py
 The lint checks are the gitleaks secret scan and the em dash check above. The typographic unavailable token in the menu bar and panel, a bare "—" string, is allowed.
 
 CI gives `xcodebuild test` the same 120 second per-test allowance as `scripts/verify-native-host.sh`. The step stops the process after 10 minutes and retries once when `xcodebuild` does not exit. An assertion failure fails the check immediately.
+
+The same macOS job compares line coverage with `.github/coverage-floor.json`. The file stores a whole-number percent for the Watt app, `WattHelper`, `WattMaintenance`, `WattHelperInstaller`, and the total of those binaries, plus an `enforce` flag. Test bundles, generated files, and SwiftUI previews are not counted. The job prints the actual and floor percentages in the log and the step summary. While `enforce` is false, a short total is a warning annotation and the job stays green. While `enforce` is true, a short total fails the job. When coverage is two or more points above a floor, the job prints a notice and leaves the file unchanged. That gate stays in the `macOS` check.
 
 UI changes need a manual check on macOS. Attach screenshots to the pull request.
 
