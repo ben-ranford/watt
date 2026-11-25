@@ -161,6 +161,16 @@ final class AppRouter: ObservableObject {
     private let updateService: (any UpdateService)?
     let updateConfigurationFailure: ServiceFailure?
     private var updateCheck: Task<Void, Never>?
+    /// Matches `updateCheck`. A timed-out check can start another before the old task ends.
+    private var updateCheckToken: UUID?
+    /// A check still in `.checking` after this interval is failed. The manifest
+    /// deadline is shorter, but a dropped completion never reaches it. Tests
+    /// shorten this. Zero disables it.
+    var updateCheckTimeout: TimeInterval = 75
+    private var updateCheckDeadline: DispatchWorkItem?
+    /// The Software Update window is on screen for this check, including a blank
+    /// frame that has not drawn Checking yet. The timeout then shows couldn’t-check.
+    private var updateCheckShowsResult = false
     private var automaticUpdateCoordinator: AutomaticUpdateCoordinator?
     private var unattendedInstallReceipt: OperationReceipt?
     /// True only while a fresh automatic check in this process opted into install.
@@ -747,7 +757,7 @@ final class AppRouter: ObservableObject {
     private func resumeIncompleteSetup(preferences: PreferencesStore, expected previous: OnboardingState) -> Bool {
         guard !previous.completed, preferences.onboarding == previous else { return false }
         var next = previous
-        next.checkpoint = .picker
+        next.checkpoint = .helperOffer
         next.deferredSetupID = nil
         guard preferences.transitionOnboarding(from: previous, to: next) else { return false }
         statusPanelPresented = false
@@ -835,21 +845,34 @@ final class AppRouter: ObservableObject {
         offeredUpdateNotes = nil
         checkFailurePresentation = nil
         dismissUpToDate()
+        updateCheckShowsResult = false
+        let token = UUID()
+        updateCheckToken = token
         updateCheck = Task { [weak self] in
             let outcome = await updateService.check(initiator: .automatic)
-            self?.finishBackgroundCheck(outcome, generation: generation, isEnabled: isEnabled, finished: finished)
+            self?.finishBackgroundCheck(outcome, generation: generation, token: token, isEnabled: isEnabled, finished: finished)
         }
+        armUpdateCheckTimeout(generation: generation)
         return true
     }
 
-    private func finishBackgroundCheck(_ outcome: ServiceOutcome<String?>, generation: UUID,
+    private func finishBackgroundCheck(_ outcome: ServiceOutcome<String?>, generation: UUID, token: UUID,
                                        isEnabled: @MainActor () -> Bool,
                                        finished: @MainActor (ServiceOutcome<String?>) -> Void) {
-        updateCheck = nil
+        if updateCheckToken == token {
+            updateCheck = nil
+            updateCheckToken = nil
+            disarmUpdateCheckTimeout()
+        }
         var reported = outcome
         defer { finished(reported) }
         guard updates.generation == generation else {
             reported = .failure(.cancelled)
+            return
+        }
+        guard updates.state == .checking else {
+            if case .failed(let reason, _) = updates.state { reported = .failure(reason) }
+            else { reported = .failure(.cancelled) }
             return
         }
         if Task.isCancelled || !isEnabled() {
@@ -953,11 +976,21 @@ final class AppRouter: ObservableObject {
         updateOfferIntent = nil
         offeredUpdateNotes = nil
         checkFailurePresentation = nil
+        updateCheckShowsResult = true
+        let token = UUID()
+        updateCheckToken = token
         updateCheck = Task { [weak self] in
             let outcome = await updateService.check(initiator: .manual)
             guard let self else { return }
-            defer { self.updateCheck = nil }
-            guard !Task.isCancelled else { return }
+            defer {
+                if self.updateCheckToken == token {
+                    self.updateCheck = nil
+                    self.updateCheckToken = nil
+                    self.disarmUpdateCheckTimeout()
+                }
+            }
+            guard self.updateCheckToken == token, !Task.isCancelled else { return }
+            guard self.updates.generation == generation, self.updates.state == .checking else { return }
             guard self.applyCheckedOffer(outcome, generation: generation) != nil else { return }
             if case .success(let version?) = outcome, self.updates.installFutureUpdatesAutomatically,
                self.installOfferedUpdate(version: version, generation: self.updates.generation, automaticUpdates: true) {
@@ -970,8 +1003,44 @@ final class AppRouter: ObservableObject {
                 self.checkFailurePresentation = CheckFailurePresentation(id: UUID(), generation: generation, reason: reason)
             }
         }
+        armUpdateCheckTimeout(generation: generation)
         present(.softwareUpdate)
         return true
+    }
+
+    private func armUpdateCheckTimeout(generation: UUID) {
+        disarmUpdateCheckTimeout()
+        let timeout = updateCheckTimeout
+        guard timeout.isFinite, timeout > 0 else { return }
+        let item = DispatchWorkItem { [weak self] in
+            self?.expireUpdateCheck(generation: generation)
+        }
+        updateCheckDeadline = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: item)
+    }
+
+    private func disarmUpdateCheckTimeout() {
+        updateCheckDeadline?.cancel()
+        updateCheckDeadline = nil
+    }
+
+    /// Moves a check that never finished out of `.checking`. A silent automatic
+    /// check stays quiet. A check whose window is up, including a blank frame,
+    /// shows the couldn’t-check alert and the Settings button can run again.
+    func expireUpdateCheck(generation: UUID) {
+        guard updates.generation == generation, updates.state == .checking else { return }
+        UpdateDiagnostics.timedOut("check")
+        guard updates.accept(.failed(.timedOut, nil), generation: generation) else { return }
+        let task = updateCheck
+        updateCheck = nil
+        updateCheckToken = nil
+        disarmUpdateCheckTimeout()
+        task?.cancel()
+        let showsResult = updateCheckShowsResult
+        updateCheckShowsResult = false
+        guard showsResult else { return }
+        checkFailurePresentation = CheckFailurePresentation(id: UUID(), generation: generation, reason: .timedOut)
+        present(.softwareUpdate)
     }
 
     /// Invalidate before signalling cancellation, including non-cooperative services.
@@ -980,6 +1049,8 @@ final class AppRouter: ObservableObject {
         guard updates.state == .checking else { return false }
         let saved = updates.cancel()
         updateCheck?.cancel()
+        updateCheckShowsResult = false
+        disarmUpdateCheckTimeout()
         return saved
     }
 

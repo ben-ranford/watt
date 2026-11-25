@@ -57,7 +57,7 @@ final class J53FinishSetupTests: XCTestCase {
         XCTAssertEqual(preferences.displayMode, .draw)
     }
 
-    func testEveryIncompleteCheckpointPersistsPickerBeforeNavigationAndPreservesOtherState() throws {
+    func testEveryIncompleteCheckpointPersistsHelperOfferBeforeNavigationAndPreservesOtherState() throws {
         for checkpoint in checkpoints {
             let storage = CountingStorage()
             let preferences = PreferencesStore(storage: storage)
@@ -83,7 +83,7 @@ final class J53FinishSetupTests: XCTestCase {
                 routes.append($0)
                 let disk = PreferencesStore(storage: storage)
                 XCTAssertEqual(disk.onboarding, preferences.onboarding)
-                XCTAssertEqual(disk.onboarding.checkpoint, .picker)
+                XCTAssertEqual(disk.onboarding.checkpoint, .helperOffer)
                 XCTAssertFalse(disk.onboarding.completed)
                 XCTAssertTrue(disk.onboarding.helperOptIn)
                 XCTAssertNil(disk.onboarding.deferredSetupID)

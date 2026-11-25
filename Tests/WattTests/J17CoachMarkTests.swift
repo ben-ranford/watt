@@ -9,8 +9,8 @@ import WattFixtures
 final class J17CoachMarkTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactCopyAndFixture() throws {
-        XCTAssertEqual(CoachMarkView.title, "Watt? lives here")
-        XCTAssertEqual(CoachMarkView.message, "Click for the detail. Right-click to change the number.")
+        XCTAssertEqual(CoachMarkView.title, "Watt? is up here")
+        XCTAssertEqual(CoachMarkView.message, "Click it to see more, or right-click to change the number.")
         let fixture = try ScenarioRegistry.resolve("J1.7")
         XCTAssertEqual(fixture.story.node, "J1.7")
         XCTAssertEqual(fixture.story.status, "implemented")
