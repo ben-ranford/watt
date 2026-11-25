@@ -327,4 +327,23 @@ final class HelperInstallerTransactionTests: XCTestCase {
         XCTAssertEqual(try record(), installed)
     }
 
+    func testInstallReadsTheRealProcessListBeforePublishingTheRecord() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        installerEnvironment.launchd = { _ in }
+        installerEnvironment.stopped = nil
+        let source = try app(directory, build: 1)
+        let journal = installerEnvironment.root.appendingPathComponent("installer-journal.json")
+        let trust = installerEnvironment.root.appendingPathComponent("helper-trust.json")
+        do {
+            try install(source: source, approval: approve(source, in: directory), rotate: false)
+            XCTAssertEqual(try record().generation, 1)
+            XCTAssertFalse(FileManager.default.fileExists(atPath: journal.path))
+        } catch {
+            // An unreadable process path is not proof that the helper is stopped.
+            XCTAssertFalse(FileManager.default.fileExists(atPath: trust.path))
+            XCTAssertTrue(FileManager.default.fileExists(atPath: journal.path))
+        }
+    }
+
 }

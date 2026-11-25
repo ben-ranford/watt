@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import XCTest
 
@@ -284,9 +285,7 @@ final class HelperInstallerHostTests: XCTestCase {
         ], environment: environment)
         XCTAssertEqual(installed.status, 0, installed.error)
         let installation = try trustRecord(in: root).installation
-        // RFC 8032 signing public key. Any 32 bytes are not necessarily a key the
-        // installer will accept.
-        let key = "11qYAYKxCrfVS/7TyWQHOg7hcvPapiMlrwIaaPcHURo="
+        let key = Curve25519.Signing.PrivateKey().publicKey.rawRepresentation.base64EncodedString()
         let trustURL = root.appendingPathComponent("protected/release-trust.json")
         let wrongIdentity = try runInstaller([
             "--provision-release-key", "--installation", installation,
