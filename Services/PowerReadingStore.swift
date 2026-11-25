@@ -706,7 +706,7 @@ final class UpdateStore: ObservableObject {
         do {
             try storage.write(JSONEncoder().encode(UpdateState.failed(.interruptedUpdate, receipt)), key: "update.v1")
             downloadReceipt = receipt
-            state = .downloading(progress: 0)
+            commit(.downloading(progress: 0))
             persistenceFailure = nil
             return true
         } catch { persistenceFailure = .persistence; return false }
@@ -733,7 +733,7 @@ final class UpdateStore: ObservableObject {
                 durable = .failed(.interruptedUpdate, downloadReceipt)
             } else { durable = next }
             try storage.write(JSONEncoder().encode(durable), key: "update.v1")
-            state = next; persistenceFailure = nil; return true
+            commit(next); persistenceFailure = nil; return true
         } catch { persistenceFailure = .persistence; return false }
     }
     // Only pre-install work is cancellable locally. Installation needs explicit adapter recovery.
@@ -754,12 +754,17 @@ final class UpdateStore: ObservableObject {
               case .failed(_, .some(let retained)) = state, retained == receipt else { return false }
         do {
             try storage.write(JSONEncoder().encode(UpdateState.idle), key: "update.v1")
-            state = .idle
+            commit(.idle)
             downloadReceipt = nil
             persistenceFailure = nil
             renewGeneration()
             return true
         } catch { persistenceFailure = .persistence; return false }
+    }
+    private func commit(_ next: UpdateState) {
+        let previous = state.updateLogPhase
+        state = next
+        UpdateDiagnostics.transition(from: previous, to: next.updateLogPhase)
     }
     private func receipt(in state: UpdateState) -> OperationReceipt? {
         switch state {
@@ -782,7 +787,7 @@ final class UpdateStore: ObservableObject {
         }
         do {
             try storage.write(JSONEncoder().encode(next), key: "update.v1")
-            state = next; downloadReceipt = incoming; persistenceFailure = nil
+            commit(next); downloadReceipt = incoming; persistenceFailure = nil
             return true
         } catch { persistenceFailure = .persistence; return false }
     }
