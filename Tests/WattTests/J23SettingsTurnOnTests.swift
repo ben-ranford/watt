@@ -322,7 +322,7 @@ final class J23SettingsTurnOnTests: XCTestCase {
         } catch { }
     }
 
-    func testConfigurationFailureReasonsPreserveDisabledRegistrationAndSharedCopy() {
+    func testConfigurationFailureReasonsPreserveDisabledRegistration() {
         let cases: [(Error, Bool, HelperUnavailableReason)] = [
             (HelperSigningError.missingTeam, false, .missingBundle),
             (HelperSigningError.missingTeam, true, .signingRequired),
@@ -344,7 +344,11 @@ final class J23SettingsTurnOnTests: XCTestCase {
             XCTAssertEqual(setup.statusTitle, "Unavailable")
             XCTAssertEqual(setup.statusSubtitle, reason.message)
             XCTAssertNil(setup.message, "The status row already shows the explanation")
-            XCTAssertTrue(OfferComponentReadingsView.unavailableMessage(for: reason).contains(reason.message))
+            let onboarding = OfferComponentReadingsView.unavailableMessage(for: reason)
+            XCTAssertFalse(onboarding.contains("certificate"))
+            XCTAssertFalse(onboarding.contains("code hash"))
+            XCTAssertFalse(onboarding.contains("signing"))
+            XCTAssertFalse(onboarding.contains(reason.message))
             XCTAssertFalse(reason.message.contains("private diagnostic"))
         }
         XCTAssertTrue(HelperUnavailableReason.signingRequired.message.contains("certificate-based"))

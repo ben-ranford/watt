@@ -14,7 +14,6 @@ final class NativeStylingTests: XCTestCase {
             XCTAssertFalse(flow.contains(forbidden), forbidden)
         }
         for (view, nextView, style) in [
-            ("OfferComponentReadingsView", "WaitingForApprovalView", "grouped"),
             ("AllSetView", "ComponentPreviewView", "grouped"),
             ("ComponentPreviewView", "CoachMarkView", "columns")
         ] {

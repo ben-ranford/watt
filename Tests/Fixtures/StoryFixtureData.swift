@@ -268,7 +268,7 @@ enum StoryFixtureData {
     "id": "J1.3",
     "node": "J1.3",
     "frame": "1.3 Offer component readings",
-    "state": "Helper facts: what it reads, network access, remove it; Not Now and Turn On…",
+    "state": "Optional helper for CPU and GPU readings; Not Now and Turn On…",
     "navigation": "J1.2 Continue → this; Not Now → J1.6; Turn On… → J1.4",
     "expectedScene": "onboarding",
     "appearance": null,
@@ -276,7 +276,7 @@ enum StoryFixtureData {
     "variants": [
       "base"
     ],
-    "acceptance": "Helper facts: what it reads, network access, remove it; Not Now and Turn On…. Assert these exact displayed values, availability, controls and state changes against fixture `J1.3`; apply D1–D7."
+    "acceptance": "Optional helper: The helper is optional. It adds CPU and GPU readings. Not Now and Turn On…. Assert these exact displayed values, availability, controls and state changes against fixture `J1.3`; apply D1–D7."
   },
   {
     "id": "J1.4",
@@ -516,7 +516,7 @@ enum StoryFixtureData {
     "variants": [
       "base"
     ],
-    "acceptance": "Explicit desktop welcome: Know your watts; Watt? sits in your menu bar and shows what your Mac draws. Nothing more. Continue uses existing persisted picker route; J4.2 capability variant remains separate. Native close/Escape, WattAppIcon asset, isolated Debug storage. Visual/live acceptance blocked."
+    "acceptance": "Explicit desktop welcome: Welcome to Watt?; Watt? sits in your menu bar and shows what your Mac is using. Continue uses existing persisted picker route; J4.2 capability variant remains separate. Native close/Escape, WattAppIcon asset, isolated Debug storage. Visual/live acceptance blocked."
   },
   {
     "id": "J4.2",
@@ -558,7 +558,7 @@ enum StoryFixtureData {
     "variants": [
       "base"
     ],
-    "acceptance": "Native light top-trailing CoachMarkView: Watt? is on, showing System Draw. / Setup can wait. Two steps, whenever you’re ready. / Not Now / Finish Setup. Not Now persists running/default state; Finish Setup persists picker state. Stale actions are ignored. Base Debug fixture isolated. Visual/AX acceptance fail closed."
+    "acceptance": "Native light top-trailing CoachMarkView: Watt? is on, showing System Draw. / Setup can wait. It’s two steps whenever you’re ready. / Not Now / Finish Setup. Not Now persists running/default state; Finish Setup persists picker state. Stale actions are ignored. Base Debug fixture isolated. Visual/AX acceptance fail closed."
   },
   {
     "id": "J5.2",

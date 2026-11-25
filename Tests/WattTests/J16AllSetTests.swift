@@ -10,7 +10,7 @@ final class J16AllSetTests: XCTestCase {
     #if DEBUG || SWIFT_PACKAGE
     func testExactCopyAndFixture() throws {
         XCTAssertEqual(AllSetView.title, "That’s it")
-        XCTAssertEqual(AllSetView.message, "Watt? lives in your menu bar. Click it for the detail. Right-click to change the number.")
+        XCTAssertEqual(AllSetView.message, "Watt? is in your menu bar. Click it to see more, or right-click to change the number.")
         let fixture = try ScenarioRegistry.resolve("J1.6")
         XCTAssertEqual(fixture.story.node, "J1.6")
         XCTAssertEqual(fixture.story.status, "implemented")
