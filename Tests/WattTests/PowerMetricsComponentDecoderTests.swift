@@ -1,5 +1,7 @@
 import XCTest
+#if SWIFT_PACKAGE
 import WattHelperShared
+#endif
 @testable import Watt
 
 /// Reduced Apple Silicon `powermetrics -f plist` documents. Power, energy, and `elapsed_ns`
