@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import Combine
 import ServiceManagement
@@ -617,6 +618,9 @@ final class AppRouter: ObservableObject {
         // Settings stays available for a fresh, explicitly requested retry.
     }
     var present: (AppDestination) -> Void = { _ in }
+    /// The real Watt? status-item button, when the menu-bar item is installed.
+    /// The Finish Setup strike reads it to decide whether the menu-bar arc can show.
+    var statusItemButton: () -> NSView? = { nil }
     enum SettingsRemoval: String, Identifiable {
         case helper, uninstall
         var id: String { rawValue }

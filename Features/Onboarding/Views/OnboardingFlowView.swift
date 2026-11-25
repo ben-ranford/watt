@@ -541,12 +541,31 @@ struct AllSetView: View {
     @EnvironmentObject private var preferences: PreferencesStore
     @EnvironmentObject private var router: AppRouter
     @Environment(\.dismiss) private var dismiss
+    @State private var strikeAnchor = FinishSetupStrikeAnchor()
 
     static let title = "That’s it"
     static let message = "Watt? is in your menu bar. Click it to see more, or right-click to change the number."
 
     static func finish(preferences: PreferencesStore, router: AppRouter, dismiss: () -> Void) {
-        guard preferences.onboarding.checkpoint == .allSet, !preferences.onboarding.completed else { return }
+        guard complete(preferences: preferences) else { return }
+        dismiss()
+        router.showCoachMark()
+    }
+
+    /// Done from the window: saves first, then plays the lightning strike and
+    /// closes the window when the strike says so. Saving can only succeed
+    /// once, so the strike plays once.
+    static func finish(preferences: PreferencesStore, router: AppRouter, strike: any FinishSetupStrikePlaying,
+                       request: FinishSetupStrikeRequest, dismiss: @escaping () -> Void) {
+        guard complete(preferences: preferences) else { return }
+        strike.play(request) {
+            dismiss()
+            router.showCoachMark()
+        }
+    }
+
+    private static func complete(preferences: PreferencesStore) -> Bool {
+        guard preferences.onboarding.checkpoint == .allSet, !preferences.onboarding.completed else { return false }
         let previous = preferences.onboarding
         var state = previous
         state.completed = true
@@ -554,10 +573,9 @@ struct AllSetView: View {
         preferences.onboarding = state
         guard preferences.persistenceFailure == nil else {
             preferences.onboarding = previous
-            return
+            return false
         }
-        dismiss()
-        router.showCoachMark()
+        return true
     }
 
     var body: some View {
@@ -593,12 +611,14 @@ struct AllSetView: View {
                 }
                 Spacer()
                 Button("Done") {
-                    Self.finish(preferences: preferences, router: router) { dismiss() }
+                    Self.finish(preferences: preferences, router: router, strike: FinishSetupStrikeController.shared,
+                                request: strikeAnchor.request(router: router)) { dismiss() }
                 }
                 .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.defaultAction)
                 .wattControlLabel("Done")
                 .accessibilityIdentifier("onboarding.allSet.done")
+                .finishSetupStrikeAnchor(strikeAnchor)
             }
         }
         .padding(.horizontal, 32)
