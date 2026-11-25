@@ -44,6 +44,38 @@ final class HelperInstallerCommandTests: XCTestCase {
         XCTAssertEqual(try InstallerCommand.parse(["--recover", "--generation", "2", "--installation", id.uuidString]),
                        .recover(installation: id, generation: 2))
     }
+    func testDocumentedCommandsRejectMalformedValues() throws {
+        let id = UUID().uuidString
+        let key = Data(repeating: 7, count: 32).base64EncodedString()
+        XCTAssertEqual(try InstallerCommand.parse(["--preflight", "--source", "/Applications/Watt.app"]),
+                       .preflight(URL(fileURLWithPath: "/Applications/Watt.app")))
+        XCTAssertThrowsError(try InstallerCommand.parse(["--preflight", "--source", "Watt.app"]))
+        let approval = String(repeating: "ab", count: 32)
+        XCTAssertEqual(
+            try InstallerCommand.parse(["--bootstrap-reviewed", "--source", "/Applications/Watt.app", "--approval", approval]),
+            .reviewed(source: URL(fileURLWithPath: "/Applications/Watt.app"), approval: approval, rotate: false)
+        )
+        XCTAssertEqual(
+            try InstallerCommand.parse(["--rotate-reviewed", "--approval", approval, "--source", "/Applications/Watt.app"]),
+            .reviewed(source: URL(fileURLWithPath: "/Applications/Watt.app"), approval: approval, rotate: true)
+        )
+        XCTAssertThrowsError(try InstallerCommand.parse(["--rotate-reviewed", "--source", "/Applications/Watt.app", "--approval", approval.uppercased()]))
+        XCTAssertThrowsError(try InstallerCommand.parse(["--bootstrap-reviewed", "--source", "/Applications/Watt.app", "--approval", String(repeating: "a", count: 63)]))
+        XCTAssertEqual(
+            try InstallerCommand.parse(["--provision-release-key", "--public-key", key, "--identity", "io.github.ben-ranford.watt", "--installation", id]),
+            .provision(installation: try XCTUnwrap(UUID(uuidString: id)), identity: "io.github.ben-ranford.watt", key: Data(repeating: 7, count: 32))
+        )
+        XCTAssertThrowsError(try InstallerCommand.parse(["--provision-release-key", "--installation", id, "--identity", "io.github.ben-ranford.watt", "--public-key", Data(repeating: 7, count: 31).base64EncodedString()]))
+        XCTAssertEqual(
+            try InstallerCommand.parse(["--discard-release-stage", "--installation", id]),
+            .discard(installation: try XCTUnwrap(UUID(uuidString: id)))
+        )
+        XCTAssertThrowsError(try InstallerCommand.parse(["--recover", "--installation", id, "--generation", "0"]))
+        XCTAssertThrowsError(try InstallerCommand.parse(["--remove-helper", "--installation", id, "--generation", "1", "--request", "/request.json"]))
+        XCTAssertThrowsError(try InstallerCommand.parse(["--rotate-release", "--manifest", "/manifest.json", "--archive", "/release.tar"]))
+        XCTAssertThrowsError(try InstallerCommand.parse(["--preflight", "--source", "/Applications/Watt.app", "--extra", String(repeating: "x", count: 40_000)]))
+    }
+
     func testActualUninstallExportKeepsHistoricalInstallationCoordinates() throws {
         let installation = UUID()
         let request = URL(fileURLWithPath: "/Users/example/Removal package/request.json")
