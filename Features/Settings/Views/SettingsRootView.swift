@@ -196,11 +196,11 @@ struct SettingsRootView: View {
                         Toggle(isOn: $preferences.smoothReadings) {
                             Text("Smooth readings")
                             Text(preferences.smoothReadings
-                                 ? "On — averages the last 5 seconds, so the number doesn’t jump."
-                                 : "Off — shows each reading without averaging.")
+                                 ? "On: averages the last 5 seconds, so the number doesn’t jump."
+                                 : "Off: shows each reading without averaging.")
                                 .wattTextMotion(displayed: preferences.smoothReadings
-                                                ? "On — averages the last 5 seconds, so the number doesn’t jump."
-                                                : "Off — shows each reading without averaging.",
+                                                ? "On: averages the last 5 seconds, so the number doesn’t jump."
+                                                : "Off: shows each reading without averaging.",
                                                 number: nil, enabled: motionEnabled)
                         }
                         .accessibilityIdentifier("settings.smoothReadings")

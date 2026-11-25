@@ -55,7 +55,7 @@ These checks run on every pull request, including every pull request into `main`
 | Check | Workflow | What it runs |
 | --- | --- | --- |
 | `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. A pull request also uploads the Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. Same-repo pull requests sign that app with Developer ID and notarise it. Fork pull requests, which cannot read the signing secrets, upload an ad-hoc build instead. That Release build compiles the public update URLs from `Resources/ReleaseIdentity.json` and the public key in `Resources/UpdatePublicKey.txt`. |
-| `Release config` | Release | `python3 scripts/test_release_pipeline.py` |
+| `Release config` | Release | `python3 scripts/test_release_pipeline.py`, including `scripts/check_user_facing_copy.py`, which fails if an em dash appears in user-facing copy. |
 | `gitleaks` | Secret scan | Working-tree secret scan. The same scanner is the optional pre-commit hook in `.pre-commit-config.yaml`. |
 | `Conventional commit` | PR title | The pull request title is a Conventional Commit, and the description follows the template. Release Please is title-only. Editing the description re-runs this check. |
 
@@ -78,7 +78,13 @@ If you change `scripts/` or `.github/workflows/`:
 python3 scripts/test_release_pipeline.py
 ```
 
-The lint check is the gitleaks secret scan.
+If you change user-facing copy in the app, README, landing pages, or templates:
+
+```sh
+python3 scripts/check_user_facing_copy.py
+```
+
+The lint checks are the gitleaks secret scan and the em dash check above. The typographic unavailable token in the menu bar and panel, a bare "—" string, is allowed.
 
 CI gives `xcodebuild test` the same 120 second per-test allowance as `scripts/verify-native-host.sh`. The step stops the process after 10 minutes and retries once when `xcodebuild` does not exit. An assertion failure fails the check immediately.
 

@@ -67,7 +67,7 @@ final class J112SettingsTests: XCTestCase {
             "Picker(\"Precision\"", "Text(\"Components\")", "Section(\"Readings\")",
             "Picker(\"Update\"", "Text(\"Faster uses a little more energy.\")",
             "Text(\"Smooth readings\")",
-            "On — averages the last 5 seconds, so the number doesn’t jump.",
+            "On: averages the last 5 seconds, so the number doesn’t jump.",
             "Text(Self.helperTitle)", "Text(Self.statusTitle)", "Text(Self.helperTitle)",
             "Reads power sensors only. No network, nothing leaves this Mac.",
             "Text(mode.title).accessibilityLabel(mode.title)",
