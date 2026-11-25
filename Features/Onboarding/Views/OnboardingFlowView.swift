@@ -66,12 +66,12 @@ struct OnboardingFlowView: View {
     }
 
     private var routeShell: some View {
-        WattWindowScaffold(title: "Onboarding shell") {
+        WattWindowScaffold(title: "Setup") {
             VStack(alignment: .leading, spacing: WattSpacing.md) {
-                Text("Setup for this step is not available.")
+                Text("This step isn’t available.")
                     .font(WattTypography.body)
-                LabeledContent("Current route", value: preferences.onboarding.checkpoint.label)
-                Text("Close the window to leave Watt? running with your current settings.")
+                LabeledContent("Current step", value: preferences.onboarding.checkpoint.label)
+                Text("Close the window and Watt? keeps running.")
                     .font(WattTypography.subheadline)
                     .foregroundStyle(.secondary)
                 HStack {
@@ -168,15 +168,15 @@ struct WelcomeView: View {
         @MainActor var message: String {
             switch self {
             case .standard: return WelcomeView.message
-            case .desktop: return "Watt? sits in your menu bar and shows what your Mac draws. Nothing more."
+            case .desktop: return "Watt? sits in your menu bar and shows what your Mac is using."
             }
         }
     }
     var variant: Variant = .standard
     let continueAction: () -> Void
     static let desktopIconAsset = "WattAppIcon"
-    static let title = "Know your watts"
-    static let message = "Watt? sits in your menu bar and shows what your Mac draws and what it’s charging with. Nothing more."
+    static let title = "Welcome to Watt?"
+    static let message = "Watt? sits in your menu bar and shows what your Mac is using and what the charger is giving."
 
     var body: some View {
         VStack(spacing: WattSpacing.lg) {
@@ -261,17 +261,17 @@ struct ChooseMenuReadingView: View {
 
     static func options(reading: PowerReading, helperAvailable: Bool = true, installOffered: Bool = false) -> [ReadingPicker.Option] {
         let componentDescription = helperAvailable
-            ? "CPU/GPU estimates. Needs administrator approval."
+            ? "Optional CPU and GPU readings."
             : installOffered
-            ? "The helper isn’t installed. Install it on the next step."
-            : "Component readings are unavailable in this build."
+            ? "The helper isn’t installed. You can install it on the next step."
+            : "CPU and GPU readings aren’t available in this copy."
         if Variant(reading: reading) == .noBattery {
             return [
                 .init(mode: .draw, description: "What your Mac uses right now. " +
                       PowerFormatter.watts(reading.value(for: .draw), signed: false)),
                 .init(mode: .components, description: componentDescription),
-                .init(mode: .delta, description: "Needs a battery. This Mac doesn’t have one."),
-                .init(mode: .charger, description: "Needs a battery. This Mac doesn’t have one.")
+                .init(mode: .delta, description: "This Mac doesn’t have a battery."),
+                .init(mode: .charger, description: "This Mac doesn’t have a battery.")
             ]
         }
         return [
@@ -341,25 +341,30 @@ struct ChooseMenuReadingView: View {
     }
 }
 
-/// J1.3: informational facts use native form layout, never painted settings rows.
+/// J1.3 offers the optional helper. Approval stays with the helper service.
 struct OfferComponentReadingsView: View {
     @EnvironmentObject private var preferences: PreferencesStore
     @EnvironmentObject private var router: AppRouter
 
-    static let title = "See where the power goes"
-    static let message = "Watt? uses a helper to read Apple’s CPU/GPU power estimates. macOS requires administrator approval. Both estimates appear only when both are available. Display, SSD and Other are unavailable."
-    static let unavailableTitle = "Component readings unavailable"
-    static let installMessage = "Watt? Helper isn’t installed, so CPU and GPU estimates are off. Install Helper… asks for an administrator password. No Apple certificate is required."
-    static let unavailableMessage = unavailableMessage(for: .missingBundle)
+    static let title = "CPU and GPU readings"
+    static let message = "The helper is optional. It adds CPU and GPU readings."
+    static let unavailableTitle = "CPU and GPU readings aren’t available"
+    static let installMessage = "The helper isn’t installed. Installing it asks for your password."
     static func unavailableMessage(for reason: HelperUnavailableReason) -> String {
-        reason.message + " You can still use battery, charger and system readings."
+        switch reason {
+        case .missingBundle:
+            return "This copy of Watt? doesn’t include the helper. Everything else still works."
+        case .signingRequired:
+            return "This copy of Watt? can’t turn the helper on. Everything else still works."
+        case .verificationFailed:
+            return "Watt? couldn’t check the helper. Reinstall Watt? and try again."
+        case .configurationFailed:
+            return "Watt? couldn’t set up the helper. Quit and open it again."
+        case .installationRequired:
+            return "The helper isn’t installed. Everything else still works."
+        }
     }
 
-    static let facts = [
-        (label: "What it reads", value: "CPU/GPU power estimates"),
-        (label: "Network", value: "Never"),
-        (label: "Remove it", value: "Any time, in Settings")
-    ]
     enum Action: CaseIterable { case notNow, turnOn }
 
     static func perform(_ action: Action, preferences: PreferencesStore, helperAvailable: Bool = true) {
@@ -401,18 +406,6 @@ struct OfferComponentReadingsView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal, 32)
-            Form {
-                if helperReady || installOffered {
-                    ForEach(Self.facts, id: \.label) { fact in
-                        LabeledContent(fact.label, value: fact.value)
-                    }
-                }
-            }
-            .formStyle(.grouped)
-            .scrollDisabled(true)
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.horizontal, WattSpacing.md)
-            .accessibilityIdentifier("onboarding.helper.facts")
             HStack {
                 Spacer()
                 Button { Self.perform(.notNow, preferences: preferences,
@@ -466,8 +459,8 @@ struct WaitingForApprovalView: View {
     @EnvironmentObject private var preferences: PreferencesStore
     @EnvironmentObject private var router: AppRouter
 
-    static let title = "One switch in System Settings"
-    static let message = "Approve Watt? Helper as an administrator in Login Items & Extensions."
+    static let title = "Allow the helper"
+    static let message = "Turn on Watt? Helper in Login Items & Extensions."
 
     static func openSettings(preferences: PreferencesStore, router: AppRouter) {
         guard preferences.onboarding.checkpoint == .approval else { return }
@@ -531,7 +524,7 @@ struct AllSetView: View {
     @Environment(\.dismiss) private var dismiss
 
     static let title = "That’s it"
-    static let message = "Watt? lives in your menu bar. Click it for the detail. Right-click to change the number."
+    static let message = "Watt? is in your menu bar. Click it to see more, or right-click to change the number."
 
     static func finish(preferences: PreferencesStore, router: AppRouter, dismiss: () -> Void) {
         guard preferences.onboarding.checkpoint == .allSet, !preferences.onboarding.completed else { return }
@@ -602,8 +595,8 @@ struct ComponentPreviewView: View {
     @EnvironmentObject private var preferences: PreferencesStore
     @EnvironmentObject private var powerStore: PowerReadingStore
 
-    static let title = "Helper’s on"
-    static let message = "CPU/GPU estimates appear when both are available. Display, SSD and Other are unavailable."
+    static let title = "The helper is on"
+    static let message = "CPU and GPU show up together."
 
     static let componentNames = ["CPU", "GPU", "Display"]
 
@@ -637,7 +630,7 @@ struct ComponentPreviewView: View {
             Form {
                 Section {
                     ForEach(Self.componentNames, id: \.self) { name in
-                        LabeledContent(name == "CPU" || name == "GPU" ? "\(name) estimate" : name, value: Self.value(for: name, reading: powerStore.statusReading))
+                        LabeledContent(name, value: Self.value(for: name, reading: powerStore.statusReading))
                             .accessibilityIdentifier("onboarding.preview." + name.lowercased())
                     }
                 }
@@ -665,14 +658,14 @@ struct CoachMarkView: View {
     let router: AppRouter
     let variant: Variant
     private let presentationID: UUID?
-    static let title = "Watt? lives here"
-    static let message = "Click for the detail. Right-click to change the number."
+    static let title = "Watt? is up here"
+    static let message = "Click it to see more, or right-click to change the number."
 
     @MainActor enum Variant {
         case standard, welcomeClosed
         var title: String { self == .standard ? CoachMarkView.title : "Watt? is on, showing System Draw." }
         var message: String {
-            self == .standard ? CoachMarkView.message : "Setup can wait. Two steps, whenever you’re ready."
+            self == .standard ? CoachMarkView.message : "Setup can wait. It’s two steps whenever you’re ready."
         }
         var size: NSSize {
             self == .standard
