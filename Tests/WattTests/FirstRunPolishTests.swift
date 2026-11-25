@@ -148,6 +148,72 @@ final class FirstRunPolishTests: XCTestCase {
         }
     }
 
+    func testHelperIsOnlyCalledNotInstalledWhenNothingOfItIsThere() {
+        XCTAssertEqual(HelperInstallPresence.detect(pinsPresent: false, journalPresent: false, helperPresent: false), .notInstalled)
+        // An install that stopped part way leaves its journal and maybe the helper file.
+        XCTAssertEqual(HelperInstallPresence.detect(pinsPresent: false, journalPresent: true, helperPresent: false), .unfinished)
+        XCTAssertEqual(HelperInstallPresence.detect(pinsPresent: false, journalPresent: false, helperPresent: true), .unfinished)
+        // A finished install that this copy can't use is set up for another copy.
+        XCTAssertEqual(HelperInstallPresence.detect(pinsPresent: true, journalPresent: false, helperPresent: true), .otherCopy)
+        XCTAssertEqual(HelperInstallPresence.detect(pinsPresent: true, journalPresent: true, helperPresent: true), .otherCopy)
+    }
+
+    func testSettingsAndComponentsReportTheRealHelperState() async {
+        // Installed and running: on, nothing offers an install, Components are not "not installed".
+        let service = FakeHelperService(); service.status = .connected
+        let running = SettingsHelperSetup(service: service)
+        running.installHelper = { nil }
+        let prefs = PreferencesStore(storage: InMemoryStorage())
+        prefs.onboarding.completed = true
+        await running.turnOn(preferences: prefs)
+        XCTAssertTrue(running.helperOn)
+        XCTAssertEqual(running.statusTitle, "On")
+        XCTAssertFalse(running.canInstallHelper)
+        let runningPanel = StatusPanelModel(reading: .sampleChargedOnAdapter, componentsNeedInstall: running.canInstallHelper,
+                                            componentsInstallSubtitle: running.componentsInstallSubtitle)
+        XCTAssertEqual(runningPanel.unavailableComponentsSubtitle, "Unavailable")
+        XCTAssertNotEqual(runningPanel.unavailableComponentsValue, "Install")
+
+        // Installed, but for a different copy of Watt?: say so and keep the install that moves it to this copy.
+        let other = SettingsHelperSetup()
+        other.unavailableReason = .installationRequired
+        other.installHelper = { nil }
+        other.installPresence = .otherCopy
+        XCTAssertEqual(other.statusTitle, "Other copy")
+        XCTAssertEqual(other.statusSubtitle, "The helper is set up for a different copy of Watt?. Install it again to use it with this copy.")
+        XCTAssertTrue(other.canInstallHelper)
+        let otherPanel = StatusPanelModel(reading: .sampleChargedOnAdapter, componentsNeedInstall: other.canInstallHelper,
+                                          componentsInstallSubtitle: other.componentsInstallSubtitle)
+        XCTAssertEqual(otherPanel.unavailableComponentsSubtitle, "Helper set up for another copy")
+        XCTAssertFalse(otherPanel.unavailableComponentsSubtitle.contains("not installed"))
+
+        // An install that stopped part way is not "not installed" either.
+        other.installPresence = .unfinished
+        XCTAssertEqual(other.statusTitle, "Not finished")
+        XCTAssertEqual(other.componentsInstallSubtitle, "Helper setup didn’t finish")
+
+        // Not installed at all.
+        let absent = SettingsHelperSetup()
+        absent.unavailableReason = .installationRequired
+        absent.installHelper = { nil }
+        XCTAssertEqual(absent.statusTitle, "Not installed")
+        XCTAssertEqual(absent.statusSubtitle, "Watt? Helper isn’t installed.")
+        XCTAssertEqual(StatusPanelModel(reading: .sampleChargedOnAdapter, componentsNeedInstall: true,
+                                        componentsInstallSubtitle: absent.componentsInstallSubtitle).unavailableComponentsSubtitle,
+                       "Helper not installed")
+    }
+
+    func testFailedInstallRechecksWhatIsOnThisMac() async {
+        let setup = SettingsHelperSetup()
+        setup.unavailableReason = .installationRequired
+        setup.installHelper = { .adminRequired }
+        setup.presenceProbe = { .unfinished }
+        XCTAssertEqual(setup.statusTitle, "Not installed")
+        _ = await setup.installFromInterface()
+        XCTAssertEqual(setup.installPresence, .unfinished)
+        XCTAssertEqual(setup.statusTitle, "Not finished")
+    }
+
     func testInstallToolThatNeverFinishesIsStoppedAtTheTimeout() async {
         let started = Date()
         let run = HelperBundleInstall.execute("/bin/sleep", ["30"], timeout: 0.5)

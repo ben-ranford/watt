@@ -297,6 +297,8 @@ struct WattApp: App {
                 appRouter.settingsHelperSetup.unavailableReason = .configurationFailure(error,
                     packagedHelperPresent: FileManager.default.fileExists(atPath: helper.path)
                         && FileManager.default.fileExists(atPath: plist.path))
+                appRouter.settingsHelperSetup.presenceProbe = { HelperInstallPresence.current() }
+                appRouter.settingsHelperSetup.installPresence = HelperInstallPresence.current()
             }
         }
         if let helper = productionHelper {
