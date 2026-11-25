@@ -2,9 +2,10 @@ name: PR title
 
 on:
   pull_request:
+    # edited covers a title change and a description change, so a body edit re-runs this job.
     types: [opened, edited, reopened, synchronize, ready_for_review]
 
-# Read-only. The title arrives in the environment, not in the shell script.
+# Read-only. The title and description arrive in the environment, not in the shell.
 permissions:
   contents: read
 
@@ -19,7 +20,11 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Check the pull request title
+      - name: Check the pull request title and description
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: python3 scripts/check_pr_title.py
