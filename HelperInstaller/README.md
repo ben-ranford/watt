@@ -42,7 +42,7 @@ Recovery resumes only the recorded exact installation/generation. Interrupted re
 
 ## Verification boundary
 
-Tests use real temporary files and actual ad-hoc signatures with injected owner/launchd/process authority. They exercise bootstrap, rotation, interruption/recovery, exact removal, foreign-object refusal, and authenticated release archives. Production CLI flags cannot change owner or destinations. Actual administrator installation, launchd behavior on supported Macs, cross-process protected XPC, and root telemetry capture remain host verification gates. Those operations were not run during implementation.
+Tests use real temporary files and actual ad-hoc signatures with injected owner/launchd/process authority. They exercise bootstrap, rotation, interruption/recovery, exact removal, foreign-object refusal, and authenticated release archives. Production CLI flags cannot change owner or destinations. A Debug build reads `WATT_INSTALLER_TEST_ROOT` only when that path is an absolute private directory, mode 0700, owned by the current user, free of symlinks, and outside `/Library`. It then uses the same injected authority. Release builds do not read the variable. Actual administrator installation, launchd behavior on supported Macs, cross-process protected XPC, and root telemetry capture remain host verification gates. Those operations were not run during implementation.
 
 ## Binding an application maintenance receipt
 
