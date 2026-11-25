@@ -1109,6 +1109,12 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertLess(text.index('notarize-app'), text.index('verify-release-readiness.sh local'))
         self.assertLess(text.index('hdiutil create'), text.index('notarize-dmg'))
 
+    def test_readiness_reads_signing_authority(self):
+        # `codesign -dv` omits Authority lines; the identity check needs `-dvv`.
+        text = (ROOT / 'scripts/verify-release-readiness.py').read_text()
+        self.assertIn("'/usr/bin/codesign', '-dvv'", text)
+        self.assertNotIn("'/usr/bin/codesign', '-dv'", text)
+
 
 class AppIconTests(unittest.TestCase):
     def _snapshot(self) -> Path:
