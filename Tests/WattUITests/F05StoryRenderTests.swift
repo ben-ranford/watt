@@ -46,8 +46,8 @@ final class F05StoryRenderTests: XCTestCase {
         defer { app.terminate() }
         let window = app.windows.firstMatch
         XCTAssertTrue(window.waitForExistence(timeout: 5))
-        XCTAssertTrue(window.staticTexts["Know your watts"].exists)
-        XCTAssertTrue(window.staticTexts["Watt? sits in your menu bar and shows what your Mac draws. Nothing more."].exists)
+        XCTAssertTrue(window.staticTexts["Welcome to Watt?"].exists)
+        XCTAssertTrue(window.staticTexts["Watt? sits in your menu bar and shows what your Mac is using."].exists)
         let button = window.buttons["onboarding.welcome.continue"]
         XCTAssertTrue(button.exists)
         try attachOwnedSurface(window, name: "J4.1-30-2275-dark-native")
@@ -60,7 +60,7 @@ final class F05StoryRenderTests: XCTestCase {
         XCTAssertTrue(window.waitForNonExistence(timeout: 5))
         app.terminate()
         app.launch()
-        XCTAssertTrue(window.staticTexts["Know your watts"].waitForExistence(timeout: 5))
+        XCTAssertTrue(window.staticTexts["Welcome to Watt?"].waitForExistence(timeout: 5))
         window.buttons[XCUIIdentifierCloseWindow].click()
         XCTAssertTrue(window.waitForNonExistence(timeout: 5))
     }
@@ -83,11 +83,11 @@ final class F05StoryRenderTests: XCTestCase {
         for index in 1...3 { XCTAssertFalse(window.radioButtons.element(boundBy: index).isEnabled) }
         try attachOwnedSurface(window, name: "J4.2-30-2576-dark-native")
         window.buttons["onboarding.reading.back"].click()
-        XCTAssertTrue(window.staticTexts["Know your watts"].waitForExistence(timeout: 5))
+        XCTAssertTrue(window.staticTexts["Welcome to Watt?"].waitForExistence(timeout: 5))
         window.typeKey(.return, modifierFlags: [])
         XCTAssertTrue(window.staticTexts["Pick one number for the menu bar"].waitForExistence(timeout: 5))
         window.buttons["onboarding.reading.continue"].click()
-        XCTAssertTrue(window.staticTexts["See where the power goes"].waitForExistence(timeout: 5))
+        XCTAssertTrue(window.staticTexts["CPU and GPU readings"].waitForExistence(timeout: 5))
         window.typeKey(.escape, modifierFlags: [])
         XCTAssertTrue(window.waitForNonExistence(timeout: 5))
     }
