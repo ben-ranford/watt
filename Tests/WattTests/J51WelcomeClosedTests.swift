@@ -11,7 +11,7 @@ final class J51WelcomeClosedTests: XCTestCase {
     func testExactCopyAndFixtureRegistration() throws {
         XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.title, "Watt? is on, showing System Draw.")
         XCTAssertEqual(CoachMarkView.Variant.welcomeClosed.message,
-                       "Setup can wait. Two steps, whenever you’re ready.")
+                       "Setup can wait. It’s two steps whenever you’re ready.")
         XCTAssertEqual(CoachMarkView.Variant.standard.title, CoachMarkView.title)
         XCTAssertEqual(CoachMarkView.Variant.standard.message, CoachMarkView.message)
         let fixture = try ScenarioRegistry.resolve("J5.1")
@@ -91,7 +91,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         }
     }
 
-    func testContinueFailureKeepsWelcomeAndRetryPersistsPicker() {
+    func testContinueFailureKeepsWelcomeAndRetryPersistsHelperOffer() {
         let storage = InMemoryStorage()
         let preferences = PreferencesStore(storage: storage)
         let before = preferences.onboarding
@@ -101,7 +101,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         XCTAssertEqual(preferences.persistenceFailure, .persistence)
         storage.failWrites = false
         OnboardingFlowView.continueWelcome(preferences: preferences)
-        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .picker)
+        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .helperOffer)
         XCTAssertNil(preferences.persistenceFailure)
     }
 
@@ -118,7 +118,7 @@ final class J51WelcomeClosedTests: XCTestCase {
             router.present = {
                 destinations.append($0)
                 let restored = PreferencesStore(storage: storage)
-                XCTAssertEqual(restored.onboarding.checkpoint, finish ? .picker : .runningDefaults)
+                XCTAssertEqual(restored.onboarding.checkpoint, finish ? .helperOffer : .runningDefaults)
                 XCTAssertNil(restored.onboarding.deferredSetupID)
                 XCTAssertEqual(restored.onboarding, preferences.onboarding)
             }
@@ -182,6 +182,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         XCTAssertTrue(OnboardingFlowView.closeWelcome(preferences: preferences, router: AppRouter()))
         let oldToken = try XCTUnwrap(preferences.onboarding.deferredSetupID)
         CoachMarkView.finishSetup(preferences: preferences, router: AppRouter(), presentationID: oldToken)
+        OfferComponentReadingsView.perform(.notNow, preferences: preferences)
         ChooseMenuReadingView.back(preferences: preferences)
         XCTAssertTrue(OnboardingFlowView.closeWelcome(preferences: preferences, router: AppRouter()))
         let newToken = try XCTUnwrap(preferences.onboarding.deferredSetupID)
@@ -210,7 +211,7 @@ final class J51WelcomeClosedTests: XCTestCase {
         }
     }
 
-    func testReopenDeferredSetupPersistsPickerAndInvalidatesPromptBeforeRouting() {
+    func testReopenDeferredSetupPersistsHelperOfferAndInvalidatesPromptBeforeRouting() {
         for checkpoint in [OnboardingCheckpoint.welcomeClosed, .runningDefaults] {
             let storage = InMemoryStorage()
             let preferences = PreferencesStore(storage: storage)
@@ -220,7 +221,7 @@ final class J51WelcomeClosedTests: XCTestCase {
             router.present = {
                 destinations.append($0)
                 let restored = PreferencesStore(storage: storage)
-                XCTAssertEqual(restored.onboarding.checkpoint, .picker)
+                XCTAssertEqual(restored.onboarding.checkpoint, .helperOffer)
                 XCTAssertNil(restored.onboarding.deferredSetupID)
                 XCTAssertTrue(restored.onboarding.helperOptIn)
                 XCTAssertFalse(restored.onboarding.completed)
@@ -329,7 +330,8 @@ final class J51WelcomeClosedTests: XCTestCase {
         let retryAction = try XCTUnwrap(retryItem.action)
         NSApplication.shared.sendAction(retryAction, to: retryItem.target, from: retryItem)
         XCTAssertEqual(destinations, [.onboarding])
-        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .picker)
+        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .helperOffer)
+        OfferComponentReadingsView.perform(.notNow, preferences: preferences)
         ChooseMenuReadingView.back(preferences: preferences)
         OnboardingFlowView.closeWelcome(preferences: preferences, router: AppRouter())
         let newer = preferences.onboarding

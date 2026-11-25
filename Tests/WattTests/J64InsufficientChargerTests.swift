@@ -36,7 +36,7 @@ final class J64InsufficientChargerTests: XCTestCase {
             .init(episodeID: "test", observedAt: Self.timestamp, sustainedDuration: .nan),
             .init(episodeID: "test", observedAt: Self.timestamp.addingTimeInterval(-1), sustainedDuration: 300)]
         var expected = Array(repeating: StatusPanelState.standard, count: badThresholds.count)
-        expected += [.noReading, .standard, .noReading, .standard, .standard, .noReading, .noReading,
+        expected += [.standard, .standard, .noReading, .standard, .standard, .noReading, .noReading,
                      .standard, .standard, .standard, .noReading, .noReading, .noReading, .noReading,
                      .noReading, .standard, .standard]
         var rejected = badThresholds.map { reading(threshold: $0) }

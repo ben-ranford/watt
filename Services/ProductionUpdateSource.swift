@@ -82,6 +82,16 @@ private final class UpdateProgressRelay {
     }
 }
 
+/// Resume the caller before invalidating the session, and invalidate off the caller.
+/// `invalidateAndCancel` waits for the delegate queue. Calling it on that queue
+/// before resume never returns, so a finished manifest leaves the check in `.checking`.
+enum UpdateTransferCompletion {
+    static func deliver(resume: () -> Void, invalidate: @escaping @Sendable () -> Void) {
+        resume()
+        DispatchQueue.global(qos: .utility).async(execute: invalidate)
+    }
+}
+
 /// All mutable state is protected by lock, including cancellation before start and final delivery.
 private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
     private let lock = NSLock()
@@ -119,11 +129,15 @@ private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @un
         self.session = session
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: deadline)
         request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
-        let timeout = DispatchWorkItem { [weak self] in self?.finish(.failure(ServiceFailure.timedOut)) }
+        let timeout = DispatchWorkItem { [weak self] in
+            UpdateDiagnostics.timedOut("request")
+            self?.finish(.failure(ServiceFailure.timedOut))
+        }
         timer = timeout
         DispatchQueue.global().asyncAfter(deadline: .now() + deadline, execute: timeout)
         session.dataTask(with: request).resume()
         lock.unlock()
+        UpdateDiagnostics.requestStarted(host: url.host ?? "unknown")
     }
     func cancel() {
         lock.lock(); cancelled = true; lock.unlock()
@@ -136,8 +150,19 @@ private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @un
         let session = self.session; self.session = nil
         timer?.cancel(); timer = nil
         lock.unlock()
-        session?.invalidateAndCancel()
-        continuation.resume(with: result)
+        let label: String
+        switch result {
+        case .success(let data): label = data == nil ? "empty" : "bytes"
+        case .failure(let error): label = (error as? ServiceFailure)?.rawValue ?? "error"
+        }
+        UpdateDiagnostics.finished(label)
+        // Resume before tearing the session down. invalidateAndCancel waits for
+        // the delegate queue, so calling it here never returns and the check stays in .checking.
+        UpdateTransferCompletion.deliver {
+            continuation.resume(with: result)
+        } invalidate: {
+            session?.invalidateAndCancel()
+        }
     }
     func urlSession(_ session: URLSession, task: URLSessionTask,
                     willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest,
@@ -166,11 +191,14 @@ private final class BoundedUpdateTransfer: NSObject, URLSessionDataDelegate, @un
               response.expectedContentLength <= Int64(limit) else {
             let status = (response as? HTTPURLResponse)?.statusCode ?? -1
             lock.unlock(); completionHandler(.cancel)
+            UpdateDiagnostics.response(status: status)
             UpdateDiagnostics.record(UpdateResponseRejection(status: status), as: .invalidData, during: "response")
             finish(.failure(ServiceFailure.invalidData)); return
         }
+        let status = http.statusCode
         expected = response.expectedContentLength; noContent = http.statusCode == 204; responseAccepted = true
         lock.unlock(); completionHandler(.allow)
+        UpdateDiagnostics.response(status: status)
     }
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         lock.lock()
