@@ -532,8 +532,10 @@ final class P04UpdaterTests: XCTestCase {
             return XCTFail("build \(publishedBuild) must be up to date, state \(current.state)")
         }
         XCTAssertEqual(current.state, .idle)
+        // A manual check skips the staged rollout, so a lower build is offered on any rollout day.
+        // An automatic check depends on the random cohort while the rollout is below 100%.
         let older = checker(currentBuild: publishedBuild - 1)
-        guard case .success(let offered) = await older.check(), offered == manifest.offerVersion else {
+        guard case .success(let offered) = await older.check(initiator: .manual), offered == manifest.offerVersion else {
             return XCTFail("a lower build must be offered \(manifest.offerVersion), state \(older.state)")
         }
         XCTAssertEqual(older.state, .available(version: manifest.offerVersion))
