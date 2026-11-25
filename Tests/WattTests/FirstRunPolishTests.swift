@@ -89,7 +89,10 @@ final class FirstRunPolishTests: XCTestCase {
 
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .picker
-        ChooseMenuReadingView.advance(preferences: preferences, helperAvailable: false, installOffered: true)
+        ChooseMenuReadingView.advance(preferences: preferences)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
+        preferences.onboarding.checkpoint = .picker
+        ChooseMenuReadingView.back(preferences: preferences, returnToInstall: true)
         XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
     }
 

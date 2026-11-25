@@ -49,7 +49,7 @@ struct OnboardingFlowView: View {
         let previous = preferences.onboarding
         guard !previous.completed, previous.checkpoint == .welcome else { return }
         var next = previous
-        next.checkpoint = .picker
+        next.checkpoint = .helperOffer
         preferences.transitionOnboarding(from: previous, to: next)
     }
 
@@ -286,14 +286,21 @@ struct ChooseMenuReadingView: View {
         ]
     }
 
-    static func back(preferences: PreferencesStore) {
+    static func back(preferences: PreferencesStore, returnToInstall: Bool = false) {
         guard preferences.onboarding.checkpoint == .picker else { return }
-        preferences.onboarding.checkpoint = .welcome
+        preferences.onboarding.checkpoint = returnToInstall ? .helperOffer : .welcome
     }
 
-    static func advance(preferences: PreferencesStore, helperAvailable: Bool = true, installOffered: Bool = false) {
+    /// The helper step has already run. Continue moves on from the helper's live state.
+    static func advance(preferences: PreferencesStore, helperOn: Bool = false, requiresApproval: Bool = false) {
         guard preferences.onboarding.checkpoint == .picker else { return }
-        preferences.onboarding.checkpoint = (helperAvailable || installOffered) ? .helperOffer : .allSet
+        if helperOn {
+            preferences.onboarding.checkpoint = .preview
+        } else if requiresApproval {
+            preferences.onboarding.checkpoint = .approval
+        } else {
+            preferences.onboarding.checkpoint = .allSet
+        }
     }
 
     var body: some View {
@@ -315,12 +322,16 @@ struct ChooseMenuReadingView: View {
                 .accessibilityIdentifier("onboarding.reading.picker")
             HStack {
                 Spacer()
-                WattActionButton(title: "Back") { Self.back(preferences: preferences) }
+                WattActionButton(title: "Back") {
+                    Self.back(preferences: preferences,
+                              returnToInstall: !router.settingsHelperSetup.helperServiceAvailable
+                                  && router.settingsHelperSetup.canInstallHelper)
+                }
                     .accessibilityIdentifier("onboarding.reading.back")
                 WattActionButton(title: "Continue", style: .prominent) {
                     Self.advance(preferences: preferences,
-                                 helperAvailable: router.settingsHelperSetup.helperServiceAvailable,
-                                 installOffered: router.settingsHelperSetup.canInstallHelper)
+                                 helperOn: router.settingsHelperSetup.helperOn,
+                                 requiresApproval: router.settingsHelperSetup.state == .requiresApproval)
                 }
                 .keyboardShortcut(.defaultAction)
                 .accessibilityIdentifier("onboarding.reading.continue")
@@ -371,7 +382,9 @@ struct OfferComponentReadingsView: View {
         switch action {
         case .notNow:
             state.helperOptIn = false
-            state.checkpoint = .allSet
+            // Skipping the offer still reaches the reading step. A helper that
+            // disappeared during approval or preview keeps the existing exit.
+            state.checkpoint = state.checkpoint == .helperOffer ? .picker : .allSet
         case .turnOn:
             // Intent only. Approval/connection must be established by the helper service.
             state.helperOptIn = true
@@ -447,17 +460,23 @@ struct OfferComponentReadingsView: View {
         .frame(width: WattSpacing.onboardingWidth)
     }
 
-    private func installHelper() async {
-        let failure = await router.settingsHelperSetup.installFromInterface()
-        guard failure == nil, preferences.onboarding.checkpoint == .helperOffer else { return }
+    /// Install succeeded. The reading step comes next, once the helper is actually on or waiting for approval.
+    static func finishInstall(preferences: PreferencesStore, helperOn: Bool, requiresApproval: Bool) {
+        guard preferences.onboarding.checkpoint == .helperOffer else { return }
         var state = preferences.onboarding
         state.helperOptIn = true
-        if router.settingsHelperSetup.helperOn {
-            state.checkpoint = .preview
-        } else if router.settingsHelperSetup.state == .requiresApproval {
-            state.checkpoint = .approval
+        if helperOn || requiresApproval {
+            state.checkpoint = .picker
         }
         preferences.onboarding = state
+    }
+
+    private func installHelper() async {
+        let failure = await router.settingsHelperSetup.installFromInterface()
+        guard failure == nil else { return }
+        Self.finishInstall(preferences: preferences,
+                           helperOn: router.settingsHelperSetup.helperOn,
+                           requiresApproval: router.settingsHelperSetup.state == .requiresApproval)
     }
 }
 
@@ -709,7 +728,7 @@ struct CoachMarkView: View {
         guard !previous.completed, previous.checkpoint == .welcomeClosed,
               previous.deferredSetupID == presentationID else { return }
         var next = previous
-        next.checkpoint = finish ? .picker : .runningDefaults
+        next.checkpoint = finish ? .helperOffer : .runningDefaults
         next.deferredSetupID = nil
         guard preferences.transitionOnboarding(from: previous, to: next) else { return }
         if finish { router.beginOnboarding() } else { router.showStatusPanel() }
