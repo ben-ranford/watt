@@ -22,6 +22,7 @@ final class ComponentTelemetryTests: XCTestCase {
     private final class Transport: ComponentHelperTransport {
         var events: [String] = []
         var connectionFailure: ServiceFailure?
+        var capture: HelperCapture?
         func connect() async throws -> HelperPeer {
             events.append("connect")
             if let connectionFailure { throw connectionFailure }
@@ -29,7 +30,9 @@ final class ComponentTelemetryTests: XCTestCase {
         }
         func request(_ request: HelperRequest) async throws -> HelperReply {
             events.append(request.command.rawValue)
-            return HelperReply(request: request, build: "test", daemonInstance: UUID(), status: .sourceUnvalidated)
+            let capture = request.command == .sample ? capture : nil
+            let status: HelperReplyStatus = capture == nil && request.command == .sample ? .busy : .sourceUnvalidated
+            return HelperReply(request: request, build: "test", daemonInstance: UUID(), status: status, capture: capture)
         }
     }
     private func pair(_ clock: FakeWattClock, cpu: Double = 2, gpu: Double = 1) -> ComponentEstimatePair {
@@ -136,12 +139,30 @@ final class ComponentTelemetryTests: XCTestCase {
         XCTAssertTrue(store.statusReading.components.isEmpty)
     }
 
-    func testProductionTelemetryConnectsBeforeRequestAndKeepsRawSourceUnavailable() async {
+    func testProductionTelemetryDecodesAuthenticatedMilliwattSample() async throws {
         let transport = Transport()
-        let provider = ProductionHelperTelemetry(transport: transport)
-        let outcome = await provider.sampleComponents()
+        transport.capture = PowerMetricsFixture.capture(stdout: PowerMetricsFixture.oneSecondRails())
+        let outcome = await ProductionHelperTelemetry(transport: transport).sampleComponents()
         XCTAssertEqual(transport.events, ["connect", "sample"])
-        guard case .failure(.unknownStatus) = outcome else { return XCTFail("Raw source must stay unavailable") }
+        guard case .success(let pair) = outcome else { return XCTFail("Expected a decoded pair, got \(outcome)") }
+        XCTAssertEqual(pair.cpuWatts, 2.34, accuracy: 0.000_000_1)
+        XCTAssertEqual(pair.gpuWatts, 0.86, accuracy: 0.000_000_1)
+        XCTAssertEqual(pair.provenance, PowerMetricsComponentDecoder.provenance)
+        XCTAssertEqual(pair.acquisitionID, transport.capture?.acquisitionID)
+        try pair.validate()
+    }
+    func testProductionTelemetryKeepsAMissingCaptureUnavailable() async {
+        let transport = Transport()
+        let outcome = await ProductionHelperTelemetry(transport: transport).sampleComponents()
+        XCTAssertEqual(transport.events, ["connect", "sample"])
+        guard case .failure(.unknownStatus) = outcome else { return XCTFail("A sample with no capture must stay unavailable") }
+    }
+    func testProductionTelemetryRejectsGarbageAfterAuthentication() async {
+        let transport = Transport()
+        transport.capture = PowerMetricsFixture.capture(stdout: Data("not a plist".utf8))
+        let outcome = await ProductionHelperTelemetry(transport: transport).sampleComponents()
+        XCTAssertEqual(transport.events, ["connect", "sample"])
+        guard case .failure(.invalidData) = outcome else { return XCTFail("Garbage must fail closed") }
     }
     func testProductionTelemetryDoesNotSampleAfterAuthenticationFailure() async {
         let transport = Transport()
