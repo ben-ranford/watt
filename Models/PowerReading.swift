@@ -178,7 +178,8 @@ struct PowerReading: Equatable, Sendable {
               [chargerWatts, systemWatts].compactMap({ $0 }).allSatisfy({ $0 >= 0 }),
               Set(components.map(\.id)).count == components.count,
               components.allSatisfy({ !$0.id.isEmpty && $0.watts.isFinite && $0.watts >= 0 }),
-              batteryState != .charging || (watts.map { $0 >= 0 } ?? true),
+              // Charging may still carry a measured negative rate: a busy Mac
+              // can drain while plugged in before the state catches up.
               batteryState != .discharging || (watts.map { $0 <= 0 } ?? true),
               batteryState != .noBattery || (watts == nil && batteryPercentage == nil),
               adapterRatedWatts.map({ (1...PowerSourceCopy.maximumRatedWatts).contains($0) }) ?? true,
