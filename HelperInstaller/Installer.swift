@@ -4,6 +4,8 @@ import CryptoKit
 #if SWIFT_PACKAGE
 import WattHelperShared
 import WattMaintenanceShared
+#elseif WATT_XCODE_TESTS
+@testable import Watt
 #endif
 
 /// Explicit administrator entry point. It has no IPC or arbitrary destination/command interface.

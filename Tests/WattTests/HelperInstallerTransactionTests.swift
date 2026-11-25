@@ -4,8 +4,10 @@ import Darwin
 import XCTest
 #if SWIFT_PACKAGE
 import WattHelperShared
-#endif
 @testable import WattHelperInstaller
+#else
+@testable import Watt
+#endif
 
 /// The signed payload the installer accepts: identity, build, archive digest, and minimum system version.
 private struct InstallerReleasePayload: Codable {

@@ -2,8 +2,10 @@ import Foundation
 import XCTest
 #if SWIFT_PACKAGE
 import WattHelperShared
-#endif
 @testable import WattHelperInstaller
+#else
+@testable import Watt
+#endif
 
 @MainActor
 final class HelperInstallerPreflightTests: XCTestCase {
