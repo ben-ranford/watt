@@ -10,10 +10,13 @@ final class HelperInstallerHostTests: XCTestCase {
         return url
     }
 
-    private func runInstaller(_ arguments: [String]) throws -> (status: Int32, output: String, error: String) {
+    private func runInstaller(_ arguments: [String], environment: [String: String] = [:]) throws -> (status: Int32, output: String, error: String) {
         let process = Process()
         process.executableURL = try installerURL()
         process.arguments = arguments
+        if !environment.isEmpty {
+            process.environment = ProcessInfo.processInfo.environment.merging(environment) { _, new in new }
+        }
         let output = Pipe()
         let error = Pipe()
         process.standardOutput = output
@@ -44,14 +47,14 @@ final class HelperInstallerHostTests: XCTestCase {
     }
 
     /// A local ad-hoc app with the identifiers and positive build the installer requires.
-    private func signedApp(build: UInt64) throws -> URL {
+    private func signedApp(build: UInt64, directory: URL? = nil) throws -> URL {
         // The installer refuses a symlink anywhere in the source path. The
         // temporary directory is often reached through one, so start from the
         // home directory and use the resolved path.
-        let root = FileManager.default.homeDirectoryForCurrentUser
+        let root = directory ?? FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent(".watt-installer-host-" + UUID().uuidString)
             .resolvingSymlinksInPath()
-        let app = root.appendingPathComponent("Watt.app")
+        let app = root.appendingPathComponent(directory == nil ? "Watt.app" : "source-\(build).app")
         let binaries = app.appendingPathComponent("Contents/MacOS")
         try FileManager.default.createDirectory(at: binaries, withIntermediateDirectories: true)
         let fields: [String: String] = [
@@ -125,5 +128,124 @@ final class HelperInstallerHostTests: XCTestCase {
         XCTAssertEqual(refused.status, 78)
         XCTAssertTrue(refused.error.contains("administratorRequired"))
         XCTAssertEqual(try Data(contentsOf: app.appendingPathComponent("Contents/Info.plist")), before)
+    }
+
+    /// A private 0700 directory the Debug installer may use instead of `/Library`.
+    private func privateInstallRoot() throws -> URL {
+        let root = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".watt-installer-root-" + UUID().uuidString)
+            .resolvingSymlinksInPath()
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
+        try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: root.path)
+        for name in ["helpers", "launchd"] {
+            let directory = root.appendingPathComponent(name)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
+            try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: directory.path)
+        }
+        try Data("preserve".utf8).write(to: root.appendingPathComponent("keep.txt"))
+        return root
+    }
+
+    private func trustRecord(in root: URL) throws -> (installation: String, generation: Int, build: Int) {
+        let url = root.appendingPathComponent("protected/helper-trust.json")
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
+        return (
+            try XCTUnwrap(json["installationID"] as? String),
+            try XCTUnwrap(json["generation"] as? NSNumber).intValue,
+            try XCTUnwrap(json["build"] as? NSNumber).intValue
+        )
+    }
+
+    func testDebugInstallerBootstrapsRotatesAndRemovesInsideAPrivateDirectory() throws {
+        _ = try installerURL()
+        let root = try privateInstallRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let environment = ["WATT_INSTALLER_TEST_ROOT": root.path]
+        let library = try runInstaller([
+            "--bootstrap-reviewed", "--source", "/Applications/Watt.app",
+            "--approval", String(repeating: "ab", count: 32)
+        ], environment: ["WATT_INSTALLER_TEST_ROOT": "/Library"])
+        XCTAssertEqual(library.status, 78)
+        XCTAssertTrue(library.error.contains("refused"))
+        XCTAssertFalse(library.error.contains("Installed protected generation"))
+
+        let first = try signedApp(build: 3, directory: root)
+        let preview = try runInstaller(["--preflight", "--source", first.path], environment: environment)
+        XCTAssertEqual(preview.status, 0, preview.error)
+        let digest = try approval(in: preview.output)
+        let before = try Data(contentsOf: first.appendingPathComponent("Contents/Info.plist"))
+        let mismatch = try runInstaller([
+            "--bootstrap-reviewed", "--source", first.path,
+            "--approval", String(repeating: "0", count: 64)
+        ], environment: environment)
+        XCTAssertEqual(mismatch.status, 78, mismatch.error)
+        XCTAssertTrue(mismatch.error.contains("approvalMismatch"))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("helpers/WattHelper").path))
+
+        let installed = try runInstaller([
+            "--bootstrap-reviewed", "--source", first.path, "--approval", digest
+        ], environment: environment)
+        XCTAssertEqual(installed.status, 0, installed.error)
+        XCTAssertTrue(installed.output.contains("Installed protected generation 1"))
+        XCTAssertTrue(installed.output.contains(root.appendingPathComponent("protected").path))
+        XCTAssertFalse(installed.output.contains("/Library/Application Support/Watt"))
+        let record = try trustRecord(in: root)
+        XCTAssertEqual(record.generation, 1)
+        XCTAssertEqual(record.build, 3)
+        let helper = root.appendingPathComponent("helpers/WattHelper")
+        XCTAssertEqual(try Data(contentsOf: helper), try Data(contentsOf: first.appendingPathComponent("Contents/MacOS/WattHelper")))
+        let plist = try Data(contentsOf: root.appendingPathComponent("launchd/helper.plist"))
+        let fields = try XCTUnwrap(PropertyListSerialization.propertyList(from: plist, format: nil) as? [String: Any])
+        XCTAssertEqual(fields["Label"] as? String, "io.github.ben-ranford.watt.helper")
+        XCTAssertEqual(fields["ProgramArguments"] as? [String], [helper.path])
+        let services = try XCTUnwrap(fields["MachServices"] as? [String: Any])
+        XCTAssertEqual(services.count, 1)
+        XCTAssertEqual((services["io.github.ben-ranford.watt.helper"] as? NSNumber)?.boolValue, true)
+        XCTAssertEqual(fields["UserName"] as? String, "root")
+        XCTAssertEqual(try Data(contentsOf: first.appendingPathComponent("Contents/Info.plist")), before)
+        XCTAssertEqual(try Data(contentsOf: root.appendingPathComponent("keep.txt")), Data("preserve".utf8))
+
+        let sameBuild = try runInstaller([
+            "--rotate-reviewed", "--source", first.path, "--approval", digest
+        ], environment: environment)
+        XCTAssertEqual(sameBuild.status, 78, sameBuild.error)
+        XCTAssertTrue(sameBuild.error.contains("refused"))
+        XCTAssertEqual(try trustRecord(in: root).generation, 1)
+        XCTAssertEqual(try Data(contentsOf: helper), try Data(contentsOf: first.appendingPathComponent("Contents/MacOS/WattHelper")))
+
+        let second = try signedApp(build: 4, directory: root)
+        let nextPreview = try runInstaller(["--preflight", "--source", second.path], environment: environment)
+        XCTAssertEqual(nextPreview.status, 0, nextPreview.error)
+        let nextDigest = try approval(in: nextPreview.output)
+        let rotated = try runInstaller([
+            "--rotate-reviewed", "--source", second.path, "--approval", nextDigest
+        ], environment: environment)
+        XCTAssertEqual(rotated.status, 0, rotated.error)
+        XCTAssertTrue(rotated.output.contains("Installed protected generation 2"))
+        let replacement = try trustRecord(in: root)
+        XCTAssertEqual(replacement.installation, record.installation)
+        XCTAssertEqual(replacement.generation, 2)
+        XCTAssertEqual(replacement.build, 4)
+        XCTAssertEqual(try Data(contentsOf: helper), try Data(contentsOf: second.appendingPathComponent("Contents/MacOS/WattHelper")))
+        let kept = root.appendingPathComponent("protected/generations/\(record.installation)-1/Watt.app")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: kept.path))
+
+        let wrongGeneration = try runInstaller([
+            "--remove-helper", "--installation", record.installation, "--generation", "1"
+        ], environment: environment)
+        XCTAssertEqual(wrongGeneration.status, 78, wrongGeneration.error)
+        XCTAssertTrue(wrongGeneration.error.contains("refused"))
+        XCTAssertEqual(try Data(contentsOf: helper), try Data(contentsOf: second.appendingPathComponent("Contents/MacOS/WattHelper")))
+
+        let removed = try runInstaller([
+            "--remove-helper", "--installation", record.installation, "--generation", "2"
+        ], environment: environment)
+        XCTAssertEqual(removed.status, 0, removed.error)
+        XCTAssertTrue(removed.output.contains("Application generations retained"))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: helper.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("launchd/helper.plist").path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("protected/helper-trust.json").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: kept.path))
+        XCTAssertEqual(try Data(contentsOf: root.appendingPathComponent("keep.txt")), Data("preserve".utf8))
     }
 }
