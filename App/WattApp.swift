@@ -245,6 +245,10 @@ struct WattApp: App {
         // bundle, the update journal, or staging from here. Updates stay fail-closed
         // and no staged payload is touched.
         let protectedFolder = !Self.isHarnessLaunch && LaunchPathPolicy.isPrivacyProtected(bundleURL)
+        // The helper's protected copy updates and removes itself. Another copy of the
+        // same pinned build hands launch over to it; any other copy says why updates are off.
+        let managedPlacement: ManagedCopyPolicy.Placement = Self.isHarnessLaunch || protectedFolder
+            ? .noProtectedInstallation : ManagedCopyPolicy.current()
         let productionUpdate: ProductionUpdateComposition?
         let updateFailure: ServiceFailure?
         if Self.isHarnessLaunch || protectedFolder { productionUpdate = nil; updateFailure = protectedFolder ? .untrustedIdentity : nil }
@@ -269,6 +273,8 @@ struct WattApp: App {
             updates: UpdateStore(storage: updateStorage), updateConfigurationFailure: updateFailure,
             whatsNewStorage: updateStorage)
         #endif
+        appRouter.updateUnavailableCause = protectedFolder
+            ? .privacyProtectedFolder : ManagedCopyPolicy.updateCause(for: managedPlacement)
         AboutPanel.presentWhatsNew = { [weak appRouter] in
             appRouter?.showInstalledReleaseNotes()
         }
@@ -409,7 +415,12 @@ struct WattApp: App {
             // not exit. The next turn is late enough that this process is no
             // longer inside the parent's launch wait.
             Task { @MainActor in
-                SingleInstanceClaim.becomeOnlyInstance()
+                if case .sameBuildElsewhere(let managed) = managedPlacement,
+                   ManagedCopyPolicy.openManagedCopy(managed) {
+                    NSApplication.shared.terminate(nil)
+                    return
+                }
+                SingleInstanceClaim.becomeOnlyInstance(managedBundle: managedPlacement == .managed ? bundleURL : nil)
             }
         }
     }
