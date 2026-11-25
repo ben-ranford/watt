@@ -1,6 +1,32 @@
 # Changelog
 
+## [1.3.1](https://github.com/ben-ranford/watt/compare/v1.2.0...v1.3.1) (2026-11-25)
+
+1.3.1 is the first published release with the 1.3.0 changes. It also fixes the release check that stopped 1.3.0 from being published.
+
+### Features
+
+* See CPU and GPU power separately. With the helper on, the panel shows a CPU estimate and a GPU estimate. (#73)
+* The panel shows your charger's wattage and how long until the battery is full or empty. (#56)
+* Updates roll out gradually, and Watt? shows what changed once after it updates. (#54)
+* Subtle motion in the panel and windows. (#53)
+
+### Bug Fixes
+
+* Plainer wording on every first-run screen. (#69)
+* First run offers the helper before you pick what the menu bar shows, so CPU and GPU are ready to choose. (#70)
+* Checking for updates no longer gets stuck on "Checking…". If Watt? can't connect, it says so. (#67)
+* System draw and battery readings now show in the panel while your Mac runs on battery. (#71)
+* Release notes in the update window show headings and bullets on separate lines. (#59)
+* Fixed the release check that stopped 1.3.0 from being published. (#81)
+
+### Performance Improvements
+
+* Uses less energy at idle while the menu bar keeps updating on time. (#57)
+
 ## [1.3.0](https://github.com/ben-ranford/watt/compare/v1.2.0...v1.3.0) (2026-11-25)
+
+Not published. Superseded by 1.3.1, which ships these changes.
 
 
 ### Features
