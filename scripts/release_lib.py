@@ -49,6 +49,11 @@ def parse_version(value: str) -> tuple[int, int, int]:
     return major, minor, patch
 
 
+def version_regresses(current: str, proposed: str) -> bool:
+    """Return whether a proposed manifest version is older than the current one."""
+    return parse_version(proposed) < parse_version(current)
+
+
 def build_number(version: str) -> int:
     major, minor, patch = parse_version(version)
     value = major * 1_000_000 + minor * 1_000 + patch

@@ -43,6 +43,32 @@ class VersionTests(unittest.TestCase):
         with self.assertRaises(release_lib.ReleaseError):
             release_lib.build_number('0.1.0')
 
+    def test_manifest_is_not_older_than_the_latest_published_tag(self) -> None:
+        # Release Please proposed 1.3.1 after v1.4.0 was already the manifest.
+        # A draft release has no git tag until it is published, so that run
+        # walked every commit and kept a Release-As: 1.3.1 footer.
+        self.assertTrue(release_lib.version_regresses('1.4.0', '1.3.1'))
+        self.assertFalse(release_lib.version_regresses('1.4.0', '1.4.0'))
+        self.assertFalse(release_lib.version_regresses('1.4.0', '1.4.1'))
+        self.assertFalse(release_lib.version_regresses('1.4.0', '1.5.0'))
+        listed = run(['git', 'tag', '--list', 'v[0-9]*'])
+        self.assertEqual(listed.returncode, 0, listed.stderr)
+        versions = []
+        for line in listed.stdout.splitlines():
+            tag = line.strip()
+            if release_lib.TAG_RE.fullmatch(tag):
+                versions.append(tag[1:])
+        self.assertTrue(
+            versions,
+            'expected published vX.Y.Z tags; the Release workflow fetches them',
+        )
+        latest = max(versions, key=release_lib.parse_version)
+        manifest = release_lib.marketing_version(ROOT)
+        self.assertFalse(
+            release_lib.version_regresses(latest, manifest),
+            'manifest %s is behind published tag v%s' % (manifest, latest),
+        )
+
     def test_repository_baseline_matches_identity(self) -> None:
         version = release_lib.marketing_version(ROOT)
         encoded = release_lib.build_number(version)
@@ -504,6 +530,19 @@ Build settings for action build and target WattTests:
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_draft_release_creates_its_git_tag(self) -> None:
+        config = json.loads((ROOT / 'release-please-config.json').read_text())
+        package = config['packages']['.']
+        self.assertIs(package['draft'], True)
+        self.assertIs(package['force-tag-creation'], True)
+        self.assertIs(package['include-component-in-tag'], False)
+        import yaml
+        workflow = yaml.safe_load((ROOT / '.github/workflows/release.yml').read_text())
+        checkout = next(
+            step for step in workflow['jobs']['test']['steps'] if step.get('name') == 'Checkout'
+        )
+        self.assertIs(checkout['with']['fetch-tags'], True)
+
     def test_workflow_is_pinned_and_does_not_interpolate_untrusted_input(self) -> None:
         import yaml
         workflow = yaml.safe_load((ROOT / '.github/workflows/release.yml').read_text())
