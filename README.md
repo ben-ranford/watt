@@ -48,6 +48,7 @@ Or grab the latest `.dmg` from [Releases](https://github.com/ben-ranford/watt/re
 </p>
 
 - Live system draw in the menu bar, or switch to battery, charger, CPU/GPU, or just the icon
+- Optional battery percentage in the menu bar, next to the watts or on its own, and a battery icon that follows the charge
 - See which charger is plugged in and its rated wattage
 - Time to full, or time left on battery
 - Optional alerts when your charger can't keep up, the battery's full, or it's running low
