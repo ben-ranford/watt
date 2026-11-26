@@ -2038,7 +2038,7 @@ final class StatusAnchorView: NSView {
                 }
                 let window = NSWindow(contentRect: host.frame, styleMask: [.borderless],
                                       backing: .buffered, defer: false)
-                window.title = "\(story) actual status button — bounded capture"
+                window.title = "\(story) actual status button, bounded capture"
                 window.appearance = NSAppearance(named: light ? C0411FixtureLaunch.appearanceName : .darkAqua)
                 window.isReleasedWhenClosed = false
                 window.contentView = host
