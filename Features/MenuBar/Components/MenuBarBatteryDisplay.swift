@@ -194,11 +194,12 @@ struct MenuBarBatteryPresentation: Equatable, Sendable {
         }
         let showsBolt = showsChargingBolt(state: state, charger: charger)
         let value = Double(percentage) / 100
-        let variableNames = showsBolt
-            ? ["battery.100percent.bolt", "battery.100.bolt"]
-            : ["battery.100percent", "battery.100"]
-        if let name = variableNames.first(where: symbolExists) {
-            return MenuBarBatteryPresentation(symbolName: name, variableValue: value, tint: tint)
+        // Only the "percent" symbols draw a variable fill. The older
+        // "battery.100" names are a fixed full battery, so they fall through
+        // to the quarter symbols below.
+        let variableName = showsBolt ? "battery.100percent.bolt" : "battery.100percent"
+        if symbolExists(variableName) {
+            return MenuBarBatteryPresentation(symbolName: variableName, variableValue: value, tint: tint)
         }
         let level = quarter(for: percentage)
         var discrete = ["battery.\(level)percent", "battery.\(level)"]
