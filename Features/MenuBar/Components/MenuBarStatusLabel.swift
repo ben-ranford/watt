@@ -54,7 +54,24 @@ struct MenuBarStatusLabel: View {
     /// the label so the menu-extra announcement is not split across nested
     /// SwiftUI text nodes.
     var accessibilityAnnouncement: String {
-        "Watt?, \(accessibilityState), \(spokenAccessibilityReading), menu extra."
+        accessibilityAnnouncement(lowPowerMode: ProcessInfo.processInfo.isLowPowerModeEnabled)
+    }
+
+    func accessibilityAnnouncement(lowPowerMode: Bool) -> String {
+        var parts = ["Watt?", accessibilityState]
+        if let slot = percentageSlot, slot.standalone {
+            parts.append(slot.spoken)
+        } else {
+            parts.append(spokenAccessibilityReading)
+            if let slot = percentageSlot {
+                parts.append(slot.spoken)
+            }
+        }
+        if let spoken = batteryPresentation(lowPowerMode: lowPowerMode, symbolExists: { _ in true })?.tint.spoken {
+            parts.append(spoken)
+        }
+        parts.append("menu extra.")
+        return parts.joined(separator: ", ")
     }
 
     static let accessibilityHint = "Click for details. VO-Shift-M for options."
@@ -62,9 +79,22 @@ struct MenuBarStatusLabel: View {
     /// The visual reading may change every sample; state transitions are the
     /// stable announcement boundary used by the native status-item bridge.
     var accessibilityStateKey: String {
-        [reading.mode.rawValue, reading.batteryState.rawValue,
-         reading.freshness.rawValue, reading.capabilities.battery.rawValue,
-         reading.capabilities.charger.rawValue].joined(separator: "|")
+        let base = [reading.mode.rawValue, reading.batteryState.rawValue,
+                    reading.freshness.rawValue, reading.capabilities.battery.rawValue,
+                    reading.capabilities.charger.rawValue].joined(separator: "|")
+        // Defaults match the historical key. Extra segments appear only once a
+        // battery menu-bar option is on, so VoiceOver hears Low Power Mode and
+        // a low-battery color without announcing every percent tick.
+        guard preferences.batteryPercentageStyle != .off || preferences.menuBarIcon != .bolt else {
+            return base
+        }
+        let tint: String = switch batteryPresentation?.tint {
+        case .lowPower: "low-power"
+        case .lowBattery: "low-battery"
+        case .template, nil: "template"
+        }
+        return [base, preferences.batteryPercentageStyle.rawValue,
+                preferences.menuBarIcon.rawValue, tint].joined(separator: "|")
     }
 
     private var accessibilityState: String {
@@ -115,6 +145,7 @@ struct MenuBarStatusLabel: View {
     }
 
     var symbolName: String {
+        if let batteryPresentation { return batteryPresentation.symbolName }
         // Icon Only is a production preference, with the same physical-state semantics
         // for system/helper readings and fixtures. Unknown or stale data stays generic.
         if effectiveMode == .iconOnly {
@@ -240,21 +271,84 @@ struct MenuBarStatusLabel: View {
         if storedReserve != winner { storedReserve = winner }
     }
 
+    /// Charge from the same power-source reading the rest of the menu bar uses.
+    /// Nil when the option is off, or this Mac has no battery.
+    var percentageSlot: MenuBarPercentageSlot? {
+        guard preferences.batteryPercentageStyle != .off else { return nil }
+        guard MenuBarBatteryAvailability.isPresent(reading) else { return nil }
+        let percentage = reading.batteryPercentage.flatMap { (0...100).contains($0) ? $0 : nil }
+        return MenuBarPercentageSlot(
+            visible: MenuBarPercentageSlot.visibleText(percentage: percentage),
+            standalone: preferences.batteryPercentageStyle == .alone || text == nil
+        )
+    }
+
+    /// Title the status item shows, including a charge percent when that option is on.
+    /// Nil keeps `text`, so the watt reading stays available to a width reserve.
+    var percentagePlainTitle: String? {
+        guard let slot = percentageSlot else { return nil }
+        if slot.standalone { return slot.visible }
+        guard let text, !text.isEmpty else { return slot.visible }
+        return text + slot.visibleText
+    }
+
+    var showsWattText: Bool { percentageSlot?.standalone != true }
+
+    /// Extra width the status item adds so the percent occupies a "100%" slot.
+    /// Zero when the percent is hidden. Independent of any watt-reading reserve.
+    @MainActor
+    func percentageSlotSlack(font: NSFont) -> CGFloat {
+        percentageSlot?.slack(font: font) ?? 0
+    }
+
+    /// Battery icon for the current reading. Nil keeps the bolt glyph, including
+    /// on a Mac with no battery.
+    var batteryPresentation: MenuBarBatteryPresentation? {
+        batteryPresentation(lowPowerMode: ProcessInfo.processInfo.isLowPowerModeEnabled,
+                            symbolExists: { MenuBarBatteryPresentation.systemSymbolExists($0) })
+    }
+
+    func batteryPresentation(
+        lowPowerMode: Bool,
+        symbolExists: @MainActor (String) -> Bool
+    ) -> MenuBarBatteryPresentation? {
+        guard preferences.menuBarIcon == .battery else { return nil }
+        guard MenuBarBatteryAvailability.isPresent(reading) else { return nil }
+        return MenuBarBatteryPresentation.resolve(
+            percentage: reading.batteryPercentage,
+            state: reading.batteryState,
+            charger: reading.capabilities.charger,
+            lowPowerMode: lowPowerMode,
+            symbolExists: symbolExists
+        )
+    }
+
+    @MainActor
+    func batteryStatusBarImage() -> NSImage? {
+        batteryPresentation?.makeImage()
+    }
+
     var body: some View {
         // The status item stays visible while the panel is closed. Leave the
         // text and symbol unanimated so samples cannot tick, jitter, or change
         // the item width. Production assigns this string to NSStatusBarButton.
         Group {
-            if effectiveMode == .iconOnly {
+            if effectiveMode == .iconOnly && percentageSlot == nil && batteryPresentation == nil {
                 // A single template SF Symbol lets MenuBarExtra own all native metrics.
                 Image(systemName: symbolName)
                     .renderingMode(.template)
+            } else if effectiveMode == .iconOnly && percentageSlot == nil, let presentation = batteryPresentation {
+                MenuBarBatteryIcon(presentation: presentation)
             } else {
                 HStack(spacing: WattSpacing.xs) {
                     if showsSymbol {
-                        Image(systemName: symbolName)
+                        if let presentation = batteryPresentation {
+                            MenuBarBatteryIcon(presentation: presentation)
+                        } else {
+                            Image(systemName: symbolName)
+                        }
                     }
-                    if let text {
+                    if showsWattText, let text {
                         // The hidden reading is the two-digit reserve (or the
                         // session high-water). Live text is centred in that
                         // slot, so a shorter value does not shrink the item.
@@ -267,6 +361,9 @@ struct MenuBarStatusLabel: View {
                             Text(text)
                         }
                         .fixedSize(horizontal: true, vertical: false)
+                    }
+                    if let percentageSlot {
+                        MenuBarPercentageSlotView(slot: percentageSlot)
                     }
                 }
                 .font(WattTypography.bodyEmphasized)
