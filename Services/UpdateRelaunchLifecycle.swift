@@ -63,11 +63,12 @@ enum SingleInstanceClaim {
     /// left its pipe wait before this process asks it to quit.
     @MainActor
     @discardableResult
-    static func becomeOnlyInstance(managedBundle: URL? = nil) -> SingleInstanceOutcome {
+    static func becomeOnlyInstance(managedBundle: URL? = nil, intentLaunch: Bool = false) -> SingleInstanceOutcome {
         becomeOnlyInstance(bundleIdentifier: Bundle.main.bundleIdentifier ?? "",
                            currentProcessIdentifier: getpid(),
                            registry: RunningApplicationRegistry(),
-                           managedBundle: managedBundle)
+                           managedBundle: managedBundle,
+                           intentLaunch: intentLaunch)
     }
 
     @MainActor
