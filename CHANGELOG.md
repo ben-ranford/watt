@@ -5,8 +5,12 @@
 
 ### Bug Fixes
 
-* **helper:** finish helper install on a Mac that never had it ([#86](https://github.com/ben-ranford/watt/issues/86)) ([fed24d3](https://github.com/ben-ranford/watt/commit/fed24d3e8fc52570abe8561bd0acffd466509fed))
-* **helper:** route updates and helper removal through the protected copy ([#84](https://github.com/ben-ranford/watt/issues/84)) ([f8e9899](https://github.com/ben-ranford/watt/commit/f8e9899d72c39bf5a07555e578f9ec6991bd255a))
+* Install Helper finishes after you enter your password, including on a Mac that never had the helper, and it finishes an install that stopped part way. (#86)
+* Installing the helper never waits forever. If it takes too long or is cancelled, Watt? says so and you can try again. (#86)
+* Settings and the menu bar panel show the helper's real state, such as "Not finished" or "Other copy", instead of always "Not installed". (#86)
+* The menu bar keeps showing a reading when a busy Mac uses more power than the charger gives. (#86)
+* The helper screen explains what the helper is for. (#86)
+* Remove Helper works, and Check for Updates works in the copy of Watt? that the helper keeps safe. (#84)
 
 ## [1.3.1](https://github.com/ben-ranford/watt/compare/v1.2.0...v1.3.1) (2026-11-25)
 
