@@ -13,7 +13,8 @@ final class J13OfferTests: XCTestCase {
         XCTAssertEqual(OfferComponentReadingsView.title, "CPU and GPU readings")
         XCTAssertEqual(OfferComponentReadingsView.message, "The helper is optional. It adds CPU and GPU readings.")
         XCTAssertEqual(OfferComponentReadingsView.unavailableTitle, "CPU and GPU readings aren’t available")
-        XCTAssertEqual(OfferComponentReadingsView.installMessage, "The helper isn’t installed. Installing it asks for your password.")
+        XCTAssertEqual(OfferComponentReadingsView.installMessage,
+                       "The helper lets Watt? show how much power your CPU, GPU and Neural Engine use. macOS only shares those readings with tools that have administrator access, so it asks for your password once. It also keeps Watt? in a protected folder, so only genuine Watt? updates can replace it. Everything else works without it.")
         XCTAssertEqual(OfferComponentReadingsView.unavailableMessage(for: .missingBundle),
                        "This copy of Watt? doesn’t include the helper. Everything else still works.")
         XCTAssertEqual(OfferComponentReadingsView.unavailableMessage(for: .signingRequired),

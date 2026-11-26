@@ -485,8 +485,13 @@ final class F03PowerContractTests: XCTestCase {
         }
     }
 
+    func testValidationAcceptsAPluggedInMacThatIsDraining() throws {
+        // The battery state can still say charging while a busy Mac drains.
+        try reading(watts: -1, state: .charging).validate()
+    }
+
     func testValidationRejectsInvalidPhysicalReadings() {
-        let invalid = [reading(watts: -1, state: .charging), reading(watts: 1, state: .discharging),
+        let invalid = [reading(watts: 1, state: .discharging),
                        reading(watts: 0, state: .noBattery), reading(watts: .nan),
                        PowerReading(mode: .charging, watts: 1, batteryPercentage: 101),
                        PowerReading(mode: .chargerInput, watts: nil, chargerWatts: -1)]

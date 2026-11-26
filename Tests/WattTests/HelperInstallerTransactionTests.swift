@@ -1,10 +1,26 @@
 import Foundation
 import CryptoKit
-@testable import Watt
 import Darwin
 import XCTest
+#if SWIFT_PACKAGE
 import WattHelperShared
 @testable import WattHelperInstaller
+#else
+@testable import Watt
+#endif
+
+/// The signed payload the installer accepts: identity, build, archive digest, and minimum system version.
+private struct InstallerReleasePayload: Codable {
+    var identity: String
+    var build: UInt64
+    var sha256: Data
+    var minimumSystemVersion: String
+}
+
+private struct InstallerSignedPayload: Codable {
+    var payload: Data
+    var signature: Data
+}
 
 @MainActor
 final class HelperInstallerTransactionTests: XCTestCase {
@@ -134,6 +150,84 @@ final class HelperInstallerTransactionTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: installerEnvironment.root.path))
     }
 
+    func testAnUnrelatedAppUpdatedWhileRunningDoesNotBlockTheInstall() {
+        let watched = [ProtectedHelperRecord.helperURL.path, "/usr/bin/powermetrics", "/Applications/Watt.app/Contents/MacOS/Watt"]
+        // Another app replaced its own executable while still running: no path, unrelated name.
+        XCTAssertEqual(replacedExecutableIsWatched(pathError: ENOENT, name: "node_repl", watched: watched), false)
+        // A replaced old helper or Watt? keeps its name (truncated by the kernel), so it still counts as running.
+        XCTAssertEqual(replacedExecutableIsWatched(pathError: ENOENT, name: String(HelperIdentity.helperIdentifier.prefix(16)), watched: watched), true)
+        XCTAssertEqual(replacedExecutableIsWatched(pathError: ENOENT, name: "Watt", watched: watched), true)
+        XCTAssertEqual(replacedExecutableIsWatched(pathError: ENOENT, name: "powermetrics", watched: watched), true)
+        // No name, or any other failure, is still unknown and stops the install.
+        XCTAssertNil(replacedExecutableIsWatched(pathError: ENOENT, name: nil, watched: watched))
+        XCTAssertNil(replacedExecutableIsWatched(pathError: ENOENT, name: "", watched: watched))
+        XCTAssertNil(replacedExecutableIsWatched(pathError: EPERM, name: "node_repl", watched: watched))
+    }
+
+    func testProcessNameReadsARunningProcess() {
+        XCTAssertEqual(processName(getpid())?.isEmpty, false)
+    }
+
+    func testAbsentServiceBootoutCountsAsAbsentOnEveryMacOS() {
+        XCTAssertTrue(launchctlSucceeded(status: 0, allowAbsent: false))
+        XCTAssertTrue(launchctlSucceeded(status: 3, allowAbsent: true))
+        XCTAssertTrue(launchctlSucceeded(status: 113, allowAbsent: true), "current macOS reports a missing service as 113")
+        XCTAssertFalse(launchctlSucceeded(status: 113, allowAbsent: false))
+        XCTAssertFalse(launchctlSucceeded(status: 5, allowAbsent: true))
+    }
+
+    func testRetriedInstallFinishesAFirstInstallThatStoppedPartWay() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        let source = try app(directory, build: 1)
+        let approval = try approve(source, in: directory)
+        installerEnvironment.launchd = { arguments in
+            if arguments.first == "bootout" { throw Simulated.interruption }
+        }
+        XCTAssertThrowsError(try install(source: source, approval: approval, rotate: false))
+        let journalURL = installerEnvironment.root.appendingPathComponent("installer-journal.json")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: journalURL.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: installerEnvironment.helperURL.path))
+
+        installerEnvironment.launchd = { _ in }
+        try install(source: source, approval: approval, rotate: false)
+        let installed = try record()
+        XCTAssertEqual(installed.generation, 1)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: journalURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: installerEnvironment.helperURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: installerEnvironment.plistURL.path))
+        let generations = try FileManager.default.contentsOfDirectory(atPath: installerEnvironment.root.appendingPathComponent("generations").path)
+        XCTAssertEqual(generations, ["\(installed.installationID.uuidString)-1"], "the retry adds no second copy of the same build")
+    }
+
+    func testRetriedInstallOfANewerBuildFinishesTheStoppedInstallThenRotates() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        let first = try app(directory, build: 1)
+        installerEnvironment.journalCheckpoint = { if $0 == "stopped" { throw Simulated.interruption } }
+        XCTAssertThrowsError(try install(source: first, approval: approve(first, in: directory), rotate: false))
+        installerEnvironment.journalCheckpoint = nil
+        let second = try app(directory, build: 2)
+        try install(source: second, approval: approve(second, in: directory), rotate: false)
+        let installed = try record()
+        XCTAssertEqual(installed.generation, 2)
+        XCTAssertEqual(installed.build, 2)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: installerEnvironment.root.appendingPathComponent("installer-journal.json").path))
+    }
+
+    func testInterruptedRemovalIsNotResumedByAnInstall() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        let source = try app(directory, build: 1)
+        let approval = try approve(source, in: directory)
+        try install(source: source, approval: approval, rotate: false)
+        let installed = try record()
+        installerEnvironment.journalCheckpoint = { if $0 == "removed" { throw Simulated.interruption } }
+        XCTAssertThrowsError(try removeHelper(installation: installed.installationID, generation: 1))
+        installerEnvironment.journalCheckpoint = nil
+        XCTAssertThrowsError(try install(source: source, approval: approval, rotate: true), "a removal needs explicit recovery")
+    }
+
     func testChangedInstalledHelperIsPreservedAndRefused() throws {
         let directory = try fixture()
         defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
@@ -162,9 +256,9 @@ final class HelperInstallerTransactionTests: XCTestCase {
         let key = Curve25519.Signing.PrivateKey()
         let manifestFile = directory.appendingPathComponent("manifest.json")
         func writeManifest(key signer: Curve25519.Signing.PrivateKey, digest: Data, minimum: String = "13.0") throws {
-            let manifest = UpdateManifest(identity: HelperIdentity.appIdentifier, build: 2, sha256: digest, minimumSystemVersion: minimum)
+            let manifest = InstallerReleasePayload(identity: HelperIdentity.appIdentifier, build: 2, sha256: digest, minimumSystemVersion: minimum)
             let payload = try JSONEncoder().encode(manifest)
-            try JSONEncoder().encode(SignedUpdate(payload: payload, signature: signer.signature(for: payload))).write(to: manifestFile)
+            try JSONEncoder().encode(InstallerSignedPayload(payload: payload, signature: signer.signature(for: payload))).write(to: manifestFile)
         }
         try writeManifest(key: key, digest: Data(SHA256.hash(data: bytes)))
         XCTAssertThrowsError(try rotateRelease(manifest: manifestFile, archive: archive, installation: original.installationID))
@@ -179,7 +273,7 @@ final class HelperInstallerTransactionTests: XCTestCase {
         XCTAssertThrowsError(try rotateRelease(manifest: manifestFile, archive: archive, installation: original.installationID))
         XCTAssertEqual(try record(), original)
         try writeManifest(key: key, digest: Data(SHA256.hash(data: bytes)))
-        let signed = try JSONDecoder().decode(SignedUpdate.self, from: Data(contentsOf: manifestFile))
+        let signed = try JSONDecoder().decode(InstallerSignedPayload.self, from: Data(contentsOf: manifestFile))
         let binaries = second.appendingPathComponent("Contents/MacOS")
         let binding = try ProtectedMaintenanceBinding(receipt: .init(id: UUID(), createdAt: Date(timeIntervalSince1970: 123456789)),
             installationID: original.installationID, previousGeneration: 1, nextGeneration: 2, operation: .update,
@@ -268,6 +362,47 @@ final class HelperInstallerTransactionTests: XCTestCase {
         let result = try ProtectedMaintenanceBinding.decode(ProtectedHelperRecord.readProtectedFile(
             at: directory.appendingPathComponent("Watt-maintenance-result.json"), requiredOwner: geteuid()))
         XCTAssertEqual(result, binding)
+    }
+
+    func testInstallRefusesTheWrongUserAWritableAncestorAndAForeignHelper() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        let source = try app(directory, build: 1)
+        let approval = try approve(source, in: directory)
+        installerEnvironment.owner = 1
+        XCTAssertThrowsError(try install(source: source, approval: approval, rotate: false))
+        installerEnvironment.owner = geteuid()
+        try FileManager.default.setAttributes([.posixPermissions: 0o777], ofItemAtPath: directory.path)
+        XCTAssertThrowsError(try install(source: source, approval: approval, rotate: false))
+        try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: directory.path)
+        try Data("keep the existing helper".utf8).write(to: installerEnvironment.helperURL)
+        XCTAssertThrowsError(try install(source: source, approval: approval, rotate: false))
+        XCTAssertEqual(try Data(contentsOf: installerEnvironment.helperURL), Data("keep the existing helper".utf8))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: installerEnvironment.root.appendingPathComponent("helper-trust.json").path))
+    }
+
+    func testRotationRefusesTheSameBuildAndDiscardRemovesOnlyUncommittedStaging() throws {
+        let directory = try fixture()
+        defer { installerEnvironment = .production; try? FileManager.default.removeItem(at: directory) }
+        let source = try app(directory, build: 2)
+        try install(source: source, approval: approve(source, in: directory), rotate: false)
+        let installed = try record()
+        XCTAssertThrowsError(try install(source: source, approval: approve(source, in: directory), rotate: true))
+        XCTAssertEqual(try record(), installed)
+        let staging = installerEnvironment.root.appendingPathComponent("release-staging")
+        try FileManager.default.createDirectory(at: staging, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
+        try Data("partial manifest".utf8).write(to: staging.appendingPathComponent("manifest.json"))
+        try discardReleaseStage(installation: installed.installationID)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: staging.path))
+        XCTAssertEqual(try record(), installed)
+        installerEnvironment.journalCheckpoint = { if $0 == "staged" { throw Simulated.interruption } }
+        let newer = try app(directory, build: 3)
+        XCTAssertThrowsError(try install(source: newer, approval: approve(newer, in: directory), rotate: true))
+        try FileManager.default.createDirectory(at: staging, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
+        try Data("still staged".utf8).write(to: staging.appendingPathComponent("manifest.json"))
+        XCTAssertThrowsError(try discardReleaseStage(installation: installed.installationID))
+        XCTAssertEqual(try Data(contentsOf: staging.appendingPathComponent("manifest.json")), Data("still staged".utf8))
+        XCTAssertEqual(try record(), installed)
     }
 
 }

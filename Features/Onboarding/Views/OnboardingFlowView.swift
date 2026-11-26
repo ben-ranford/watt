@@ -360,7 +360,7 @@ struct OfferComponentReadingsView: View {
     static let title = "CPU and GPU readings"
     static let message = "The helper is optional. It adds CPU and GPU readings."
     static let unavailableTitle = "CPU and GPU readings aren’t available"
-    static let installMessage = "The helper isn’t installed. Installing it asks for your password."
+    static let installMessage = HelperPurpose.explanation + " Everything else works without it."
     static func unavailableMessage(for reason: HelperUnavailableReason) -> String {
         switch reason {
         case .missingBundle:
@@ -417,6 +417,22 @@ struct OfferComponentReadingsView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                if installOffered || router.settingsHelperSetup.isInstalling {
+                    if router.settingsHelperSetup.isInstalling {
+                        HStack(spacing: WattSpacing.sm) {
+                            ProgressView().controlSize(.small)
+                            Text(HelperPurpose.installing)
+                        }
+                        .font(WattTypography.body)
+                        .accessibilityIdentifier("onboarding.helper.installing")
+                    } else if let result = router.settingsHelperSetup.installResult {
+                        Text(result)
+                            .font(WattTypography.body)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("onboarding.helper.installResult")
+                    }
+                }
             }
             .padding(.horizontal, 32)
             HStack {

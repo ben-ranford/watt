@@ -5,6 +5,58 @@ import Combine
 import WattHelperShared
 #endif
 
+/// What is on this Mac when this copy of Watt? can't use the helper. "Not installed"
+/// is only shown when nothing of the helper is there.
+enum HelperInstallPresence: Equatable, Sendable {
+    case notInstalled
+    /// An install started but stopped before the helper was turned on.
+    case unfinished
+    /// The helper is set up, but for a different copy of Watt?.
+    case otherCopy
+
+    static func detect(pinsPresent: Bool, journalPresent: Bool, helperPresent: Bool) -> Self {
+        if pinsPresent { return .otherCopy }
+        if journalPresent || helperPresent { return .unfinished }
+        return .notInstalled
+    }
+
+    /// Checks only whether the fixed protected paths exist. Nothing is opened.
+    static func current() -> Self {
+        func exists(_ url: URL) -> Bool { var info = stat(); return lstat(url.path, &info) == 0 }
+        return detect(pinsPresent: exists(ProtectedHelperRecord.publicURL),
+                      journalPresent: exists(ProtectedHelperRecord.directory.appendingPathComponent("installer-journal.json")),
+                      helperPresent: exists(ProtectedHelperRecord.helperURL))
+    }
+
+    var statusTitle: String {
+        switch self {
+        case .notInstalled: return "Not installed"
+        case .unfinished: return "Not finished"
+        case .otherCopy: return "Other copy"
+        }
+    }
+    var statusSubtitle: String {
+        switch self {
+        case .notInstalled: return HelperUnavailableReason.installationRequired.message
+        case .unfinished: return "Helper setup didn’t finish. Install it again to finish setting it up."
+        case .otherCopy: return "The helper is set up for a different copy of Watt?. Install it again to use it with this copy."
+        }
+    }
+    var componentsSubtitle: String {
+        switch self {
+        case .notInstalled: return "Helper not installed"
+        case .unfinished: return "Helper setup didn’t finish"
+        case .otherCopy: return "Helper set up for another copy"
+        }
+    }
+}
+
+/// What the helper is for, in the words the install button sits beside.
+enum HelperPurpose {
+    static let explanation = "The helper lets Watt? show how much power your CPU, GPU and Neural Engine use. macOS only shares those readings with tools that have administrator access, so it asks for your password once. It also keeps Watt? in a protected folder, so only genuine Watt? updates can replace it."
+    static let installing = "Installing the helper…"
+}
+
 enum HelperUnavailableReason: Equatable {
     case missingBundle, signingRequired, verificationFailed, configurationFailed, installationRequired
 
@@ -79,6 +131,7 @@ struct SettingsRootView: View {
     }
     static let removeHelperTitle = "Remove the helper?"
     static let removeHelperMessage = "Components stop and the menu bar switches to Delta. Turn it back on any time."
+    static let helperRemovalNeedsAdministrator = "Removing the helper needs your administrator password. The helper is still on."
     static let componentsSubtitle = "Two fit."
     static let componentSelectionSubtitle = "Two fit. More crowd the menu bar."
     static let fullSettingsComponentSubtitle = "In Components mode. Two fit; more crowd the menu bar."
@@ -318,6 +371,8 @@ struct SettingsRootView: View {
                         removalMessage = target == .helper ? "Helper removed." : "Watt? removed."
                     } else if case .adminRequired = outcome {
                         removalMessage = "Administrator access is required. Use the Watt? installer to remove the helper."
+                    } else if case .failed(.adminRequired) = outcome {
+                        removalMessage = Self.helperRemovalNeedsAdministrator
                     } else if case .cancelled = outcome {
                         removalMessage = nil
                     } else {
@@ -576,6 +631,9 @@ struct SettingsHelperRows: View {
                 Text(Self.reconnectNote).font(.footnote).foregroundStyle(.secondary)
                     .accessibilityIdentifier("settings.helper.reconnected")
                     .wattFade(.reveal, when: setup.reconnectedFromLastInstall, enabled: motionEnabled)
+            } else if setup.canInstallHelper {
+                Text(HelperPurpose.explanation)
+                    .accessibilityIdentifier("settings.helper.purpose")
             } else if setup.helperServiceAvailable && !setup.wasRemoved && !setup.helperOn
                         && setup.state != .requiresApproval {
                 Text(Self.approvalNote)
@@ -700,11 +758,18 @@ final class SettingsHelperSetup: ObservableObject {
         let failure = await installHelper()
         isInstalling = false
         if let failure {
-            installResult = failure == .cancelled
-                ? "Helper installation was cancelled."
-                : "Couldn’t install the helper. Try again."
+            installResult = Self.installFailureMessage(failure)
+            installPresence = presenceProbe()
         }
         return failure
+    }
+    /// Every failed install ends with a message, so the button never just resets.
+    static func installFailureMessage(_ failure: ServiceFailure) -> String {
+        switch failure {
+        case .cancelled: return "Helper installation was cancelled."
+        case .timedOut: return "Installing the helper took too long, so Watt? stopped waiting. Try again."
+        default: return "Watt? couldn’t install the helper. Try again."
+        }
     }
     var captureDiagnostic: (() async -> Void)?
     private var repairReceipt: (() -> OperationReceipt)?
@@ -740,14 +805,21 @@ final class SettingsHelperSetup: ObservableObject {
     }
     @Published var unavailableReason: HelperUnavailableReason = .missingBundle
     var helperServiceAvailable: Bool { service != nil || helperOn }
+    /// Refines "not installed" with what is actually on disk. Launch and every failed
+    /// install refresh it through `presenceProbe`.
+    @Published var installPresence: HelperInstallPresence = .notInstalled
+    var presenceProbe: () -> HelperInstallPresence = { .notInstalled }
+    var componentsInstallSubtitle: String { installPresence.componentsSubtitle }
     var statusTitle: String {
         guard helperServiceAvailable else {
-            return unavailableReason == .installationRequired ? "Not installed" : "Unavailable"
+            return unavailableReason == .installationRequired ? installPresence.statusTitle : "Unavailable"
         }
         return state == .requiresApproval ? SettingsHelperRows.pendingStatus : helperOn ? "On" : "Off"
     }
     var statusSubtitle: String {
-        guard helperServiceAvailable else { return unavailableReason.message }
+        guard helperServiceAvailable else {
+            return unavailableReason == .installationRequired ? installPresence.statusSubtitle : unavailableReason.message
+        }
         return state == .requiresApproval ? SettingsHelperRows.pendingSubtitle : SettingsHelperRows.statusSubtitle
     }
     var isLoading: Bool { state == .loading }
