@@ -8,6 +8,32 @@ import WattMaintenanceShared
 
 @MainActor
 final class UpdateHandoffTests: XCTestCase {
+    func testHandoffQuitsOnlyAfterTheProtectedCopyHasLaunched() async throws {
+        let managed = FileManager.default.temporaryDirectory.appendingPathComponent("handoff-\(UUID().uuidString).app")
+        try FileManager.default.createDirectory(at: managed, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: managed) }
+        var launched = false
+        let opened = await ManagedCopyPolicy.openManagedCopy(managed) { url in
+            XCTAssertEqual(url, managed)
+            try await Task.sleep(nanoseconds: 50_000_000)
+            launched = true
+        }
+        XCTAssertTrue(opened)
+        XCTAssertTrue(launched, "the caller may quit only once the protected copy is running")
+    }
+
+    func testFailedHandoffKeepsThisCopyRunning() async throws {
+        let managed = FileManager.default.temporaryDirectory.appendingPathComponent("handoff-\(UUID().uuidString).app")
+        try FileManager.default.createDirectory(at: managed, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: managed) }
+        let opened = await ManagedCopyPolicy.openManagedCopy(managed) { _ in throw CocoaError(.fileReadNoPermission) }
+        XCTAssertFalse(opened, "a launch that failed must not quit the only running copy")
+        var called = false
+        let missing = await ManagedCopyPolicy.openManagedCopy(managed.appendingPathComponent("gone.app")) { _ in called = true }
+        XCTAssertFalse(missing)
+        XCTAssertFalse(called)
+    }
+
     func testEncodedBuildIsTheMarketingVersionInTheOfferHeadline() {
         XCTAssertEqual(manifest(1_001_000).offerVersion, "1.1.0")
         XCTAssertEqual(manifest(1_000_001).offerVersion, "1.0.1")
