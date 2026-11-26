@@ -66,12 +66,12 @@ final class MenuBarBatteryDisplayTests: XCTestCase {
     }
 
     func testPercentageCanReplaceTheReading() {
-        let label = label(style: .alone, percentage: 87)
-        XCTAssertEqual(label.text, "12.3 W")
-        XCTAssertEqual(label.percentagePlainTitle, "87%")
-        XCTAssertEqual(label.percentageSlot?.standalone, true)
-        XCTAssertEqual(label.percentageSlot?.reserveText, "100%")
-        XCTAssertFalse(label.showsWattText)
+        let alone = label(style: .alone, percentage: 87)
+        XCTAssertEqual(alone.text, "12.3 W")
+        XCTAssertEqual(alone.percentagePlainTitle, "87%")
+        XCTAssertEqual(alone.percentageSlot?.standalone, true)
+        XCTAssertEqual(alone.percentageSlot?.reserveText, "100%")
+        XCTAssertFalse(alone.showsWattText)
 
         let iconOnly = label(style: .withReading, percentage: 64, mode: .iconOnly)
         XCTAssertNil(iconOnly.text)
