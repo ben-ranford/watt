@@ -1392,8 +1392,8 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     private var panel: NSPopover?
     private var fallbackWindow: NSWindow?
     private var contextMenuMonitor: Any?
-        private var wakeObserver: NSObjectProtocol?
-        private var powerStateObserver: NSObjectProtocol?
+    private var wakeObserver: NSObjectProtocol?
+    private var powerStateObserver: NSObjectProtocol?
     private var observations = Set<AnyCancellable>()
     private var samplingTask: Task<Void, Never>?
     private var buttonUpdateScheduled = false
