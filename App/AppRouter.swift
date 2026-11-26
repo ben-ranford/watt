@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import Combine
 import ServiceManagement
@@ -619,6 +620,12 @@ final class AppRouter: ObservableObject {
         // Settings stays available for a fresh, explicitly requested retry.
     }
     var present: (AppDestination) -> Void = { _ in }
+    /// The real Watt? status-item button, when the menu-bar item is installed.
+    /// The Finish Setup strike reads it to decide whether the menu-bar arc can show.
+    var statusItemButton: () -> NSView? = { nil }
+    /// True from Done until the strike closes the setup window. The window keeps
+    /// showing "That's it" meanwhile, even though setup is already saved.
+    @Published var finishSetupStrikePlaying = false
     enum SettingsRemoval: String, Identifiable {
         case helper, uninstall
         var id: String { rawValue }
