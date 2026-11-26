@@ -403,7 +403,7 @@ final class ReadingPickerTests: XCTestCase {
         let picker = ReadingPicker(selection: .constant(.delta), options: WattReferenceSpecimen.readingOptions)
         XCTAssertEqual(picker.options.map(\.mode), [.delta, .charger, .draw, .components])
         XCTAssertTrue(picker.unavailableModes.isEmpty)
-        for (option, expected) in zip(picker.options, ["+42.1 W", "65 W", "22.9 W", "CPU, GPU and the rest. Needs the helper — next step."]) {
+        for (option, expected) in zip(picker.options, ["+42.1 W", "65 W", "22.9 W", "CPU, GPU and the rest. Needs the helper (next step)."]) {
             XCTAssertTrue(option.description?.contains(expected) == true)
         }
     }
