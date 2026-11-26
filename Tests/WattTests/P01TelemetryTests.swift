@@ -129,19 +129,109 @@ final class P01TelemetryTests: XCTestCase {
             kIOPSIsChargedKey: false,
             kIOPSPowerSourceStateKey: kIOPSBatteryPowerValue
         ])
+        // Signed milliwatts, the same bits wrapped as a uint64 (ioreg prints
+        // 18446744073709540986 for -10630 mW), and a legacy positive magnitude.
+        let reportedWrap = UInt64(18_446_744_073_709_540_986)
+        XCTAssertEqual(Int64(bitPattern: reportedWrap), -10_630)
+        let cases: [(Any, Double)] = [
+            (-18_400, -18.4),
+            (UInt64(bitPattern: Int64(-18_400)), -18.4),
+            (18_400, -18.4),
+            (reportedWrap, -10.630)
+        ]
+        for (power, expected) in cases {
+            let reading = try SystemPowerSourceParser.parse(.init(
+                descriptions: [discharging], providingSource: kIOPSBatteryPowerValue,
+                timestamp: time,
+                batteryProperties: ["PowerTelemetryData": [
+                    "BatteryPower": power,
+                    "SystemPowerIn": 0,
+                    "SystemLoad": 18_400
+                ]]))
+
+            XCTAssertEqual(try XCTUnwrap(reading.watts), expected, accuracy: 0.001, "\(power)")
+            XCTAssertNil(reading.chargerWatts, "\(power)")
+            XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 18.4, accuracy: 0.001, "\(power)")
+            XCTAssertEqual(reading.capabilities.charger, .disconnected, "\(power)")
+            XCTAssertEqual(reading.mode, .onBattery, "\(power)")
+            let panel = StatusPanelModel(reading: reading)
+            XCTAssertEqual(panel.state, .standard, "\(power)")
+            XCTAssertEqual(panel.title, "On battery", "\(power)")
+            XCTAssertEqual(panel.system, "18.4 W", "\(power)")
+            let batteryLabel = abs(expected + 10.630) < 0.000_1 ? "−10.6 W" : "−18.4 W"
+            XCTAssertEqual(panel.battery, batteryLabel, "\(power)")
+            try reading.validate()
+        }
+    }
+
+    func testOnBatteryPanelKeepsSystemDrawWhenBatteryPowerIsUnreadable() throws {
+        let discharging = battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false,
+            kIOPSPowerSourceStateKey: kIOPSBatteryPowerValue
+        ])
         let reading = try SystemPowerSourceParser.parse(.init(
             descriptions: [discharging], providingSource: kIOPSBatteryPowerValue,
             timestamp: time,
             batteryProperties: ["PowerTelemetryData": [
-                "BatteryPower": 18_400,
+                "BatteryPower": "18400",
                 "SystemPowerIn": 0,
-                "SystemLoad": 18_400
+                "SystemLoad": 12_800
             ]]))
 
-        XCTAssertEqual(try XCTUnwrap(reading.watts), -18.4, accuracy: 0.001)
-        XCTAssertNil(reading.chargerWatts)
-        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 18.4, accuracy: 0.001)
-        XCTAssertEqual(reading.capabilities.charger, .disconnected)
+        XCTAssertEqual(reading.mode, .onBattery)
+        XCTAssertNil(reading.watts)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 12.8, accuracy: 0.001)
+        let panel = StatusPanelModel(reading: reading)
+        XCTAssertEqual(panel.state, .standard)
+        XCTAssertEqual(panel.title, "On battery")
+        XCTAssertEqual(panel.system, "12.8 W")
+        XCTAssertEqual(panel.battery, "—")
+        XCTAssertEqual(panel.charger, "Unplugged")
+        XCTAssertNotEqual(panel.title, "No reading")
+        try reading.validate()
+    }
+
+    /// A busy Mac can drain while plugged in while the battery state still says
+    /// charging. The measured negative rate is what the menu bar must show.
+    func testBusyMacDrainingWhilePluggedInShowsTheNegativeRate() throws {
+        let powers: [Any] = [-4_200, UInt64(bitPattern: Int64(-4_200))]
+        for power in powers {
+            let reading = try parseTelemetry([
+                "BatteryPower": power,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ])
+
+            XCTAssertEqual(reading.batteryState, .charging, "\(power)")
+            XCTAssertEqual(try XCTUnwrap(reading.watts), -4.2, accuracy: 0.001, "\(power)")
+            XCTAssertTrue(reading.hasCurrentSample, "\(power)")
+            XCTAssertEqual(try XCTUnwrap(reading.value(for: .delta)), -4.2, accuracy: 0.001, "\(power)")
+            XCTAssertEqual(PowerFormatter.watts(reading.value(for: .delta)), "-4.2 W", "\(power)")
+            XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 65, accuracy: 0.001, "\(power)")
+            XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 22.9, accuracy: 0.001, "\(power)")
+            try reading.validate()
+        }
+    }
+
+    func testSignedNegativeBatteryPowerKeepsItsSignWhenStateIsUnclassified() throws {
+        let snapshot = battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false
+        ])
+        let reading = try SystemPowerSourceParser.parse(.init(
+            descriptions: [snapshot], providingSource: kIOPSACPowerValue,
+            timestamp: time,
+            batteryProperties: ["PowerTelemetryData": [
+                "BatteryPower": -4_200,
+                "SystemPowerIn": 24_000,
+                "SystemLoad": 18_000
+            ]]))
+
+        XCTAssertEqual(reading.batteryState, .unknown)
+        XCTAssertEqual(reading.mode, .chargerInput)
+        XCTAssertEqual(try XCTUnwrap(reading.watts), -4.2, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 18, accuracy: 0.001)
         try reading.validate()
     }
 
@@ -191,7 +281,7 @@ final class P01TelemetryTests: XCTestCase {
 
     func testMalformedRegistryTelemetryDoesNotFabricateMeasurements() throws {
         let reading = try parseTelemetry([
-            "BatteryPower": -1,
+            "BatteryPower": "42100",
             "SystemPowerIn": "65000",
             "SystemLoad": true
         ])

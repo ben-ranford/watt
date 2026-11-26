@@ -1,6 +1,7 @@
 import CryptoKit
 import Darwin
 import Foundation
+import os
 import XCTest
 #if SWIFT_PACKAGE
 @testable import WattMaintenanceShared
@@ -351,6 +352,27 @@ final class ProductionUpdateSourceTests: XCTestCase {
             do { _ = try await source.check(); XCTFail("Must reject redirect") }
             catch { XCTAssertEqual(error as? ServiceFailure, .invalidData) }
         }
+    }
+    func testCompletionResumesBeforeInvalidationLeavesTheDelegateQueue() {
+        let delegate = DispatchQueue(label: "watt.update.delegate")
+        let resumed = OSAllocatedUnfairLock(initialState: false)
+        let finished = OSAllocatedUnfairLock(initialState: false)
+        delegate.async {
+            UpdateTransferCompletion.deliver {
+                resumed.withLock { $0 = true }
+            } invalidate: {
+                // invalidateAndCancel waits for this queue. Running that wait here deadlocks.
+                delegate.sync {}
+                finished.withLock { $0 = true }
+            }
+            XCTAssertTrue(resumed.withLock { $0 })
+        }
+        let deadline = Date().addingTimeInterval(2)
+        while finished.withLock({ !$0 }) && Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.01))
+        }
+        XCTAssertTrue(resumed.withLock { $0 })
+        XCTAssertTrue(finished.withLock { $0 })
     }
     func testDownloaderRejectsQueryPortAndUserinfo() throws {
         let key = Curve25519.Signing.PrivateKey()

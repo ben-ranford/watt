@@ -36,9 +36,11 @@ final class J64InsufficientChargerTests: XCTestCase {
             .init(episodeID: "test", observedAt: Self.timestamp, sustainedDuration: .nan),
             .init(episodeID: "test", observedAt: Self.timestamp.addingTimeInterval(-1), sustainedDuration: 300)]
         var expected = Array(repeating: StatusPanelState.standard, count: badThresholds.count)
-        expected += [.noReading, .standard, .noReading, .standard, .standard, .noReading, .noReading,
+        expected += [.standard, .standard, .noReading, .standard, .standard, .noReading, .noReading,
                      .standard, .standard, .standard, .noReading, .noReading, .noReading, .noReading,
-                     .noReading, .standard, .standard]
+                     .standard, .standard, .standard]
+        // A charging state with a negative rate is a busy Mac draining while plugged in:
+        // a normal reading, but not the "charger can't keep up" alert.
         var rejected = badThresholds.map { reading(threshold: $0) }
         rejected += [reading(watts: nil), reading(watts: 0), reading(watts: .nan),
             reading(charger: nil), reading(charger: 0), reading(charger: -1), reading(charger: .infinity),

@@ -1109,6 +1109,12 @@ class HomebrewCaskTests(unittest.TestCase):
         self.assertLess(text.index('notarize-app'), text.index('verify-release-readiness.sh local'))
         self.assertLess(text.index('hdiutil create'), text.index('notarize-dmg'))
 
+    def test_readiness_reads_signing_authority(self):
+        # `codesign -dv` omits Authority lines; the identity check needs `-dvv`.
+        text = (ROOT / 'scripts/verify-release-readiness.py').read_text()
+        self.assertIn("'/usr/bin/codesign', '-dvv'", text)
+        self.assertNotIn("'/usr/bin/codesign', '-dv'", text)
+
 
 class AppIconTests(unittest.TestCase):
     def _snapshot(self) -> Path:
@@ -1832,10 +1838,56 @@ class ContributorTemplateTests(unittest.TestCase):
             'gitleaks',
             'scripts/test_release_pipeline.py',
             'screenshots',
+            '## Test plan',
+            '- [ ] Name the check, command, or case that covers this change',
+            '## Assumptions to confirm',
+            '- [ ] State what a reviewer should confirm',
             'CHANGELOG.md',
         ):
             self.assertIn(line, template)
+        import check_pr_title
+        headings = [text for _index, level, text in check_pr_title.headings(template) if level == 2]
+        self.assertEqual(headings, list(check_pr_title.HEADING_ORDER))
         self.assertIn('CONTRIBUTING.md', (ROOT / 'README.md').read_text())
+
+
+def pull_request_body(
+    *,
+    summary: str = 'Show the charger watts in the menu bar.',
+    bump: str = 'none',
+    test_plan: str = '- [x] Ran the release-pipeline tests\n',
+    assumptions: str | None = None,
+    linked: str = 'No linked issue.\n',
+    extra_headings: str = '',
+) -> str:
+    marks = {kind: 'x' if kind == bump else ' ' for kind in ('patch', 'minor', 'major', 'none')}
+    assumptions_section = ''
+    if assumptions is not None:
+        assumptions_section = '## Assumptions to confirm\n\n' + assumptions
+        if not assumptions.endswith('\n'):
+            assumptions_section += '\n'
+    return (
+        '## Summary\n\n'
+        + summary
+        + '\n\n## Linked issue\n\n'
+        + linked
+        + '\n## Change type\n\n'
+        'The title must be a Conventional Commit.\n\n'
+        '- [%s] `fix:` (patch)\n' % marks['patch']
+        + '- [%s] `feat:` (minor)\n' % marks['minor']
+        + '- [%s] `feat!:` or `BREAKING CHANGE` (major)\n' % marks['major']
+        + '- [%s] `build:`, `chore:`, `ci:`, `deps:`, `docs:`, `perf:`, '
+        '`refactor:`, `revert:`, `style:`, or `test:` (no version bump)\n' % marks['none']
+        + '\n## Validation\n\n'
+        '- [ ] Unit tests pass\n'
+        '\n## Test plan\n\n'
+        + test_plan
+        + '\n'
+        + assumptions_section
+        + '## Docs and changelog\n\n'
+        '- [x] Docs updated, or no doc update is needed\n'
+        + extra_headings
+    )
 
 
 class PullRequestTitleTests(unittest.TestCase):
@@ -1847,7 +1899,9 @@ class PullRequestTitleTests(unittest.TestCase):
             'feat!: change the reading',
             'feat(menu-bar)!: change the reading',
             'chore(main): release 1.0.1',
+            'chore(main): release 1.3.0',
             'ci: build and test on macOS',
+            'ci: enforce pull request title and description format',
             'docs: follow Standard Readme',
             'test: read the marketing version instead of assuming 1.0.0',
             'build: enable hardened runtime with minimal entitlements',
@@ -1856,7 +1910,9 @@ class PullRequestTitleTests(unittest.TestCase):
             'revert: restore the panel',
             'style: wrap the settings row',
             'deps: bump gitleaks',
+            'fix: ' + ('a' * 67),
         ):
+            self.assertLessEqual(len(title), 72, title)
             self.assertIsNone(check_pr_title.title_error(title), title)
 
     def test_rejects_titles_release_please_cannot_read(self) -> None:
@@ -1868,24 +1924,223 @@ class PullRequestTitleTests(unittest.TestCase):
             'fix: ',
             'fix:missing space',
             'feat(): empty scope',
+            'feat!(menu-bar): wrong bang place',
             'chore(main): release 1.0.1\nfix: hidden',
             ' fix: leading space',
             'fix: trailing space ',
             'wip: not a type',
+            'fix: Show charger watts',
+            'fix: show charger watts.',
+            'fix(Menu): show charger watts',
+            'fix(menu_bar): show charger watts',
+            'fix(menu.bar): show charger watts',
+            'fix(menu/bar): show charger watts',
+            'fix: ' + ('a' * 68),
         ):
             self.assertIsNotNone(check_pr_title.title_error(title), title)
 
+    def test_title_lists_length_scope_and_subject_together(self) -> None:
+        import check_pr_title
+        found = check_pr_title.title_problems('fix(Bad_Scope): Subject.')
+        self.assertTrue(any('kebab-case' in item for item in found))
+        self.assertTrue(any('lowercase' in item for item in found))
+        self.assertTrue(any('period' in item for item in found))
+        long_title = 'fix(telemetry): treat BatteryPower as signed so on-battery panel shows readings'
+        self.assertEqual(len(long_title), 79)
+        long_found = check_pr_title.title_problems(long_title)
+        self.assertEqual(len(long_found), 1)
+        self.assertIn('79 characters', long_found[0])
+        self.assertIn('72', long_found[0])
+
+    def test_description_accepts_a_filled_template(self) -> None:
+        import check_pr_title
+        title = 'ci: enforce pull request title and description format'
+        body = pull_request_body(assumptions='- [ ] The runner already has Python 3\n')
+        self.assertEqual(check_pr_title.problems(title, body), [])
+        wrapped = (
+            '<!-- CURSOR_AGENT_PR_BODY_BEGIN -->\n'
+            + body
+            + '<!-- CURSOR_AGENT_PR_BODY_END -->\n'
+            '<div><a href="https://cursor.com/agents/bc-48b8b075-4dcf-5ff8-abec-b590f19aaf6e">'
+            'footer</a></div>\n'
+        )
+        self.assertEqual(check_pr_title.problems(title, wrapped), [])
+        without_assumptions = pull_request_body()
+        self.assertNotIn('## Assumptions to confirm', without_assumptions)
+        self.assertEqual(check_pr_title.problems(title, without_assumptions), [])
+
+    def test_change_type_matches_the_title_bump(self) -> None:
+        import check_pr_title
+        cases = (
+            ('fix: show charger watts', 'patch'),
+            ('feat: add a reading', 'minor'),
+            ('feat!: change the reading', 'major'),
+            ('fix!: change the reading', 'major'),
+            ('refactor: move the parser', 'none'),
+        )
+        for title, bump in cases:
+            self.assertEqual(
+                check_pr_title.problems(title, pull_request_body(bump=bump)),
+                [],
+                title,
+            )
+        breaking = pull_request_body(
+            bump='major',
+            summary='The menu label moved.\n\nBREAKING CHANGE: the old label is gone',
+        )
+        self.assertEqual(check_pr_title.problems('fix: drop the old label', breaking), [])
+        mismatch = check_pr_title.problems('fix: show charger watts', pull_request_body(bump='minor'))
+        self.assertTrue(any('does not match' in item for item in mismatch))
+        none_ticked = check_pr_title.problems('ci: add the check', pull_request_body(bump='skip'))
+        self.assertTrue(any('Tick exactly one' in item for item in none_ticked))
+
+    def test_template_placeholder_and_sections_are_rejected(self) -> None:
+        import check_pr_title
+        template = (ROOT / '.github/pull_request_template.md').read_text()
+        found = check_pr_title.problems('ci: add the check', template)
+        self.assertTrue(any('Summary is empty' in item for item in found))
+        self.assertTrue(any('Tick exactly one' in item for item in found))
+        placeholder = pull_request_body(summary='What changed, and why.')
+        self.assertTrue(any(
+            'placeholder' in item
+            for item in check_pr_title.problems('ci: add the check', placeholder)
+        ))
+        missing_plan = pull_request_body(test_plan='Ran the tests in a paragraph.\n')
+        plan_found = check_pr_title.problems('ci: add the check', missing_plan)
+        self.assertTrue(any('## Test plan' in item and 'checkbox' in item for item in plan_found))
+        prose = pull_request_body(assumptions='The lab Mac is already on macOS 27.\n')
+        prose_found = check_pr_title.problems('ci: add the check', prose)
+        self.assertTrue(any('checkbox list' in item for item in prose_found))
+        unchecked = pull_request_body(test_plan='- [ ] Open the panel on battery\n')
+        self.assertEqual(check_pr_title.problems('ci: add the check', unchecked), [])
+
+    def test_disallowed_mac_headings_point_at_the_test_plan(self) -> None:
+        import check_pr_title
+        for heading in (
+            '## Mac checklist\n\n1. Install the app\n',
+            '### Mac test plan\n\nWatch the menu bar.\n',
+            '### Mac test checklist (about 4 minutes)\n\n1. Launch Watt\n',
+        ):
+            found = check_pr_title.problems(
+                'fix: show charger watts',
+                pull_request_body(bump='patch', extra_headings=heading),
+            )
+            self.assertTrue(any('## Test plan' in item and 'not allowed' in item for item in found), found)
+        renamed = pull_request_body(extra_headings='## Assumptions to confirm on a Mac\n\n- maybe\n')
+        unexpected = check_pr_title.problems('ci: add the check', renamed)
+        self.assertTrue(any('Assumptions to confirm on a Mac' in item for item in unexpected))
+        self.assertTrue(any('exactly "## Assumptions to confirm"' in item for item in unexpected))
+        self.assertTrue(any('checkbox list' in item for item in unexpected))
+        wrong_level = pull_request_body(bump='patch').replace('## Test plan', '### Test plan', 1)
+        level_found = check_pr_title.problems('fix: show charger watts', wrong_level)
+        self.assertTrue(any(
+            '### Test plan' in item and 'must be the H2 "## Test plan"' in item
+            for item in level_found
+        ))
+        self.assertFalse(any(item.startswith('Missing "## Test plan"') for item in level_found))
+
+    def test_banned_tokens_are_listed_together(self) -> None:
+        import check_pr_title
+        serials = [''.join(parts) for parts in (
+            ('F4MH', '3GCYNJ'),
+            ('CL9M', 'F2P79C'),
+            ('JGH7', '6QK2QX'),
+        )]
+        hardware = '4C4C4544-0032-4610-804A-' + 'B4C04F325332'
+        body = pull_request_body(
+            summary=(
+                'Shipped on %s and %s. Hardware UUID %s. '
+                'This needs a Mac from the shelf, and it took 30 minutes of mac time.'
+                % (serials[0], serials[1], hardware)
+            ),
+        )
+        title = 'fix: drop serial %s from the log' % serials[2]
+        found = check_pr_title.problems(title, body)
+        joined = '\n'.join(found)
+        for token in serials:
+            self.assertIn(token, joined)
+        self.assertIn(hardware, joined)
+        self.assertIn('mac time', joined)
+        self.assertIn('minutes of mac', joined)
+        self.assertIn('needs a Mac from', joined)
+        self.assertGreater(len(found), 1)
+
+    def test_ordinary_identifiers_are_not_banned(self) -> None:
+        import check_pr_title
+        summary = ' '.join((
+            'Team GUT4TJFVQ2 signed the app.',
+            'Commit 01a36818e320fbb0a90049e26e3bf518c31bca60 and B1C2D3F4B5C6.',
+            'Short e580786. On a Mac running macOS. machine time. CONTRIBUTING.',
+            'The uint64 wrap is 18446744073709540986.',
+            'See https://cursor.com/agents/bc-48b8b075-4dcf-5ff8-abec-b590f19aaf6e for the run.',
+        ))
+        title = 'ci: enforce pull request title and description format'
+        self.assertEqual(check_pr_title.problems(title, pull_request_body(summary=summary)), [])
+
+    def test_release_please_skips_the_description_only(self) -> None:
+        import check_pr_title
+        title = 'chore(main): release 1.3.0'
+        changelog = '## [1.3.0]\n\n### Features\n\n* show adapter wattage\n'
+        release = dict(
+            author='github-actions[bot]',
+            author_type='Bot',
+            head_ref='release-please--branches--main--components--Watt',
+        )
+        self.assertEqual(check_pr_title.problems(title, changelog, **release), [])
+        self.assertEqual(
+            check_pr_title.problems(
+                title,
+                changelog,
+                author='app/github-actions',
+                author_type='Bot',
+                head_ref='release-please--branches--main',
+            ),
+            [],
+        )
+        human = check_pr_title.problems(
+            title,
+            changelog,
+            author='ben-ranford',
+            author_type='User',
+            head_ref=release['head_ref'],
+        )
+        self.assertTrue(human)
+        other_branch = check_pr_title.problems(
+            title,
+            changelog,
+            author='github-actions[bot]',
+            author_type='Bot',
+            head_ref='cursor/enforce-pr-format-8174',
+        )
+        self.assertTrue(other_branch)
+        serial = ''.join(('F4MH', '3GCYNJ'))
+        bad_title = check_pr_title.problems(
+            'chore(main): release %s' % serial,
+            changelog,
+            **release,
+        )
+        self.assertTrue(any(serial in item and 'title' in item for item in bad_title))
+        self.assertFalse(any('Missing "## Summary"' in item for item in bad_title))
+
     def test_cli_reads_the_environment_and_does_not_need_the_shell(self) -> None:
+        title = 'ci: enforce pull request title and description format'
         accepted = run(
             [sys.executable, 'scripts/check_pr_title.py'],
-            env={'PR_TITLE': 'chore: add issue and PR templates'},
+            env={'PR_TITLE': title, 'PR_BODY': pull_request_body()},
         )
         self.assertEqual(accepted.returncode, 0, accepted.stderr)
-        self.assertIn('PASS', accepted.stdout)
+        self.assertIn('PASS: pull request title and description', accepted.stdout)
+        missing_body = run(
+            [sys.executable, 'scripts/check_pr_title.py'],
+            env={'PR_TITLE': title},
+        )
+        self.assertEqual(missing_body.returncode, 1, missing_body.stdout)
+        self.assertIn('description is missing', missing_body.stderr)
         missing = run([sys.executable, 'scripts/check_pr_title.py'], env={'PR_TITLE': ''})
         self.assertEqual(missing.returncode, 1, missing.stdout)
         cleaned = os.environ.copy()
         cleaned.pop('PR_TITLE', None)
+        cleaned.pop('PR_BODY', None)
         unset_result = subprocess.run(
             [sys.executable, 'scripts/check_pr_title.py'],
             cwd=ROOT,
@@ -1895,20 +2150,43 @@ class PullRequestTitleTests(unittest.TestCase):
         )
         self.assertEqual(unset_result.returncode, 1)
         self.assertIn('PR_TITLE is not set', unset_result.stderr)
+        serial = ''.join(('JGH7', '6QK2QX'))
+        crowded = run(
+            [sys.executable, 'scripts/check_pr_title.py'],
+            env={
+                'PR_TITLE': 'fix: drop serial %s from the log' % serial,
+                'PR_BODY': '## Mac checklist\n\nNeeds a Mac from the lab.\n',
+            },
+        )
+        self.assertEqual(crowded.returncode, 1)
+        self.assertIn('BLOCKED: this pull request has', crowded.stderr)
+        for fragment in (serial, '## Test plan', 'needs a Mac from', 'Missing "## Summary"'):
+            self.assertIn(fragment, crowded.stderr)
 
     def test_workflow_passes_the_title_in_the_environment(self) -> None:
         import yaml
         workflow = yaml.safe_load((ROOT / '.github/workflows/pr-title.yml').read_text())
         triggers = workflow.get('on', workflow.get(True))
         self.assertEqual(set(triggers), {'pull_request'})
-        self.assertIn('edited', triggers['pull_request']['types'])
+        types = set(triggers['pull_request']['types'])
+        self.assertTrue({'opened', 'edited', 'synchronize', 'reopened'} <= types)
         self.assertNotIn('pull_request_target', triggers)
         self.assertEqual(workflow['permissions'], {'contents': 'read'})
         job = workflow['jobs']['conventional-commit']
         self.assertEqual(job['name'], 'Conventional commit')
         self.assertEqual(job['runs-on'], 'ubuntu-latest')
-        check = next(step for step in job['steps'] if step.get('name') == 'Check the pull request title')
+        check = next(
+            step for step in job['steps']
+            if step.get('name') == 'Check the pull request title and description'
+        )
         self.assertEqual(check['env']['PR_TITLE'], '${{ github.event.pull_request.title }}')
+        self.assertEqual(check['env']['PR_BODY'], '${{ github.event.pull_request.body }}')
+        self.assertEqual(check['env']['PR_AUTHOR'], '${{ github.event.pull_request.user.login }}')
+        self.assertEqual(
+            check['env']['PR_AUTHOR_TYPE'],
+            '${{ github.event.pull_request.user.type }}',
+        )
+        self.assertEqual(check['env']['PR_HEAD_REF'], '${{ github.event.pull_request.head.ref }}')
         self.assertNotIn('${{', check['run'])
         self.assertEqual(check['run'], 'python3 scripts/check_pr_title.py')
         checkout = next(step for step in job['steps'] if 'uses' in step)
@@ -1932,11 +2210,20 @@ class CIWorkflowTests(unittest.TestCase):
         test = steps['Unit tests (xcodebuild)']
         self.assertIn('xcodebuild test', test)
         self.assertIn('-only-testing:WattTests', test)
+        self.assertIn('-enableCodeCoverage YES', test)
+        self.assertIn('-resultBundlePath "${WATT_RESULT_BUNDLE}"', test)
         self.assertIn('-test-timeouts-enabled YES', test)
         self.assertIn('-default-test-execution-time-allowance 120', test)
         self.assertIn('-maximum-test-execution-time-allowance 120', test)
         self.assertIn('bash scripts/retry_on_timeout.sh 600 1 --', test)
         self.assertIn('swift test --configuration debug', steps['Unit tests (swift test)'])
+        self.assertEqual(steps['Test coverage floor script'], 'python3 scripts/test_coverage_floor.py')
+        coverage = steps['Enforce coverage floor']
+        self.assertIn('python3 scripts/check_coverage_floor.py', coverage)
+        self.assertIn('--xcresult "${RUNNER_TEMP}/WattTests.xcresult"', coverage)
+        self.assertIn('--floor .github/coverage-floor.json', coverage)
+        self.assertNotIn('codecov', coverage.lower())
+        self.assertNotIn('sonar', coverage.lower())
         self.assertIn('ditto -c -k --keepParent', steps['Zip the Release app'])
         self.assertIn('codesign --verify --verbose=2', steps['Zip the Release app'])
         self.assertIn('print_release_update_settings.py --check-plist', steps['Zip the Release app'])
@@ -1966,6 +2253,10 @@ class CIWorkflowTests(unittest.TestCase):
         self.assertIs(shots['with']['include-hidden-files'], True)
         self.assertIn('WATT_SCREENSHOT_DIR', steps['Unit tests (xcodebuild)'])
         names = [step.get('name') for step in job['steps']]
+        self.assertLess(names.index('Checkout'), names.index('Test coverage floor script'))
+        self.assertLess(names.index('Test coverage floor script'), names.index('Build Debug and Release'))
+        self.assertLess(names.index('Unit tests (xcodebuild)'), names.index('Unit tests (swift test)'))
+        self.assertLess(names.index('Unit tests (swift test)'), names.index('Enforce coverage floor'))
         self.assertLess(names.index('Unit tests (xcodebuild)'), names.index('Collect site screenshots'))
         self.assertLess(names.index('Collect site screenshots'), names.index('Upload site screenshots'))
         self.assertLess(names.index('Import Developer ID keychain'), names.index('Build Debug and Release'))

@@ -71,7 +71,7 @@ def main(argv: list[str] | None = None) -> None:
             if not binary.is_file():
                 continue
             run(['/usr/bin/codesign', '--verify', '--strict', '--all-architectures', str(binary)])
-            detail = run(['/usr/bin/codesign', '-dv', str(binary)])
+            detail = run(['/usr/bin/codesign', '-dvv', str(binary)])
             require('Identifier=' + expected + '\n' in detail, 'code identifier mismatch: ' + name)
             entitlement_result = subprocess.run(
                 ['/usr/bin/codesign', '-d', '--entitlements', ':-', str(binary)],

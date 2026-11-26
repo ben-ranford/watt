@@ -12,6 +12,8 @@ The app’s **Install Helper…** button, in setup and in Settings, runs this to
 2. An administrator invokes `WattHelperInstaller --bootstrap-reviewed --source /absolute/path/Watt.app --approval <digest>`. For a newer build, use `--rotate-reviewed` with a freshly reviewed preflight digest.
 3. Open the exact application path printed by the installer as the ordinary user. The installer never runs the GUI as root.
 
+While the helper is on, the protected copy is the one that runs, updates and removes the helper. Opening another copy of the same pinned build, such as the Homebrew copy in `/Applications`, opens the protected copy and quits. A copy of a different build asks to turn the helper on again, which rotates that build into a new generation. **Remove Helper** in Settings runs `--remove-helper` from the protected copy behind the macOS administrator prompt and keeps the application generations.
+
 Preflight does not write protected paths. Installation re-copies inputs into root-controlled staging and checks the approved bytes again. It installs the app under `/Library/Application Support/Watt/generations/<installation UUID>-<generation>/Watt.app`, the helper at `/Library/PrivilegedHelperTools/io.github.ben-ranford.watt.helper`, and its launchd plist at `/Library/LaunchDaemons/io.github.ben-ranford.watt.helper.plist`. Public hash pins are root-owned `helper-trust.json`; the mutation journal and lock are private. Ancestors must be protected directories, and symlinks are refused.
 
 Old application generations remain available during rotation. One public generation becomes active only after corresponding app/helper bytes are verified and placed. A crash leaves a private journal; a stale app cannot authenticate against the new exact helper pins.
@@ -42,7 +44,7 @@ Recovery resumes only the recorded exact installation/generation. Interrupted re
 
 ## Verification boundary
 
-Tests use real temporary files and actual ad-hoc signatures with injected owner/launchd/process authority. They exercise bootstrap, rotation, interruption/recovery, exact removal, foreign-object refusal, and authenticated release archives. Production CLI flags cannot change owner or destinations. Actual administrator installation, launchd behavior on supported Macs, cross-process protected XPC, and root telemetry capture remain host verification gates. Those operations were not run during implementation.
+Tests use real temporary files and actual ad-hoc signatures with injected owner/launchd/process authority. They exercise bootstrap, rotation, interruption/recovery, exact removal, foreign-object refusal, and authenticated release archives. Production CLI flags cannot change owner or destinations. A Debug build reads `WATT_INSTALLER_TEST_ROOT` only when that path is an absolute private directory, mode 0700, owned by the current user, free of symlinks, and outside `/Library`. It then uses the same injected authority. Release builds do not read the variable. Actual administrator installation, launchd behavior on supported Macs, cross-process protected XPC, and root telemetry capture remain host verification gates. Those operations were not run during implementation.
 
 ## Binding an application maintenance receipt
 

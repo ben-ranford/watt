@@ -1,5 +1,55 @@
 # Changelog
 
+## [1.3.1](https://github.com/ben-ranford/watt/compare/v1.2.0...v1.3.1) (2026-11-25)
+
+1.3.1 is the first published release with the 1.3.0 changes. It also fixes the release check that stopped 1.3.0 from being published.
+
+### Features
+
+* See CPU and GPU power separately. With the helper on, the panel shows a CPU estimate and a GPU estimate. (#73)
+* The panel shows your charger's wattage and how long until the battery is full or empty. (#56)
+* Updates roll out gradually, and Watt? shows what changed once after it updates. (#54)
+* Subtle motion in the panel and windows. (#53)
+
+### Bug Fixes
+
+* Plainer wording on every first-run screen. (#69)
+* First run offers the helper before you pick what the menu bar shows, so CPU and GPU are ready to choose. (#70)
+* Checking for updates no longer gets stuck on "Checking…". If Watt? can't connect, it says so. (#67)
+* System draw and battery readings now show in the panel while your Mac runs on battery. (#71)
+* Release notes in the update window show headings and bullets on separate lines. (#59)
+* Fixed the release check that stopped 1.3.0 from being published. (#81)
+
+### Performance Improvements
+
+* Uses less energy at idle while the menu bar keeps updating on time. (#57)
+
+## [1.3.0](https://github.com/ben-ranford/watt/compare/v1.2.0...v1.3.0) (2026-11-25)
+
+Not published. Superseded by 1.3.1, which ships these changes.
+
+
+### Features
+
+* **helper:** decode powermetrics samples into component readings ([#73](https://github.com/ben-ranford/watt/issues/73)) ([c085392](https://github.com/ben-ranford/watt/commit/c0853929233f32aa0264631b0f59f965e6d906c8))
+* show adapter wattage and time remaining in the panel ([#56](https://github.com/ben-ranford/watt/issues/56)) ([01a3681](https://github.com/ben-ranford/watt/commit/01a36818e320fbb0a90049e26e3bf518c31bca60))
+* stage update rollouts and show what changed once ([#54](https://github.com/ben-ranford/watt/issues/54)) ([9149256](https://github.com/ben-ranford/watt/commit/91492565926b0ebbbd18061cb81b6490eb9a1253))
+* subtle UI motion ([#53](https://github.com/ben-ranford/watt/issues/53)) ([b25e899](https://github.com/ben-ranford/watt/commit/b25e89979dec45439f685f42f51530ddb942fe1d))
+
+
+### Bug Fixes
+
+* **onboarding:** install helper before choosing components ([#70](https://github.com/ben-ranford/watt/issues/70)) ([b32e769](https://github.com/ben-ranford/watt/commit/b32e769eb4de44334c446d0a935c237b69242d6d))
+* **onboarding:** plain the first-run copy ([#69](https://github.com/ben-ranford/watt/issues/69)) ([e9c776c](https://github.com/ben-ranford/watt/commit/e9c776c8bc7e3a03d08dc9d994406f89410f8449))
+* render release note headings and bullets on separate lines ([#59](https://github.com/ben-ranford/watt/issues/59)) ([0573c4d](https://github.com/ben-ranford/watt/commit/0573c4d7bea6ac5302d1004571b23906f5bf3208))
+* **telemetry:** read signed BatteryPower so panel shows on battery ([#71](https://github.com/ben-ranford/watt/issues/71)) ([bfc15cc](https://github.com/ben-ranford/watt/commit/bfc15ccb831f830d1852cebb369b7a969b4dc9e8))
+* **updates:** finish a check when the manifest request completes ([#67](https://github.com/ben-ranford/watt/issues/67)) ([440b392](https://github.com/ben-ranford/watt/commit/440b392f7016d102b6cfe3b954635e68078f3c2d))
+
+
+### Performance Improvements
+
+* cut idle sampling while the menu bar keeps its cadence ([#57](https://github.com/ben-ranford/watt/issues/57)) ([8f89387](https://github.com/ben-ranford/watt/commit/8f89387b38468f716e4f6bef6a23e53f4cdc279c))
+
 ## [1.2.0](https://github.com/ben-ranford/watt/compare/v1.1.1...v1.2.0) (2026-11-11)
 
 
