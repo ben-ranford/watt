@@ -103,6 +103,15 @@ private struct NativeReadingRadioGroup: NSViewRepresentable {
         context.coordinator.refresh()
     }
 
+    /// Report the stack's fitted height. Without this the representable accepts
+    /// any height it is offered, and a taller window (the helper step comes first)
+    /// opens a gap between the rows instead of shrinking to fit.
+    func sizeThatFits(_ proposal: ProposedViewSize, nsView: NSStackView, context: Context) -> CGSize? {
+        guard let width = proposal.width, width.isFinite, width > 0 else { return nil }
+        context.coordinator.wrapDetails(width: width)
+        return CGSize(width: width, height: ceil(nsView.fittingSize.height))
+    }
+
     @MainActor
     final class Coordinator: NSObject {
         var selection: Binding<WattDisplayMode>
@@ -110,6 +119,8 @@ private struct NativeReadingRadioGroup: NSViewRepresentable {
         var options: [ReadingPicker.Option]
         private weak var stack: NSStackView?
         private var buttons: [NSButton] = []
+        private var details: [NSTextField] = []
+        private static let detailIndent: CGFloat = 22
 
         init(selection: Binding<WattDisplayMode>,
              unavailableModes: Set<WattDisplayMode>,
@@ -124,6 +135,7 @@ private struct NativeReadingRadioGroup: NSViewRepresentable {
             stack.orientation = .vertical
             stack.alignment = .leading
             stack.spacing = WattSpacing.xs
+            stack.setHuggingPriority(.required, for: .vertical)
             stack.setAccessibilityElement(true)
             stack.setAccessibilityRole(.group)
             stack.setAccessibilityLabel("Menu bar reading")
@@ -148,6 +160,7 @@ private struct NativeReadingRadioGroup: NSViewRepresentable {
             guard let stack else { return }
             stack.arrangedSubviews.forEach { stack.removeArrangedSubview($0); $0.removeFromSuperview() }
             buttons = []
+            details = []
             for option in options {
                 let row = NSStackView()
                 row.orientation = .vertical
@@ -176,9 +189,17 @@ private struct NativeReadingRadioGroup: NSViewRepresentable {
                     detail.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
                     detail.translatesAutoresizingMaskIntoConstraints = false
                     row.addArrangedSubview(detail)
-                    detail.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: 22).isActive = true
+                    details.append(detail)
+                    detail.leadingAnchor.constraint(equalTo: row.leadingAnchor, constant: Self.detailIndent).isActive = true
                 }
                 stack.addArrangedSubview(row)
+            }
+        }
+
+        func wrapDetails(width: CGFloat) {
+            let available = max(0, width - Self.detailIndent)
+            for detail in details where detail.preferredMaxLayoutWidth != available {
+                detail.preferredMaxLayoutWidth = available
             }
         }
 

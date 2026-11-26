@@ -57,6 +57,19 @@ final class HelperProtocolTests: XCTestCase {
         XCTAssertTrue(HelperRequest(command: .diagnosticCapture, generation: UUID()).isAdmitted)
     }
 
+    func testSampleReplyCarriesCaptureWithinDiagnosticBudget() throws {
+        let request = HelperRequest(command: .sample, generation: UUID())
+        let capture = HelperCapture(startedAt: Date(), duration: 1.2,
+                                    stdout: Data(repeating: 0x20, count: 80_000), stderr: Data(),
+                                    exitStatus: 0, status: .completed, terminationConfirmed: true)
+        let reply = HelperReply(request: request, build: "test", daemonInstance: UUID(),
+                                status: .sourceUnvalidated, capture: capture)
+        let data = try HelperWire.encode(reply)
+        XCTAssertGreaterThan(data.count, HelperLimits.replyBytes)
+        XCTAssertLessThan(data.count, HelperLimits.diagnosticReplyBytes)
+        XCTAssertEqual(try HelperWire.decodeReply(data, for: request), reply)
+    }
+
     func testFixedCommandMatchesLocalHelp() {
         XCTAssertEqual(FixedPowerSampler.executable, "/usr/bin/powermetrics")
         XCTAssertEqual(FixedPowerSampler.arguments, ["-f", "plist", "-n", "1", "-i", "1000", "-s", "cpu_power,gpu_power"])

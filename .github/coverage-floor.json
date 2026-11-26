@@ -1,0 +1,10 @@
+{
+  "enforce": false,
+  "overall": 90,
+  "targets": {
+    "Watt": 90,
+    "WattHelper": 90,
+    "WattMaintenance": 90,
+    "WattHelperInstaller": 90
+  }
+}

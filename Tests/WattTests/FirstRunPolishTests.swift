@@ -83,13 +83,16 @@ final class FirstRunPolishTests: XCTestCase {
         let offered = ChooseMenuReadingView.options(reading: .sampleCharging, helperAvailable: false, installOffered: true)
         XCTAssertEqual(offered.last?.mode, .components)
         let description = try XCTUnwrap(offered.last?.description)
-        XCTAssertEqual(description, "The helper isn’t installed. You can install it on the next step.")
+        XCTAssertEqual(description, "The helper isn’t installed. Go back to install it.")
         XCTAssertFalse(description.contains("unavailable in this build"))
         XCTAssertEqual(OfferComponentReadingsView.installMessage.contains("isn’t installed"), true)
 
         let preferences = PreferencesStore(storage: InMemoryStorage())
         preferences.onboarding.checkpoint = .picker
-        ChooseMenuReadingView.advance(preferences: preferences, helperAvailable: false, installOffered: true)
+        ChooseMenuReadingView.advance(preferences: preferences)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
+        preferences.onboarding.checkpoint = .picker
+        ChooseMenuReadingView.back(preferences: preferences, returnToInstall: true)
         XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
     }
 

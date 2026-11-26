@@ -54,7 +54,7 @@ These checks run on every pull request, including every pull request into `main`
 
 | Check | Workflow | What it runs |
 | --- | --- | --- |
-| `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. A pull request also uploads the Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. Same-repo pull requests sign that app with Developer ID and notarise it. Fork pull requests, which cannot read the signing secrets, upload an ad-hoc build instead. That Release build compiles the public update URLs from `Resources/ReleaseIdentity.json` and the public key in `Resources/UpdatePublicKey.txt`. |
+| `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. That `xcodebuild test` records line coverage and compares the app and helper targets with `.github/coverage-floor.json`. While `enforce` is false the job warns; while `enforce` is true it fails. A pull request also uploads the Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. Same-repo pull requests sign that app with Developer ID and notarise it. Fork pull requests, which cannot read the signing secrets, upload an ad-hoc build instead. That Release build compiles the public update URLs from `Resources/ReleaseIdentity.json` and the public key in `Resources/UpdatePublicKey.txt`. |
 | `Release config` | Release | `python3 scripts/test_release_pipeline.py` |
 | `gitleaks` | Secret scan | Working-tree secret scan. The same scanner is the optional pre-commit hook in `.pre-commit-config.yaml`. |
 | `Conventional commit` | PR title | The pull request title is a Conventional Commit, and the description follows the template. Release Please is title-only. Editing the description re-runs this check. |
@@ -76,11 +76,14 @@ If you change `scripts/` or `.github/workflows/`:
 
 ```sh
 python3 scripts/test_release_pipeline.py
+python3 scripts/test_coverage_floor.py
 ```
 
 The lint check is the gitleaks secret scan.
 
 CI gives `xcodebuild test` the same 120 second per-test allowance as `scripts/verify-native-host.sh`. The step stops the process after 10 minutes and retries once when `xcodebuild` does not exit. An assertion failure fails the check immediately.
+
+The same macOS job compares line coverage with `.github/coverage-floor.json`. The file stores a whole-number percent for the Watt app, `WattHelper`, `WattMaintenance`, `WattHelperInstaller`, and the total of those binaries, plus an `enforce` flag. Test bundles, generated files, and SwiftUI previews are not counted. The job prints the actual and floor percentages in the log and the step summary. While `enforce` is false, a short total is a warning annotation and the job stays green. While `enforce` is true, a short total fails the job. When coverage is two or more points above a floor, the job prints a notice and leaves the file unchanged. That gate stays in the `macOS` check.
 
 UI changes need a manual check on macOS. Attach screenshots to the pull request.
 
@@ -108,7 +111,7 @@ Idle-cost notes, including the host samples from 18 Nov 2026, are in [docs/PERFO
 
 `WattHelper` (`io.github.ben-ranford.watt.helper`) is a launch daemon. The administrator installer places the binary at `/Library/PrivilegedHelperTools/io.github.ben-ranford.watt.helper` and its launchd plist at `/Library/LaunchDaemons/io.github.ben-ranford.watt.helper.plist`. That plist sets `UserName` to `root`. `WattHelperInstaller` does not take privilege itself. An administrator runs it, and macOS then asks you to approve Watt? Helper in Login Items & Extensions.
 
-The helper's sampler runs one fixed command, `/usr/bin/powermetrics` with `-f plist -n 1 -i 1000 -s cpu_power,gpu_power`. It does not accept an executable, arguments, or paths from the app. CPU and GPU estimates appear only when both are available. Display, SSD, and Other are unavailable. Battery delta, charger input, and system draw come from IOKit power sources and do not need the helper.
+The helper's sampler runs one fixed command, `/usr/bin/powermetrics` with `-f plist -n 1 -i 1000 -s cpu_power,gpu_power`. It does not accept an executable, arguments, or paths from the app. The helper returns that plist unchanged. The app reads `processor.cpu_power` and `processor.gpu_power` as milliwatts and keeps the sample only when those averages match `cpu_energy` and `gpu_energy` in millijoules across `elapsed_ns`, and `combined_power` matches the cpu, gpu, and ane sum. A missing key, a different unit, or a value above 200 W on one rail leaves both estimates unavailable. CPU and GPU estimates appear only when both are available. Display, SSD, and Other are unavailable. Battery delta, charger input, and system draw come from IOKit power sources and do not need the helper.
 
 A fresh install does not register the helper by itself. Setup and Settings offer **Install Helper…**, which runs the bundled `WattHelperInstaller` and asks for an administrator password. `SMAppService` daemon registration does not write the exact code-hash pins the helper requires, so the app does not use that API for this path. The installer still checks the preflight digest against the staged bytes before it writes anything. Homebrew does not install the helper during `brew install`; the cask only places `Watt.app` in Applications.
 

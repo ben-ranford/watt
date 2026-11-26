@@ -134,14 +134,18 @@ public enum HelperWire {
     }
 
     private static func limit(for command: HelperCommand) -> Int {
-        command == .diagnosticCapture ? HelperLimits.diagnosticReplyBytes : HelperLimits.replyBytes
+        // A cpu_power,gpu_power plist is larger than the short reply budget once it is JSON-encoded.
+        switch command {
+        case .diagnosticCapture, .sample: return HelperLimits.diagnosticReplyBytes
+        case .ping, .prepareUpdate: return HelperLimits.replyBytes
+        }
     }
 
     private static func validate(_ reply: HelperReply) throws {
         guard reply.version == HelperRequest.currentVersion else { throw HelperProtocolError.unsupportedVersion }
         guard !reply.build.isEmpty, reply.build.utf8.count <= 128 else { throw HelperProtocolError.invalidEnvelope }
         if let capture = reply.capture {
-            guard reply.command == .diagnosticCapture,
+            guard reply.command == .diagnosticCapture || reply.command == .sample,
                   capture.stdout.count + capture.stderr.count <= HelperLimits.captureBytes,
                   capture.duration.isFinite, capture.duration >= 0,
                   capture.startedAt.timeIntervalSince1970.isFinite else { throw HelperProtocolError.invalidEnvelope }

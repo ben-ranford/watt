@@ -669,6 +669,25 @@ struct UpdateResponseRejection: LocalizedError, Sendable {
     var errorDescription: String? { "HTTP \(status)" }
 }
 
+extension UpdateState {
+    /// Stable phase name for the local update log. Progress ticks stay in `downloading`.
+    var updateLogPhase: String {
+        switch self {
+        case .idle: return "idle"
+        case .checking: return "checking"
+        case .available: return "available"
+        case .downloading: return "downloading"
+        case .staged: return "staged"
+        case .installing: return "installing"
+        case .awaitingRelaunch: return "awaitingRelaunch"
+        case .completed: return "completed"
+        case .failed(let reason, _): return "failed.\(reason.rawValue)"
+        case .adminRequired: return "adminRequired"
+        case .handoffAccepted: return "handoffAccepted"
+        }
+    }
+}
+
 enum UpdateDiagnostics {
     private static let log = Logger(subsystem: "io.github.ben-ranford.watt", category: "updates")
 
@@ -680,5 +699,26 @@ enum UpdateDiagnostics {
 
     static func withheldRollout() {
         log.error("update check withheld by the signed rollout")
+    }
+
+    static func transition(from previous: String, to next: String) {
+        guard previous != next else { return }
+        log.notice("update state \(previous, privacy: .public) -> \(next, privacy: .public)")
+    }
+
+    static func requestStarted(host: String) {
+        log.notice("update request start host \(host, privacy: .public)")
+    }
+
+    static func response(status: Int) {
+        log.notice("update response status \(status, privacy: .public)")
+    }
+
+    static func finished(_ result: String) {
+        log.notice("update finish \(result, privacy: .public)")
+    }
+
+    static func timedOut(_ context: String) {
+        log.error("update timeout \(context, privacy: .public)")
     }
 }

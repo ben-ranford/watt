@@ -38,7 +38,7 @@ final class J41WelcomeDesktopTests: XCTestCase {
     }
     #endif
 
-    func testContinuePersistsPickerWithoutChangingOtherPreferences() {
+    func testContinuePersistsHelperOfferWithoutChangingOtherPreferences() {
         for _ in WelcomeView.Variant.allCases {
             let storage = InMemoryStorage()
             let preferences = PreferencesStore(storage: storage)
@@ -46,12 +46,12 @@ final class J41WelcomeDesktopTests: XCTestCase {
             preferences.onboarding.helperOptIn = true
             OnboardingFlowView.continueWelcome(preferences: preferences)
             let restored = PreferencesStore(storage: storage)
-            XCTAssertEqual(restored.onboarding.checkpoint, .picker)
+            XCTAssertEqual(restored.onboarding.checkpoint, .helperOffer)
             XCTAssertFalse(restored.onboarding.completed)
             XCTAssertTrue(restored.onboarding.helperOptIn)
             XCTAssertEqual(restored.displayMode, .draw)
             ChooseMenuReadingView.back(preferences: preferences)
-            XCTAssertEqual(preferences.onboarding.checkpoint, .welcome)
+            XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
         }
     }
 

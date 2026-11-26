@@ -42,8 +42,9 @@ private final class Session: NSObject, WattHelperXPC, @unchecked Sendable {
                     status = .unavailable
                 }
             case .sample:
-                // Never decode or present guessed schema. Source capture must establish it first.
-                status = .sourceUnvalidated
+                // Raw plist only. PowerMetricsComponentDecoder owns schema, units, and range.
+                capture = await coordinator.capture()
+                status = capture == nil ? .busy : .sourceUnvalidated
             case .diagnosticCapture:
                 capture = await coordinator.capture()
                 status = capture == nil ? .busy : .sourceUnvalidated
