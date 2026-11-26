@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.2](https://github.com/ben-ranford/watt/compare/v1.3.1...v1.3.2) (2026-11-26)
+
+
+### Bug Fixes
+
+* **helper:** finish helper install on a Mac that never had it ([#86](https://github.com/ben-ranford/watt/issues/86)) ([fed24d3](https://github.com/ben-ranford/watt/commit/fed24d3e8fc52570abe8561bd0acffd466509fed))
+* **helper:** route updates and helper removal through the protected copy ([#84](https://github.com/ben-ranford/watt/issues/84)) ([f8e9899](https://github.com/ben-ranford/watt/commit/f8e9899d72c39bf5a07555e578f9ec6991bd255a))
+
 ## [1.3.1](https://github.com/ben-ranford/watt/compare/v1.2.0...v1.3.1) (2026-11-25)
 
 1.3.1 is the first published release with the 1.3.0 changes. It also fixes the release check that stopped 1.3.0 from being published.
