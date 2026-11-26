@@ -416,7 +416,7 @@ struct WattApp: App {
             // longer inside the parent's launch wait.
             Task { @MainActor in
                 if case .sameBuildElsewhere(let managed) = managedPlacement,
-                   ManagedCopyPolicy.openManagedCopy(managed) {
+                   await ManagedCopyPolicy.openManagedCopy(managed) {
                     NSApplication.shared.terminate(nil)
                     return
                 }

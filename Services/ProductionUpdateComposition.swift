@@ -112,15 +112,23 @@ enum ManagedCopyPolicy {
                          managedMatchesPins: matches(managed.appendingPathComponent("Contents/MacOS/Watt")))
     }
 
-    /// Opens the protected copy as a new instance. The caller quits after this returns true.
+    /// Opens the protected copy as a new instance and waits until it has launched.
+    /// The caller quits only after this returns true. Quitting before the launch
+    /// finished dropped the request, so neither copy was left running. If the
+    /// protected copy can't be opened, this copy keeps running.
     @MainActor
-    static func openManagedCopy(_ managed: URL) -> Bool {
+    static func openManagedCopy(_ managed: URL,
+                                open: @MainActor (URL) async throws -> Void = launchNewInstance) async -> Bool {
         guard FileManager.default.fileExists(atPath: managed.path) else { return false }
+        do { try await open(managed); return true } catch { return false }
+    }
+
+    @MainActor
+    static func launchNewInstance(_ url: URL) async throws {
         let configuration = NSWorkspace.OpenConfiguration()
         configuration.createsNewApplicationInstance = true
         configuration.activates = false
-        NSWorkspace.shared.openApplication(at: managed, configuration: configuration) { _, _ in }
-        return true
+        _ = try await NSWorkspace.shared.openApplication(at: url, configuration: configuration)
     }
 }
 
