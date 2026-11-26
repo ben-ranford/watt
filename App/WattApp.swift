@@ -1711,9 +1711,11 @@ private struct StatusItemAdapter: NSViewRepresentable {
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 }
             }
+            router.statusItemButton = { [weak view] in view?.statusButton }
             applicationDelegate.onTerminate = { [weak view] in
                 router.leftoverHelper?.close()
                 router.present = { _ in }
+                router.statusItemButton = { nil }
                 router.statusPanelPresented = false
                 view?.tearDown()
             }
