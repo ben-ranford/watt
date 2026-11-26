@@ -5,15 +5,15 @@
 
 ### Features
 
-* **menu-bar:** add optional battery percentage and icon ([#79](https://github.com/ben-ranford/watt/issues/79)) ([25667eb](https://github.com/ben-ranford/watt/commit/25667eb0f22c342c401441595222547bf001ea43))
-* **onboarding:** strike Done with lightning when setup finishes ([#87](https://github.com/ben-ranford/watt/issues/87)) ([f6dd6a8](https://github.com/ben-ranford/watt/commit/f6dd6a8cd456779469ae400d7958a81414473f47))
+* The menu bar can show your battery percentage, after the watts or on its own, and can use a battery icon instead of the bolt. Both are off until you turn them on in Settings, and only appear on a Mac with a battery. (#79)
+* Finishing setup ends with a lightning strike on Done. (#87)
 
 
 ### Bug Fixes
 
-* **build:** compile the width and battery tests into WattTests again ([#95](https://github.com/ben-ranford/watt/issues/95)) ([8c0f55c](https://github.com/ben-ranford/watt/commit/8c0f55ccb1677c482ab7fafeec140e9c036ff055))
-* **copy:** remove em dashes from user-facing text ([#85](https://github.com/ben-ranford/watt/issues/85)) ([5064962](https://github.com/ben-ranford/watt/commit/506496251d173bc85a16481424412e710cde7766))
-* **menubar:** keep status item width stable as readings change ([#75](https://github.com/ben-ranford/watt/issues/75)) ([5787a96](https://github.com/ben-ranford/watt/commit/5787a96cb043d3d1e26418d9b8f2e0b7eaa330d9))
+* The menu bar item keeps the same width as the reading changes, so the items next to it stay put. (#75)
+* Settings and the website use plainer punctuation. (#85)
+* More of the app's own checks run on every build. (#95)
 
 ## [1.3.2](https://github.com/ben-ranford/watt/compare/v1.3.1...v1.3.2) (2026-11-26)
 
