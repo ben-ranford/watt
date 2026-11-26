@@ -465,3 +465,250 @@ private final class OfferDriver: UpdateInstallationDriver {
     func discard(receipt: OperationReceipt) throws {}
     func stagingAbsent(receipt: OperationReceipt) throws -> Bool { true }
 }
+
+@MainActor
+final class LaunchHelperUpdateTests: XCTestCase {
+    private let managed = URL(fileURLWithPath: "/Library/Application Support/Watt/generations/11111111-2222-4333-8444-555555555555-2/Watt.app")
+    private let updatedCopy = URL(fileURLWithPath: "/Library/Application Support/Watt/generations/11111111-2222-4333-8444-555555555555-3/Watt.app")
+    private let applications = URL(fileURLWithPath: "/Applications/Watt.app")
+
+    private func facts(
+        installed: Bool = true,
+        launching: UInt64? = 1_003_002,
+        helperBuild: UInt64? = 1_003_001,
+        protectedCopy: Bool = false,
+        url: URL? = nil,
+        protectedPins: Bool = true,
+        runningPins: Bool = false,
+        journal: Bool = false,
+        allowUpdate: Bool = true
+    ) -> LaunchHelperFacts {
+        LaunchHelperFacts(
+            helperInstalled: installed,
+            launchingBuild: launching,
+            installedBuild: installed ? helperBuild : nil,
+            runningIsProtectedCopy: protectedCopy,
+            protectedCopyURL: installed ? (url ?? managed) : nil,
+            protectedCopyMatchesPins: protectedPins,
+            runningMatchesPins: runningPins,
+            unfinishedInstallJournal: journal,
+            automaticHelperUpdateAllowed: allowUpdate)
+    }
+
+    private func expect(_ label: String, _ facts: LaunchHelperFacts, _ plan: LaunchHelperPlan,
+                        file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(LaunchHelperPolicy.plan(for: facts), plan, label, file: file, line: line)
+    }
+
+    func testLaunchLeavesAMissingHelperAlone() {
+        expect("nothing installed", facts(installed: false, launching: 1_003_002, helperBuild: nil), .stay)
+        expect("journal without a helper is not an install",
+               facts(installed: false, journal: true), .stay)
+        expect("certificate build does not auto-install",
+               facts(installed: false, allowUpdate: false), .stay)
+    }
+
+    func testSameBuildKeepsTheProtectedCopyHandover() {
+        expect("same pins",
+               facts(launching: 1_003_002, helperBuild: 1_003_002, protectedPins: true, runningPins: true),
+               .handOver(managed))
+        expect("same build still hands over when a journal remains",
+               facts(launching: 1_003_002, helperBuild: 1_003_002, protectedPins: true, runningPins: true, journal: true),
+               .handOver(managed))
+        expect("same build with different bytes does not rotate or open a mismatched copy",
+               facts(launching: 1_003_002, helperBuild: 1_003_002, protectedPins: false, runningPins: false),
+               .stay)
+        expect("unreadable builds still hand over when both copies match the pins",
+               facts(launching: nil, helperBuild: nil, protectedPins: true, runningPins: true),
+               .handOver(managed))
+        expect("an unreadable launching build is not treated as newer",
+               facts(launching: nil, helperBuild: 1_003_002, protectedPins: false, runningPins: false),
+               .stay)
+        expect("a certificate build of the same version still hands over",
+               facts(launching: 1_003_002, helperBuild: 1_003_002, protectedPins: true, runningPins: true, allowUpdate: false),
+               .handOver(managed))
+    }
+
+    func testNewerLaunchUpdatesBeforeAnyHandoverToTheOlderCopy() {
+        expect("newer Homebrew copy",
+               facts(launching: 1_003_002, helperBuild: 1_003_001),
+               .updateInstalledHelper)
+        expect("newer copy with an unfinished journal resumes through that update",
+               facts(launching: 1_003_002, helperBuild: 1_003_001, journal: true),
+               .updateInstalledHelper)
+        expect("newer copy does not open a protected bundle that fails its own pins first",
+               facts(launching: 1_003_002, helperBuild: 1_003_001, protectedPins: false),
+               .updateInstalledHelper)
+        expect("the protected copy does not reinstall itself",
+               facts(launching: 1_003_002, helperBuild: 1_003_001, protectedCopy: true, journal: true),
+               .stay)
+        expect("a certificate build does not rotate the protected helper on launch",
+               facts(launching: 1_003_002, helperBuild: 1_003_001, allowUpdate: false),
+               .stay)
+    }
+
+    func testOlderLaunchNeverDowngradesAndHandsOverToTheNewerCopy() {
+        expect("older copy opens the newer protected copy",
+               facts(launching: 1_003_000, helperBuild: 1_003_002, protectedPins: true, runningPins: false),
+               .handOver(managed))
+        expect("a leftover journal does not turn an older launch into a downgrade",
+               facts(launching: 1_003_000, helperBuild: 1_003_002, journal: true),
+               .handOver(managed))
+        expect("a protected copy that fails its own pins is never opened",
+               facts(launching: 1_003_000, helperBuild: 1_003_002, protectedPins: false),
+               .stay)
+        let older = facts(launching: 1_003_000, helperBuild: 1_003_002)
+        let cause = LaunchHelperPolicy.updateCause(
+            facts: older, placement: .differentBuildElsewhere(managed: managed))
+        XCTAssertEqual(cause, .helperCopyElsewhere)
+        XCTAssertFalse(cause.message.localizedCaseInsensitiveContains("turn on the helper"))
+        let newer = LaunchHelperPolicy.updateCause(
+            facts: facts(launching: 1_003_002, helperBuild: 1_003_001),
+            placement: .differentBuildElsewhere(managed: managed))
+        XCTAssertEqual(newer, .helperCopyDiffers)
+    }
+
+    func testPlacementFromFactsMatchesPinPlacement() {
+        let same = facts(launching: 1_003_002, helperBuild: 1_003_002, protectedPins: true, runningPins: true)
+        XCTAssertEqual(LaunchHelperPolicy.placement(for: same, running: applications),
+                       .sameBuildElsewhere(managed: managed))
+        let broken = facts(launching: 1_003_002, helperBuild: 1_003_001, protectedPins: false, runningPins: true)
+        XCTAssertEqual(LaunchHelperPolicy.placement(for: broken, running: applications),
+                       .differentBuildElsewhere(managed: managed))
+        XCTAssertEqual(LaunchHelperPolicy.placement(for: same, running: managed), .managed)
+        XCTAssertEqual(LaunchHelperPolicy.placement(for: facts(installed: false), running: applications),
+                       .noProtectedInstallation)
+    }
+
+    func testSuccessfulUpdateHandsOverOnlyToTheNewPinnedCopy() {
+        XCTAssertNil(LaunchHelperPolicy.sameBuildHandoverURL(.differentBuildElsewhere(managed: managed)))
+        XCTAssertNil(LaunchHelperPolicy.sameBuildHandoverURL(.managed))
+        XCTAssertNil(LaunchHelperPolicy.sameBuildHandoverURL(.noProtectedInstallation))
+        XCTAssertEqual(LaunchHelperPolicy.sameBuildHandoverURL(.sameBuildElsewhere(managed: updatedCopy)), updatedCopy)
+    }
+
+    func testUpdateRunsOnceAndAFailureDoesNotOpenTheOlderCopy() async {
+        for failure in [ServiceFailure.cancelled, .timedOut, .adminRequired, .unknownStatus] {
+            var updates = 0
+            var rereads = 0
+            let result = await LaunchHelperStartup.continuation(plan: .updateInstalledHelper, update: {
+                updates += 1
+                return updates == 1 ? failure : nil
+            }, protectedCopyAfterUpdate: {
+                rereads += 1
+                return self.updatedCopy
+            })
+            XCTAssertEqual(result, .stay(helperUpdated: false, failure: failure), "\(failure)")
+            XCTAssertEqual(updates, 1, "\(failure) is not retried")
+            XCTAssertEqual(rereads, 0, "\(failure) does not look up a handover copy")
+        }
+    }
+
+    func testSuccessfulUpdateUsesTheRereadCopyAndNotThePreviousOne() async {
+        var updates = 0
+        let result = await LaunchHelperStartup.continuation(plan: .updateInstalledHelper, update: {
+            updates += 1
+            return nil
+        }, protectedCopyAfterUpdate: { self.updatedCopy })
+        XCTAssertEqual(result, .handOver(updatedCopy, helperUpdated: true))
+        XCTAssertEqual(updates, 1)
+        let unchanged = await LaunchHelperStartup.continuation(plan: .updateInstalledHelper, update: {
+            nil
+        }, protectedCopyAfterUpdate: { nil })
+        XCTAssertEqual(unchanged, .stay(helperUpdated: true, failure: nil))
+    }
+
+    func testStayAndSameBuildHandoverDoNotUpdate() async {
+        var updates = 0
+        let update: () async -> ServiceFailure? = {
+            updates += 1
+            return nil
+        }
+        let stayed = await LaunchHelperStartup.continuation(plan: .stay, update: update, protectedCopyAfterUpdate: { self.managed })
+        XCTAssertEqual(stayed, .stay(helperUpdated: false, failure: nil))
+        let handed = await LaunchHelperStartup.continuation(
+            plan: .handOver(managed), update: update, protectedCopyAfterUpdate: { self.updatedCopy })
+        XCTAssertEqual(handed, .handOver(managed, helperUpdated: false))
+        XCTAssertEqual(updates, 0)
+    }
+
+    func testLaunchUpdateRotatesSoAnInterruptedInstallCanResume() async {
+        let bundle = URL(fileURLWithPath: "/Applications/Watt.app")
+        let digest = String(repeating: "ab", count: 32)
+        var commands: [HelperBundleInstall.Command] = []
+        let cancelled = await LaunchHelperUpdate.install(bundle: bundle, executable: { _ in true }) { command in
+            commands.append(command)
+            if command.arguments.first == "--preflight" {
+                return .success("Approval: \(digest)\n")
+            }
+            return .failure(.cancelled)
+        }
+        XCTAssertEqual(cancelled, .cancelled)
+        XCTAssertEqual(commands.map(\.privileged), [false, true])
+        XCTAssertEqual(commands[0].arguments, ["--preflight", "--source", bundle.path])
+        XCTAssertEqual(commands[1].arguments.first, "--rotate-reviewed")
+        XCTAssertEqual(commands[1].arguments, ["--rotate-reviewed", "--source", bundle.path, "--approval", digest])
+
+        var privileged = 0
+        let preflightFailed = await LaunchHelperUpdate.install(bundle: bundle, executable: { _ in true }) { command in
+            if command.privileged { privileged += 1 }
+            return .failure(.unknownStatus)
+        }
+        XCTAssertEqual(preflightFailed, .unknownStatus)
+        XCTAssertEqual(privileged, 0, "a failed preflight does not ask for an administrator password")
+
+        var calls = 0
+        let missing = await LaunchHelperUpdate.install(bundle: bundle, executable: { _ in false }) { _ in
+            calls += 1
+            return .success("")
+        }
+        XCTAssertEqual(missing, .unknownStatus)
+        XCTAssertEqual(calls, 0)
+    }
+
+    func testCancelledLaunchUpdateStaysUsableAndDoesNotRetry() {
+        let setup = SettingsHelperSetup()
+        setup.unavailableReason = .installationRequired
+        var installs = 0
+        setup.installHelper = { installs += 1; return .cancelled }
+        setup.noteLaunchHelperUpdateStarted()
+        XCTAssertTrue(setup.isInstalling)
+        setup.noteLaunchHelperUpdateFinished()
+        setup.recordLaunchHelperUpdateFailure(.cancelled, presence: .otherCopy)
+        XCTAssertFalse(setup.isInstalling)
+        XCTAssertEqual(installs, 0, "recording the failure does not start another install")
+        XCTAssertEqual(setup.message, "The helper update was cancelled. Watt? will keep running.")
+        XCTAssertTrue(setup.canInstallHelper, "Settings can still install later, without a launch loop")
+        XCTAssertEqual(setup.statusTitle, "Other copy")
+
+        XCTAssertEqual(SettingsHelperSetup.launchUpdateFailureMessage(.timedOut),
+                       "Updating the helper took too long, so Watt? stopped waiting. It will keep running.")
+        XCTAssertEqual(SettingsHelperSetup.launchUpdateFailureMessage(.adminRequired),
+                       "Watt? couldn’t update the helper. It will keep running.")
+        setup.recordLaunchHelperUpdateFailure(.untrustedIdentity, presence: .unfinished, connectedAfterUpdate: true)
+        XCTAssertEqual(setup.message, SettingsHelperSetup.launchUpdateConnectionMessage)
+        XCTAssertEqual(setup.installPresence, .unfinished)
+        for text in [setup.message, SettingsHelperSetup.launchUpdateConnectionMessage,
+                     SettingsHelperSetup.launchUpdateFailureMessage(.cancelled),
+                     SettingsHelperSetup.launchUpdateFailureMessage(.timedOut),
+                     SettingsHelperSetup.launchUpdateFailureMessage(.unknownStatus)].compactMap({ $0 }) {
+            XCTAssertFalse(text.contains("\u{2014}"), text)
+            XCTAssertFalse(text.localizedCaseInsensitiveContains("not installed"), text)
+        }
+    }
+
+    func testLaunchSourceUpdatesTheHelperBeforeOpeningAProtectedCopy() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+        let app = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+        let plan = try XCTUnwrap(app.range(of: "LaunchHelperPolicy.plan(for: launchFacts)"))
+        let open = try XCTUnwrap(app.range(of: "ManagedCopyPolicy.openManagedCopy"))
+        let only = try XCTUnwrap(app.range(of: "SingleInstanceClaim.becomeOnlyInstance"))
+        XCTAssertLessThan(plan.lowerBound, open.lowerBound)
+        XCTAssertLessThan(open.lowerBound, only.lowerBound)
+        XCTAssertEqual(app.components(separatedBy: "LaunchHelperUpdate.install").count, 2,
+                       "launch installs the helper once")
+        XCTAssertFalse(app[plan.lowerBound..<only.upperBound].contains("while "))
+        XCTAssertEqual(app.components(separatedBy: "ProductionHelperComposition.configured()").count, 2)
+    }
+}
