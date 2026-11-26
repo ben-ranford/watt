@@ -281,6 +281,10 @@ final class FinishSetupStrikeController: FinishSetupStrikePlaying {
     private(set) var lastMode: FinishSetupStrikeMode?
     private(set) var overlay: NSPanel?
     private(set) var state: FinishSetupStrikeState?
+    /// Held for the whole strike. The default scheduler's tasks only hold it
+    /// weakly, so without this every step after `play` returns would be dropped
+    /// and the overlay would never close.
+    private var scheduler: (any FinishSetupStrikeScheduling)?
     private let reduceMotion: () -> Bool
     private let makeScheduler: () -> any FinishSetupStrikeScheduling
     private let haptics: () -> Void
@@ -318,6 +322,7 @@ final class FinishSetupStrikeController: FinishSetupStrikePlaying {
         overlay = panel
         panel.orderFrontRegardless()
         let scheduler = makeScheduler()
+        self.scheduler = scheduler
         typealias T = FinishSetupStrikeTimeline
         if reduced {
             scheduler.schedule(after: T.reducedDismiss) { onDismiss() }
@@ -347,6 +352,7 @@ final class FinishSetupStrikeController: FinishSetupStrikePlaying {
         overlay?.close()
         overlay = nil
         state = nil
+        scheduler = nil
     }
 
     /// Fades the onboarding window out in steps so it closes softly.

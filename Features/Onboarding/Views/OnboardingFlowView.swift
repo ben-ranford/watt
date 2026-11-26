@@ -30,7 +30,7 @@ struct OnboardingFlowView: View {
                 } else {
                     OfferComponentReadingsView()
                 }
-            } else if preferences.onboarding.checkpoint == .allSet {
+            } else if preferences.onboarding.checkpoint == .allSet || router.finishSetupStrikePlaying {
                 AllSetView()
             } else {
                 routeShell
@@ -574,8 +574,10 @@ struct AllSetView: View {
     static func finish(preferences: PreferencesStore, router: AppRouter, strike: any FinishSetupStrikePlaying,
                        request: FinishSetupStrikeRequest, dismiss: @escaping () -> Void) {
         guard complete(preferences: preferences) else { return }
+        router.finishSetupStrikePlaying = true
         strike.play(request) {
             dismiss()
+            router.finishSetupStrikePlaying = false
             router.showCoachMark()
         }
     }
