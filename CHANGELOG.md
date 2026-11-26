@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0](https://github.com/ben-ranford/watt/compare/v1.3.2...v1.4.0) (2026-11-26)
+
+
+### Features
+
+* The menu bar can show your battery percentage, after the watts or on its own, and can use a battery icon instead of the bolt. Both are off until you turn them on in Settings, and only appear on a Mac with a battery. (#79)
+* Finishing setup ends with a lightning strike on Done. (#87)
+
+
+### Bug Fixes
+
+* The menu bar item keeps the same width as the reading changes, so the items next to it stay put. (#75)
+* Settings and the website use plainer punctuation. (#85)
+* More of the app's own checks run on every build. (#95)
+
 ## [1.3.2](https://github.com/ben-ranford/watt/compare/v1.3.1...v1.3.2) (2026-11-26)
 
 
