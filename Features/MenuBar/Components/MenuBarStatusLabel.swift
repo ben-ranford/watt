@@ -233,14 +233,12 @@ struct MenuBarStatusLabel: View {
         // text and symbol unanimated so samples cannot tick, jitter, or change
         // the item width. Production assigns this string to NSStatusBarButton.
         Group {
-            if effectiveMode == .iconOnly && percentageSlot == nil {
-                if let presentation = batteryPresentation {
-                    MenuBarBatteryIcon(presentation: presentation)
-                } else {
-                    // A single template SF Symbol lets MenuBarExtra own all native metrics.
-                    Image(systemName: symbolName)
-                        .renderingMode(.template)
-                }
+            if effectiveMode == .iconOnly && percentageSlot == nil && batteryPresentation == nil {
+                // A single template SF Symbol lets MenuBarExtra own all native metrics.
+                Image(systemName: symbolName)
+                    .renderingMode(.template)
+            } else if effectiveMode == .iconOnly && percentageSlot == nil, let presentation = batteryPresentation {
+                MenuBarBatteryIcon(presentation: presentation)
             } else {
                 HStack(spacing: WattSpacing.xs) {
                     if showsSymbol {

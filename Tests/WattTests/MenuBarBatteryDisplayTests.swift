@@ -201,11 +201,18 @@ final class MenuBarBatteryDisplayTests: XCTestCase {
         XCTAssertNil(full.variableValue)
         XCTAssertEqual(MenuBarBatteryPresentation.quarter(for: 100), 100)
 
-        let legacy = MenuBarBatteryPresentation.resolve(
+        // battery.100 is the variable symbol. A partial charge uses it instead of a quarter glyph.
+        let legacyVariable = MenuBarBatteryPresentation.resolve(
             percentage: 40, state: .discharging, charger: .disconnected, lowPowerMode: false,
             symbolExists: { ["battery.0", "battery.25", "battery.50", "battery.75", "battery.100"].contains($0) })
-        XCTAssertEqual(legacy.symbolName, "battery.50")
-        XCTAssertNil(legacy.variableValue)
+        XCTAssertEqual(legacyVariable.symbolName, "battery.100")
+        XCTAssertEqual(legacyVariable.variableValue ?? -1, 0.4, accuracy: 0.0001)
+
+        let legacyQuarter = MenuBarBatteryPresentation.resolve(
+            percentage: 40, state: .discharging, charger: .disconnected, lowPowerMode: false,
+            symbolExists: { ["battery.0", "battery.25", "battery.50", "battery.75"].contains($0) })
+        XCTAssertEqual(legacyQuarter.symbolName, "battery.50")
+        XCTAssertNil(legacyQuarter.variableValue)
 
         let charging = presentation(40, state: .charging)
         XCTAssertEqual(charging.symbolName, "battery.50percent")
