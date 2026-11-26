@@ -227,6 +227,23 @@ private func itemExists(_ path: String) -> Bool {
     guard launchctlSucceeded(status: process.terminationStatus, allowAbsent: allowAbsent) else { throw InstallerError.interrupted }
 }
 
+/// A process whose executable was deleted or replaced after it started (an app
+/// that updated itself while running) has no path: `proc_pidpath` fails with
+/// ENOENT. Its name still says whether it could be one we wait for, so it only
+/// counts when that name could belong to a watched executable. A replaced old
+/// helper keeps its name, so it still counts as running. Anything else that has
+/// no path stays unknown (`nil`).
+func replacedExecutableIsWatched(pathError: Int32, name: String?, watched: [String]) -> Bool? {
+    guard pathError == ENOENT, let name, !name.isEmpty else { return nil }
+    return watched.contains { URL(fileURLWithPath: $0).lastPathComponent.hasPrefix(name) }
+}
+
+func processName(_ pid: pid_t) -> String? {
+    var bytes = [CChar](repeating: 0, count: 2 * Int(MAXCOMLEN) + 1)
+    guard proc_name(pid, &bytes, UInt32(bytes.count)) > 0 else { return nil }
+    return String(cString: bytes)
+}
+
 /// `bootout` of a service that is not loaded exits 3 (ESRCH) on older macOS and
 /// 113 ("Could not find specified service") on current macOS. Both mean absent.
 func launchctlSucceeded(status: Int32, allowAbsent: Bool) -> Bool {
@@ -235,6 +252,7 @@ func launchctlSucceeded(status: Int32, allowAbsent: Bool) -> Bool {
 
 @MainActor private func requireStopped(applicationPaths: [String] = [], includeHelper: Bool = true) throws {
     if let stopped = installerEnvironment.stopped { try stopped(applicationPaths, includeHelper); return }
+    let watched = (includeHelper ? [helperURL.path, "/usr/bin/powermetrics"] : []) + applicationPaths
     let deadline = Date().addingTimeInterval(5)
     repeat {
         let estimate = proc_listallpids(nil, 0)
@@ -249,8 +267,12 @@ func launchctlSucceeded(status: Int32, allowAbsent: Bool) -> Bool {
             let length = bytes.withUnsafeMutableBytes { proc_pidpath(pid, $0.baseAddress, UInt32($0.count)) }
             if length <= 0 {
                 if errno == ESRCH { continue }
-                // Unknown process identity is not proof of absence.
-                throw InstallerError.interrupted
+                let pathError = errno
+                switch replacedExecutableIsWatched(pathError: pathError, name: processName(pid), watched: watched) {
+                case .some(true): found = true; continue
+                case .some(false): continue
+                case nil: throw InstallerError.interrupted // Unknown process identity is not proof of absence.
+                }
             }
             guard let end = bytes.firstIndex(of: 0), end > 0,
                   let path = String(bytes: bytes[..<end].map { UInt8(bitPattern: $0) }, encoding: .utf8) else { throw InstallerError.interrupted }

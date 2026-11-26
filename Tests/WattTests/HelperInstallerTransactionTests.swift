@@ -150,6 +150,24 @@ final class HelperInstallerTransactionTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: installerEnvironment.root.path))
     }
 
+    func testAnUnrelatedAppUpdatedWhileRunningDoesNotBlockTheInstall() {
+        let watched = [ProtectedHelperRecord.helperURL.path, "/usr/bin/powermetrics", "/Applications/Watt.app/Contents/MacOS/Watt"]
+        // Another app replaced its own executable while still running: no path, unrelated name.
+        XCTAssertEqual(replacedExecutableIsWatched(pathError: ENOENT, name: "node_repl", watched: watched), false)
+        // A replaced old helper or Watt? keeps its name (truncated by the kernel), so it still counts as running.
+        XCTAssertEqual(replacedExecutableIsWatched(pathError: ENOENT, name: String(HelperIdentity.helperIdentifier.prefix(16)), watched: watched), true)
+        XCTAssertEqual(replacedExecutableIsWatched(pathError: ENOENT, name: "Watt", watched: watched), true)
+        XCTAssertEqual(replacedExecutableIsWatched(pathError: ENOENT, name: "powermetrics", watched: watched), true)
+        // No name, or any other failure, is still unknown and stops the install.
+        XCTAssertNil(replacedExecutableIsWatched(pathError: ENOENT, name: nil, watched: watched))
+        XCTAssertNil(replacedExecutableIsWatched(pathError: ENOENT, name: "", watched: watched))
+        XCTAssertNil(replacedExecutableIsWatched(pathError: EPERM, name: "node_repl", watched: watched))
+    }
+
+    func testProcessNameReadsARunningProcess() {
+        XCTAssertEqual(processName(getpid())?.isEmpty, false)
+    }
+
     func testAbsentServiceBootoutCountsAsAbsentOnEveryMacOS() {
         XCTAssertTrue(launchctlSucceeded(status: 0, allowAbsent: false))
         XCTAssertTrue(launchctlSucceeded(status: 3, allowAbsent: true))
