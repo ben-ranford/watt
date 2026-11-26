@@ -28,9 +28,10 @@ enum WattSpacing {
     static let settingsExcerptWidth: CGFloat = 520
     static let settingsExcerptHeight: CGFloat = 256
     static let settingsWidth: CGFloat = 580
-    // Settings content includes the notification thresholds and a 20pt top and bottom inset.
-    // The Settings scene sizes its native window from that content area.
-    static let settingsContentHeight: CGFloat = 1060
+    // Settings content includes the menu-bar battery rows, the notification
+    // thresholds, and a 20pt top and bottom inset. The Settings scene sizes
+    // its native window from that content area.
+    static let settingsContentHeight: CGFloat = 1140
     static let onboardingWidth: CGFloat = 480
     static let formRowHeight: CGFloat = 42
     static let buttonHeight: CGFloat = 24

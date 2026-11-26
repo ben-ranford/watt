@@ -47,7 +47,7 @@ final class J81NoReadingTests: XCTestCase {
     func testUnavailableStaleInvalidAndPermissionConditionsFailClosed() {
         for sample in [reading(source: .unavailable), reading(freshness: .unavailable),
                        reading(freshness: .stale), reading(watts: .nan), reading(watts: .infinity),
-                       reading(watts: -1), reading(percentage: 101), reading(capability: .permissionRequired),
+                       reading(chargerWatts: -1), reading(percentage: 101), reading(capability: .permissionRequired),
                        reading(capability: .unknown), reading(capability: .unsupported),
                        reading(capability: .disconnected), reading(watts: nil, chargerWatts: nil, systemWatts: nil)] {
             assertNoPower(sample)

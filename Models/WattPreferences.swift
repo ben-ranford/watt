@@ -140,6 +140,9 @@ private struct StoredPreferences: Codable {
     var checkForUpdatesAutomatically = true
     var selectedComponents = ["CPU", "GPU"]
     var onboarding = OnboardingState()
+    // Optional so a preferences file written before the battery menu-bar options still decodes.
+    var batteryPercentageStyle: MenuBarBatteryPercentageStyle? = nil
+    var menuBarIcon: MenuBarIconChoice? = nil
 }
 
 @MainActor
@@ -150,6 +153,8 @@ final class PreferencesStore: ObservableObject {
     @Published var displayMode: WattDisplayMode = .draw { didSet { save() } }
     @Published var precision: WattPrecision = .decimal { didSet { save() } }
     @Published var showSymbol = true { didSet { save() } }
+    @Published var batteryPercentageStyle: MenuBarBatteryPercentageStyle = .off { didSet { save() } }
+    @Published var menuBarIcon: MenuBarIconChoice = .bolt { didSet { save() } }
     @Published var updateInterval = "Every 2 seconds" { didSet { save() } }
     @Published var smoothReadings = true { didSet { save() } }
     @Published var componentReadings = true { didSet { save() } }
@@ -269,6 +274,8 @@ final class PreferencesStore: ObservableObject {
             guard Self.validSelection(p.selectedComponents) else { throw ServiceFailure.invalidData }
             precision = p.precision ?? .decimal
             displayMode = p.displayMode; showSymbol = p.showSymbol; updateInterval = p.updateInterval
+            batteryPercentageStyle = p.batteryPercentageStyle ?? .off
+            menuBarIcon = p.menuBarIcon ?? .bolt
             smoothReadings = p.smoothReadings; componentReadings = p.componentReadings
             chargerNotification = p.chargerNotification; fullyChargedNotification = p.fullyChargedNotification
             lowBatteryNotification = p.lowBatteryNotification ?? false
@@ -308,7 +315,8 @@ final class PreferencesStore: ObservableObject {
                                   lowBatteryNotification: lowBatteryNotification, lowBatteryPercentage: lowBatteryPercentage,
                                   insufficientChargerMinutes: insufficientChargerMinutes, fullyChargedPercentage: fullyChargedPercentage,
                                   openAtLogin: openAtLogin, checkForUpdatesAutomatically: checkForUpdatesAutomatically,
-                                  selectedComponents: selectedComponents, onboarding: onboarding)
+                                  selectedComponents: selectedComponents, onboarding: onboarding,
+                                  batteryPercentageStyle: batteryPercentageStyle, menuBarIcon: menuBarIcon)
     }
 
     private func persist(_ p: StoredPreferences) -> Bool {

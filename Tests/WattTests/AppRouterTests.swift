@@ -403,7 +403,7 @@ final class ReadingPickerTests: XCTestCase {
         let picker = ReadingPicker(selection: .constant(.delta), options: WattReferenceSpecimen.readingOptions)
         XCTAssertEqual(picker.options.map(\.mode), [.delta, .charger, .draw, .components])
         XCTAssertTrue(picker.unavailableModes.isEmpty)
-        for (option, expected) in zip(picker.options, ["+42.1 W", "65 W", "22.9 W", "CPU, GPU and the rest. Needs the helper — next step."]) {
+        for (option, expected) in zip(picker.options, ["+42.1 W", "65 W", "22.9 W", "CPU, GPU and the rest. Needs the helper (next step)."]) {
             XCTAssertTrue(option.description?.contains(expected) == true)
         }
     }
@@ -485,8 +485,13 @@ final class F03PowerContractTests: XCTestCase {
         }
     }
 
+    func testValidationAcceptsAPluggedInMacThatIsDraining() throws {
+        // The battery state can still say charging while a busy Mac drains.
+        try reading(watts: -1, state: .charging).validate()
+    }
+
     func testValidationRejectsInvalidPhysicalReadings() {
-        let invalid = [reading(watts: -1, state: .charging), reading(watts: 1, state: .discharging),
+        let invalid = [reading(watts: 1, state: .discharging),
                        reading(watts: 0, state: .noBattery), reading(watts: .nan),
                        PowerReading(mode: .charging, watts: 1, batteryPercentage: 101),
                        PowerReading(mode: .chargerInput, watts: nil, chargerWatts: -1)]

@@ -48,9 +48,11 @@ struct StatusItemAdapter: NSViewRepresentable {
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 }
             }
+            router.statusItemButton = { [weak view] in view?.statusButton }
             applicationDelegate.onTerminate = { [weak view] in
                 router.leftoverHelper?.close()
                 router.present = { _ in }
+                router.statusItemButton = { nil }
                 router.statusPanelPresented = false
                 view?.tearDown()
             }
@@ -375,7 +377,7 @@ final class StatusAnchorView: NSView {
                 }
                 let window = NSWindow(contentRect: host.frame, styleMask: [.borderless],
                                       backing: .buffered, defer: false)
-                window.title = "\(story) actual status button — bounded capture"
+                window.title = "\(story) actual status button, bounded capture"
                 window.appearance = NSAppearance(named: light ? C0411FixtureLaunch.appearanceName : .darkAqua)
                 window.isReleasedWhenClosed = false
                 window.contentView = host

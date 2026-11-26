@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import Combine
 import ServiceManagement
@@ -184,10 +185,12 @@ final class AppRouter: ObservableObject {
     var canScheduleAutomaticChecks: Bool {
         updateService != nil && updateConfigurationFailure == nil
     }
+    /// Why the updater is off. Launch sets this from where this copy runs.
+    var updateUnavailableCause: UpdateUnavailableCause = .notConfigured
     /// Shown under the disabled Check for Updates button. A configured updater stays quiet.
     var updateUnavailableReason: String? {
         guard updateService == nil || updateConfigurationFailure != nil else { return nil }
-        return "Updates aren’t configured in this build."
+        return updateUnavailableCause.message
     }
     @Published private(set) var updateOfferIntent: UpdateOfferIntent?
     /// Notes from the signed manifest for the offer currently on screen.
@@ -617,6 +620,12 @@ final class AppRouter: ObservableObject {
         // Settings stays available for a fresh, explicitly requested retry.
     }
     var present: (AppDestination) -> Void = { _ in }
+    /// The real Watt? status-item button, when the menu-bar item is installed.
+    /// The Finish Setup strike reads it to decide whether the menu-bar arc can show.
+    var statusItemButton: () -> NSView? = { nil }
+    /// True from Done until the strike closes the setup window. The window keeps
+    /// showing "That's it" meanwhile, even though setup is already saved.
+    @Published var finishSetupStrikePlaying = false
     enum SettingsRemoval: String, Identifiable {
         case helper, uninstall
         var id: String { rawValue }

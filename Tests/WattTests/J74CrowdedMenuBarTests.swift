@@ -76,7 +76,9 @@ final class J74CrowdedMenuBarTests: XCTestCase {
         let preferences = J74FixtureLaunch.makePreferences()
         let invalid = [PowerReading.unavailable, reading(source: .unavailable), reading(freshness: .stale),
                        reading(freshness: .unavailable), reading(watts: .nan), reading(watts: .infinity),
-                       reading(watts: -1), reading(battery: .unsupported), reading(battery: .unknown),
+                       PowerReading(mode: .onBattery, watts: 1, timestamp: .init(timeIntervalSince1970: 1_700_000_000),
+                                    batteryState: .discharging, capabilities: .init(battery: .available, charger: .available)),
+                       reading(battery: .unsupported), reading(battery: .unknown),
                        reading(battery: .permissionRequired), reading(battery: .disconnected)]
         for sample in invalid {
             let label = MenuBarStatusLabel(reading: sample, preferences: preferences)
@@ -85,6 +87,9 @@ final class J74CrowdedMenuBarTests: XCTestCase {
             XCTAssertEqual(label.symbolName, "bolt.fill")
             XCTAssertEqual(label.accessibilityReading, "No reading yet")
         }
+        // A busy Mac draining while plugged in still has a real reading to show.
+        let draining = MenuBarStatusLabel(reading: reading(watts: -1), preferences: preferences)
+        XCTAssertEqual(draining.accessibilityReading, "−1.0 watts")
         let missing = MenuBarStatusLabel(reading: reading(watts: nil), preferences: preferences)
         XCTAssertNil(missing.text)
         XCTAssertEqual(missing.accessibilityReading, "No reading yet")

@@ -30,7 +30,7 @@ struct OnboardingFlowView: View {
                 } else {
                     OfferComponentReadingsView()
                 }
-            } else if preferences.onboarding.checkpoint == .allSet {
+            } else if preferences.onboarding.checkpoint == .allSet || router.finishSetupStrikePlaying {
                 AllSetView()
             } else {
                 routeShell
@@ -360,7 +360,7 @@ struct OfferComponentReadingsView: View {
     static let title = "CPU and GPU readings"
     static let message = "The helper is optional. It adds CPU and GPU readings."
     static let unavailableTitle = "CPU and GPU readings aren’t available"
-    static let installMessage = "The helper isn’t installed. Installing it asks for your password."
+    static let installMessage = HelperPurpose.explanation + " Everything else works without it."
     static func unavailableMessage(for reason: HelperUnavailableReason) -> String {
         switch reason {
         case .missingBundle:
@@ -417,6 +417,22 @@ struct OfferComponentReadingsView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                if installOffered || router.settingsHelperSetup.isInstalling {
+                    if router.settingsHelperSetup.isInstalling {
+                        HStack(spacing: WattSpacing.sm) {
+                            ProgressView().controlSize(.small)
+                            Text(HelperPurpose.installing)
+                        }
+                        .font(WattTypography.body)
+                        .accessibilityIdentifier("onboarding.helper.installing")
+                    } else if let result = router.settingsHelperSetup.installResult {
+                        Text(result)
+                            .font(WattTypography.body)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("onboarding.helper.installResult")
+                    }
+                }
             }
             .padding(.horizontal, 32)
             HStack {
@@ -541,12 +557,33 @@ struct AllSetView: View {
     @EnvironmentObject private var preferences: PreferencesStore
     @EnvironmentObject private var router: AppRouter
     @Environment(\.dismiss) private var dismiss
+    @State private var strikeAnchor = FinishSetupStrikeAnchor()
 
     static let title = "That’s it"
     static let message = "Watt? is in your menu bar. Click it to see more, or right-click to change the number."
 
     static func finish(preferences: PreferencesStore, router: AppRouter, dismiss: () -> Void) {
-        guard preferences.onboarding.checkpoint == .allSet, !preferences.onboarding.completed else { return }
+        guard complete(preferences: preferences) else { return }
+        dismiss()
+        router.showCoachMark()
+    }
+
+    /// Done from the window: saves first, then plays the lightning strike and
+    /// closes the window when the strike says so. Saving can only succeed
+    /// once, so the strike plays once.
+    static func finish(preferences: PreferencesStore, router: AppRouter, strike: any FinishSetupStrikePlaying,
+                       request: FinishSetupStrikeRequest, dismiss: @escaping () -> Void) {
+        guard complete(preferences: preferences) else { return }
+        router.finishSetupStrikePlaying = true
+        strike.play(request) {
+            dismiss()
+            router.finishSetupStrikePlaying = false
+            router.showCoachMark()
+        }
+    }
+
+    private static func complete(preferences: PreferencesStore) -> Bool {
+        guard preferences.onboarding.checkpoint == .allSet, !preferences.onboarding.completed else { return false }
         let previous = preferences.onboarding
         var state = previous
         state.completed = true
@@ -554,10 +591,9 @@ struct AllSetView: View {
         preferences.onboarding = state
         guard preferences.persistenceFailure == nil else {
             preferences.onboarding = previous
-            return
+            return false
         }
-        dismiss()
-        router.showCoachMark()
+        return true
     }
 
     var body: some View {
@@ -593,12 +629,14 @@ struct AllSetView: View {
                 }
                 Spacer()
                 Button("Done") {
-                    Self.finish(preferences: preferences, router: router) { dismiss() }
+                    Self.finish(preferences: preferences, router: router, strike: FinishSetupStrikeController.shared,
+                                request: strikeAnchor.request(router: router)) { dismiss() }
                 }
                 .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.defaultAction)
                 .wattControlLabel("Done")
                 .accessibilityIdentifier("onboarding.allSet.done")
+                .finishSetupStrikeAnchor(strikeAnchor)
             }
         }
         .padding(.horizontal, 32)
