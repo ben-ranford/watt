@@ -1,25 +1,5 @@
-import AppIntents
-import os
 import XCTest
 @testable import Watt
-
-/// Resolves only after `WattIntentHost.registerIfNeeded()`. A metatype
-/// registration traps here instead of returning the shared host.
-private enum HostProbeResult {
-    static let matched = OSAllocatedUnfairLock(initialState: false)
-}
-
-private struct RegisteredHostProbe: AppIntent {
-    static let title: LocalizedStringResource = "Registered Host Probe"
-    static var openAppWhenRun: Bool { false }
-    @Dependency var host: WattIntentHost
-
-    func perform() async throws -> some IntentResult {
-        let match = host === WattIntentHost.shared
-        HostProbeResult.matched.withLock { $0 = match }
-        return .result()
-    }
-}
 
 @MainActor
 final class AppIntentsTests: XCTestCase {
@@ -465,10 +445,13 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertEqual(delegate.applicationShouldTerminate(.shared), .terminateNow)
     }
 
-    func testRegisteredDependencyIsTheSharedHost() async throws {
-        HostProbeResult.matched.withLock { $0 = false }
-        _ = try await RegisteredHostProbe().perform()
-        XCTAssertTrue(HostProbeResult.matched.withLock { $0 })
+    func testDependencyFactoryReturnsTheSharedHost() throws {
+        XCTAssertTrue(WattIntentHost.dependency() === WattIntentHost.shared)
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let session = try String(contentsOf: root.appendingPathComponent("Features/Intents/WattIntentSession.swift"), encoding: .utf8)
+        XCTAssertTrue(session.contains("WattIntentHost.dependency()"))
+        XCTAssertFalse(session.contains("add(dependency: WattIntentHost.self)"))
     }
 
     func testShortcutsInFrontIsAnIntentLaunchEvenWhenTheParentIsLaunchd() {

@@ -624,6 +624,9 @@ final class WattIntentHost: NSObject, @unchecked Sendable {
     static let shared = WattIntentHost()
     private static let registration = OSAllocatedUnfairLock(initialState: false)
 
+    /// The value stored for `@Dependency`. It is the host instance, not `WattIntentHost.self`.
+    static func dependency() -> WattIntentHost { shared }
+
     static func registerIfNeeded() {
         let shouldRegister = registration.withLock { registered in
             if registered { return false }
@@ -631,12 +634,10 @@ final class WattIntentHost: NSObject, @unchecked Sendable {
             return true
         }
         guard shouldRegister else { return }
-        // `add` stores a Sendable closure. Capture the instance here so that
-        // closure does not read a main-actor static, and the dependency type
-        // is WattIntentHost rather than the closure's own type.
-        let host = WattIntentHost.shared
+        // `add` stores a Sendable closure. The closure returns the host instance.
+        // Reading `WattIntentHost.self` here would register the metatype and trap.
         AppDependencyManager.shared.add { @Sendable in
-            host
+            WattIntentHost.dependency()
         }
     }
 
