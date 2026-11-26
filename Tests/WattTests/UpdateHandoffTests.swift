@@ -8,6 +8,32 @@ import WattMaintenanceShared
 
 @MainActor
 final class UpdateHandoffTests: XCTestCase {
+    func testHandoffQuitsOnlyAfterTheProtectedCopyHasLaunched() async throws {
+        let managed = FileManager.default.temporaryDirectory.appendingPathComponent("handoff-\(UUID().uuidString).app")
+        try FileManager.default.createDirectory(at: managed, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: managed) }
+        var launched = false
+        let opened = await ManagedCopyPolicy.openManagedCopy(managed) { url in
+            XCTAssertEqual(url, managed)
+            try await Task.sleep(nanoseconds: 50_000_000)
+            launched = true
+        }
+        XCTAssertTrue(opened)
+        XCTAssertTrue(launched, "the caller may quit only once the protected copy is running")
+    }
+
+    func testFailedHandoffKeepsThisCopyRunning() async throws {
+        let managed = FileManager.default.temporaryDirectory.appendingPathComponent("handoff-\(UUID().uuidString).app")
+        try FileManager.default.createDirectory(at: managed, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: managed) }
+        let opened = await ManagedCopyPolicy.openManagedCopy(managed) { _ in throw CocoaError(.fileReadNoPermission) }
+        XCTAssertFalse(opened, "a launch that failed must not quit the only running copy")
+        var called = false
+        let missing = await ManagedCopyPolicy.openManagedCopy(managed.appendingPathComponent("gone.app")) { _ in called = true }
+        XCTAssertFalse(missing)
+        XCTAssertFalse(called)
+    }
+
     func testEncodedBuildIsTheMarketingVersionInTheOfferHeadline() {
         XCTAssertEqual(manifest(1_001_000).offerVersion, "1.1.0")
         XCTAssertEqual(manifest(1_000_001).offerVersion, "1.0.1")
@@ -185,6 +211,71 @@ final class UpdateHandoffTests: XCTestCase {
         XCTAssertFalse(mixed.requested.contains(7))
     }
 
+    func testHelperCopyReplacesTheSameBuildRunningFromApplications() {
+        let managed = URL(fileURLWithPath: "/Library/Application Support/Watt/generations/11111111-2222-4333-8444-555555555555-2/Watt.app")
+        let registry = FakeInstances()
+        registry.currentVersion = 1_003_001
+        registry.versions = [40: 1_003_001]
+        registry.locations = [40: URL(fileURLWithPath: "/Applications/Watt.app")]
+        registry.polite = [40]
+        registry.instances = [AppInstance(processIdentifier: 40, bundleIdentifier: "io.github.ben-ranford.watt")]
+        let outcome = SingleInstanceClaim.becomeOnlyInstance(bundleIdentifier: "io.github.ben-ranford.watt",
+                                                             currentProcessIdentifier: 99, registry: registry,
+                                                             managedBundle: managed)
+        XCTAssertEqual(outcome.stopped, [40])
+        XCTAssertNil(outcome.activated)
+        XCTAssertFalse(outcome.terminatedSelf, "the helper's copy is the one that keeps running")
+    }
+
+    func testHelperCopyStillYieldsToANewerBuildAndToItself() {
+        let managed = URL(fileURLWithPath: "/Library/Application Support/Watt/generations/11111111-2222-4333-8444-555555555555-2/Watt.app")
+        let newer = FakeInstances()
+        newer.currentVersion = 1_003_001
+        newer.versions = [41: 1_004_000]
+        newer.locations = [41: URL(fileURLWithPath: "/Applications/Watt.app")]
+        newer.instances = [AppInstance(processIdentifier: 41, bundleIdentifier: "io.github.ben-ranford.watt")]
+        let yielded = SingleInstanceClaim.becomeOnlyInstance(bundleIdentifier: "io.github.ben-ranford.watt",
+                                                             currentProcessIdentifier: 99, registry: newer,
+                                                             managedBundle: managed)
+        XCTAssertTrue(newer.requested.isEmpty)
+        XCTAssertEqual(yielded.activated, 41)
+        XCTAssertTrue(yielded.terminatedSelf)
+
+        let twin = FakeInstances()
+        twin.currentVersion = 1_003_001
+        twin.versions = [42: 1_003_001]
+        twin.locations = [42: managed]
+        twin.instances = [AppInstance(processIdentifier: 42, bundleIdentifier: "io.github.ben-ranford.watt")]
+        let second = SingleInstanceClaim.becomeOnlyInstance(bundleIdentifier: "io.github.ben-ranford.watt",
+                                                            currentProcessIdentifier: 99, registry: twin,
+                                                            managedBundle: managed)
+        XCTAssertTrue(twin.requested.isEmpty, "a second launch of the helper's copy leaves the first one running")
+        XCTAssertEqual(second.activated, 42)
+
+        let unknown = FakeInstances()
+        unknown.currentVersion = 1_003_001
+        unknown.versions = [43: 1_003_001]
+        unknown.instances = [AppInstance(processIdentifier: 43, bundleIdentifier: "io.github.ben-ranford.watt")]
+        let unplaced = SingleInstanceClaim.becomeOnlyInstance(bundleIdentifier: "io.github.ben-ranford.watt",
+                                                              currentProcessIdentifier: 99, registry: unknown,
+                                                              managedBundle: managed)
+        XCTAssertTrue(unknown.requested.isEmpty, "an unreadable location is never stopped")
+        XCTAssertEqual(unplaced.activated, 43)
+    }
+
+    func testCopyOutsideTheHelperCopyGetsNoPreference() {
+        let registry = FakeInstances()
+        registry.currentVersion = 1_003_001
+        registry.versions = [44: 1_003_001]
+        registry.locations = [44: URL(fileURLWithPath: "/Library/Application Support/Watt/generations/11111111-2222-4333-8444-555555555555-2/Watt.app")]
+        registry.instances = [AppInstance(processIdentifier: 44, bundleIdentifier: "io.github.ben-ranford.watt")]
+        let outcome = SingleInstanceClaim.becomeOnlyInstance(bundleIdentifier: "io.github.ben-ranford.watt",
+                                                             currentProcessIdentifier: 99, registry: registry)
+        XCTAssertTrue(registry.requested.isEmpty)
+        XCTAssertEqual(outcome.activated, 44)
+        XCTAssertTrue(outcome.terminatedSelf)
+    }
+
     func testUnreadableBuildYieldsInsteadOfQuittingTheOtherCopy() throws {
         let missing = claim(current: 1_001_000, other: nil, otherPID: 30)
         XCTAssertTrue(missing.registry.requested.isEmpty)
@@ -320,6 +411,7 @@ private final class FakeInstances: AppInstanceRegistry {
     var forced: [Int32] = []
     var activated: [Int32] = []
     var terminatedSelf = false
+    var locations: [Int32: URL] = [:]
 
     func runningInstances(bundleIdentifier: String) -> [AppInstance] {
         queried.append(bundleIdentifier)
@@ -350,6 +442,8 @@ private final class FakeInstances: AppInstanceRegistry {
     func terminateCurrentProcess() {
         terminatedSelf = true
     }
+
+    func bundleURL(of instance: AppInstance) -> URL? { locations[instance.processIdentifier] }
 }
 
 @MainActor

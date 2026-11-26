@@ -1,6 +1,9 @@
 import IOKit.ps
 import XCTest
 @testable import Watt
+#if SWIFT_PACKAGE
+import WattHelperShared
+#endif
 
 @MainActor
 final class FirstRunPolishTests: XCTestCase {
@@ -118,6 +121,92 @@ final class FirstRunPolishTests: XCTestCase {
         let configured = AppRouter(updateService: FakeUpdateService(), updates: UpdateStore(storage: InMemoryStorage()))
         XCTAssertNil(configured.updateUnavailableReason)
         XCTAssertTrue(configured.canCheckForUpdates)
+    }
+
+    func testUpdateReasonNamesTheCopyTheHelperUsesInsteadOfAMissingConfiguration() {
+        let applications = URL(fileURLWithPath: "/Applications/Watt.app")
+        let managed = URL(fileURLWithPath: "/Library/Application Support/Watt/generations/11111111-2222-4333-8444-555555555555-2/Watt.app")
+        let elsewhere = ManagedCopyPolicy.placement(running: applications, managed: managed,
+                                                    runningMatchesPins: true, managedMatchesPins: true)
+        XCTAssertEqual(elsewhere, .sameBuildElsewhere(managed: managed))
+        let router = AppRouter(updateConfigurationFailure: .untrustedIdentity)
+        router.updateUnavailableCause = ManagedCopyPolicy.updateCause(for: elsewhere)
+        XCTAssertFalse(router.canCheckForUpdates)
+        XCTAssertEqual(router.updateUnavailableReason,
+                       "Updates run from the copy the helper uses. Quit Watt? and open it again to switch to that copy.")
+
+        let differs = ManagedCopyPolicy.placement(running: applications, managed: managed,
+                                                  runningMatchesPins: false, managedMatchesPins: true)
+        XCTAssertEqual(differs, .differentBuildElsewhere(managed: managed))
+        router.updateUnavailableCause = ManagedCopyPolicy.updateCause(for: differs)
+        XCTAssertEqual(router.updateUnavailableReason,
+                       "This copy of Watt? doesn’t match the copy the helper uses. Turn on the helper in Settings to switch to this copy.")
+
+        router.updateUnavailableCause = .privacyProtectedFolder
+        XCTAssertEqual(router.updateUnavailableReason, "Move Watt? to Applications to get updates.")
+
+        for reason in UpdateUnavailableCause.allCases.map(\.message) {
+            XCTAssertFalse(reason.contains("\u{2014}"), "no em dashes in update copy")
+        }
+    }
+
+    func testOnlyAnExactPinnedCopyElsewhereHandsLaunchToTheHelperCopy() {
+        let managed = URL(fileURLWithPath: "/Library/Application Support/Watt/generations/11111111-2222-4333-8444-555555555555-2/Watt.app")
+        let applications = URL(fileURLWithPath: "/Applications/Watt.app")
+        XCTAssertEqual(ManagedCopyPolicy.placement(running: applications, managed: nil,
+                                                   runningMatchesPins: false, managedMatchesPins: false),
+                       .noProtectedInstallation)
+        XCTAssertEqual(ManagedCopyPolicy.placement(running: URL(fileURLWithPath: managed.path + "/"), managed: managed,
+                                                   runningMatchesPins: true, managedMatchesPins: true),
+                       .managed)
+        XCTAssertEqual(ManagedCopyPolicy.placement(running: applications, managed: managed,
+                                                   runningMatchesPins: true, managedMatchesPins: false),
+                       .differentBuildElsewhere(managed: managed),
+                       "a protected copy that fails its own pins is never opened")
+        XCTAssertEqual(ManagedCopyPolicy.updateCause(for: .managed), .notConfigured)
+        XCTAssertEqual(ManagedCopyPolicy.updateCause(for: .noProtectedInstallation), .notConfigured)
+    }
+
+    func testProtectedHelperRemovalRunsTheProtectedInstallerAsAdministrator() async throws {
+        let installation = try XCTUnwrap(UUID(uuidString: "11111111-2222-4333-8444-555555555555"))
+        let record = try ProtectedHelperRecord(installationID: installation, generation: 2, build: 1_003_001,
+                                               appHashes: [Data(repeating: 1, count: 20)],
+                                               helperHashes: [Data(repeating: 2, count: 20)],
+                                               maintenanceHashes: [Data(repeating: 3, count: 20)])
+        var commands: [HelperBundleInstall.Command] = []
+        let lifecycle = ProtectedHelperLifecycle(record: record, candidate: { throw ServiceFailure.untrustedIdentity },
+                                                 recordPresent: { true }, helperAbsent: { false },
+                                                 administrator: { commands.append($0); return .success("") })
+        try await lifecycle.unregister(receipt: OperationReceipt(createdAt: time))
+        XCTAssertEqual(commands, [HelperBundleInstall.Command(
+            executable: "/Library/Application Support/Watt/generations/11111111-2222-4333-8444-555555555555-2/Watt.app/Contents/MacOS/WattHelperInstaller",
+            arguments: ["--remove-helper", "--installation", "11111111-2222-4333-8444-555555555555", "--generation", "2"],
+            privileged: true)])
+
+        let cancelled = ProtectedHelperLifecycle(record: record, candidate: { throw ServiceFailure.untrustedIdentity },
+                                                 recordPresent: { true }, helperAbsent: { false },
+                                                 administrator: { _ in .failure(.cancelled) })
+        do {
+            try await cancelled.unregister(receipt: OperationReceipt(createdAt: time))
+            XCTFail("a cancelled password prompt is not a removal")
+        } catch { XCTAssertEqual(error as? ServiceFailure, .cancelled) }
+    }
+
+    func testProtectedHelperIsAbsentOnlyWhenPinsFilesAndProcessAreGone() async throws {
+        let record = try ProtectedHelperRecord(installationID: UUID(), generation: 1, build: 1_003_001,
+                                               appHashes: [Data(repeating: 1, count: 20)],
+                                               helperHashes: [Data(repeating: 2, count: 20)],
+                                               maintenanceHashes: [Data(repeating: 3, count: 20)])
+        let gone = ProtectedHelperLifecycle(record: record, candidate: { throw ServiceFailure.untrustedIdentity },
+                                            recordPresent: { false }, helperAbsent: { true },
+                                            administrator: { _ in .success("") })
+        let removed = try await gone.status()
+        guard case .absent = removed else { return XCTFail("pins, files and process gone is absence") }
+        let lingering = ProtectedHelperLifecycle(record: record, candidate: { throw ServiceFailure.untrustedIdentity },
+                                                 recordPresent: { false }, helperAbsent: { false },
+                                                 administrator: { _ in .success("") })
+        let unproven = try await lingering.status()
+        guard case .unknown = unproven else { return XCTFail("missing pins alone are not absence") }
     }
 
     func testReviewedInstallCommandUsesThePreflightDigest() async {
