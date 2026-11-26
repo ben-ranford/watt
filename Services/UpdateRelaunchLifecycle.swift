@@ -47,6 +47,12 @@ protocol AppInstanceRegistry {
     func activate(_ instance: AppInstance)
     /// Quits the process that is deciding. Used when another copy should stay.
     func terminateCurrentProcess()
+    /// Bundle location of that instance. Nil when it cannot be read.
+    func bundleURL(of instance: AppInstance) -> URL?
+}
+
+extension AppInstanceRegistry {
+    func bundleURL(of instance: AppInstance) -> URL? { nil }
 }
 
 /// A new Watt replaces only an older copy of the same bundle id.
@@ -57,10 +63,11 @@ enum SingleInstanceClaim {
     /// left its pipe wait before this process asks it to quit.
     @MainActor
     @discardableResult
-    static func becomeOnlyInstance() -> SingleInstanceOutcome {
+    static func becomeOnlyInstance(managedBundle: URL? = nil) -> SingleInstanceOutcome {
         becomeOnlyInstance(bundleIdentifier: Bundle.main.bundleIdentifier ?? "",
                            currentProcessIdentifier: getpid(),
-                           registry: RunningApplicationRegistry())
+                           registry: RunningApplicationRegistry(),
+                           managedBundle: managedBundle)
     }
 
     @MainActor
@@ -68,6 +75,7 @@ enum SingleInstanceClaim {
     static func becomeOnlyInstance(bundleIdentifier: String,
                                    currentProcessIdentifier: Int32,
                                    registry: any AppInstanceRegistry,
+                                   managedBundle: URL? = nil,
                                    intentLaunch: Bool = false) -> SingleInstanceOutcome {
         guard !bundleIdentifier.isEmpty, currentProcessIdentifier > 0 else { return SingleInstanceOutcome() }
         let others = registry.runningInstances(bundleIdentifier: bundleIdentifier).filter {
@@ -84,7 +92,10 @@ enum SingleInstanceClaim {
         var outcome = SingleInstanceOutcome()
         var keepers: [AppInstance] = []
         for instance in others {
-            if isOlder(registry.bundleVersion(of: instance), than: current) {
+            let version = registry.bundleVersion(of: instance)
+            if isOlder(version, than: current)
+                || yieldsToManagedCopy(registry.bundleURL(of: instance), build: version,
+                                       managedBundle: managedBundle, currentBuild: current) {
                 if registry.requestTermination(instance) || registry.forceTermination(instance) {
                     outcome.stopped.append(instance.processIdentifier)
                 }
@@ -99,6 +110,15 @@ enum SingleInstanceClaim {
             outcome.terminatedSelf = true
         }
         return outcome
+    }
+
+    /// The helper's protected copy (`managedBundle`, set only when this process is that
+    /// copy) replaces a copy of the same or an older build running from anywhere else.
+    /// Unknown locations or builds never count.
+    static func yieldsToManagedCopy(_ other: URL?, build: UInt64?, managedBundle: URL?,
+                                    currentBuild: UInt64?) -> Bool {
+        guard let managedBundle, let other, let build, let currentBuild else { return false }
+        return other.standardizedFileURL.path != managedBundle.standardizedFileURL.path && build <= currentBuild
     }
 
     /// True only when both builds are known and the other one is strictly older.
@@ -182,6 +202,10 @@ struct RunningApplicationRegistry: AppInstanceRegistry {
             RunLoop.current.run(mode: .default, before: Date().addingTimeInterval(0.05))
         }
         return application.isTerminated
+    }
+
+    func bundleURL(of instance: AppInstance) -> URL? {
+        runningApplication(instance)?.bundleURL
     }
 
     func forceTermination(_ instance: AppInstance) -> Bool {

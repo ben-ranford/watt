@@ -186,7 +186,7 @@ final class AppRouterTests: XCTestCase {
         }
     }
 
-    func testFinishSetupPersistsPickerBeforeRequestingOnboardingWithoutCompleting() throws {
+    func testFinishSetupPersistsHelperOfferBeforeRequestingOnboardingWithoutCompleting() throws {
         let storage = InMemoryStorage()
         let preferences = PreferencesStore(storage: storage)
         preferences.onboarding.checkpoint = .approval
@@ -195,14 +195,14 @@ final class AppRouterTests: XCTestCase {
         var requests: [AppDestination] = []
         router.present = {
             requests.append($0)
-            XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .picker)
+            XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .helperOffer)
         }
         let menu = StatusItemContextMenu.makeMenu(router: router, preferences: preferences, componentsAvailable: { true })
 
         try invoke("Finish Setup…", in: menu)
 
         XCTAssertEqual(requests, [.onboarding])
-        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
         XCTAssertFalse(preferences.onboarding.completed)
         XCTAssertTrue(preferences.onboarding.helperOptIn)
         XCTAssertEqual(PreferencesStore(storage: storage).onboarding, preferences.onboarding)
@@ -387,6 +387,17 @@ final class ReadingPickerTests: XCTestCase {
         XCTAssertEqual(picker.unavailableModes, [.charger])
     }
 
+    /// The reading step follows the taller helper step. A picker with an unavailable
+    /// option must keep its fitted height, not spread its rows over the extra space.
+    func testPickerWithUnavailableOptionKeepsItsFittedHeight() {
+        let picker = ReadingPicker(selection: .constant(.draw), unavailableModes: [.components])
+        let host = NSHostingController(rootView: picker)
+        let short = host.sizeThatFits(in: CGSize(width: 416, height: 300)).height
+        let tall = host.sizeThatFits(in: CGSize(width: 416, height: 2_000)).height
+        XCTAssertGreaterThan(short, 0)
+        XCTAssertEqual(tall, short, accuracy: 1)
+    }
+
     #if DEBUG
     func testReferenceReadingHasExactlyFourEnabledOptions() {
         let picker = ReadingPicker(selection: .constant(.delta), options: WattReferenceSpecimen.readingOptions)
@@ -474,8 +485,13 @@ final class F03PowerContractTests: XCTestCase {
         }
     }
 
+    func testValidationAcceptsAPluggedInMacThatIsDraining() throws {
+        // The battery state can still say charging while a busy Mac drains.
+        try reading(watts: -1, state: .charging).validate()
+    }
+
     func testValidationRejectsInvalidPhysicalReadings() {
-        let invalid = [reading(watts: -1, state: .charging), reading(watts: 1, state: .discharging),
+        let invalid = [reading(watts: 1, state: .discharging),
                        reading(watts: 0, state: .noBattery), reading(watts: .nan),
                        PowerReading(mode: .charging, watts: 1, batteryPercentage: 101),
                        PowerReading(mode: .chargerInput, watts: nil, chargerWatts: -1)]
@@ -1876,22 +1892,22 @@ final class P03NotificationLoginTests: XCTestCase {
 
 @MainActor
 final class J11WelcomeTests: XCTestCase {
-    func testContinuePersistsPickerWithoutCompletingSetupOrChangingDefaults() {
+    func testContinuePersistsHelperOfferWithoutCompletingSetupOrChangingDefaults() {
         let storage = InMemoryStorage()
         let preferences = PreferencesStore(storage: storage)
         OnboardingFlowView.continueWelcome(preferences: preferences)
-        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
         XCTAssertFalse(preferences.onboarding.completed)
         XCTAssertEqual(preferences.displayMode, .draw)
-        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .picker)
-        preferences.onboarding.checkpoint = .helperOffer
+        XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .helperOffer)
+        preferences.onboarding.checkpoint = .picker
         OnboardingFlowView.continueWelcome(preferences: preferences)
-        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
     }
 
     func testExactCopy() {
-        XCTAssertEqual(WelcomeView.title, "Know your watts")
-        XCTAssertEqual(WelcomeView.message, "Watt? sits in your menu bar and shows what your Mac draws and what it’s charging with. Nothing more.")
+        XCTAssertEqual(WelcomeView.title, "Welcome to Watt?")
+        XCTAssertEqual(WelcomeView.message, "Watt? sits in your menu bar and shows what your Mac is using and what the charger is giving.")
     }
 
     #if DEBUG
@@ -1943,7 +1959,7 @@ final class J12ReadingTests: XCTestCase {
             "How fast the battery fills or drains. +42.1 W",
             "What the charger is giving. 65 W",
             "What your Mac uses right now. 22.9 W",
-            "CPU/GPU estimates. Needs administrator approval."
+            "Optional CPU and GPU readings."
         ])
         XCTAssertEqual(ChooseMenuReadingView.title, "Pick one number for the menu bar")
         XCTAssertEqual(ChooseMenuReadingView.message, "Change it any time. Right-click Watt? or open Settings.")
@@ -1964,16 +1980,19 @@ final class J12ReadingTests: XCTestCase {
             ChooseMenuReadingView.back(preferences: preferences)
             XCTAssertEqual(PreferencesStore(storage: storage).onboarding.checkpoint, .welcome)
             OnboardingFlowView.continueWelcome(preferences: preferences)
+            XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
+            XCTAssertEqual(preferences.displayMode, mode)
+            OfferComponentReadingsView.perform(.notNow, preferences: preferences)
             XCTAssertEqual(preferences.displayMode, mode)
             ChooseMenuReadingView.advance(preferences: preferences)
             let restored = PreferencesStore(storage: storage)
-            XCTAssertEqual(restored.onboarding.checkpoint, .helperOffer)
+            XCTAssertEqual(restored.onboarding.checkpoint, .allSet)
             XCTAssertEqual(restored.displayMode, mode)
             XCTAssertFalse(restored.onboarding.completed)
             XCTAssertFalse(restored.onboarding.helperOptIn)
             ChooseMenuReadingView.back(preferences: preferences)
             ChooseMenuReadingView.advance(preferences: preferences)
-            XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
+            XCTAssertEqual(preferences.onboarding.checkpoint, .allSet)
         }
     }
 

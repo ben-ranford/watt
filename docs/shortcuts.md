@@ -14,7 +14,7 @@ Same-repo CI signs the Release app with Developer ID for team `GUT4TJFVQ2` and n
 
 ## Mac test procedure
 
-Use the machine that can run the app. The last check was macOS 27.2.1 on a MacBook Air M3. Install the signed artifact at `/Applications/Watt.app`.
+Use the machine that can run the app. The last check was macOS 27.2.1 on an Apple silicon MacBook. Install the signed artifact at `/Applications/Watt.app`.
 
 1. Quit every running Watt?, including one left over from Homebrew. Confirm none remain:
 

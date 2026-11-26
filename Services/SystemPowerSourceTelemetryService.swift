@@ -181,8 +181,9 @@ enum SystemPowerSourceParser {
         return nil
     }
 
-    /// PowerTelemetryData values are milliwatts. Keep zero as a real reading;
+    /// PowerTelemetryData magnitudes are milliwatts. Keep zero as a real reading;
     /// only malformed, non-finite and negative input values are unavailable.
+    /// `BatteryPower` is a signed rate and is parsed separately.
     private static func watts(_ value: Any?) -> Double? {
         guard let number = value as? NSNumber,
               CFGetTypeID(number) != CFBooleanGetTypeID() else { return nil }
@@ -191,18 +192,52 @@ enum SystemPowerSourceParser {
         return value
     }
 
+    /// `BatteryPower` is milliwatts. Newer Macs report a signed rate, negative
+    /// while discharging. IORegistry may surface those same bits as a uint64
+    /// (ioreg prints the wrap). Older hardware reports a positive magnitude,
+    /// and the battery state supplies the direction.
     private static func batteryWatts(_ value: Any?, state: BatteryState) -> Double? {
-        guard let value = watts(value) else { return nil }
+        guard state != .noBattery, let milliwatts = batteryMilliwatts(value) else { return nil }
+        let watts = milliwatts / 1_000
+        guard watts.isFinite else { return nil }
+        if milliwatts < 0 {
+            // The sample already carries its direction. A busy Mac can drain
+            // while plugged in even though the battery state still says
+            // charging, so the measured negative rate is reported as it is.
+            return watts
+        }
         switch state {
-        case .discharging: return -value
-        case .charging, .chargingHold, .full: return value
+        case .discharging: return -watts
+        case .charging, .chargingHold, .full: return watts
         case .unknown:
             // Not charging on AC is not a charging hold, but a measured idle
-            // flow is still a reading. A non-zero rate without a classified
+            // flow is still a reading. A positive magnitude without a classified
             // state stays unavailable rather than inventing a sign.
-            return value == 0 ? 0 : nil
+            return watts == 0 ? 0 : nil
         case .noBattery: return nil
         }
+    }
+
+    /// Signed milliwatts, including a uint64 whose bits are a negative Int64.
+    /// Doubles above 2^53 cannot round-trip that wrap, so unsigned integers are
+    /// reinterpreted before any conversion through Double.
+    private static func batteryMilliwatts(_ value: Any?) -> Double? {
+        guard let number = value as? NSNumber,
+              CFGetTypeID(number) != CFBooleanGetTypeID() else { return nil }
+        let encoding = String(cString: number.objCType)
+        if encoding == "d" || encoding == "f" {
+            let milliwatts = number.doubleValue
+            guard milliwatts.isFinite else { return nil }
+            return milliwatts
+        }
+        let bits = number.uint64Value
+        if encoding == "Q" || encoding == "L" || bits > UInt64(Int64.max) {
+            if bits > UInt64(Int64.max) {
+                return Double(Int64(bitPattern: bits))
+            }
+            return Double(bits)
+        }
+        return Double(number.int64Value)
     }
 
     private static func percentage(_ battery: [String: Any]) -> Int? {

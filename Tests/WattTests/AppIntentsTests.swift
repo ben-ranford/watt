@@ -396,6 +396,36 @@ final class AppIntentsTests: XCTestCase {
         XCTAssertFalse(source.contains("com.apple.runningboard"))
     }
 
+    func testShortcutLaunchStaysAndTheProtectedCopyStillReplacesOtherCopies() throws {
+        // A shortcut's own process must not hand over to the protected copy and
+        // quit, or LinkDaemon loses the process it is waiting on.
+        let shortcuts = WattIntentLaunchSignal(parentPID: 42, parentBundleIdentifier: "com.apple.shortcuts",
+                                               eventSenderBundleIdentifier: nil)
+        let finder = WattIntentLaunchSignal(parentPID: 1, parentBundleIdentifier: nil,
+                                            eventSenderBundleIdentifier: "com.apple.finder")
+        XCTAssertTrue(WattIntentSession.isDispatcherLaunch(shortcuts))
+        XCTAssertFalse(WattIntentSession.isDispatcherLaunch(finder))
+
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let app = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+        let dispatcherGuard = try XCTUnwrap(app.range(of: "!WattIntentSession.isDispatcherLaunch(WattIntentSession.launchSignal())"))
+        let handover = try XCTUnwrap(app.range(of: "await ManagedCopyPolicy.openManagedCopy(managed)"))
+        XCTAssertLessThan(dispatcherGuard.lowerBound, handover.lowerBound)
+        let placement = try XCTUnwrap(app.range(of: "WattIntentSession.managedBundle = managedPlacement == .managed ? bundleURL : nil"))
+        let claim = try XCTUnwrap(app.range(of: "await WattIntentSession.finishLaunchClaim()"))
+        XCTAssertLessThan(handover.lowerBound, placement.lowerBound)
+        XCTAssertLessThan(placement.lowerBound, claim.lowerBound)
+
+        // The keeper's claim passes the protected bundle through, so a same-build
+        // copy running from /Applications is still replaced, as on main.
+        let session = try String(contentsOf: root.appendingPathComponent("Features/Intents/WattIntentSession.swift"), encoding: .utf8)
+        XCTAssertTrue(session.contains("SingleInstanceClaim.becomeOnlyInstance(managedBundle: managedBundle)"))
+        WattIntentSession.managedBundle = URL(fileURLWithPath: "/Library/Application Support/Watt/generations/a-1/Watt.app")
+        WattIntentSession.resetForTests()
+        XCTAssertNil(WattIntentSession.managedBundle)
+    }
+
     func testIntentDispatcherCannotQuitTheMenuBarProcess() {
         let delegate = WattApplicationDelegate()
         WattIntentSession.reopenSenderLookup = { "com.apple.linkd" }

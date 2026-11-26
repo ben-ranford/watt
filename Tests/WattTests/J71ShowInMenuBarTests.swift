@@ -117,7 +117,7 @@ final class J71ShowInMenuBarTests: XCTestCase {
         }
     }
 
-    func testFinishSetupRemainsConditionalAndResumesPicker() throws {
+    func testFinishSetupRemainsConditionalAndResumesHelperOffer() throws {
         let preferences = J71FixtureLaunch.makePreferences()
         preferences.onboarding.completed = false
         let router = AppRouter()
@@ -128,7 +128,7 @@ final class J71ShowInMenuBarTests: XCTestCase {
         XCTAssertTrue(menu.items[1].isSeparatorItem)
         try invoke(menu.items[0])
         XCTAssertEqual(routes, [.onboarding])
-        XCTAssertEqual(preferences.onboarding.checkpoint, .picker)
+        XCTAssertEqual(preferences.onboarding.checkpoint, .helperOffer)
         XCTAssertFalse(preferences.onboarding.completed)
         XCTAssertTrue(preferences.onboarding.helperOptIn)
         try invoke(menu.items[0])

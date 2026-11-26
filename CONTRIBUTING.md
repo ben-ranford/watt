@@ -28,19 +28,23 @@ A feature request needs the problem, the proposed behavior, and the acceptance c
 
 ## Pull requests
 
-Use the template in `.github/pull_request_template.md`. The description has a summary, a linked issue (`Closes #`), the change type, the validation checklist, and a note on docs and the changelog.
+Use the template in `.github/pull_request_template.md`. Keep these headings, in this order: Summary, Linked issue, Change type, Validation, Test plan, and Docs and changelog. `Assumptions to confirm` is optional. When you include it, every line is a checkbox.
 
-Delete the `Closes #` line when there is no issue.
+Summary says what changed and why, in your own words. Tick one change type, and make it the bump the title uses (`fix` patch, `feat` minor, `!` or `BREAKING CHANGE` major, anything else no bump). Test plan is a checkbox list. Put a Mac check there, under `## Test plan`.
+
+Delete the `Closes #` line when there is no issue. Leave Mac serial numbers, hardware UUIDs, and notes such as "mac time" out of the title and the description.
 
 ## Conventional commits
 
-This repository uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) because [Release Please](https://github.com/googleapis/release-please) cuts releases from the pull request title. The title check on every pull request rejects a title that Release Please cannot read.
+This repository uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) because [Release Please](https://github.com/googleapis/release-please) cuts releases from the pull request title. The pull request check rejects a title Release Please cannot read, and it checks the description against the template. Release Please's own pull request is checked on the title only.
 
 `fix:` is a patch. `feat:` is a minor. `feat!:` or a `BREAKING CHANGE` footer is a major. These types do not bump the version: `build:`, `chore:`, `ci:`, `deps:`, `docs:`, `perf:`, `refactor:`, `revert:`, `style:`, and `test:`.
 
 ```text
-type(optional-scope)!: description
+type(optional-scope)!: subject
 ```
+
+The scope is lowercase kebab-case, such as `menu-bar`. The subject starts with a lowercase letter and does not end with a period. The whole title is 72 characters or fewer.
 
 `chore(main): release 1.0.1` is the title Release Please uses for its own pull request. The release steps are in [RELEASING.md](RELEASING.md).
 
@@ -50,10 +54,10 @@ These checks run on every pull request, including every pull request into `main`
 
 | Check | Workflow | What it runs |
 | --- | --- | --- |
-| `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. A pull request also uploads the Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. Same-repo pull requests sign that app with Developer ID and notarise it. Fork pull requests, which cannot read the signing secrets, upload an ad-hoc build instead. That Release build compiles the public update URLs from `Resources/ReleaseIdentity.json` and the public key in `Resources/UpdatePublicKey.txt`. |
+| `macOS` | Build and test | Debug and Release `xcodebuild` builds, `xcodebuild test` for `WattTests`, and `swift test`. That `xcodebuild test` records line coverage and compares the app and helper targets with `.github/coverage-floor.json`. While `enforce` is false the job warns; while `enforce` is true it fails. A pull request also uploads the Release `Watt.app` as the `Watt-app-pr` workflow artifact for 7 days. Same-repo pull requests sign that app with Developer ID and notarise it. Fork pull requests, which cannot read the signing secrets, upload an ad-hoc build instead. That Release build compiles the public update URLs from `Resources/ReleaseIdentity.json` and the public key in `Resources/UpdatePublicKey.txt`. |
 | `Release config` | Release | `python3 scripts/test_release_pipeline.py` |
 | `gitleaks` | Secret scan | Working-tree secret scan. The same scanner is the optional pre-commit hook in `.pre-commit-config.yaml`. |
-| `Conventional commit` | PR title | The pull request title matches the types above |
+| `Conventional commit` | PR title | The pull request title is a Conventional Commit, and the description follows the template. Release Please is title-only. Editing the description re-runs this check. |
 
 Require those four checks. `Release Please`, `Build and publish`, `Update Homebrew cask`, and `Publish update endpoints` stay in the Release workflow and are skipped on a pull request that does not publish. A skipped required check blocks the merge.
 
@@ -72,11 +76,14 @@ If you change `scripts/` or `.github/workflows/`:
 
 ```sh
 python3 scripts/test_release_pipeline.py
+python3 scripts/test_coverage_floor.py
 ```
 
 The lint check is the gitleaks secret scan.
 
 CI gives `xcodebuild test` the same 120 second per-test allowance as `scripts/verify-native-host.sh`. The step stops the process after 10 minutes and retries once when `xcodebuild` does not exit. An assertion failure fails the check immediately.
+
+The same macOS job compares line coverage with `.github/coverage-floor.json`. The file stores a whole-number percent for the Watt app, `WattHelper`, `WattMaintenance`, `WattHelperInstaller`, and the total of those binaries, plus an `enforce` flag. Test bundles, generated files, and SwiftUI previews are not counted. The job prints the actual and floor percentages in the log and the step summary. While `enforce` is false, a short total is a warning annotation and the job stays green. While `enforce` is true, a short total fails the job. When coverage is two or more points above a floor, the job prints a notice and leaves the file unchanged. That gate stays in the `macOS` check.
 
 UI changes need a manual check on macOS. Attach screenshots to the pull request.
 
@@ -104,7 +111,7 @@ Idle-cost notes, including the host samples from 18 Nov 2026, are in [docs/PERFO
 
 `WattHelper` (`io.github.ben-ranford.watt.helper`) is a launch daemon. The administrator installer places the binary at `/Library/PrivilegedHelperTools/io.github.ben-ranford.watt.helper` and its launchd plist at `/Library/LaunchDaemons/io.github.ben-ranford.watt.helper.plist`. That plist sets `UserName` to `root`. `WattHelperInstaller` does not take privilege itself. An administrator runs it, and macOS then asks you to approve Watt? Helper in Login Items & Extensions.
 
-The helper's sampler runs one fixed command, `/usr/bin/powermetrics` with `-f plist -n 1 -i 1000 -s cpu_power,gpu_power`. It does not accept an executable, arguments, or paths from the app. CPU and GPU estimates appear only when both are available. Display, SSD, and Other are unavailable. Battery delta, charger input, and system draw come from IOKit power sources and do not need the helper.
+The helper's sampler runs one fixed command, `/usr/bin/powermetrics` with `-f plist -n 1 -i 1000 -s cpu_power,gpu_power`. It does not accept an executable, arguments, or paths from the app. The helper returns that plist unchanged. The app reads `processor.cpu_power` and `processor.gpu_power` as milliwatts and keeps the sample only when those averages match `cpu_energy` and `gpu_energy` in millijoules across `elapsed_ns`, and `combined_power` matches the cpu, gpu, and ane sum. A missing key, a different unit, or a value above 200 W on one rail leaves both estimates unavailable. CPU and GPU estimates appear only when both are available. Display, SSD, and Other are unavailable. Battery delta, charger input, and system draw come from IOKit power sources and do not need the helper.
 
 A fresh install does not register the helper by itself. Setup and Settings offer **Install Helper…**, which runs the bundled `WattHelperInstaller` and asks for an administrator password. `SMAppService` daemon registration does not write the exact code-hash pins the helper requires, so the app does not use that API for this path. The installer still checks the preflight digest against the staged bytes before it writes anything. Homebrew does not install the helper during `brew install`; the cask only places `Watt.app` in Applications.
 

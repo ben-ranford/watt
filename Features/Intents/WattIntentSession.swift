@@ -49,7 +49,8 @@ enum WattIntentSession {
         intentVisibleUntil = nil
         claimDeferralNanoseconds = 3_000_000_000
         otherInstances = liveOtherInstances
-        claimSingleInstance = { SingleInstanceClaim.becomeOnlyInstance() }
+        managedBundle = nil
+        claimSingleInstance = { SingleInstanceClaim.becomeOnlyInstance(managedBundle: managedBundle) }
         keeperIntentInFlight = { await WattIntentBridge.probeIntentInFlight() }
         launchSignal = liveLaunchSignal
         exitProcess = { NSApp.terminate(nil) }
@@ -219,8 +220,11 @@ enum WattIntentSession {
     /// An update relaunch waits this long. A shortcut is recognised inside it.
     static var claimDeferralNanoseconds: UInt64 = 3_000_000_000
     static var otherInstances: @MainActor () -> [Int32] = liveOtherInstances
+    /// The protected copy's own bundle when this process is that copy, so the
+    /// claim replaces a same-build copy running from anywhere else.
+    static var managedBundle: URL?
     static var claimSingleInstance: @MainActor () -> SingleInstanceOutcome = {
-        SingleInstanceClaim.becomeOnlyInstance()
+        SingleInstanceClaim.becomeOnlyInstance(managedBundle: managedBundle)
     }
     static var keeperIntentInFlight: @MainActor () async -> Bool = {
         await WattIntentBridge.probeIntentInFlight()
