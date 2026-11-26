@@ -429,7 +429,7 @@ struct WattApp: App {
             // longer inside the parent's launch wait. A newer helper is installed
             // before that, so launch does not open an older protected copy.
             Task { @MainActor in
-                func adoptUpdatedHelper() async {
+                @MainActor func adoptUpdatedHelper() async {
                     guard let failure = await InstalledHelperAdoption.adopt(into: appRouter, powerStore: appPowerStore) else { return }
                     appRouter.settingsHelperSetup.recordLaunchHelperUpdateFailure(
                         failure, presence: HelperInstallPresence.current(), connectedAfterUpdate: true)
