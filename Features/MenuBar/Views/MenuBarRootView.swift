@@ -35,6 +35,7 @@ struct MenuBarRootView: View {
                         setupSaveFailed: preferences.persistenceFailure != nil,
                         insufficientChargerMinimumDuration: preferences.insufficientChargerDuration,
                         helperInstallOffered: router.settingsHelperSetup.canInstallHelper,
+                        helperInstallSubtitle: router.settingsHelperSetup.componentsInstallSubtitle,
                         onInstallHelper: {
                             Task { await router.settingsHelperSetup.installFromInterface() }
                             return

@@ -3,6 +3,7 @@ import ServiceManagement
 import Darwin
 #if SWIFT_PACKAGE
 import WattHelperShared
+import WattMaintenanceShared
 #endif
 
 /// Journals operation intent before ServiceManagement effects. A missing registration is
@@ -373,11 +374,34 @@ enum HelperProcessInventory {
 final class ProtectedHelperLifecycle: HelperLifecycleDriver {
     private let record: ProtectedHelperRecord
     private let candidate: () throws -> HelperPeer
-    init(record: ProtectedHelperRecord, candidate: @escaping () throws -> HelperPeer) {
+    private let recordPresent: () -> Bool
+    private let helperAbsent: () throws -> Bool
+    private let administrator: (HelperBundleInstall.Command) async -> Result<String, ServiceFailure>
+    init(record: ProtectedHelperRecord, candidate: @escaping () throws -> HelperPeer,
+         recordPresent: @escaping () -> Bool = { FileManager.default.fileExists(atPath: ProtectedHelperRecord.publicURL.path) },
+         helperAbsent: @escaping () throws -> Bool = { try MaintenanceRemovalPlan.fixedHelperAbsent() },
+         administrator: @escaping (HelperBundleInstall.Command) async -> Result<String, ServiceFailure> = HelperBundleInstall.run) {
         self.record = record; self.candidate = candidate
+        self.recordPresent = recordPresent; self.helperAbsent = helperAbsent; self.administrator = administrator
     }
+
+    /// The root-owned installer in the protected copy removes the helper, its launchd
+    /// plist and its pins, and keeps the application generations. macOS asks for an
+    /// administrator password first.
+    static func removalCommand(for record: ProtectedHelperRecord) -> HelperBundleInstall.Command {
+        HelperBundleInstall.Command(
+            executable: record.applicationURL.appendingPathComponent("Contents/MacOS/WattHelperInstaller").path,
+            arguments: ["--remove-helper", "--installation", record.installationID.uuidString,
+                        "--generation", String(record.generation)],
+            privileged: true)
+    }
+
     func verifyCandidate() throws -> HelperPeer { try candidate() }
     func status() async throws -> HelperRegistrationStatus {
+        if !recordPresent() {
+            // Absence needs the fixed helper files and the helper process gone, not just the pins.
+            return try helperAbsent() ? .absent : .unknown
+        }
         guard try ProtectedHelperRecord.read(expectedInstallationID: record.installationID) == record else {
             throw ServiceFailure.untrustedIdentity
         }
@@ -395,6 +419,11 @@ final class ProtectedHelperLifecycle: HelperLifecycleDriver {
     }
     func register(receipt: OperationReceipt) async throws { throw ServiceFailure.adminRequired }
     func update(receipt: OperationReceipt) async throws { throw ServiceFailure.adminRequired }
-    func unregister(receipt: OperationReceipt) async throws { throw ServiceFailure.adminRequired }
+    func unregister(receipt: OperationReceipt) async throws {
+        switch await administrator(Self.removalCommand(for: record)) {
+        case .success: return
+        case .failure(let failure): throw failure
+        }
+    }
     func updateApplied(receipt: OperationReceipt) async throws -> Bool { false }
 }

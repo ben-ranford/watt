@@ -122,8 +122,11 @@ struct StatusPanelModel {
         showsComponents && components.isEmpty && !componentsOff
     }
     var componentsNeedInstall: Bool = false
+    /// What the helper install state actually is, so an unfinished or other-copy
+    /// install is not reported as "not installed".
+    var componentsInstallSubtitle: String = HelperInstallPresence.notInstalled.componentsSubtitle
     var unavailableComponentsValue: String { componentsNeedInstall ? "Install" : "—" }
-    var unavailableComponentsSubtitle: String { componentsNeedInstall ? "Helper not installed" : "Unavailable" }
+    var unavailableComponentsSubtitle: String { componentsNeedInstall ? componentsInstallSubtitle : "Unavailable" }
     var usesIntrinsicPowerTableHeight: Bool {
         !setupIncomplete && !isDesktop && (hasNoReading || !showsComponents || showsUnavailableComponents)
     }
@@ -264,6 +267,7 @@ struct StatusPanelView: View {
     var setupSaveFailed = false
     var insufficientChargerMinimumDuration: TimeInterval = PowerReading.defaultInsufficientChargerDuration
     var helperInstallOffered = false
+    var helperInstallSubtitle = HelperInstallPresence.notInstalled.componentsSubtitle
     var onInstallHelper: () -> Void = {}
     var onContinueSetup: () -> Void = {}
     var onRetry: () -> Void = {}
@@ -274,7 +278,7 @@ struct StatusPanelView: View {
     @State private var surfaceVisible = false
     private var motionEnabled: Bool { surfaceVisible && !motionSuppressed }
     private var accessibilityPrefix: String { setupIncomplete ? "J5.2" : model.hasNoReading ? "J8.1" : model.hasInsufficientCharger ? "J6.4" : model.hasFullOnAdapter ? "J6.3" : model.hasOptimisedChargingHold ? "J6.2" : !includesComponents ? (reading.batteryState == .discharging ? "J6.5" : "J6.1") : model.isDesktop ? "J4.3" : reading.batteryState == .discharging ? "C02" : "C01" }
-    private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed, insufficientChargerMinimumDuration: insufficientChargerMinimumDuration, componentsNeedInstall: helperInstallOffered) }
+    private var model: StatusPanelModel { StatusPanelModel(reading: reading, chargerDescription: chargerDescription, helperSwitchedOff: helperSwitchedOff, componentReadingsEnabled: componentReadingsEnabled, includesComponents: includesComponents, setupIncomplete: setupIncomplete, setupSaveFailed: setupSaveFailed, insufficientChargerMinimumDuration: insufficientChargerMinimumDuration, componentsNeedInstall: helperInstallOffered, componentsInstallSubtitle: helperInstallSubtitle) }
 
     var body: some View {
         column
