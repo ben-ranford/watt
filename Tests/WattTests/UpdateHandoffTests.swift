@@ -345,6 +345,24 @@ final class UpdateHandoffTests: XCTestCase {
         XCTAssertEqual(routes, [.update])
     }
 
+    func testIntentLaunchDoesNotStopOrReplaceTheRunningInstance() {
+        let registry = FakeInstances()
+        registry.currentVersion = 1_002_000
+        registry.versions = [20: 1_001_000, 21: 1_002_000]
+        registry.instances = [20, 21].map { AppInstance(processIdentifier: $0, bundleIdentifier: "io.github.ben-ranford.watt") }
+        let outcome = SingleInstanceClaim.becomeOnlyInstance(bundleIdentifier: "io.github.ben-ranford.watt",
+                                                             currentProcessIdentifier: 99, registry: registry,
+                                                             intentLaunch: true)
+        XCTAssertTrue(outcome.deferredForIntent)
+        XCTAssertTrue(outcome.stopped.isEmpty)
+        XCTAssertNil(outcome.activated)
+        XCTAssertFalse(outcome.terminatedSelf)
+        XCTAssertTrue(registry.requested.isEmpty)
+        XCTAssertTrue(registry.forced.isEmpty)
+        XCTAssertTrue(registry.activated.isEmpty)
+        XCTAssertFalse(registry.terminatedSelf)
+    }
+
     func testSingleInstanceDoesNothingWhenThisProcessIsAlone() {
         let registry = FakeInstances()
         registry.instances = [AppInstance(processIdentifier: 4, bundleIdentifier: "io.github.ben-ranford.watt")]

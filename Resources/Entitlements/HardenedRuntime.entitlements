@@ -6,6 +6,8 @@
   App Sandbox is intentionally off. Watt reads root-owned trust files under
   /Library and launches sibling maintenance tools outside an app container.
   Do not add get-task-allow or disable-library-validation to this file.
+  App Intents run in this process. Do not add private RunningBoard or
+  LinkDaemon entitlements; this app cannot be granted them.
 -->
 <dict>
 </dict>

@@ -6,6 +6,25 @@ import UserNotifications
 import WattHelperShared
 #endif
 
+/// Whether a status-item popover can be shown on this turn. A button that is
+/// not on a screen yet, or a popover that did not appear, gets one more try
+/// after activation has reached the menu bar.
+enum StatusPanelShowPlan: Equatable {
+    case show
+    case retry
+    case unavailable
+
+    static func beforeShow(hasButton: Bool, buttonOnScreen: Bool, mayRetry: Bool) -> Self {
+        if hasButton, buttonOnScreen { return .show }
+        return mayRetry ? .retry : .unavailable
+    }
+
+    static func afterShow(shown: Bool, mayRetry: Bool) -> Self {
+        if shown { return .show }
+        return mayRetry ? .retry : .unavailable
+    }
+}
+
 /// Public AppKit fallback for hosts where SwiftUI's MenuBarExtra scene does not
 /// register a visible status item. It deliberately uses the native status button
 /// and NSPopover; no custom menu-bar chrome or pixel drawing is introduced.
@@ -35,6 +54,10 @@ final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     }
 
     func install() {
+        guard WattIntentSession.role != .satellite else {
+            WattIntentLog.notice("status item skipped for the intent satellite pid=\(getpid())")
+            return
+        }
         guard item == nil else { return }
         // SwiftUI Window scenes can promote an LSUIElement process to the
         // regular activation policy during launch. Restore the native agent
@@ -101,7 +124,7 @@ final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
 
         router.present = { [weak self] destination in
             switch destination {
-            case .statusPanel: self?.togglePanel()
+            case .statusPanel: self?.showPanel()
             case .coachMark: self?.togglePanel()
             case .settings:
                 guard let self else { return }
@@ -140,6 +163,7 @@ final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
                     .environmentObject(self.router))
             }
         }
+        WattIntentSession.notePresenterReady()
 
         powerStore.objectWillChange
             .receive(on: RunLoop.main)
@@ -205,32 +229,77 @@ final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     }
 
     @objc private func togglePanel() {
-        guard let button = item?.button else { return }
-        if let panel, panel.isShown {
-            panel.performClose(nil)
+        if panel?.isShown == true {
+            panel?.performClose(nil)
             router.statusPanelPresented = false
             powerStore.refreshComponentSamplingNeed()
+            return
+        }
+        showPanel()
+    }
+
+    /// Open Status Panel and the menu's Open Watt? show the popover. A second
+    /// request leaves it open. The status button still toggles.
+    private func showPanel() {
+        presentStatusPanel(mayRetry: true)
+    }
+
+    /// Shortcuts can ask for the panel while this accessory app is not active.
+    /// `NSPopover.show` then returns with the popover hidden. Activate first,
+    /// anchor on the status button, and try once more on the next main turn.
+    private func presentStatusPanel(mayRetry: Bool) {
+        guard let button = item?.button else {
+            scheduleStatusPanelRetry(mayRetry)
+            return
+        }
+        NSApp.setActivationPolicy(.accessory)
+        NSApp.activate(ignoringOtherApps: true)
+        if panel?.isShown == true {
+            router.statusPanelPresented = true
+            WattIntentLog.notice("status panel shown=true pid=\(getpid())")
             return
         }
         let popover = panel ?? NSPopover()
         popover.behavior = .transient
         popover.animates = false
         popover.delegate = self
-        let host = NSHostingController(rootView:
-            MenuBarRootView()
-                .environmentObject(router)
-                .environmentObject(powerStore)
-                .environmentObject(preferences))
-        popover.contentViewController = host
-        panel = popover
-        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-        host.view.layoutSubtreeIfNeeded()
-        let fitted = host.view.fittingSize
-        if fitted.height > 1 {
-            popover.contentSize = NSSize(width: max(fitted.width, WattSpacing.panelWidth), height: fitted.height)
+        if popover.contentViewController == nil {
+            popover.contentViewController = NSHostingController(rootView:
+                MenuBarRootView()
+                    .environmentObject(router)
+                    .environmentObject(powerStore)
+                    .environmentObject(preferences))
         }
+        panel = popover
+        button.window?.orderFrontRegardless()
+        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        if !popover.isShown {
+            WattIntentLog.notice("status panel shown=false retry=\(mayRetry) onScreen=\(button.window?.screen != nil) pid=\(getpid())")
+            if StatusPanelShowPlan.afterShow(shown: false, mayRetry: mayRetry) == .retry {
+                scheduleStatusPanelRetry(true)
+            }
+        } else if let host = popover.contentViewController {
+            host.view.layoutSubtreeIfNeeded()
+            let fitted = host.view.fittingSize
+            if fitted.height > 1 {
+                popover.contentSize = NSSize(width: max(fitted.width, WattSpacing.panelWidth), height: fitted.height)
+            }
+        }
+        // The action has opened the panel even when AppKit has not marked the
+        // popover shown yet. A retry can still bring it on screen.
         router.statusPanelPresented = true
         powerStore.refreshComponentSamplingNeed()
+        WattIntentLog.notice("status panel shown=\(popover.isShown) pid=\(getpid())")
+    }
+
+    private func scheduleStatusPanelRetry(_ mayRetry: Bool) {
+        guard mayRetry else {
+            WattIntentLog.notice("status panel unavailable pid=\(getpid())")
+            return
+        }
+        Task { @MainActor [weak self] in
+            self?.presentStatusPanel(mayRetry: false)
+        }
     }
 
     /// The popover is reused, but its SwiftUI tree is not. Leaving the hosting

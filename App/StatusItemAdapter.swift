@@ -48,6 +48,7 @@ struct StatusItemAdapter: NSViewRepresentable {
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 }
             }
+            WattIntentSession.notePresenterReady()
             router.statusItemButton = { [weak view] in view?.statusButton }
             applicationDelegate.onTerminate = { [weak view] in
                 router.leftoverHelper?.close()
