@@ -303,6 +303,8 @@ struct WattApp: App {
                 appRouter.settingsHelperSetup.unavailableReason = .configurationFailure(error,
                     packagedHelperPresent: FileManager.default.fileExists(atPath: helper.path)
                         && FileManager.default.fileExists(atPath: plist.path))
+                appRouter.settingsHelperSetup.presenceProbe = { HelperInstallPresence.current() }
+                appRouter.settingsHelperSetup.installPresence = HelperInstallPresence.current()
             }
         }
         if let helper = productionHelper {
@@ -1342,6 +1344,9 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     private var observations = Set<AnyCancellable>()
     private var samplingTask: Task<Void, Never>?
     private var buttonUpdateScheduled = false
+    /// Widest text width shown since the display mode, precision, unit, or font changed.
+    private var textHighWater: CGFloat = 0
+    private var widthIdentity: MenuBarStatusWidthIdentity?
 
     init(router: AppRouter, powerStore: PowerReadingStore, preferences: PreferencesStore) {
         self.router = router
@@ -1364,7 +1369,7 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
         button.target = self
         button.action = #selector(togglePanel)
         button.sendAction(on: [.leftMouseUp])
-        button.font = NSFont.systemFont(ofSize: 13, weight: .semibold)
+        button.font = MenuBarStatusFont.menuBar()
         updateButton()
 
         // The normal app deliberately suppresses MenuBarExtra because some
@@ -1572,6 +1577,8 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
             router.settingsHelperSetup.confirmRecoveredComponents(PowerReading.unavailable.presenting(pair))
         }
         guard let button = item?.button else { return }
+        let font = MenuBarStatusFont.menuBar()
+        button.font = font
         let label = MenuBarStatusLabel(reading: powerStore.statusReading,
                                        preferences: preferences,
                                        helperSwitchedOff: router.settingsHelperSetup.helperSwitchedOff)
@@ -1582,23 +1589,45 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
         }
         let showsTitle = label.text != nil || label.percentagePlainTitle != nil
         button.imagePosition = label.showsSymbol ? (showsTitle ? .imageLeading : .imageOnly) : .noImage
-        let pointSize = button.font?.pointSize ?? 13
-        if label.percentagePlainTitle != nil {
-            button.font = NSFont.monospacedDigitSystemFont(ofSize: pointSize, weight: .semibold)
-        } else {
-            button.font = NSFont.systemFont(ofSize: pointSize, weight: .semibold)
-        }
         button.title = label.text ?? ""
         if let percentTitle = label.percentagePlainTitle {
             button.title = percentTitle
         }
+        // Shorter readings sit in the middle of the reserved width.
+        (button.cell as? NSButtonCell)?.alignment = .center
         button.toolTip = label.accessibilityAnnouncement
         MenuBarStatusAccessibility.apply(to: button, label: label)
         button.sizeToFit()
+
+        // The watt reading keeps its two-digit reserve. A percent shown on its
+        // own has no watt text, so it reserves nothing for watts and leaves the
+        // watt high-water alone for when the reading comes back.
+        var wattSlack: CGFloat = 0
+        if label.showsWattText {
+            let identity = label.statusWidthIdentity(font: font)
+            let references = label.statusWidthReferences
+            let title = label.text ?? ""
+            let metrics = MenuBarFontMetrics.measuring(font, covering: [title] + references)
+            let resolved = MenuBarStatusWidth.resolve(.init(
+                displayed: title,
+                references: references,
+                metrics: metrics,
+                highWater: textHighWater,
+                keepHighWater: widthIdentity == identity
+            ))
+            textHighWater = resolved.highWater
+            widthIdentity = identity
+            wattSlack = resolved.textWidth - resolved.displayedTextWidth
+        }
         // The percent keeps its own slot, wide enough for "100%". This slack is
-        // separate from any watt-reading reserve, so 9%, 87% and 100% stay the same width.
-        let percentSlack = label.percentageSlotSlack(font: button.font ?? NSFont.systemFont(ofSize: pointSize, weight: .semibold))
-        item?.length = max(42, button.intrinsicContentSize.width + 12 + percentSlack)
+        // separate from the watt-reading reserve, so 9%, 87% and 100% stay the same width.
+        let percentSlack = label.percentageSlotSlack(font: font)
+        let scale = button.window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
+        item?.length = MenuBarStatusWidth.itemLength(
+            intrinsicWidth: button.intrinsicContentSize.width,
+            textSlack: wattSlack + percentSlack,
+            scale: scale
+        )
     }
 
     private func startSampling() {
@@ -2063,7 +2092,7 @@ final class StatusAnchorView: NSView {
                 }
                 let window = NSWindow(contentRect: host.frame, styleMask: [.borderless],
                                       backing: .buffered, defer: false)
-                window.title = "\(story) actual status button — bounded capture"
+                window.title = "\(story) actual status button, bounded capture"
                 window.appearance = NSAppearance(named: light ? C0411FixtureLaunch.appearanceName : .darkAqua)
                 window.isReleasedWhenClosed = false
                 window.contentView = host

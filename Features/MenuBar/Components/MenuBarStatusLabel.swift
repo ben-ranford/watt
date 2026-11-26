@@ -171,6 +171,106 @@ struct MenuBarStatusLabel: View {
 
     var showsSymbol: Bool { preferences.showSymbol || effectiveMode == .iconOnly }
 
+    /// Two-digit reserve for the reading that is actually on screen. One- and
+    /// two-digit values share it. A three-digit integer is wider than it.
+    var statusWidthReferences: [String] {
+        switch effectiveMode {
+        case .iconOnly:
+            return []
+        case .delta:
+            return MenuBarStatusReserve.signed(precision: preferences.precision)
+        case .charger, .draw:
+            return MenuBarStatusReserve.unsigned(precision: preferences.precision)
+        case .components:
+            return MenuBarStatusReserve.components(
+                labels: componentWidthLabels,
+                precision: preferences.precision,
+                sharesUnit: componentSharesUnit
+            )
+        }
+    }
+
+    func statusWidthIdentity(font: NSFont) -> MenuBarStatusWidthIdentity {
+        MenuBarStatusWidthIdentity(
+            mode: effectiveMode,
+            precision: preferences.precision,
+            unit: MenuBarStatusReserve.unit,
+            fontName: font.fontName,
+            fontSize: font.pointSize,
+            components: effectiveMode == .components ? componentWidthLabels : [],
+            componentSharesUnit: effectiveMode == .components && componentSharesUnit
+        )
+    }
+
+    /// Names as the label prints them, so the reserve matches the live line.
+    private var componentWidthLabels: [String] {
+        preferences.selectedComponents.map { id in
+            reading.components.first { $0.id.lowercased() == id.lowercased() }?.name ?? id
+        }
+    }
+
+    /// A full per-component sample shares one unit. An empty sample reserves
+    /// that same shape, so the item does not shrink while watts are missing
+    /// and grow again when they return.
+    private var componentSharesUnit: Bool {
+        reading.mode == .perComponent || !reading.hasCurrentSample
+    }
+
+    @State private var storedReserve = ""
+    @State private var storedWidthIdentity: MenuBarStatusWidthIdentity?
+
+    private var measurementFont: NSFont { MenuBarStatusFont.swiftUILabel() }
+
+    private var currentWidthIdentity: MenuBarStatusWidthIdentity {
+        statusWidthIdentity(font: measurementFont)
+    }
+
+    /// Strings that compete for the text slot. SwiftUI lays them out and keeps
+    /// the widest, so the slot matches the rendered reading rather than an inset.
+    private var reserveCandidates: [String] {
+        let displayed = text ?? ""
+        var candidates = statusWidthReferences
+        if !displayed.isEmpty { candidates.append(displayed) }
+        if storedWidthIdentity == currentWidthIdentity, !storedReserve.isEmpty {
+            candidates.append(storedReserve)
+        }
+        var unique: [String] = []
+        for candidate in candidates where !unique.contains(candidate) {
+            unique.append(candidate)
+        }
+        return unique
+    }
+
+    private var statusWidthToken: String {
+        let identity = currentWidthIdentity
+        return [
+            identity.mode.rawValue,
+            identity.precision.rawValue,
+            identity.unit,
+            identity.fontName,
+            String(Double(identity.fontSize)),
+            identity.componentSharesUnit ? "shared" : "separate",
+            identity.components.joined(separator: "\u{1e}"),
+            text ?? ""
+        ].joined(separator: "\u{1f}")
+    }
+
+    private func rememberStatusWidth() {
+        let identity = currentWidthIdentity
+        let displayed = text ?? ""
+        let references = statusWidthReferences
+        let metrics = MenuBarFontMetrics.measuring(
+            measurementFont,
+            covering: [displayed, storedReserve] + references
+        )
+        let winner = MenuBarStatusWidth.widest(
+            [displayed] + references + (storedWidthIdentity == identity ? [storedReserve] : []),
+            metrics: metrics
+        )
+        if storedWidthIdentity != identity { storedWidthIdentity = identity }
+        if storedReserve != winner { storedReserve = winner }
+    }
+
     /// Charge from the same power-source reading the rest of the menu bar uses.
     /// Nil when the option is off, or this Mac has no battery.
     var percentageSlot: MenuBarPercentageSlot? {
@@ -248,12 +348,28 @@ struct MenuBarStatusLabel: View {
                             Image(systemName: symbolName)
                         }
                     }
-                    if showsWattText, let text { Text(text) }
+                    if showsWattText, let text {
+                        // The hidden reading is the two-digit reserve (or the
+                        // session high-water). Live text is centred in that
+                        // slot, so a shorter value does not shrink the item.
+                        ZStack(alignment: .center) {
+                            ForEach(reserveCandidates, id: \.self) { candidate in
+                                Text(candidate)
+                                    .hidden()
+                                    .accessibilityHidden(true)
+                            }
+                            Text(text)
+                        }
+                        .fixedSize(horizontal: true, vertical: false)
+                    }
                     if let percentageSlot {
                         MenuBarPercentageSlotView(slot: percentageSlot)
                     }
                 }
                 .font(WattTypography.bodyEmphasized)
+                .monospacedDigit()
+                .onAppear(perform: rememberStatusWidth)
+                .onChange(of: statusWidthToken) { _ in rememberStatusWidth() }
             }
         }
         .accessibilityElement(children: .ignore)

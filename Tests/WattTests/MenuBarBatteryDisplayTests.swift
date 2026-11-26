@@ -110,14 +110,31 @@ final class MenuBarBatteryDisplayTests: XCTestCase {
             let title = "12.3 W · \(percent)%"
             let intrinsic = (title as NSString).size(withAttributes: attributes).width
             let slot = MenuBarPercentageSlot(visible: "\(percent)%", standalone: false)
-            return max(42, intrinsic + 12 + slot.slack(font: font))
+            return MenuBarStatusWidth.itemLength(intrinsicWidth: intrinsic, textSlack: slot.slack(font: font), scale: 2)
         }
         XCTAssertEqual(itemLength(percent: 9), itemLength(percent: 87), accuracy: 1)
         XCTAssertEqual(itemLength(percent: 87), itemLength(percent: 100), accuracy: 1)
         let shortTitle = ("12.3 W · 9%" as NSString).size(withAttributes: attributes).width
         let fullTitle = ("12.3 W · 100%" as NSString).size(withAttributes: attributes).width
         XCTAssertLessThan(shortTitle, fullTitle)
-        XCTAssertEqual(itemLength(percent: 9), max(42, fullTitle + 12), accuracy: 1)
+        XCTAssertEqual(itemLength(percent: 9), fullTitle, accuracy: 1)
+    }
+
+    /// A percent shown on its own has no watt text, so the status item must not
+    /// keep the watt reading's two-digit reserve or its high-water width.
+    func testPercentOnItsOwnDoesNotReserveWattWidth() throws {
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let app = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+        let lower = try XCTUnwrap(app.range(of: "private func updateButton()"))
+        let upper = try XCTUnwrap(app.range(of: "private func startSampling()", range: lower.upperBound..<app.endIndex))
+        let update = String(app[lower.lowerBound..<upper.lowerBound])
+        let gate = try XCTUnwrap(update.range(of: "if label.showsWattText {"))
+        let resolve = try XCTUnwrap(update.range(of: "MenuBarStatusWidth.resolve"))
+        XCTAssertLessThan(gate.lowerBound, resolve.lowerBound)
+        XCTAssertTrue(update.contains("textSlack: wattSlack + percentSlack"))
+        let label = try String(contentsOf: root.appendingPathComponent("Features/MenuBar/Components/MenuBarStatusLabel.swift"), encoding: .utf8)
+        XCTAssertTrue(label.contains("if showsWattText, let text {"))
     }
 
     func testMenuBarLabelSlotDoesNotChangeWidthAcrossPercentages() {
