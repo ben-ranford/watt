@@ -1703,27 +1703,32 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
         button.sizeToFit()
 
         // The watt reading keeps its two-digit reserve. A percent shown on its
-        // own has no watt text, so it reserves nothing for watts.
-        let identity = label.statusWidthIdentity(font: font)
-        let references = label.showsWattText ? label.statusWidthReferences : []
-        let title = label.showsWattText ? (label.text ?? "") : ""
-        let metrics = MenuBarFontMetrics.measuring(font, covering: [title] + references)
-        let resolved = MenuBarStatusWidth.resolve(.init(
-            displayed: title,
-            references: references,
-            metrics: metrics,
-            highWater: textHighWater,
-            keepHighWater: widthIdentity == identity
-        ))
-        textHighWater = resolved.highWater
-        widthIdentity = identity
+        // own has no watt text, so it reserves nothing for watts and leaves the
+        // watt high-water alone for when the reading comes back.
+        var wattSlack: CGFloat = 0
+        if label.showsWattText {
+            let identity = label.statusWidthIdentity(font: font)
+            let references = label.statusWidthReferences
+            let title = label.text ?? ""
+            let metrics = MenuBarFontMetrics.measuring(font, covering: [title] + references)
+            let resolved = MenuBarStatusWidth.resolve(.init(
+                displayed: title,
+                references: references,
+                metrics: metrics,
+                highWater: textHighWater,
+                keepHighWater: widthIdentity == identity
+            ))
+            textHighWater = resolved.highWater
+            widthIdentity = identity
+            wattSlack = resolved.textWidth - resolved.displayedTextWidth
+        }
         // The percent keeps its own slot, wide enough for "100%". This slack is
         // separate from the watt-reading reserve, so 9%, 87% and 100% stay the same width.
         let percentSlack = label.percentageSlotSlack(font: font)
         let scale = button.window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
         item?.length = MenuBarStatusWidth.itemLength(
             intrinsicWidth: button.intrinsicContentSize.width,
-            textSlack: resolved.textWidth - resolved.displayedTextWidth + percentSlack,
+            textSlack: wattSlack + percentSlack,
             scale: scale
         )
     }
