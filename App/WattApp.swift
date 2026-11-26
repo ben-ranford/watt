@@ -6,6 +6,39 @@ import UserNotifications
 import WattHelperShared
 #endif
 
+/// Connects a helper that was installed after this process started.
+@MainActor
+enum InstalledHelperAdoption {
+    static func adopt(into router: AppRouter, powerStore: PowerReadingStore?) async -> ServiceFailure? {
+        let helper: ProductionHelperComposition
+        do { helper = try ProductionHelperComposition.adoptInstalled() }
+        catch { return (error as? ServiceFailure) ?? .untrustedIdentity }
+        router.helperChangedAfterUpdate = helper.hasPendingUpdate
+        router.settingsHelperSetup.service = helper.service
+        router.settingsHelperSetup.configureRepair(receipt: helper.updateReceipt, pending: helper.hasPendingUpdate)
+        router.settingsHelperSetup.captureDiagnostic = {
+            await HelperDiagnosticExport.present(transport: helper.transport)
+        }
+        let previousRemoval = router.removeFromSettings
+        var helperRemovalReceipt: OperationReceipt?
+        router.removeFromSettings = { target in
+            guard target == .helper else { return await previousRemoval(target) }
+            let receipt = helperRemovalReceipt ?? helper.removalReceipt()
+            helperRemovalReceipt = receipt
+            let result = await helper.service.remove(receipt: receipt)
+            if case .verifiedAbsent = result { helperRemovalReceipt = nil }
+            return result
+        }
+        powerStore?.attachComponentTelemetry(ProductionHelperTelemetry(transport: helper.transport))
+        helper.transport.onInvalidated = { [weak powerStore, weak service = helper.service] in
+            service?.connectionLost()
+            powerStore?.invalidateComponents()
+        }
+        await router.settingsHelperSetup.refreshStatus()
+        return nil
+    }
+}
+
 @main
 struct WattApp: App {
     @NSApplicationDelegateAdaptor(WattApplicationDelegate.self) private var applicationDelegate
@@ -246,9 +279,12 @@ struct WattApp: App {
         // and no staged payload is touched.
         let protectedFolder = !Self.isHarnessLaunch && LaunchPathPolicy.isPrivacyProtected(bundleURL)
         // The helper's protected copy updates and removes itself. Another copy of the
-        // same pinned build hands launch over to it; any other copy says why updates are off.
+        // same pinned build hands launch over to it. A newer copy updates the helper
+        // before that handover. An older copy never downgrades the helper.
+        let launchFacts: LaunchHelperFacts = Self.isHarnessLaunch || protectedFolder
+            ? .inactive : LaunchHelperFacts.current()
         let managedPlacement: ManagedCopyPolicy.Placement = Self.isHarnessLaunch || protectedFolder
-            ? .noProtectedInstallation : ManagedCopyPolicy.current()
+            ? .noProtectedInstallation : LaunchHelperPolicy.placement(for: launchFacts, running: bundleURL)
         let productionUpdate: ProductionUpdateComposition?
         let updateFailure: ServiceFailure?
         if Self.isHarnessLaunch || protectedFolder { productionUpdate = nil; updateFailure = protectedFolder ? .untrustedIdentity : nil }
@@ -274,7 +310,7 @@ struct WattApp: App {
             whatsNewStorage: updateStorage)
         #endif
         appRouter.updateUnavailableCause = protectedFolder
-            ? .privacyProtectedFolder : ManagedCopyPolicy.updateCause(for: managedPlacement)
+            ? .privacyProtectedFolder : LaunchHelperPolicy.updateCause(facts: launchFacts, placement: managedPlacement)
         AboutPanel.presentWhatsNew = { [weak appRouter] in
             appRouter?.showInstalledReleaseNotes()
         }
@@ -357,32 +393,7 @@ struct WattApp: App {
                     if let failure = await HelperBundleInstall.install(installer: installer, source: source, rotate: rotate) {
                         return failure
                     }
-                    let helper: ProductionHelperComposition
-                    do { helper = try ProductionHelperComposition.adoptInstalled() }
-                    catch { return (error as? ServiceFailure) ?? .untrustedIdentity }
-                    appRouter.helperChangedAfterUpdate = helper.hasPendingUpdate
-                    appRouter.settingsHelperSetup.service = helper.service
-                    appRouter.settingsHelperSetup.configureRepair(receipt: helper.updateReceipt, pending: helper.hasPendingUpdate)
-                    appRouter.settingsHelperSetup.captureDiagnostic = {
-                        await HelperDiagnosticExport.present(transport: helper.transport)
-                    }
-                    let previousRemoval = appRouter.removeFromSettings
-                    var helperRemovalReceipt: OperationReceipt?
-                    appRouter.removeFromSettings = { target in
-                        guard target == .helper else { return await previousRemoval(target) }
-                        let receipt = helperRemovalReceipt ?? helper.removalReceipt()
-                        helperRemovalReceipt = receipt
-                        let result = await helper.service.remove(receipt: receipt)
-                        if case .verifiedAbsent = result { helperRemovalReceipt = nil }
-                        return result
-                    }
-                    appPowerStore?.attachComponentTelemetry(ProductionHelperTelemetry(transport: helper.transport))
-                    helper.transport.onInvalidated = { [weak appPowerStore, weak service = helper.service] in
-                        service?.connectionLost()
-                        appPowerStore?.invalidateComponents()
-                    }
-                    await appRouter.settingsHelperSetup.refreshStatus()
-                    return nil
+                    return await InstalledHelperAdoption.adopt(into: appRouter, powerStore: appPowerStore)
                 }
             }
         }
@@ -415,12 +426,43 @@ struct WattApp: App {
             if protectedFolder { ApplicationsFolderGuidance.presentIfNeeded(bundleURL: bundleURL) }
             // After the handshake has returned, drop any older Watt that did
             // not exit. The next turn is late enough that this process is no
-            // longer inside the parent's launch wait.
+            // longer inside the parent's launch wait. A newer helper is installed
+            // before that, so launch does not open an older protected copy.
             Task { @MainActor in
-                if case .sameBuildElsewhere(let managed) = managedPlacement,
-                   await ManagedCopyPolicy.openManagedCopy(managed) {
-                    NSApplication.shared.terminate(nil)
-                    return
+                @MainActor func adoptUpdatedHelper() async {
+                    guard let failure = await InstalledHelperAdoption.adopt(into: appRouter, powerStore: appPowerStore) else { return }
+                    appRouter.settingsHelperSetup.recordLaunchHelperUpdateFailure(
+                        failure, presence: HelperInstallPresence.current(), connectedAfterUpdate: true)
+                }
+                if !protectedFolder {
+                    let continuation = await LaunchHelperStartup.continuation(
+                        plan: LaunchHelperPolicy.plan(for: launchFacts),
+                        update: {
+                            appRouter.settingsHelperSetup.noteLaunchHelperUpdateStarted()
+                            let failure = await LaunchHelperUpdate.install(bundle: bundleURL)
+                            appRouter.settingsHelperSetup.noteLaunchHelperUpdateFinished()
+                            return failure
+                        },
+                        protectedCopyAfterUpdate: {
+                            LaunchHelperPolicy.sameBuildHandoverURL(ManagedCopyPolicy.current())
+                        })
+                    switch continuation {
+                    case .handOver(let managed, let helperUpdated):
+                        if await ManagedCopyPolicy.openManagedCopy(managed) {
+                            NSApplication.shared.terminate(nil)
+                            return
+                        }
+                        if helperUpdated {
+                            await adoptUpdatedHelper()
+                        }
+                    case .stay(let helperUpdated, let failure):
+                        if let failure {
+                            appRouter.settingsHelperSetup.recordLaunchHelperUpdateFailure(
+                                failure, presence: HelperInstallPresence.current())
+                        } else if helperUpdated {
+                            await adoptUpdatedHelper()
+                        }
+                    }
                 }
                 SingleInstanceClaim.becomeOnlyInstance(managedBundle: managedPlacement == .managed ? bundleURL : nil)
             }

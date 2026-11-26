@@ -62,6 +62,7 @@ struct ProductionUpdateComposition {
 /// With the helper on, the protected copy under /Library/Application Support/Watt
 /// is the one that can update and remove itself. A copy anywhere else, such as the
 /// Homebrew copy in /Applications, is a separate bundle at a separate path.
+/// `LaunchHelperPolicy` decides whether launch updates that helper or opens the copy.
 enum ManagedCopyPolicy {
     enum Placement: Equatable {
         case noProtectedInstallation
@@ -129,6 +130,184 @@ enum ManagedCopyPolicy {
         configuration.createsNewApplicationInstance = true
         configuration.activates = false
         _ = try await NSWorkspace.shared.openApplication(at: url, configuration: configuration)
+    }
+}
+
+/// What launch knows about the installed helper before it opens another copy.
+struct LaunchHelperFacts: Equatable, Sendable {
+    var helperInstalled: Bool
+    var launchingBuild: UInt64?
+    var installedBuild: UInt64?
+    /// This process is the bundle recorded in helper-trust.json.
+    var runningIsProtectedCopy: Bool
+    var protectedCopyURL: URL?
+    /// The protected copy still matches the helper's own pins.
+    var protectedCopyMatchesPins: Bool
+    /// This process matches the helper's app pins.
+    var runningMatchesPins: Bool
+    /// `installer-journal.json` is still on disk from an install that did not finish.
+    var unfinishedInstallJournal: Bool
+    /// Release builds may rotate the protected helper. Certificate builds do not.
+    var automaticHelperUpdateAllowed: Bool
+
+    static let inactive = LaunchHelperFacts(
+        helperInstalled: false, launchingBuild: nil, installedBuild: nil,
+        runningIsProtectedCopy: false, protectedCopyURL: nil,
+        protectedCopyMatchesPins: false, runningMatchesPins: false,
+        unfinishedInstallJournal: false, automaticHelperUpdateAllowed: false)
+
+    /// Reads the root-owned helper record and this bundle. A privacy-protected
+    /// bundle is left untouched, the same way managed-copy placement skips it.
+    static func current(bundle: Bundle = .main) -> LaunchHelperFacts {
+        let running = bundle.bundleURL
+        if LaunchPathPolicy.isPrivacyProtected(running) { return .inactive }
+        let launchingBuild = BundleBuildNumber.read(bundleURL: running)
+        let automatic = bundle.object(forInfoDictionaryKey: "WATTHelperTrustMode") as? String != "certificate"
+        let journal = installerJournalPresent()
+        guard FileManager.default.fileExists(atPath: ProtectedHelperRecord.publicURL.path),
+              let record = try? ProtectedHelperRecord.read() else {
+            return LaunchHelperFacts(
+                helperInstalled: false, launchingBuild: launchingBuild, installedBuild: nil,
+                runningIsProtectedCopy: false, protectedCopyURL: nil,
+                protectedCopyMatchesPins: false, runningMatchesPins: false,
+                unfinishedInstallJournal: journal, automaticHelperUpdateAllowed: automatic)
+        }
+        let managed = record.applicationURL
+        let policy = HelperTrustPolicy.protectedInstallation(record)
+        func matches(_ executable: URL?) -> Bool {
+            guard let executable else { return false }
+            return (try? policy.verifyExecutable(at: executable, helper: false)) != nil
+        }
+        let runningIsProtected = ManagedCopyPolicy.samePath(running, managed)
+        return LaunchHelperFacts(
+            helperInstalled: true,
+            launchingBuild: launchingBuild,
+            installedBuild: record.build,
+            runningIsProtectedCopy: runningIsProtected,
+            protectedCopyURL: managed,
+            protectedCopyMatchesPins: matches(managed.appendingPathComponent("Contents/MacOS/Watt")),
+            runningMatchesPins: runningIsProtected || matches(bundle.executableURL),
+            unfinishedInstallJournal: journal,
+            automaticHelperUpdateAllowed: automatic)
+    }
+
+    /// Existence only. The journal is root-owned, so launch does not open it.
+    static func installerJournalPresent() -> Bool {
+        var info = stat()
+        let path = ProtectedHelperRecord.directory.appendingPathComponent("installer-journal.json").path
+        return lstat(path, &info) == 0
+    }
+}
+
+/// Launch either stays here, opens the protected copy, or updates the helper first.
+enum LaunchHelperPlan: Equatable, Sendable {
+    case stay
+    case handOver(URL)
+    /// Rotate the installed helper to this build before any handover.
+    case updateInstalledHelper
+}
+
+enum LaunchHelperPolicy {
+    /// One decision for the whole launch. A missing helper is never installed here.
+    /// An older launching app never rotates the helper down. A newer app updates
+    /// first, so launch does not open the older protected copy.
+    static func plan(for facts: LaunchHelperFacts) -> LaunchHelperPlan {
+        guard facts.helperInstalled else { return .stay }
+        // This process is the protected copy. It does not install over itself.
+        if facts.runningIsProtectedCopy { return .stay }
+        if let launching = facts.launchingBuild, let installed = facts.installedBuild {
+            if launching > installed {
+                return facts.automaticHelperUpdateAllowed ? .updateInstalledHelper : .stay
+            }
+            if launching < installed {
+                if facts.protectedCopyMatchesPins, let url = facts.protectedCopyURL {
+                    return .handOver(url)
+                }
+                return .stay
+            }
+            // Same build keeps the normal handover. A leftover journal is not a
+            // second install: the next newer launch rotates, and that installer
+            // finishes the journal before it writes the new generation.
+            if facts.runningMatchesPins, facts.protectedCopyMatchesPins, let url = facts.protectedCopyURL {
+                return .handOver(url)
+            }
+            return .stay
+        }
+        // Unreadable builds are not treated as newer or older. Pin handover stays.
+        if facts.runningMatchesPins, facts.protectedCopyMatchesPins, let url = facts.protectedCopyURL {
+            return .handOver(url)
+        }
+        return .stay
+    }
+
+    static func placement(for facts: LaunchHelperFacts, running: URL) -> ManagedCopyPolicy.Placement {
+        guard facts.helperInstalled else { return .noProtectedInstallation }
+        return ManagedCopyPolicy.placement(
+            running: running, managed: facts.protectedCopyURL,
+            runningMatchesPins: facts.runningMatchesPins,
+            managedMatchesPins: facts.protectedCopyMatchesPins)
+    }
+
+    /// After a successful update, only an exact pinned copy elsewhere is opened.
+    /// A still-different protected copy is left alone.
+    static func sameBuildHandoverURL(_ placement: ManagedCopyPolicy.Placement) -> URL? {
+        if case .sameBuildElsewhere(let url) = placement { return url }
+        return nil
+    }
+
+    /// An older launching app must not be told to turn the helper on for this copy.
+    /// That rotation would be a downgrade, and the installer refuses it.
+    static func updateCause(facts: LaunchHelperFacts, placement: ManagedCopyPolicy.Placement) -> UpdateUnavailableCause {
+        if case .differentBuildElsewhere = placement,
+           let launching = facts.launchingBuild, let installed = facts.installedBuild, launching < installed {
+            return .helperCopyElsewhere
+        }
+        return ManagedCopyPolicy.updateCause(for: placement)
+    }
+}
+
+/// What launch does after the version check. The helper update runs at most once.
+enum LaunchHelperContinuation: Equatable, Sendable {
+    case handOver(URL, helperUpdated: Bool)
+    case stay(helperUpdated: Bool, failure: ServiceFailure?)
+}
+
+@MainActor
+enum LaunchHelperStartup {
+    static func continuation(
+        plan: LaunchHelperPlan,
+        update: () async -> ServiceFailure?,
+        protectedCopyAfterUpdate: () async -> URL?
+    ) async -> LaunchHelperContinuation {
+        switch plan {
+        case .stay:
+            return .stay(helperUpdated: false, failure: nil)
+        case .handOver(let url):
+            return .handOver(url, helperUpdated: false)
+        case .updateInstalledHelper:
+            if let failure = await update() {
+                return .stay(helperUpdated: false, failure: failure)
+            }
+            if let url = await protectedCopyAfterUpdate() {
+                return .handOver(url, helperUpdated: true)
+            }
+            return .stay(helperUpdated: true, failure: nil)
+        }
+    }
+}
+
+/// The launch-time helper update. It always rotates, so the administrator
+/// installer finishes an interrupted install journal before it writes this build.
+@MainActor
+enum LaunchHelperUpdate {
+    static func install(
+        bundle: URL,
+        executable: (String) -> Bool = { FileManager.default.isExecutableFile(atPath: $0) },
+        run: @escaping (HelperBundleInstall.Command) async -> Result<String, ServiceFailure> = HelperBundleInstall.run
+    ) async -> ServiceFailure? {
+        let installer = bundle.appendingPathComponent("Contents/MacOS/WattHelperInstaller")
+        guard executable(installer.path) else { return .unknownStatus }
+        return await HelperBundleInstall.install(installer: installer, source: bundle, rotate: true, run: run)
     }
 }
 

@@ -787,6 +787,34 @@ final class SettingsHelperSetup: ObservableObject {
         default: return "Watt? couldn’t install the helper. Try again."
         }
     }
+
+    /// Shown once when launch tried to update an older helper and did not finish.
+    static func launchUpdateFailureMessage(_ failure: ServiceFailure) -> String {
+        switch failure {
+        case .cancelled: return "The helper update was cancelled. Watt? will keep running."
+        case .timedOut: return "Updating the helper took too long, so Watt? stopped waiting. It will keep running."
+        default: return "Watt? couldn’t update the helper. It will keep running."
+        }
+    }
+
+    static let launchUpdateConnectionMessage = "Watt? updated the helper, but this copy couldn’t connect to it. Quit and open Watt? again."
+
+    func noteLaunchHelperUpdateStarted() {
+        isInstalling = true
+        installResult = nil
+    }
+
+    func noteLaunchHelperUpdateFinished() {
+        isInstalling = false
+    }
+
+    /// Records the one launch attempt. It does not start another install.
+    func recordLaunchHelperUpdateFailure(_ failure: ServiceFailure?, presence: HelperInstallPresence, connectedAfterUpdate: Bool = false) {
+        installResult = connectedAfterUpdate
+            ? Self.launchUpdateConnectionMessage
+            : Self.launchUpdateFailureMessage(failure ?? .unknownStatus)
+        installPresence = presence
+    }
     var captureDiagnostic: (() async -> Void)?
     private var repairReceipt: (() -> OperationReceipt)?
     private var pendingRepair: () -> Bool = { false }
