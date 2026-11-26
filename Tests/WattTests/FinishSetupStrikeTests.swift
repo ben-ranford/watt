@@ -323,8 +323,36 @@ final class FinishSetupStrikeTests: XCTestCase {
         XCTAssertEqual(strike.plays, 1, "Plays once")
         XCTAssertTrue(PreferencesStore(storage: storage).onboarding.completed, "Saved before the strike")
         XCTAssertEqual(events, [], "Nothing closes until the strike says so")
+        XCTAssertTrue(router.finishSetupStrikePlaying, "The window keeps showing That's it during the strike")
         strike.finish?()
         XCTAssertEqual(events, ["dismiss", "coachMark"])
+        XCTAssertFalse(router.finishSetupStrikePlaying)
+    }
+
+    func testSetupWindowKeepsThatsItWhileTheStrikePlays() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let flow = try String(contentsOf: root.appendingPathComponent("Features/Onboarding/Views/OnboardingFlowView.swift"), encoding: .utf8)
+        XCTAssertTrue(flow.contains("preferences.onboarding.checkpoint == .allSet || router.finishSetupStrikePlaying"),
+                      "Saving moves the checkpoint on; the window must not fall through to the unavailable step")
+    }
+
+    func testDefaultSchedulerFinishesTheStrikeAfterPlayReturns() async throws {
+        let screen = try XCTUnwrap(NSScreen.main ?? NSScreen.screens.first)
+        let done = CGRect(x: screen.frame.midX - 30, y: screen.frame.midY - 12, width: 60, height: 24)
+        for reduced in [true, false] {
+            // The real main-queue scheduler, not the manual one. Nothing else keeps it alive.
+            let controller = FinishSetupStrikeController(reduceMotion: { reduced }, haptics: {})
+            let dismissed = expectation(description: "dismissed reduced=\(reduced)")
+            controller.play(FinishSetupStrikeRequest(doneButtonFrame: done, hostWindow: nil, statusItemPlacement: { nil })) {
+                dismissed.fulfill()
+            }
+            XCTAssertNotNil(controller.overlay)
+            await fulfillment(of: [dismissed], timeout: 5)
+            let end = reduced ? T.reducedEnd : T.end
+            try await Task.sleep(nanoseconds: UInt64((end + 0.5) * 1_000_000_000))
+            XCTAssertNil(controller.overlay, "The overlay closes on its own, reduced=\(reduced)")
+            XCTAssertNil(controller.state)
+        }
     }
 
     func testFailedSaveDoesNotStrike() {
