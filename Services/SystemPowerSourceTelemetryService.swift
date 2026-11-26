@@ -201,10 +201,10 @@ enum SystemPowerSourceParser {
         let watts = milliwatts / 1_000
         guard watts.isFinite else { return nil }
         if milliwatts < 0 {
-            // The sample already carries its direction. Charging cannot publish
-            // a negative rate without failing validation and hiding system draw,
-            // so that contradictory row stays hidden.
-            return state == .charging ? nil : watts
+            // The sample already carries its direction. A busy Mac can drain
+            // while plugged in even though the battery state still says
+            // charging, so the measured negative rate is reported as it is.
+            return watts
         }
         switch state {
         case .discharging: return -watts

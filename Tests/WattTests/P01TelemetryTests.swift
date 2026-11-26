@@ -192,7 +192,9 @@ final class P01TelemetryTests: XCTestCase {
         try reading.validate()
     }
 
-    func testSignedNegativeBatteryPowerDoesNotDropAChargingSnapshot() throws {
+    /// A busy Mac can drain while plugged in while the battery state still says
+    /// charging. The measured negative rate is what the menu bar must show.
+    func testBusyMacDrainingWhilePluggedInShowsTheNegativeRate() throws {
         let powers: [Any] = [-4_200, UInt64(bitPattern: Int64(-4_200))]
         for power in powers {
             let reading = try parseTelemetry([
@@ -202,7 +204,10 @@ final class P01TelemetryTests: XCTestCase {
             ])
 
             XCTAssertEqual(reading.batteryState, .charging, "\(power)")
-            XCTAssertNil(reading.watts, "\(power)")
+            XCTAssertEqual(try XCTUnwrap(reading.watts), -4.2, accuracy: 0.001, "\(power)")
+            XCTAssertTrue(reading.hasCurrentSample, "\(power)")
+            XCTAssertEqual(try XCTUnwrap(reading.value(for: .delta)), -4.2, accuracy: 0.001, "\(power)")
+            XCTAssertEqual(PowerFormatter.watts(reading.value(for: .delta)), "-4.2 W", "\(power)")
             XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 65, accuracy: 0.001, "\(power)")
             XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 22.9, accuracy: 0.001, "\(power)")
             try reading.validate()

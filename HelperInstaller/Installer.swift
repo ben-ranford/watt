@@ -224,11 +224,35 @@ private func itemExists(_ path: String) -> Bool {
     let process = Process(); process.executableURL = URL(fileURLWithPath: "/bin/launchctl")
     process.arguments = arguments
     try process.run(); process.waitUntilExit()
-    guard process.terminationStatus == 0 || (allowAbsent && process.terminationStatus == 3) else { throw InstallerError.interrupted }
+    guard launchctlSucceeded(status: process.terminationStatus, allowAbsent: allowAbsent) else { throw InstallerError.interrupted }
+}
+
+/// A process whose executable was deleted or replaced after it started (an app
+/// that updated itself while running) has no path: `proc_pidpath` fails with
+/// ENOENT. Its name still says whether it could be one we wait for, so it only
+/// counts when that name could belong to a watched executable. A replaced old
+/// helper keeps its name, so it still counts as running. Anything else that has
+/// no path stays unknown (`nil`).
+func replacedExecutableIsWatched(pathError: Int32, name: String?, watched: [String]) -> Bool? {
+    guard pathError == ENOENT, let name, !name.isEmpty else { return nil }
+    return watched.contains { URL(fileURLWithPath: $0).lastPathComponent.hasPrefix(name) }
+}
+
+func processName(_ pid: pid_t) -> String? {
+    var bytes = [CChar](repeating: 0, count: 2 * Int(MAXCOMLEN) + 1)
+    guard proc_name(pid, &bytes, UInt32(bytes.count)) > 0 else { return nil }
+    return String(cString: bytes)
+}
+
+/// `bootout` of a service that is not loaded exits 3 (ESRCH) on older macOS and
+/// 113 ("Could not find specified service") on current macOS. Both mean absent.
+func launchctlSucceeded(status: Int32, allowAbsent: Bool) -> Bool {
+    status == 0 || (allowAbsent && (status == 3 || status == 113))
 }
 
 @MainActor private func requireStopped(applicationPaths: [String] = [], includeHelper: Bool = true) throws {
     if let stopped = installerEnvironment.stopped { try stopped(applicationPaths, includeHelper); return }
+    let watched = (includeHelper ? [helperURL.path, "/usr/bin/powermetrics"] : []) + applicationPaths
     let deadline = Date().addingTimeInterval(5)
     repeat {
         let estimate = proc_listallpids(nil, 0)
@@ -243,8 +267,12 @@ private func itemExists(_ path: String) -> Bool {
             let length = bytes.withUnsafeMutableBytes { proc_pidpath(pid, $0.baseAddress, UInt32($0.count)) }
             if length <= 0 {
                 if errno == ESRCH { continue }
-                // Unknown process identity is not proof of absence.
-                throw InstallerError.interrupted
+                let pathError = errno
+                switch replacedExecutableIsWatched(pathError: pathError, name: processName(pid), watched: watched) {
+                case .some(true): found = true; continue
+                case .some(false): continue
+                case nil: throw InstallerError.interrupted // Unknown process identity is not proof of absence.
+                }
             }
             guard let end = bytes.firstIndex(of: 0), end > 0,
                   let path = String(bytes: bytes[..<end].map { UInt8(bitPattern: $0) }, encoding: .utf8) else { throw InstallerError.interrupted }
@@ -278,14 +306,24 @@ private func itemExists(_ path: String) -> Bool {
     guard fstat(lock, &lockInfo) == 0, lockInfo.st_uid == installerEnvironment.owner, lockInfo.st_mode & 0o077 == 0,
           lockInfo.st_mode & S_IFMT == S_IFREG, lockInfo.st_nlink == 1,
           flock(lock, LOCK_EX | LOCK_NB) == 0 else { throw InstallerError.interrupted }
-    try installLocked(source: source, approval: approval, rotate: rotate)
+    try installLocked(source: source, approval: approval, rotate: rotate, resumeInterruptedInstall: true)
 }
 
-@MainActor private func installLocked(source: URL, approval: String, rotate: Bool, binding: ProtectedMaintenanceBinding? = nil) throws {
-    // An interrupted mutation requires explicit recovery, never blind replay.
-    guard !itemExists(journalURL.path) else { throw InstallerError.interrupted }
+@MainActor private func installLocked(source: URL, approval: String, rotate: Bool, binding: ProtectedMaintenanceBinding? = nil,
+                                      resumeInterruptedInstall: Bool = false) throws {
+    // An interrupted reviewed install is finished first, exactly as --recover does,
+    // so a retry from the app completes instead of failing on the old journal.
+    // Any other interrupted mutation still needs explicit recovery.
+    var resumed: ProtectedHelperRecord?
+    if itemExists(journalURL.path) {
+        guard resumeInterruptedInstall, binding == nil else { throw InstallerError.interrupted }
+        var journal = try readJournal()
+        guard journal.action == "install" else { throw InstallerError.interrupted }
+        try finishInstall(&journal)
+        resumed = journal.next
+    }
     let previous = itemExists(publicURL.path) ? try readRecord() : nil
-    guard rotate == (previous != nil) else { throw InstallerError.refused }
+    guard rotate == (previous != nil) || (resumed != nil && previous == resumed) else { throw InstallerError.refused }
     if previous == nil {
         guard !itemExists(helperURL.path), !itemExists(plistURL.path) else { throw InstallerError.refused }
     }
@@ -307,6 +345,13 @@ private func itemExists(_ path: String) -> Bool {
     // it keeps a verified replacement from inheriting the download's quarantine flag.
     try QuarantineAttribute.clear(at: app)
     guard try candidate.approval == approval else { throw InstallerError.approvalMismatch }
+    if let resumed, previous == resumed, Set(candidate.appHashes) == Set(resumed.appHashes),
+       Set(candidate.helperHashes) == Set(resumed.helperHashes),
+       Set(candidate.maintenanceHashes) == Set(resumed.maintenanceHashes) {
+        // The resumed generation is this exact build. The unused staging copy is discarded.
+        print("Installed protected generation \(resumed.generation). Application: \(applicationURL(resumed).path)")
+        return
+    }
     guard previous == nil || candidate.build > previous!.build else { throw InstallerError.refused }
     let record = try ProtectedHelperRecord(installationID: installation, generation: generation, build: candidate.build,
                                           appHashes: candidate.appHashes, helperHashes: candidate.helperHashes, maintenanceHashes: candidate.maintenanceHashes, maintenanceBinding: binding)
@@ -393,6 +438,20 @@ private func itemExists(_ path: String) -> Bool {
     journal.phase = "complete"; try persistJournal(journal)
     guard unlink(journalURL.path) == 0 else { throw InstallerError.interrupted }
     print("Installed protected generation \(record.generation). Application: \(applicationURL(record).path)")
+}
+
+/// The private journal, checked the same way recovery checks it.
+@MainActor private func readJournal() throws -> Journal {
+    let descriptor = try protectedFile(journalURL)
+    var information = stat()
+    let status = fstat(descriptor, &information); close(descriptor)
+    guard status == 0, information.st_mode & 0o077 == 0 else { throw InstallerError.unsafeFile }
+    let journal = try JSONDecoder().decode(Journal.self, from: protectedData(journalURL))
+    guard journal.next.installationID == journal.installationID, journal.next.generation == journal.generation else {
+        throw InstallerError.refused
+    }
+    try journal.next.validate()
+    return journal
 }
 
 @MainActor private func withInstallationLock(_ body: () throws -> Void) throws {
