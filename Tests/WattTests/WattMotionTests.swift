@@ -65,7 +65,7 @@ final class WattMotionTests: XCTestCase {
                           "wattTextMotion", "WattMotion", "repeatForever"] {
             XCTAssertFalse(label.contains(forbidden), forbidden)
         }
-        let app = try source("App/WattApp.swift")
+        let app = try source("App/WattFallbackStatusItem.swift")
         let update = try function("private func updateButton()", until: "private func startSampling()", in: app)
         XCTAssertTrue(update.contains("button.title = label.text ?? \"\""))
         for forbidden in ["animator()", "NSAnimationContext", "contentTransition", ".animation("] {

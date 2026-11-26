@@ -232,6 +232,7 @@ final class J74CrowdedMenuBarTests: XCTestCase {
             XCTAssertFalse(fixture.contains(token))
         }
         let app = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+            + String(contentsOf: root.appendingPathComponent("App/StatusItemAdapter.swift"), encoding: .utf8)
         for token in ["MenuBarExtra(isInserted:", "ScenePresentationBridge(", "view.observeJ74StatusFixture(", "button.performClick(nil)"] { XCTAssertTrue(app.contains(token)) }
     }
 

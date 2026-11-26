@@ -150,6 +150,7 @@ final class J22ComponentsOffTests: XCTestCase {
         let composition = try String(contentsOf: root.appendingPathComponent("Features/MenuBar/Views/MenuBarRootView.swift"), encoding: .utf8)
         XCTAssertTrue(composition.contains("componentReadingsEnabled: preferences.componentReadings"))
         let app = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+            + String(contentsOf: root.appendingPathComponent("App/Fixtures/J2FixtureLaunches.swift"), encoding: .utf8)
         XCTAssertTrue(app.contains("if J22FixtureLaunch.requested"))
         XCTAssertTrue(app.contains("temporary native AppKit anchor"))
     }

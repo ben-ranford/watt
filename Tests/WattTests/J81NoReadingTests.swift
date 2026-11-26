@@ -338,7 +338,7 @@ final class J81NoReadingTests: XCTestCase {
         let storeSource = try source("Services/PowerReadingStore.swift")
         XCTAssertTrue(storeSource.contains("try await Task.sleep(for: duration, tolerance: leeway)"))
         XCTAssertTrue(storeSource.contains("func setComponentSamplingPolicy"))
-        let app = try source("App/WattApp.swift")
+        let app = try source("App/WattFallbackStatusItem.swift")
         let installStart = try XCTUnwrap(app.range(of: "func install()"))
         let uninstall = try XCTUnwrap(app.range(of: "func uninstall()", range: installStart.upperBound..<app.endIndex))
         let install = app[installStart.lowerBound..<uninstall.lowerBound]
@@ -529,7 +529,7 @@ final class J81NoReadingTests: XCTestCase {
         let root = try source("Features/MenuBar/Views/MenuBarRootView.swift")
         XCTAssertTrue(root.contains("Task { await powerStore.refresh() }"))
         XCTAssertTrue(root.contains("isRetrying: powerStore.isRefreshing"))
-        let app = try source("App/WattApp.swift")
+        let app = try source("App/WattApp.swift") + source("App/WattFallbackStatusItem.swift") + source("App/StatusItemAdapter.swift")
         for token in ["MenuBarExtra(isInserted:", ".menuBarExtraStyle(.window)", "ScenePresentationBridge(",
                       ".task(id: preferences.updateInterval)", "await powerStore.runSampling(interval:",
                       "NSWorkspace.didWakeNotification", "powerStore.handleWake()",
