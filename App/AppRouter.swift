@@ -698,7 +698,7 @@ final class AppRouter: ObservableObject {
         launched = true
         let state = preferences.onboarding
         if CoachMarkView.canPresent(state) { showCoachMark() }
-        else if state.completed { showSettings() }
+        else if state.completed && WattIntentSession.shouldPresentLaunchUI { showSettings() }
         else if !state.completed && state.checkpoint != .runningDefaults { beginOnboarding() }
         considerWhatsNew(version: currentAppVersion, notes: installedReleaseNotes(),
                          onboardingComplete: state.completed)

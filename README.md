@@ -69,6 +69,10 @@ Charging feeling slow? [Here's how to tell why](https://ben-ranford.github.io/wa
 
 No. Watt just shows the numbers. If you want to cap your charge, use AlDente or the Charge Limit option in Battery settings.
 
+### Can I use it from Shortcuts?
+
+Yes. Shortcuts can read the current sample, open the panel or Settings, and change the menu-bar display. The manual check is [docs/shortcuts.md](docs/shortcuts.md).
+
 ### Why does it ask for a helper?
 
 Only for CPU and GPU readings. Everything else works without it. If you want those, setup asks for your password once and macOS asks you to allow it in Login Items. You can skip it, or remove it later in Settings.

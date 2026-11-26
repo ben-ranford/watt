@@ -389,40 +389,56 @@ struct WattApp: App {
         let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
+        WattIntentSession.install(router: appRouter, readings: appPowerStore, preferences: appPreferences)
         // The fallback owns the visible production status item on hosts where
         // MenuBarExtra does not materialise, so keep reopen routing alive there
         // as well as in the SwiftUI scene bridge.
         applicationDelegate.onReopen = { [weak appRouter] in
             appRouter?.reopen(preferences: appPreferences)
         }
+        // Shortcuts may launch a second process. That process must not install
+        // another status item or start another sampler. The claim below calls
+        // this only for the process that keeps the menu bar.
+        WattIntentSession.onBecameKeeper = { [weak applicationDelegate] in
+            applicationDelegate?.scheduleFallbackStatusItem(router: appRouter,
+                                                            powerStore: appPowerStore,
+                                                            preferences: appPreferences)
+        }
         // MenuBarExtra is the preferred SwiftUI path, but it is not materialising
         // an item on some macOS hosts (including the local verification host). Keep
         // the user-facing app usable with the public AppKit status-item API while
         // retaining MenuBarExtra for all fixture launches.
         if !Self.isHarnessLaunch {
+            // A menu-bar process stays up after a shortcut ends. Automatic
+            // termination would quit it once the system decides it is idle.
+            ProcessInfo.processInfo.disableAutomaticTermination("Watt menu bar")
+            ProcessInfo.processInfo.disableSuddenTermination()
+            // Announce this process before the single-instance claim. LinkDaemon
+            // delivers perform() only after the running app has registered.
+            WattIntentSession.connectToShortcuts()
             let notificationBridge = SystemNotificationBridge(driver: NativeNotificationDriver(center: .current()))
             appRouter.notificationBridge = notificationBridge
             appRouter.powerNotificationEffects = PowerNotificationEffects(bridge: notificationBridge, preferences: appPreferences)
             Task { @MainActor in
                 appRouter.notificationAuthorization = await notificationBridge.authorization()
             }
-            // App.init can run before NSApplication has finished registering its
-            // status-bar scene. The delegate installs the public NSStatusItem
-            // from applicationDidFinishLaunching instead.
-            applicationDelegate.scheduleFallbackStatusItem(router: appRouter,
-                                                            powerStore: appPowerStore,
-                                                            preferences: appPreferences)
             if protectedFolder { ApplicationsFolderGuidance.presentIfNeeded(bundleURL: bundleURL) }
             // After the handshake has returned, drop any older Watt that did
-            // not exit. The next turn is late enough that this process is no
-            // longer inside the parent's launch wait.
+            // not exit. An App Intents launch skips that claim so linkd's
+            // process stays alive and the menu-bar process stays in place.
+            // The next turn is late enough that this process is no longer
+            // inside a parent's launch wait.
             Task { @MainActor in
+                // A shortcut launch stays in this process so LinkDaemon gets its
+                // result. Any other launch hands over to the protected copy.
                 if case .sameBuildElsewhere(let managed) = managedPlacement,
+                   !WattIntentSession.intentLaunchForClaim(),
                    await ManagedCopyPolicy.openManagedCopy(managed) {
                     NSApplication.shared.terminate(nil)
                     return
                 }
-                SingleInstanceClaim.becomeOnlyInstance(managedBundle: managedPlacement == .managed ? bundleURL : nil)
+                WattIntentSession.managedBundle = managedPlacement == .managed ? bundleURL : nil
+                await WattIntentSession.finishLaunchClaim()
             }
         }
     }
@@ -591,8 +607,8 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        UpdateHandoffQuit.reply(handoffRequiresQuit: Self.handoffRequiresQuit,
-                                confirmationAllowsQuit: !Self.handoffRequiresQuit)
+        if Self.handoffRequiresQuit { return .terminateNow }
+        return WattIntentSession.quitReply()
     }
     private var fallbackStatusItem: WattFallbackStatusItem?
     private var pendingFallbackInstall: (() -> Void)?
@@ -604,6 +620,7 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
             self?.installFallbackStatusItem(router: router, powerStore: powerStore,
                                             preferences: preferences)
         }
+        armFallbackInstall()
     }
 
     @MainActor
@@ -624,6 +641,7 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
         cleanup?()
         fallbackStatusItem?.uninstall()
         fallbackStatusItem = nil
+        WattIntentBridge.stop()
         // SwiftUI owns the MenuBarExtra/NSStatusItem. Process termination removes it;
         // do not remove a borrowed status item behind SwiftUI's back.
         NSApplication.shared.windows.forEach { $0.orderOut(nil) }
@@ -632,7 +650,20 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
     private let capture = NativeCaptureDelegate()
     #endif
 
+    private var didFinishLaunching = false
+
     func applicationDidFinishLaunching(_ notification: Notification) {
+        didFinishLaunching = true
+        armFallbackInstall()
+        #if DEBUG
+        capture.applicationDidFinishLaunching(notification)
+        #endif
+    }
+
+    /// The status item waits until this process is the one that keeps the menu
+    /// bar. An intent satellite never schedules it, so it never starts a sampler.
+    private func armFallbackInstall() {
+        guard didFinishLaunching, pendingFallbackInstall != nil else { return }
         let install = pendingFallbackInstall
         pendingFallbackInstall = nil
         // On some hosts NSStatusBar has a zero-height window during the
@@ -640,16 +671,21 @@ final class WattApplicationDelegate: NSObject, NSApplicationDelegate {
         // the system menu bar has finished materialising before creating the
         // public status item.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // A second process only exists so Shortcuts can finish an action.
+            // The copy that is already running keeps the menu-bar item.
+            if WattIntentSession.role == .satellite { return }
             install?()
         }
-        #if DEBUG
-        capture.applicationDidFinishLaunching(notification)
-        #endif
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         guard !isTerminating else { return false }
-        onReopen?()
+        // Finder and the Dock still open Settings. A Shortcuts action also
+        // delivers this reopen to an accessory app; that one must not.
+        WattIntentSession.handleReopen { [weak self] in
+            guard let self, !self.isTerminating else { return }
+            self.onReopen?()
+        }
         return false
     }
 
