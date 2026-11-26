@@ -125,7 +125,7 @@ final class MenuBarBatteryDisplayTests: XCTestCase {
     func testPercentOnItsOwnDoesNotReserveWattWidth() throws {
         let root = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-        let app = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+        let app = try String(contentsOf: root.appendingPathComponent("App/WattFallbackStatusItem.swift"), encoding: .utf8)
         let lower = try XCTUnwrap(app.range(of: "private func updateButton()"))
         let upper = try XCTUnwrap(app.range(of: "private func startSampling()", range: lower.upperBound..<app.endIndex))
         let update = String(app[lower.lowerBound..<upper.lowerBound])

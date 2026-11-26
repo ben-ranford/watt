@@ -72,7 +72,7 @@ final class J82ReadingsResumeTests: XCTestCase {
     #endif
 
     func testRecoveredStateUsesNativeStatusBridgeAndNoCustomChrome() throws {
-        let app = try source("App/WattApp.swift")
+        let app = try source("App/WattApp.swift") + source("App/StatusItemAdapter.swift")
         for token in ["MenuBarExtra(isInserted:", ".menuBarExtraStyle(.window)",
                       "J82FixtureLaunch.prepare(router: router, store: powerStore)",
                       "view.observeJ82StatusFixture"] {
