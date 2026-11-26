@@ -117,7 +117,7 @@ final class J83OpeningSettingsTests: XCTestCase {
                       "relaunchExcerpt: settingsRelaunchExcerpt", "openSettings()", "router.launch(preferences: preferences)"] {
             XCTAssertTrue(app.contains(token), token)
         }
-        XCTAssertTrue(router.contains("else if state.completed { showSettings() }"))
+        XCTAssertTrue(router.contains("state.completed && WattIntentSession.shouldPresentLaunchUI { showSettings() }"))
         XCTAssertFalse(app.contains("J83FixtureLaunch.requested { router.showStatusPanel()"))
     }
 
