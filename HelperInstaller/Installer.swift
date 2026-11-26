@@ -4,6 +4,8 @@ import CryptoKit
 #if SWIFT_PACKAGE
 import WattHelperShared
 import WattMaintenanceShared
+#elseif WATT_XCODE_TESTS
+@testable import Watt
 #endif
 
 /// Explicit administrator entry point. It has no IPC or arbitrary destination/command interface.
@@ -32,6 +34,8 @@ private struct Journal: Codable {
 }
 /// The CLI uses only production. Tests inject filesystem/launchd authority at this
 /// boundary; there are no command-line switches for alternative paths or ownership.
+/// A Debug build may adopt that same injected authority when `WATT_INSTALLER_TEST_ROOT`
+/// names a private directory. Release builds do not compile that path.
 struct InstallerEnvironment {
     var root: URL
     var helperURL: URL
@@ -46,6 +50,31 @@ struct InstallerEnvironment {
     }
 }
 @MainActor var installerEnvironment = InstallerEnvironment.production
+
+#if DEBUG
+/// Point a Debug installer at a private directory owned by the current user.
+/// The directory must be mode 0700, contain no symlink, and sit outside `/Library`.
+/// Launchd and process checks use the same injected success the in-process tests use.
+@MainActor private func applyDebugTestRoot() throws {
+    guard let raw = ProcessInfo.processInfo.environment["WATT_INSTALLER_TEST_ROOT"] else { return }
+    let supplied = URL(fileURLWithPath: raw)
+    let resolved = supplied.resolvingSymlinksInPath()
+    guard supplied.isFileURL, raw.hasPrefix("/"), !raw.contains("\0"),
+          resolved.path == supplied.standardizedFileURL.path,
+          resolved.path != "/", !resolved.path.hasPrefix("/Library") else { throw InstallerError.refused }
+    var info = stat()
+    guard lstat(resolved.path, &info) == 0, info.st_uid == geteuid(),
+          info.st_mode & S_IFMT == S_IFDIR, info.st_mode & 0o777 == 0o700 else { throw InstallerError.unsafeFile }
+    installerEnvironment = InstallerEnvironment(
+        root: resolved.appendingPathComponent("protected"),
+        helperURL: resolved.appendingPathComponent("helpers/WattHelper"),
+        plistURL: resolved.appendingPathComponent("launchd/helper.plist"),
+        owner: geteuid(),
+        launchd: { _ in },
+        stopped: { _, _ in })
+}
+#endif
+
 @MainActor private let fm = FileManager.default
 private func itemExists(_ path: String) -> Bool {
     var information = stat()
@@ -849,6 +878,9 @@ enum InstallerCommand: Equatable {
 }
 
 @MainActor func run() throws {
+    #if DEBUG
+    try applyDebugTestRoot()
+    #endif
     switch try InstallerCommand.parse(Array(CommandLine.arguments.dropFirst())) {
     case .preflight(let source):
         let temporary = fm.temporaryDirectory.appendingPathComponent("watt-preflight-" + UUID().uuidString)

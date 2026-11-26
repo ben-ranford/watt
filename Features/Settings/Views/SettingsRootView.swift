@@ -131,6 +131,7 @@ struct SettingsRootView: View {
     }
     static let removeHelperTitle = "Remove the helper?"
     static let removeHelperMessage = "Components stop and the menu bar switches to Delta. Turn it back on any time."
+    static let helperRemovalNeedsAdministrator = "Removing the helper needs your administrator password. The helper is still on."
     static let componentsSubtitle = "Two fit."
     static let componentSelectionSubtitle = "Two fit. More crowd the menu bar."
     static let fullSettingsComponentSubtitle = "In Components mode. Two fit; more crowd the menu bar."
@@ -370,6 +371,8 @@ struct SettingsRootView: View {
                         removalMessage = target == .helper ? "Helper removed." : "Watt? removed."
                     } else if case .adminRequired = outcome {
                         removalMessage = "Administrator access is required. Use the Watt? installer to remove the helper."
+                    } else if case .failed(.adminRequired) = outcome {
+                        removalMessage = Self.helperRemovalNeedsAdministrator
                     } else if case .cancelled = outcome {
                         removalMessage = nil
                     } else {
