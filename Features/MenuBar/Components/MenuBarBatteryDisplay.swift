@@ -239,8 +239,7 @@ struct MenuBarBatteryIcon: View {
     var body: some View {
         Group {
             if let value = presentation.variableValue {
-                Image(systemName: presentation.symbolName)
-                    .symbolVariableValue(value)
+                Image(systemName: presentation.symbolName, variableValue: value)
             } else {
                 Image(systemName: presentation.symbolName)
             }
