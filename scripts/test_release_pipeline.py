@@ -17,6 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
+import check_user_facing_copy
 import release_lib
 import release_plan
 import release_readiness
@@ -2749,6 +2750,88 @@ class RolloutWorkflowTests(unittest.TestCase):
                     walk(value)
 
         walk(workflow)
+
+
+
+class UserFacingCopyTests(unittest.TestCase):
+    def test_reports_an_em_dash_in_user_facing_copy(self) -> None:
+        found = check_user_facing_copy.findings_in_text(
+            'docs/index.html',
+            '<title>Watt? — menu-bar power in watts</title>\n',
+        )
+        self.assertEqual(len(found), 1, found)
+        self.assertIn('docs/index.html:1:', found[0])
+        self.assertIn('U+2014', found[0])
+
+    def test_reports_an_html_entity_and_spaced_double_hyphen(self) -> None:
+        entity = check_user_facing_copy.findings_in_text(
+            'README.md',
+            'Watt?&mdash;menu-bar power\n',
+        )
+        self.assertEqual(len(entity), 1, entity)
+        self.assertIn('&mdash;', entity[0])
+        dash = check_user_facing_copy.findings_in_text(
+            'README.md',
+            'Watt? -- menu-bar power\n',
+        )
+        self.assertEqual(len(dash), 1, dash)
+        self.assertIn(' -- ', dash[0])
+        cask = check_user_facing_copy.findings_in_text(
+            'README.md',
+            'brew install --cask ben-ranford/tap/watt\n',
+        )
+        self.assertEqual(cask, [])
+
+    def test_allows_the_unavailable_token_and_ignores_comments(self) -> None:
+        allowed = check_user_facing_copy.findings_in_text(
+            'Models/PowerReading.swift',
+            'guard let value, value.isFinite else { return "—" }\n'
+            'return values.isEmpty ? "—" : values.joined(separator: " · ")\n',
+        )
+        self.assertEqual(allowed, [])
+        comments = check_user_facing_copy.findings_in_text(
+            'App/WattApp.swift',
+            '// only to the hidden SwiftUI label leaves the visible widget at “—”.\n'
+            '/* window title — not copy */\n'
+            'let title = "Ready: success"\n',
+        )
+        self.assertEqual(comments, [])
+        prose = check_user_facing_copy.findings_in_text(
+            'Features/Settings/Views/SettingsRootView.swift',
+            'Text("On — averages the last 5 seconds, so the number doesn’t jump.")\n',
+        )
+        self.assertEqual(len(prose), 1, prose)
+        self.assertIn('user-facing string', prose[0])
+
+    def test_repository_user_facing_copy_has_no_em_dashes(self) -> None:
+        found = check_user_facing_copy.scan(ROOT)
+        self.assertEqual(found, [], found)
+
+    def test_command_fails_when_copy_contains_an_em_dash(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'docs').mkdir()
+            (root / 'docs' / 'index.html').write_text(
+                '<title>Watt? — menu-bar power in watts</title>\n',
+                encoding='utf-8',
+            )
+            result = run(
+                [sys.executable, 'scripts/check_user_facing_copy.py', str(root)],
+            )
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn('BLOCKED: user-facing copy has 1 problem:', result.stderr)
+        self.assertIn('docs/index.html:1:', result.stderr)
+        self.assertIn('U+2014', result.stderr)
+
+    def test_command_passes_on_the_repository(self) -> None:
+        result = run([sys.executable, 'scripts/check_user_facing_copy.py'])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('PASS: user-facing copy has no em dashes', result.stdout)
+        crowded = run(
+            [sys.executable, 'scripts/check_user_facing_copy.py', '.', 'extra'],
+        )
+        self.assertEqual(crowded.returncode, 2, crowded.stderr)
+        self.assertIn('zero or one repository root', crowded.stderr)
 
 
 if __name__ == '__main__':

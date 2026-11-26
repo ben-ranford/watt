@@ -112,8 +112,8 @@ struct WattComponentGallery: View {
                         .accessibilityValue("50 percent")
                 }
             }
-            Text("Ready — success").foregroundStyle(WattColors.success)
-            Text("Unable to continue — failure").foregroundStyle(WattColors.destructive)
+            Text("Ready: success").foregroundStyle(WattColors.success)
+            Text("Unable to continue: failure").foregroundStyle(WattColors.destructive)
             Text(confirmationResult).font(WattTypography.footnote)
         }
         .font(WattTypography.body)
@@ -160,7 +160,7 @@ struct WattReferenceSpecimen: View {
         .init(mode: .delta, description: "How fast the battery fills or drains. +42.1 W"),
         .init(mode: .charger, description: "What the charger is giving. 65 W"),
         .init(mode: .draw, description: "What your Mac uses right now. 22.9 W"),
-        .init(mode: .components, description: "CPU, GPU and the rest. Needs the helper — next step.")
+        .init(mode: .components, description: "CPU, GPU and the rest. Needs the helper (next step).")
     ]
 
     var body: some View {
@@ -231,7 +231,7 @@ struct WattReferenceSpecimen: View {
                     WattRowLabel(title: "Update", subtitle: "Faster uses a little more energy.")
                 } trailing: { choice("Update", value: $update, options: ["Every 2 seconds", "Every 5 seconds"]) }
                 WattFormRow {
-                    WattRowLabel(title: "Smooth readings", subtitle: smoothing ? "On — averages the last 5 seconds, so the number doesn’t jump." : "Off — shows the latest reading.")
+                    WattRowLabel(title: "Smooth readings", subtitle: smoothing ? "On: averages the last 5 seconds, so the number doesn’t jump." : "Off: shows the latest reading.")
                 } trailing: { miniSwitch("Smooth readings", value: $smoothing) }
             }
             Section(SettingsHelperRows.helperTitle) {
