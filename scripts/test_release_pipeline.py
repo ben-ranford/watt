@@ -377,6 +377,32 @@ class ProjectTests(unittest.TestCase):
             r'MARKETING_VERSION = \d+\.\d+\.\d+ // x-release-please-version',
         )
 
+    def test_project_defines_each_object_once(self) -> None:
+        # Xcode keeps the last of two definitions, so a merge that repeats an
+        # object silently drops whatever only the first copy listed.
+        project = (ROOT / 'Watt.xcodeproj/project.pbxproj').read_text()
+        ids = re.findall(r'^\s+([0-9A-Z]{24}) = \{', project, re.M)
+        repeated = sorted({identifier for identifier in ids if ids.count(identifier) > 1})
+        self.assertEqual(repeated, [])
+
+    def test_every_test_build_file_is_compiled_into_watt_tests(self) -> None:
+        project = (ROOT / 'Watt.xcodeproj/project.pbxproj').read_text()
+        references = {
+            match.group(1): match.group(2)
+            for match in re.finditer(r'^\s+([0-9A-Z]{24}) = \{[^\n]*?PBXFileReference[^\n]*?path = "?(Tests/WattTests/[^";]+\.swift)"?;', project, re.M)
+        }
+        build_files = {
+            match.group(1): match.group(2)
+            for match in re.finditer(r'^\s+"?([0-9A-Z]{24})"? = \{[^\n]*?PBXBuildFile"?; "?fileRef"? = "?([0-9A-Z]{24})"?', project, re.M)
+        }
+        phase = re.search(r'^\s+F3F7794F02C2CA8B565DE4A3 = \{[^\n]*?"?files"? = \(([^)]*)\)', project, re.M)
+        self.assertIsNotNone(phase)
+        compiled = {item.strip().strip('"') for item in phase.group(1).split(',') if item.strip()}
+        expected = {build for build, ref in build_files.items() if ref in references}
+        self.assertTrue({'A5A8B1000000000000000004', 'BATTTEST0000000000000002'} <= expected)
+        missing = sorted(references[build_files[build]] for build in expected - compiled)
+        self.assertEqual(missing, [])
+
     def test_app_info_plist_expands_custom_keys_before_signing(self) -> None:
         import plistlib
         app = plistlib.loads((ROOT / 'Resources/App/Info.plist').read_bytes())
