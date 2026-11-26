@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import XCTest
 
@@ -267,6 +268,69 @@ final class HelperInstallerHostTests: XCTestCase {
         XCTAssertTrue(uninstalled.output.contains("Protected application generations and helper removed after process cessation."))
         XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("protected").path))
         XCTAssertFalse(FileManager.default.fileExists(atPath: kept.path))
+        XCTAssertEqual(try Data(contentsOf: root.appendingPathComponent("keep.txt")), Data("preserve".utf8))
+    }
+
+    func testDebugInstallerProvisionsReleaseTrustAndDiscardsOnlyUncommittedStaging() throws {
+        _ = try installerURL()
+        let root = try privateInstallRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let environment = ["WATT_INSTALLER_TEST_ROOT": root.path]
+        let app = try signedApp(build: 5, directory: root)
+        let preview = try runInstaller(["--preflight", "--source", app.path], environment: environment)
+        XCTAssertEqual(preview.status, 0, preview.error)
+        let digest = try approval(in: preview.output)
+        let installed = try runInstaller([
+            "--bootstrap-reviewed", "--source", app.path, "--approval", digest
+        ], environment: environment)
+        XCTAssertEqual(installed.status, 0, installed.error)
+        let installation = try trustRecord(in: root).installation
+        let key = Curve25519.Signing.PrivateKey().publicKey.rawRepresentation.base64EncodedString()
+        let trustURL = root.appendingPathComponent("protected/release-trust.json")
+        let wrongIdentity = try runInstaller([
+            "--provision-release-key", "--installation", installation,
+            "--identity", "io.github.ben-ranford.watt.helper", "--public-key", key
+        ], environment: environment)
+        XCTAssertEqual(wrongIdentity.status, 78, wrongIdentity.error)
+        XCTAssertTrue(wrongIdentity.error.contains("refused"))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: trustURL.path))
+
+        let provisioned = try runInstaller([
+            "--provision-release-key", "--installation", installation,
+            "--identity", "io.github.ben-ranford.watt", "--public-key", key
+        ], environment: environment)
+        XCTAssertEqual(provisioned.status, 0, provisioned.error)
+        let trustBytes = try Data(contentsOf: trustURL)
+        let trust = try XCTUnwrap(JSONSerialization.jsonObject(with: trustBytes) as? [String: Any])
+        XCTAssertEqual(trust["installationID"] as? String, installation)
+        XCTAssertEqual(trust["identity"] as? String, "io.github.ben-ranford.watt")
+        XCTAssertEqual(trust["publicKey"] as? String, key)
+        let again = try runInstaller([
+            "--provision-release-key", "--installation", installation,
+            "--identity", "io.github.ben-ranford.watt", "--public-key", key
+        ], environment: environment)
+        XCTAssertEqual(again.status, 78, again.error)
+        XCTAssertTrue(again.error.contains("refused"))
+        XCTAssertEqual(try Data(contentsOf: trustURL), trustBytes)
+
+        let missingStage = try runInstaller([
+            "--discard-release-stage", "--installation", installation
+        ], environment: environment)
+        XCTAssertEqual(missingStage.status, 78, missingStage.error)
+        XCTAssertTrue(missingStage.error.contains("unsafeFile"))
+        XCTAssertEqual(try Data(contentsOf: trustURL), trustBytes)
+
+        let staging = root.appendingPathComponent("protected/release-staging")
+        try FileManager.default.createDirectory(at: staging, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
+        try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: staging.path)
+        try Data("still staged".utf8).write(to: staging.appendingPathComponent("manifest.json"))
+        let discarded = try runInstaller([
+            "--discard-release-stage", "--installation", installation
+        ], environment: environment)
+        XCTAssertEqual(discarded.status, 0, discarded.error)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: staging.path))
+        XCTAssertEqual(try Data(contentsOf: trustURL), trustBytes)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: root.appendingPathComponent("protected/helper-trust.json").path))
         XCTAssertEqual(try Data(contentsOf: root.appendingPathComponent("keep.txt")), Data("preserve".utf8))
     }
 }
