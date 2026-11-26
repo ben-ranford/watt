@@ -1343,6 +1343,9 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
     private var observations = Set<AnyCancellable>()
     private var samplingTask: Task<Void, Never>?
     private var buttonUpdateScheduled = false
+    /// Widest text width shown since the display mode, precision, unit, or font changed.
+    private var textHighWater: CGFloat = 0
+    private var widthIdentity: MenuBarStatusWidthIdentity?
 
     init(router: AppRouter, powerStore: PowerReadingStore, preferences: PreferencesStore) {
         self.router = router
@@ -1365,7 +1368,7 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
         button.target = self
         button.action = #selector(togglePanel)
         button.sendAction(on: [.leftMouseUp])
-        button.font = NSFont.systemFont(ofSize: 13, weight: .semibold)
+        button.font = MenuBarStatusFont.menuBar()
         updateButton()
 
         // The normal app deliberately suppresses MenuBarExtra because some
@@ -1564,16 +1567,39 @@ private final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
             router.settingsHelperSetup.confirmRecoveredComponents(PowerReading.unavailable.presenting(pair))
         }
         guard let button = item?.button else { return }
+        let font = MenuBarStatusFont.menuBar()
+        button.font = font
         let label = MenuBarStatusLabel(reading: powerStore.statusReading,
                                        preferences: preferences,
                                        helperSwitchedOff: router.settingsHelperSetup.helperSwitchedOff)
         button.image = NSImage(systemSymbolName: label.symbolName, accessibilityDescription: nil)
         button.imagePosition = label.showsSymbol ? (label.text == nil ? .imageOnly : .imageLeading) : .noImage
         button.title = label.text ?? ""
+        // Shorter readings sit in the middle of the reserved width.
+        (button.cell as? NSButtonCell)?.alignment = .center
         button.toolTip = label.accessibilityAnnouncement
         MenuBarStatusAccessibility.apply(to: button, label: label)
         button.sizeToFit()
-        item?.length = max(42, button.intrinsicContentSize.width + 12)
+
+        let identity = label.statusWidthIdentity(font: font)
+        let references = label.statusWidthReferences
+        let title = label.text ?? ""
+        let metrics = MenuBarFontMetrics.measuring(font, covering: [title] + references)
+        let resolved = MenuBarStatusWidth.resolve(.init(
+            displayed: title,
+            references: references,
+            metrics: metrics,
+            highWater: textHighWater,
+            keepHighWater: widthIdentity == identity
+        ))
+        textHighWater = resolved.highWater
+        widthIdentity = identity
+        let scale = button.window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
+        item?.length = MenuBarStatusWidth.itemLength(
+            intrinsicWidth: button.intrinsicContentSize.width,
+            textSlack: resolved.textWidth - resolved.displayedTextWidth,
+            scale: scale
+        )
     }
 
     private func startSampling() {
