@@ -244,7 +244,7 @@ final class J103AvailableTests: XCTestCase {
         XCTAssertGreaterThan(scroll?.documentView?.frame.height ?? 0, content.height)
     }
 
-    func testProductionFallbackHostFitsTheOffer() async {
+    func testProductionFallbackHostFitsTheOffer() async throws {
         _ = NSApplication.shared
         let (router, _) = await offered()
         let fallback = WattFallbackStatusItem(router: router,
@@ -270,7 +270,7 @@ final class J103AvailableTests: XCTestCase {
         }
     }
 
-    func testCheckingWindowGrowsToTheOfferAndDownloadFitsAgain() async {
+    func testCheckingWindowGrowsToTheOfferAndDownloadFitsAgain() async throws {
         _ = NSApplication.shared
         let store = UpdateStore(storage: InMemoryStorage())
         XCTAssertTrue(store.accept(.checking, generation: store.generation))
@@ -288,7 +288,7 @@ final class J103AvailableTests: XCTestCase {
         assertHorizontallyContained(host)
 
         XCTAssertTrue(store.accept(.available(version: "1.4.0"), generation: store.generation))
-        content = await waitForWidth(window, expected: SoftwareUpdateWindowMetrics.offerWidth)
+        content = waitForWidth(window, expected: SoftwareUpdateWindowMetrics.offerWidth)
         XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.offerWidth, accuracy: 2)
         XCTAssertGreaterThan(content.width, 420)
         host.layoutSubtreeIfNeeded()
@@ -296,14 +296,14 @@ final class J103AvailableTests: XCTestCase {
         assertHorizontallyContained(host)
 
         XCTAssertTrue(router.startUpdateDownload(version: "1.4.0", generation: store.generation))
-        content = await waitForWidth(window, expected: SoftwareUpdateWindowMetrics.compactWidth)
+        content = waitForWidth(window, expected: SoftwareUpdateWindowMetrics.compactWidth)
         XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.compactWidth, accuracy: 2)
         host.layoutSubtreeIfNeeded()
         XCTAssertGreaterThanOrEqual(host.bounds.width + 1, host.fittingSize.width)
         assertHorizontallyContained(host)
     }
 
-    func testLongVersionAndReleaseLineStayInsideTheOfferWindow() async {
+    func testLongVersionAndReleaseLineStayInsideTheOfferWindow() async throws {
         _ = NSApplication.shared
         let version = String(repeating: "2026.11.27.", count: 8)
         let url = "https://example.com/watt/notes/" + String(repeating: "release", count: 40)
@@ -354,12 +354,11 @@ final class J103AvailableTests: XCTestCase {
             column + 1)
     }
 
-    private func waitForWidth(_ window: NSWindow, expected: CGFloat) async -> NSSize {
+    private func waitForWidth(_ window: NSWindow, expected: CGFloat) -> NSSize {
         let deadline = Date(timeIntervalSinceNow: 1.5)
         var size = window.contentRect(forFrameRect: window.frame).size
         while abs(size.width - expected) > 2, Date() < deadline {
             RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
-            await Task.yield()
             size = window.contentRect(forFrameRect: window.frame).size
         }
         return size
