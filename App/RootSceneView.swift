@@ -205,7 +205,7 @@ private extension View {
 /// Layout size of the SwiftUI update content, including a fixed width the
 /// window has not caught up with yet.
 private struct SoftwareUpdateSizeKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
+    static let defaultValue = CGSize.zero
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
         let next = nextValue()
         if next.width > 1, next.height > 1 { value = next }
