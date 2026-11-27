@@ -257,16 +257,19 @@ private struct SoftwareUpdateWindowSizer: NSViewRepresentable {
         marker.latestWidth = relay.width
         relay.onChange = { [weak marker, weak relay] in
             marker?.latestWidth = relay?.width ?? 0
-            marker?.schedule()
+            marker?.apply()
         }
-        marker.schedule()
+        marker.apply()
     }
 
     final class Marker: NSView {
         var latestWidth: CGFloat = 0
+        private var applying = false
         override var intrinsicContentSize: NSSize { .zero }
-        func schedule() { DispatchQueue.main.async { [weak self] in self?.apply() } }
         func apply() {
+            guard !applying else { return }
+            applying = true
+            defer { applying = false }
             guard let window, window.identifier == SoftwareUpdateWindowMetrics.identifier,
                   let host = SoftwareUpdateWindowMetrics.hostingView(in: window) else { return }
             let width = latestWidth > 1 ? latestWidth : SoftwareUpdateWindowMetrics.measuredSize(of: host).width

@@ -288,7 +288,7 @@ final class J103AvailableTests: XCTestCase {
         assertHorizontallyContained(host)
 
         XCTAssertTrue(store.accept(.available(version: "1.4.0"), generation: store.generation))
-        content = waitForWidth(window, expected: SoftwareUpdateWindowMetrics.offerWidth)
+        content = await waitForWidth(window, expected: SoftwareUpdateWindowMetrics.offerWidth)
         XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.offerWidth, accuracy: 2)
         XCTAssertGreaterThan(content.width, 420)
         host.layoutSubtreeIfNeeded()
@@ -296,7 +296,7 @@ final class J103AvailableTests: XCTestCase {
         assertHorizontallyContained(host)
 
         XCTAssertTrue(router.startUpdateDownload(version: "1.4.0", generation: store.generation))
-        content = waitForWidth(window, expected: SoftwareUpdateWindowMetrics.compactWidth)
+        content = await waitForWidth(window, expected: SoftwareUpdateWindowMetrics.compactWidth)
         XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.compactWidth, accuracy: 2)
         host.layoutSubtreeIfNeeded()
         XCTAssertGreaterThanOrEqual(host.bounds.width + 1, host.fittingSize.width)
@@ -354,11 +354,13 @@ final class J103AvailableTests: XCTestCase {
             column + 1)
     }
 
-    private func waitForWidth(_ window: NSWindow, expected: CGFloat) -> NSSize {
-        let deadline = Date(timeIntervalSinceNow: 1.5)
+    private func waitForWidth(_ window: NSWindow, expected: CGFloat) async -> NSSize {
+        let deadline = Date(timeIntervalSinceNow: 2)
         var size = window.contentRect(forFrameRect: window.frame).size
         while abs(size.width - expected) > 2, Date() < deadline {
-            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
+            // Suspend so SwiftUI can publish the new state and the window sizer
+            // can apply it. Spinning the run loop here keeps the main actor busy.
+            try? await Task.sleep(for: .milliseconds(50))
             size = window.contentRect(forFrameRect: window.frame).size
         }
         return size
