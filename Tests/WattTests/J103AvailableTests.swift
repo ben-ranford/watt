@@ -175,8 +175,8 @@ final class J103AvailableTests: XCTestCase {
             .deletingLastPathComponent().deletingLastPathComponent()
         let source = try String(contentsOf: root.appendingPathComponent("App/RootSceneView.swift"), encoding: .utf8)
         for token in [
-            "Text(Self.headline(version: version))",
-            "Text(Self.summary(installedVersion: router.currentAppVersion))",
+            "Text(SoftwareUpdateWrapping.breakable(Self.headline(version: version)))",
+            "Text(SoftwareUpdateWrapping.breakable(Self.summary(installedVersion: router.currentAppVersion)))",
             "Text(Self.changesHeading)",
             ".accessibilityLabel(Self.headline(version: version))",
             ".accessibilityLabel(Self.summary(installedVersion: router.currentAppVersion))",
@@ -196,9 +196,201 @@ final class J103AvailableTests: XCTestCase {
         _ = NSApplication.shared
         let (router, _) = await offered()
         let host = NSHostingView(rootView: UpdateRootView(softwareUpdate: true).environmentObject(router))
-        XCTAssertEqual(host.fittingSize.width, 520, accuracy: 1)
+        XCTAssertEqual(host.fittingSize.width, SoftwareUpdateWindowMetrics.offerWidth, accuracy: 1)
         XCTAssertGreaterThanOrEqual(host.fittingSize.height, 334)
         XCTAssertLessThan(host.fittingSize.height, 500)
+    }
+
+    func testShortUpdateCopyIsNotRewrapped() {
+        let headline = UpdateAvailableContent.headline(version: "1.4.0")
+        XCTAssertEqual(SoftwareUpdateWrapping.breakable(headline), headline)
+        XCTAssertFalse(headline.contains("\u{200B}"))
+        let summary = UpdateAvailableContent.summary(installedVersion: "1.3.1")
+        XCTAssertEqual(SoftwareUpdateWrapping.breakable(summary), summary)
+    }
+
+    func testOfferWindowIsWiderThanTheLegacyHost() {
+        let legacy = CGSize(width: 420, height: 560)
+        let fitted = CGSize(width: SoftwareUpdateWindowMetrics.offerWidth, height: 420)
+        let size = SoftwareUpdateWindowMetrics.contentSize(fitting: fitted, visibleHeight: 1000)
+        XCTAssertEqual(size.width, fitted.width)
+        XCTAssertEqual(size.height, fitted.height)
+        XCTAssertGreaterThan(size.width, legacy.width)
+        let capped = SoftwareUpdateWindowMetrics.contentSize(
+            fitting: CGSize(width: SoftwareUpdateWindowMetrics.offerWidth, height: 4000), visibleHeight: 700)
+        XCTAssertEqual(capped.width, SoftwareUpdateWindowMetrics.offerWidth)
+        XCTAssertLessThan(capped.height, 700)
+        XCTAssertGreaterThanOrEqual(capped.height, SoftwareUpdateWindowMetrics.minimumHeight)
+    }
+
+    func testTallNotesScrollVerticallyAndKeepTheOfferWidth() {
+        _ = NSApplication.shared
+        let host = NSView(frame: NSRect(x: 0, y: 0, width: 520, height: 2400))
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 420, height: 560),
+                              styleMask: [.titled, .closable], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        defer { window.close() }
+        let fitted = CGSize(width: SoftwareUpdateWindowMetrics.offerWidth, height: 2400)
+        let size = SoftwareUpdateWindowMetrics.contentSize(fitting: fitted, visibleHeight: 700)
+        SoftwareUpdateWindowMetrics.place(host: host, fitted: fitted, in: window, contentSize: size)
+        let content = window.contentRect(forFrameRect: window.frame).size
+        XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.offerWidth, accuracy: 1)
+        XCTAssertGreaterThan(content.width, 420)
+        XCTAssertLessThan(content.height, fitted.height)
+        let scroll = window.contentView as? NSScrollView
+        XCTAssertNotNil(scroll)
+        XCTAssertFalse(scroll?.hasHorizontalScroller ?? true)
+        XCTAssertEqual(scroll?.documentView?.frame.width ?? 0, SoftwareUpdateWindowMetrics.offerWidth, accuracy: 1)
+        XCTAssertGreaterThan(scroll?.documentView?.frame.height ?? 0, content.height)
+    }
+
+    func testProductionFallbackHostFitsTheOffer() async throws {
+        _ = NSApplication.shared
+        let (router, _) = await offered()
+        let fallback = WattFallbackStatusItem(router: router,
+                                               powerStore: PowerReadingStore(currentReading: .unavailable),
+                                               preferences: PreferencesStore(storage: InMemoryStorage()))
+        fallback.install()
+        defer { fallback.uninstall() }
+        router.present(.softwareUpdate)
+        let window = try XCTUnwrap(NSApp.windows.first { $0.identifier == SoftwareUpdateWindowMetrics.identifier })
+        defer { window.close() }
+        window.contentView?.layoutSubtreeIfNeeded()
+        let content = window.contentRect(forFrameRect: window.frame).size
+        XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.offerWidth, accuracy: 2)
+        XCTAssertGreaterThan(content.width, 420)
+        let host = try XCTUnwrap(SoftwareUpdateWindowMetrics.hostingView(in: window))
+        XCTAssertGreaterThanOrEqual(host.bounds.width + 1, SoftwareUpdateWindowMetrics.offerWidth)
+        XCTAssertGreaterThanOrEqual(host.bounds.width + 1, host.fittingSize.width)
+        assertHorizontallyContained(host)
+        let titles = buttonTitles(in: host)
+        if titles.contains("Skip This Version") {
+            XCTAssertTrue(titles.contains("Remind Me Later"))
+            XCTAssertTrue(titles.contains("Install Update"))
+        }
+    }
+
+    func testCheckingWindowGrowsToTheOfferAndDownloadFitsAgain() async throws {
+        _ = NSApplication.shared
+        let store = UpdateStore(storage: InMemoryStorage())
+        XCTAssertTrue(store.accept(.checking, generation: store.generation))
+        let service = FakeUpdateService()
+        service.availableVersion = .success("1.4.0")
+        let router = AppRouter(updateService: service, updates: store)
+        let window = SoftwareUpdateWindowMetrics.makeWindow(
+            content: UpdateRootView(softwareUpdate: true).environmentObject(router))
+        window.isReleasedWhenClosed = false
+        defer { window.close() }
+        window.orderFront(nil)
+        var content = window.contentRect(forFrameRect: window.frame).size
+        XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.compactWidth, accuracy: 2)
+        let host = try XCTUnwrap(SoftwareUpdateWindowMetrics.hostingView(in: window))
+        assertHorizontallyContained(host)
+
+        XCTAssertTrue(store.accept(.available(version: "1.4.0"), generation: store.generation))
+        content = await waitForWidth(window, expected: SoftwareUpdateWindowMetrics.offerWidth)
+        XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.offerWidth, accuracy: 2)
+        XCTAssertGreaterThan(content.width, 420)
+        host.layoutSubtreeIfNeeded()
+        XCTAssertGreaterThanOrEqual(host.bounds.width + 1, SoftwareUpdateWindowMetrics.offerWidth)
+        assertHorizontallyContained(host)
+
+        XCTAssertTrue(router.startUpdateDownload(version: "1.4.0", generation: store.generation))
+        content = await waitForWidth(window, expected: SoftwareUpdateWindowMetrics.compactWidth)
+        XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.compactWidth, accuracy: 2)
+        host.layoutSubtreeIfNeeded()
+        XCTAssertGreaterThanOrEqual(host.bounds.width + 1, host.fittingSize.width)
+        assertHorizontallyContained(host)
+    }
+
+    func testLongVersionAndReleaseLineStayInsideTheOfferWindow() async throws {
+        _ = NSApplication.shared
+        let version = String(repeating: "2026.11.27.", count: 8)
+        let url = "https://example.com/watt/notes/" + String(repeating: "release", count: 40)
+        let service = FakeUpdateService()
+        service.availableVersion = .success(version)
+        service.offeredNotes = """
+        ### Fixes
+
+        * Read the notes at \(url)
+        """
+        let router = AppRouter(updateService: service, updates: UpdateStore(storage: InMemoryStorage()))
+        XCTAssertTrue(router.checkForUpdatesFromMenu(presentationID: router.beginMenuSetupPresentation()))
+        for _ in 0..<40 {
+            if case .available = router.updates.state { break }
+            await Task.yield()
+        }
+        XCTAssertEqual(router.updates.state, .available(version: version))
+        let window = SoftwareUpdateWindowMetrics.makeWindow(
+            content: UpdateRootView(softwareUpdate: true).environmentObject(router))
+        window.isReleasedWhenClosed = false
+        defer { window.close() }
+        window.orderFront(nil)
+        window.contentView?.layoutSubtreeIfNeeded()
+        let content = window.contentRect(forFrameRect: window.frame).size
+        XCTAssertEqual(content.width, SoftwareUpdateWindowMetrics.offerWidth, accuracy: 2)
+        let host = try XCTUnwrap(SoftwareUpdateWindowMetrics.hostingView(in: window))
+        XCTAssertLessThanOrEqual(host.fittingSize.width, SoftwareUpdateWindowMetrics.offerWidth + 1)
+        XCTAssertGreaterThanOrEqual(host.bounds.width + 1, host.fittingSize.width)
+        assertHorizontallyContained(host)
+
+        let notes = SoftwareUpdateWrapping.breakable(url)
+        XCTAssertNotEqual(notes, url)
+        let body = NSFont.systemFont(ofSize: NSFont.systemFontSize)
+        XCTAssertLessThanOrEqual(
+            SoftwareUpdateWrapping.measuredWidth(notes, font: body, wrapping: SoftwareUpdateWindowMetrics.notesWidth),
+            SoftwareUpdateWindowMetrics.notesWidth + 1)
+        let headline = SoftwareUpdateWrapping.breakable(UpdateAvailableContent.headline(version: version))
+        let semibold = NSFont.systemFont(ofSize: NSFont.systemFontSize, weight: .semibold)
+        XCTAssertLessThanOrEqual(
+            SoftwareUpdateWrapping.measuredWidth(headline, font: semibold,
+                                                 wrapping: SoftwareUpdateWindowMetrics.headlineWidth),
+            SoftwareUpdateWindowMetrics.headlineWidth + 1)
+        let column = SoftwareUpdateWindowMetrics.compactWidth - SoftwareUpdateWindowMetrics.margin * 2
+            - SoftwareUpdateWindowMetrics.iconSide - SoftwareUpdateWindowMetrics.iconGap
+        let downloading = SoftwareUpdateWrapping.breakable("Downloading Watt? \(version)…")
+        XCTAssertLessThanOrEqual(
+            SoftwareUpdateWrapping.measuredWidth(downloading, font: semibold, wrapping: column),
+            column + 1)
+    }
+
+    private func waitForWidth(_ window: NSWindow, expected: CGFloat) async -> NSSize {
+        let deadline = Date(timeIntervalSinceNow: 2)
+        var size = window.contentRect(forFrameRect: window.frame).size
+        while abs(size.width - expected) > 2, Date() < deadline {
+            // Suspend so SwiftUI can publish the new state and the window sizer
+            // can apply it. Spinning the run loop here keeps the main actor busy.
+            try? await Task.sleep(for: .milliseconds(50))
+            size = window.contentRect(forFrameRect: window.frame).size
+        }
+        return size
+    }
+
+    private func buttonTitles(in view: NSView) -> [String] {
+        var titles: [String] = []
+        func walk(_ candidate: NSView) {
+            if let button = candidate as? NSButton { titles.append(button.title) }
+            candidate.subviews.forEach(walk)
+        }
+        walk(view)
+        return titles
+    }
+
+    private func assertHorizontallyContained(_ host: NSView, file: StaticString = #filePath, line: UInt = #line) {
+        host.layoutSubtreeIfNeeded()
+        let limit = host.bounds.width
+        func walk(_ view: NSView) {
+            let name = String(describing: type(of: view))
+            if name.contains("FocusRing") {
+                view.subviews.forEach(walk)
+                return
+            }
+            let frame = view.convert(view.bounds, to: host)
+            XCTAssertGreaterThanOrEqual(frame.minX, -2, "\(name) starts at \(frame.minX)", file: file, line: line)
+            XCTAssertLessThanOrEqual(frame.maxX, limit + 2, "\(name) ends at \(frame.maxX) in \(limit)", file: file, line: line)
+            view.subviews.forEach(walk)
+        }
+        host.subviews.forEach(walk)
     }
 }
 

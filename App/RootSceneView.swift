@@ -42,14 +42,264 @@ private struct HelperUpdateSceneContent: View {
 }
 
 
+/// Widths the Software Update window uses. The offer is wider than checking
+/// and download so the icon, notes, checkbox and three buttons keep a margin.
+/// The window host has to adopt that width. A narrower host centers the offer
+/// and cuts both the left and the right edges off.
+enum SoftwareUpdateWindowMetrics {
+    static let identifier = NSUserInterfaceItemIdentifier("watt.software-update")
+    static let offerWidth: CGFloat = 520
+    static let compactWidth: CGFloat = 420
+    static let margin: CGFloat = 20
+    static let iconSide: CGFloat = 64
+    static let iconGap: CGFloat = 16
+    static let minimumHeight: CGFloat = 146
+    /// Title bar plus a gap so a tall note list stays on the visible screen.
+    static let screenChrome: CGFloat = 64
+
+    static var notesWidth: CGFloat { offerWidth - margin * 2 }
+    static var headlineWidth: CGFloat { notesWidth - iconSide - iconGap }
+
+    static func contentSize(fitting: CGSize, visibleHeight: CGFloat) -> NSSize {
+        let width = max(1, fitting.width.rounded(.up))
+        let limit = max(minimumHeight, visibleHeight - screenChrome)
+        let height = min(max(minimumHeight, fitting.height.rounded(.up)), limit)
+        return NSSize(width: width, height: height)
+    }
+
+    @MainActor
+    static func measuredSize(of host: NSView) -> NSSize {
+        host.layoutSubtreeIfNeeded()
+        let fitted = host.fittingSize
+        guard fitted.width > 1, fitted.height > 1 else {
+            return NSSize(width: offerWidth, height: minimumHeight)
+        }
+        return fitted
+    }
+
+    @MainActor
+    static func hostingView(in window: NSWindow) -> NSView? {
+        if let scroll = window.contentView as? NSScrollView {
+            return scroll.documentView
+        }
+        return window.contentView
+    }
+
+    /// Gives the SwiftUI tree the full fitted height when notes are taller than
+    /// the screen, and scrolls vertically. Width stays the fitted width so a
+    /// long line cannot be cut off on the side.
+    @MainActor
+    static func place(host: NSView, fitted: CGSize, in window: NSWindow, contentSize: NSSize) {
+        let scrolls = fitted.height > contentSize.height + 1
+        if scrolls {
+            let scroll: NSScrollView
+            if let existing = window.contentView as? NSScrollView, existing.documentView === host {
+                scroll = existing
+            } else {
+                scroll = NSScrollView()
+                scroll.borderType = .noBorder
+                scroll.drawsBackground = false
+                scroll.hasVerticalScroller = true
+                scroll.hasHorizontalScroller = false
+                scroll.autohidesScrollers = true
+                scroll.scrollerStyle = .overlay
+                scroll.automaticallyAdjustsContentInsets = false
+                scroll.contentInsets = NSEdgeInsets()
+                scroll.documentView = host
+                window.contentView = scroll
+            }
+            let document = NSRect(origin: .zero, size: NSSize(width: contentSize.width, height: fitted.height))
+            if host.frame.integral != document.integral { host.frame = document }
+        } else if window.contentView !== host {
+            window.contentView = host
+        }
+        let current = window.contentRect(forFrameRect: window.frame).size
+        guard abs(current.width - contentSize.width) > 1 || abs(current.height - contentSize.height) > 1 else { return }
+        window.setContentSize(contentSize)
+    }
+
+    @MainActor
+    static func makeWindow<Content: View>(content: Content) -> NSWindow {
+        let host = SoftwareUpdateHostingView(rootView: content)
+        let fitted = measuredSize(of: host)
+        let visible = NSScreen.main?.visibleFrame.height ?? 900
+        let size = contentSize(fitting: fitted, visibleHeight: visible)
+        let window = NSWindow(contentRect: NSRect(origin: .zero, size: size),
+                              styleMask: [.titled, .closable, .miniaturizable],
+                              backing: .buffered, defer: false)
+        window.title = "Software Update"
+        window.identifier = identifier
+        window.isReleasedWhenClosed = false
+        place(host: host, fitted: fitted, in: window, contentSize: size)
+        return window
+    }
+}
+
+/// Puts wrap opportunities into a long token, such as a URL or version, so the
+/// line stays inside the update window. Short copy is returned unchanged.
+enum SoftwareUpdateWrapping {
+    static let tokenLimit = 28
+
+    static func breakable(_ text: String, limit: Int = tokenLimit) -> String {
+        guard limit > 1 else { return text }
+        var result = String()
+        result.reserveCapacity(text.count)
+        var run = 0
+        var inserted = false
+        for character in text {
+            result.append(character)
+            if character.isWhitespace {
+                run = 0
+                continue
+            }
+            run += 1
+            if run >= limit {
+                result.append("\u{200B}")
+                inserted = true
+                run = 0
+            }
+        }
+        return inserted ? result : text
+    }
+
+    static func breakable(_ source: AttributedString, limit: Int = tokenLimit) -> AttributedString {
+        let raw = String(source.characters)
+        guard breakable(raw, limit: limit) != raw else { return source }
+        var result = AttributedString()
+        var run = 0
+        for slice in source.runs {
+            for character in source[slice.range].characters {
+                result.append(AttributedString(String(character), attributes: slice.attributes))
+                if character.isWhitespace {
+                    run = 0
+                    continue
+                }
+                run += 1
+                if run >= limit {
+                    result.append(AttributedString("\u{200B}", attributes: slice.attributes))
+                    run = 0
+                }
+            }
+        }
+        return result
+    }
+
+    static func measuredWidth(_ text: String, font: NSFont, wrapping: CGFloat) -> CGFloat {
+        let style = NSMutableParagraphStyle()
+        style.lineBreakMode = .byWordWrapping
+        let rect = (text as NSString).boundingRect(
+            with: NSSize(width: wrapping, height: 10_000),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font, .paragraphStyle: style])
+        return ceil(rect.width)
+    }
+}
+
+private extension View {
+    func softwareUpdateWrapped() -> some View {
+        fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    func softwareUpdateColumn(_ width: CGFloat, alignment: Alignment = .center) -> some View {
+        frame(width: width, alignment: alignment)
+            .preference(key: SoftwareUpdateWidthKey.self, value: width)
+    }
+}
+
+/// The designed width of the visible update state. This is a constant, not the
+/// window's current bounds, so a 420 point host can still learn that the offer
+/// needs 520.
+private struct SoftwareUpdateWidthKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
+@MainActor
+protocol SoftwareUpdateSizingView: AnyObject {
+    func softwareUpdateIdealSize(width: CGFloat) -> CGSize
+}
+
+final class SoftwareUpdateHostingView<Content: View>: NSHostingView<Content>, SoftwareUpdateSizingView {
+    func softwareUpdateIdealSize(width: CGFloat) -> CGSize {
+        // fittingSize on the live host repeats the window width, so a 420 point
+        // window never discovers that the offer is 520. A new host is unconstrained.
+        let probe = NSHostingView(rootView: rootView)
+        probe.layoutSubtreeIfNeeded()
+        let fitted = probe.fittingSize
+        let resolvedWidth = fitted.width > 1 ? fitted.width : width
+        let height = (fitted.height > 1 && fitted.height < 7_000) ? fitted.height : SoftwareUpdateWindowMetrics.minimumHeight
+        return CGSize(width: resolvedWidth, height: height)
+    }
+}
+
+@MainActor
+final class SoftwareUpdateSizeRelay: ObservableObject {
+    var width: CGFloat = 0
+    var onChange: (@MainActor () -> Void)?
+    func update(width: CGFloat) {
+        guard width > 1 else { return }
+        let changed = abs(self.width - width) > 0.5
+        self.width = width
+        if changed { onChange?() }
+    }
+}
+
+/// Resizes the AppKit Software Update window when checking, the offer,
+/// download and install swap content inside the same host.
+private struct SoftwareUpdateWindowSizer: NSViewRepresentable {
+    @ObservedObject var relay: SoftwareUpdateSizeRelay
+    func makeNSView(context: Context) -> NSView { Marker() }
+    func updateNSView(_ view: NSView, context: Context) {
+        guard let marker = view as? Marker else { return }
+        marker.latestWidth = relay.width
+        relay.onChange = { [weak marker, weak relay] in
+            marker?.latestWidth = relay?.width ?? 0
+            marker?.apply()
+        }
+        marker.apply()
+    }
+
+    final class Marker: NSView {
+        var latestWidth: CGFloat = 0
+        private var applying = false
+        override var intrinsicContentSize: NSSize { .zero }
+        func apply() {
+            guard !applying else { return }
+            applying = true
+            defer { applying = false }
+            guard let window, window.identifier == SoftwareUpdateWindowMetrics.identifier,
+                  let host = SoftwareUpdateWindowMetrics.hostingView(in: window) else { return }
+            let width = latestWidth > 1 ? latestWidth : SoftwareUpdateWindowMetrics.measuredSize(of: host).width
+            let fitted: CGSize
+            if let measuring = host as? SoftwareUpdateSizingView {
+                fitted = measuring.softwareUpdateIdealSize(width: width)
+            } else {
+                var measured = SoftwareUpdateWindowMetrics.measuredSize(of: host)
+                measured.width = width
+                fitted = measured
+            }
+            let visible = window.screen?.visibleFrame.height ?? NSScreen.main?.visibleFrame.height ?? 900
+            let size = SoftwareUpdateWindowMetrics.contentSize(fitting: fitted, visibleHeight: visible)
+            SoftwareUpdateWindowMetrics.place(host: host, fitted: fitted, in: window, contentSize: size)
+        }
+    }
+}
+
 // Keep the checking → available transition inside the same native window.
 struct SoftwareUpdateContent: View {
     @ObservedObject var router: AppRouter
     @ObservedObject var store: UpdateStore
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var sizing = SoftwareUpdateSizeRelay()
     var body: some View {
         content
-            .frame(minWidth: 420, minHeight: 146)
+            .onPreferenceChange(SoftwareUpdateWidthKey.self) { sizing.update(width: $0) }
+            .frame(minWidth: SoftwareUpdateWindowMetrics.compactWidth,
+                   minHeight: SoftwareUpdateWindowMetrics.minimumHeight)
+            .background(SoftwareUpdateWindowSizer(relay: sizing))
             .background(UpToDatePresentation(router: router) { dismiss() })
             .background(CouldntCheckPresentation(router: router) { dismiss() })
             .onDisappear { router.closeUpdatePresentation() }
@@ -68,18 +318,21 @@ struct SoftwareUpdateContent: View {
         } else if case .adminRequired = store.state {
             VStack(alignment: .leading, spacing: 16) {
                 Text("The update is ready. Administrator installation is required to update Watt? and its helper together. Use the Watt? installer, then launch the installed app.")
+                    .softwareUpdateWrapped()
                 Button("Discard Download") { Task { if await router.cancelUpdateDownload() { dismiss() } } }
-            }.padding(20).frame(width: 420)
+            }.padding(SoftwareUpdateWindowMetrics.margin).softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
         } else if Self.isClosingAfterUpdate(store.state) {
-            Text("Watt? will close while the update finishes.").padding(20).frame(width: 420)
+            Text("Watt? will close while the update finishes.").softwareUpdateWrapped()
+                .padding(SoftwareUpdateWindowMetrics.margin).softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
         } else if router.isUnattendedInstall, let version = router.downloadVersion {
             UpdateDownloadingContent(router: router, store: store, version: version)
         } else if router.pendingProtectedReceipt != nil {
             VStack(alignment: .leading, spacing: 16) {
                 Text("An update needs recovery. Resume to verify the installer result and relaunch Watt?.")
+                    .softwareUpdateWrapped()
                 Button("Resume Install and Relaunch") { Task { await router.resumeProtectedUpdate() } }
                     .disabled(router.resumingProtectedUpdate)
-            }.padding(20).frame(width: 420)
+            }.padding(SoftwareUpdateWindowMetrics.margin).softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
         } else if let receipt = router.readyReceipt, let version = router.downloadVersion {
             UpdateReadyContent(router: router, store: store, version: version, receipt: receipt)
         } else if let version = router.downloadVersion {
@@ -113,17 +366,21 @@ struct UpdateAvailableContent: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top, spacing: 16) {
-                Image("WattAppIcon").resizable().frame(width: 64, height: 64)
+            HStack(alignment: .top, spacing: SoftwareUpdateWindowMetrics.iconGap) {
+                Image("WattAppIcon").resizable()
+                    .frame(width: SoftwareUpdateWindowMetrics.iconSide, height: SoftwareUpdateWindowMetrics.iconSide)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(Self.headline(version: version))
+                    Text(SoftwareUpdateWrapping.breakable(Self.headline(version: version)))
                         .font(.body).fontWeight(.semibold)
+                        .softwareUpdateWrapped()
                         .accessibilityLabel(Self.headline(version: version))
-                    Text(Self.summary(installedVersion: router.currentAppVersion))
+                    Text(SoftwareUpdateWrapping.breakable(Self.summary(installedVersion: router.currentAppVersion)))
                         .font(.subheadline).foregroundStyle(.secondary)
+                        .softwareUpdateWrapped()
                         .accessibilityLabel(Self.summary(installedVersion: router.currentAppVersion))
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             Text(Self.changesHeading).font(.headline)
                 .accessibilityLabel(Self.changesHeading)
@@ -147,8 +404,8 @@ struct UpdateAvailableContent: View {
                 Text("Couldn’t apply your choice. Try again.").font(.caption)
             }
         }
-        .padding(20)
-        .frame(width: 520)
+        .padding(SoftwareUpdateWindowMetrics.margin)
+        .softwareUpdateColumn(SoftwareUpdateWindowMetrics.offerWidth)
         .frame(minHeight: 334)
     }
 
@@ -221,12 +478,11 @@ struct ReleaseNotesBlock: View {
     }
 
     private func noteText(_ block: UpdateReleaseNotes.Block) -> some View {
-        Text(block.inline)
+        Text(SoftwareUpdateWrapping.breakable(block.inline))
             .font(noteFont(block.kind))
             .foregroundStyle(.primary)
             .multilineTextAlignment(.leading)
-            .fixedSize(horizontal: false, vertical: true)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .softwareUpdateWrapped()
             .textSelection(.enabled)
     }
 
@@ -257,14 +513,16 @@ struct UpdateReadyContent: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            HStack(alignment: .top, spacing: 16) {
-                Image("WattAppIcon").resizable().frame(width: 64, height: 64).accessibilityHidden(true)
+            HStack(alignment: .top, spacing: SoftwareUpdateWindowMetrics.iconGap) {
+                Image("WattAppIcon").resizable()
+                    .frame(width: SoftwareUpdateWindowMetrics.iconSide, height: SoftwareUpdateWindowMetrics.iconSide)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(Self.title).font(WattTypography.headline)
+                    Text(Self.title).font(WattTypography.headline).softwareUpdateWrapped()
                     ProgressView(value: Self.progress).progressViewStyle(.linear)
                         .accessibilityLabel("Download complete")
                     Text(Self.footnote).font(WattTypography.footnote).foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .softwareUpdateWrapped()
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack(spacing: 10) {
@@ -275,15 +533,18 @@ struct UpdateReadyContent: View {
                     .buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction)
             }.font(WattTypography.bodyEmphasized).disabled(router.readyIntent != nil)
             if let message = router.readyInstallFailure?.message {
-                Text(message).font(WattTypography.footnote).foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                Text(SoftwareUpdateWrapping.breakable(message))
+                    .font(WattTypography.footnote).foregroundStyle(.secondary)
+                    .softwareUpdateWrapped()
                     .accessibilityLabel(message)
             }
             if store.persistenceFailure != nil {
                 Text("Couldn’t save your choice. Try again.").font(WattTypography.footnote)
                     .foregroundStyle(.secondary)
             }
-        }.padding(20).frame(width: 420).frame(minHeight: 146)
+        }.padding(SoftwareUpdateWindowMetrics.margin)
+            .softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
+            .frame(minHeight: SoftwareUpdateWindowMetrics.minimumHeight)
         .onAppear {
             generation = store.generation
             presentation = router.beginReadyPresentation()
@@ -312,14 +573,20 @@ struct UpdateDownloadingContent: View {
     @State private var cancelling = false
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            HStack(alignment: .top, spacing: 16) {
-                Image("WattAppIcon").resizable().frame(width: 64, height: 64).accessibilityHidden(true)
+            HStack(alignment: .top, spacing: SoftwareUpdateWindowMetrics.iconGap) {
+                Image("WattAppIcon").resizable()
+                    .frame(width: SoftwareUpdateWindowMetrics.iconSide, height: SoftwareUpdateWindowMetrics.iconSide)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Downloading Watt? \(version)…").font(WattTypography.bodyEmphasized)
+                    Text(SoftwareUpdateWrapping.breakable("Downloading Watt? \(version)…"))
+                        .font(WattTypography.bodyEmphasized)
+                        .softwareUpdateWrapped()
+                        .accessibilityLabel("Downloading Watt? \(version)…")
                     ProgressView(value: progress).progressViewStyle(.linear)
                         .accessibilityLabel("Download progress")
                     Text(router.downloadProgress?.label ?? "Preparing download…")
                         .font(WattTypography.footnote).foregroundStyle(.secondary)
+                        .softwareUpdateWrapped()
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack {
@@ -337,7 +604,9 @@ struct UpdateDownloadingContent: View {
             } else if case .failed = store.state {
                 Text("Download stopped. Cancel to clean up before retrying.").font(.caption)
             }
-        }.padding(20).frame(width: 420).frame(minHeight: 146)
+        }.padding(SoftwareUpdateWindowMetrics.margin)
+            .softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
+            .frame(minHeight: SoftwareUpdateWindowMetrics.minimumHeight)
         .onDisappear {
             if case .downloading = store.state { Task { _ = await router.cancelUpdateDownload() } }
         }
@@ -357,19 +626,20 @@ struct UpdateCheckingContent: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            HStack(alignment: .top, spacing: 16) {
+            HStack(alignment: .top, spacing: SoftwareUpdateWindowMetrics.iconGap) {
                 Image("WattAppIcon")
                     .resizable()
-                    .frame(width: 64, height: 64)
+                    .frame(width: SoftwareUpdateWindowMetrics.iconSide, height: SoftwareUpdateWindowMetrics.iconSide)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Checking for updates…")
                         .font(WattTypography.bodyEmphasized)
+                        .softwareUpdateWrapped()
                     ProgressView()
                         .progressViewStyle(.linear)
                         .accessibilityLabel("Checking for updates…")
                 }
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack {
                 Spacer()
@@ -385,9 +655,9 @@ struct UpdateCheckingContent: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(20)
-        .frame(width: 420, alignment: .leading)
-        .frame(minHeight: 146)
+        .padding(SoftwareUpdateWindowMetrics.margin)
+        .softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth, alignment: .leading)
+        .frame(minHeight: SoftwareUpdateWindowMetrics.minimumHeight)
         .onChange(of: store.state) { state in
             // Keep native result alerts in this scene.
             if state != .checking && !router.upToDatePresented && !router.couldntCheckPresented {

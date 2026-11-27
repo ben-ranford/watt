@@ -539,6 +539,7 @@ struct WattApp: App {
             UpdateRootView(softwareUpdate: true)
                 .environmentObject(router)
         }
+        .defaultSize(width: SoftwareUpdateWindowMetrics.offerWidth, height: 480)
         .windowResizability(.contentSize)
 
         Window("Watt? Update", id: "update") {

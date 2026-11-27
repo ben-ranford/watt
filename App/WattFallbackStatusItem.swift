@@ -126,8 +126,13 @@ final class WattFallbackStatusItem: NSObject, NSPopoverDelegate {
                     .environmentObject(self.preferences))
             case .softwareUpdate:
                 guard let self else { return }
-                self.showFallbackWindow(title: "Software Update", content: UpdateRootView(softwareUpdate: true)
-                    .environmentObject(self.router))
+                let window = SoftwareUpdateWindowMetrics.makeWindow(
+                    content: UpdateRootView(softwareUpdate: true).environmentObject(self.router))
+                window.center()
+                window.makeKeyAndOrderFront(nil)
+                NSApp.activate(ignoringOtherApps: true)
+                self.fallbackWindow?.close()
+                self.fallbackWindow = window
             case .update:
                 guard let self else { return }
                 self.showFallbackWindow(title: "Watt? Update", content: UpdateRootView()
