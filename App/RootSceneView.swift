@@ -224,12 +224,16 @@ protocol SoftwareUpdateSizingView: AnyObject {
 
 final class SoftwareUpdateHostingView<Content: View>: NSHostingView<Content>, SoftwareUpdateSizingView {
     func softwareUpdateIdealSize(width: CGFloat) -> CGSize {
-        let probed = sizeThatFits(CGSize(width: width, height: 8_000))
-        var height = probed.height
-        if height < 1 || height >= 7_000 {
-            let fallback = fittingSize.height
-            height = (fallback > 1 && fallback < 7_000) ? fallback : SoftwareUpdateWindowMetrics.minimumHeight
+        let current = fittingSize
+        if abs(current.width - width) < 2, current.height > 1, current.height < 7_000 {
+            return CGSize(width: width, height: current.height)
         }
+        // A fresh host is not constrained by the current window, so a 420 point
+        // frame cannot hide the offer's 520 point layout.
+        let probe = NSHostingView(rootView: rootView)
+        probe.layoutSubtreeIfNeeded()
+        let fitted = probe.fittingSize
+        let height = (fitted.height > 1 && fitted.height < 7_000) ? fitted.height : SoftwareUpdateWindowMetrics.minimumHeight
         return CGSize(width: width, height: height)
     }
 }
