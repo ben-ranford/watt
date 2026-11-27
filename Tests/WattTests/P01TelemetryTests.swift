@@ -769,6 +769,191 @@ final class P01TelemetryTests: XCTestCase {
         }
     }
 
+    func testOnBatteryGaugeReplacesStaleSystemLoadWithoutChangingBatteryWatts() throws {
+        let reading = try onBattery(properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 12_000,
+                "SystemPowerIn": 0,
+                "SystemLoad": 18_400
+            ],
+            "Voltage": 12_000,
+            "InstantAmperage": -2_000,
+            "Amperage": -1_500
+        ])
+        XCTAssertEqual(reading.batteryState, .discharging)
+        XCTAssertEqual(try XCTUnwrap(reading.watts), -12, accuracy: 0.001)
+        XCTAssertNil(reading.chargerWatts)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 24, accuracy: 0.001)
+        XCTAssertEqual(reading.capabilities.systemDraw, .available)
+        XCTAssertEqual(try XCTUnwrap(reading.value(for: .draw)), 24, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.value(for: .delta)), -12, accuracy: 0.001)
+        try reading.validate()
+    }
+
+    func testZeroInstantCurrentUsesAverageAmperage() throws {
+        let reading = try onBattery(properties: [
+            "PowerTelemetryData": ["BatteryPower": 18_400, "SystemLoad": 18_400],
+            "Voltage": 11_000,
+            "InstantAmperage": 0,
+            "Amperage": -1_500
+        ])
+        XCTAssertEqual(try XCTUnwrap(reading.watts), -18.4, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 16.5, accuracy: 0.001)
+    }
+
+    func testPositiveGaugeCurrentStillUsesMagnitude() throws {
+        let reading = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 5_000],
+            "Voltage": 12_000,
+            "InstantAmperage": 1_800
+        ])
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 21.6, accuracy: 0.001)
+    }
+
+    func testStuckZeroGaugeKeepsSystemLoad() throws {
+        let stuck = try onBattery(properties: [
+            "PowerTelemetryData": ["BatteryPower": 18_400, "SystemLoad": 18_400],
+            "Voltage": 12_000,
+            "InstantAmperage": 0,
+            "Amperage": 0
+        ])
+        XCTAssertEqual(try XCTUnwrap(stuck.systemWatts), 18.4, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(stuck.watts), -18.4, accuracy: 0.001)
+
+        let atThreshold = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 500],
+            "Voltage": 12_000,
+            "InstantAmperage": 0,
+            "Amperage": 0
+        ])
+        XCTAssertEqual(try XCTUnwrap(atThreshold.systemWatts), 0.5, accuracy: 0.001)
+
+        let quiet = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 0],
+            "Voltage": 12_000,
+            "InstantAmperage": 0,
+            "Amperage": 0
+        ])
+        XCTAssertEqual(try XCTUnwrap(quiet.systemWatts), 0, accuracy: 0.001)
+    }
+
+    func testImplausibleGaugeFallsBackToSystemLoad() throws {
+        let volts = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 18_400],
+            "Voltage": 12,
+            "InstantAmperage": -2_000
+        ])
+        XCTAssertEqual(try XCTUnwrap(volts.systemWatts), 18.4, accuracy: 0.001)
+
+        let microamps = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 18_400],
+            "Voltage": 12_000,
+            "InstantAmperage": -40_000
+        ])
+        XCTAssertEqual(try XCTUnwrap(microamps.systemWatts), 18.4, accuracy: 0.001)
+
+        let missingVoltage = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 18_400],
+            "Amperage": -2_000
+        ])
+        XCTAssertEqual(try XCTUnwrap(missingVoltage.systemWatts), 18.4, accuracy: 0.001)
+
+        let namedVoltage = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 18_400],
+            "Voltage": "12000",
+            "Amperage": -2_000
+        ])
+        XCTAssertEqual(try XCTUnwrap(namedVoltage.systemWatts), 18.4, accuracy: 0.001)
+
+        let booleanInstant = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 18_400],
+            "Voltage": 12_000,
+            "InstantAmperage": true,
+            "Amperage": -2_000
+        ])
+        XCTAssertEqual(try XCTUnwrap(booleanInstant.systemWatts), 24, accuracy: 0.001)
+
+        let notANumber = try onBattery(properties: [
+            "PowerTelemetryData": ["SystemLoad": 9_000],
+            "Voltage": Double.nan,
+            "InstantAmperage": -1_000
+        ])
+        XCTAssertEqual(try XCTUnwrap(notANumber.systemWatts), 9, accuracy: 0.001)
+    }
+
+    func testGaugeWithoutSystemLoadStillPublishesOnBatteryDraw() throws {
+        let reading = try onBattery(properties: [
+            "PowerTelemetryData": ["BatteryPower": 10_000],
+            "Voltage": 12_000,
+            "InstantAmperage": -900
+        ])
+        XCTAssertEqual(try XCTUnwrap(reading.watts), -10, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 10.8, accuracy: 0.001)
+        XCTAssertEqual(reading.capabilities.systemDraw, .available)
+        XCTAssertEqual(reading.mode, .onBattery)
+    }
+
+    func testAlternatingCurrentIgnoresPackCurrent() throws {
+        let reading = try parseSnapshot([battery()], properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 42_100,
+                "SystemPowerIn": 65_000,
+                "SystemLoad": 22_900
+            ],
+            "Voltage": 12_000,
+            "InstantAmperage": 3_500,
+            "Amperage": 3_200
+        ])
+        XCTAssertEqual(reading.batteryState, .charging)
+        XCTAssertEqual(try XCTUnwrap(reading.watts), 42.1, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 65, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 22.9, accuracy: 0.001)
+    }
+
+    func testDischargingOnACKeepsSystemLoad() throws {
+        let reading = try parseSnapshot([battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false,
+            kIOPSPowerSourceStateKey: kIOPSBatteryPowerValue
+        ])], source: kIOPSACPowerValue, properties: [
+            "PowerTelemetryData": [
+                "BatteryPower": 12_000,
+                "SystemPowerIn": 20_000,
+                "SystemLoad": 40_000
+            ],
+            "Voltage": 12_000,
+            "InstantAmperage": -2_000
+        ])
+        XCTAssertEqual(reading.batteryState, .discharging)
+        XCTAssertEqual(try XCTUnwrap(reading.watts), -12, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.systemWatts), 40, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(reading.chargerWatts), 20, accuracy: 0.001)
+    }
+
+    func testPackPowerFormulaRejectsOutOfRangeGaugeValues() throws {
+        XCTAssertEqual(try XCTUnwrap(SystemDrawResolver.packWatts([
+            "Voltage": 12_000, "InstantAmperage": -2_000
+        ])), 24, accuracy: 0.001)
+        XCTAssertNil(SystemDrawResolver.packWatts(["Voltage": 12_000]))
+        XCTAssertNil(SystemDrawResolver.packWatts([
+            "Voltage": 2_999, "InstantAmperage": -2_000
+        ]))
+        XCTAssertNil(SystemDrawResolver.packWatts([
+            "Voltage": 20_001, "InstantAmperage": -1
+        ]))
+        XCTAssertNil(SystemDrawResolver.packWatts([
+            "Voltage": 12_000, "InstantAmperage": -30_001
+        ]))
+        XCTAssertEqual(try XCTUnwrap(SystemDrawResolver.systemWatts(
+            systemLoad: 18.4,
+            batteryProperties: ["Voltage": 12_000, "InstantAmperage": -2_000],
+            onBattery: false)), 18.4, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(SystemDrawResolver.systemWatts(
+            systemLoad: nil,
+            batteryProperties: ["Voltage": 12_000, "InstantAmperage": -2_000],
+            onBattery: true)), 24, accuracy: 0.001)
+    }
+
     @MainActor func testPhysicalHostPublicAPISmoke() async throws {
         guard ProcessInfo.processInfo.environment["WATT_P01_HOST_PROBE"] == "1" else {
             throw XCTSkip("Opt-in physical-host metadata probe; not fixture evidence")
@@ -789,8 +974,200 @@ final class P01TelemetryTests: XCTestCase {
         print("P01 HOST: battery=\(reading.batteryState.rawValue) percentage=\(String(describing: reading.batteryPercentage)) batteryWatts=\(String(describing: reading.watts)) chargerWatts=\(String(describing: reading.chargerWatts)) systemWatts=\(String(describing: reading.systemWatts)) adapter=\(reading.adapterSubtitle ?? "none") detail=\(reading.detail ?? "none") observedAt=\(reading.timestamp)")
     }
 
+    private func onBattery(properties: [String: Any]) throws -> PowerReading {
+        try parseSnapshot([battery([
+            kIOPSIsChargingKey: false,
+            kIOPSIsChargedKey: false,
+            kIOPSPowerSourceStateKey: kIOPSBatteryPowerValue
+        ])], source: kIOPSBatteryPowerValue, properties: properties)
+    }
+
     private func assertFailure(_ outcome: ServiceOutcome<PowerReading>, _ expected: ServiceFailure, file: StaticString = #filePath, line: UInt = #line) {
         guard case .failure(let failure) = outcome else { return XCTFail("Expected failure", file: file, line: line) }
         XCTAssertEqual(failure, expected, file: file, line: line)
+    }
+}
+
+@MainActor
+final class ReadingSmoothingTests: XCTestCase {
+    func testSmoothReadingsAveragesTheLastFiveSeconds() async {
+        let clock = FakeWattClock()
+        let telemetry = FakeTelemetryService(outcome: .success(sample(at: clock.now, system: 10, battery: -10)))
+        let store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: telemetry)
+        var smooth = true
+        store.setSmoothReadings { smooth }
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 10, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.watts), -10, accuracy: 0.001)
+
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 20, battery: -20))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 15, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.watts), -15, accuracy: 0.001)
+
+        clock.advance(by: 4)
+        telemetry.outcome = .success(sample(at: clock.now, system: 40, battery: -40))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 30, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.watts), -30, accuracy: 0.001)
+    }
+
+    func testSampleAtTheWindowEdgeStaysInTheAverage() async {
+        let clock = FakeWattClock()
+        let telemetry = FakeTelemetryService(outcome: .success(sample(at: clock.now, system: 10, battery: -10)))
+        let store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: telemetry)
+        store.setSmoothReadings { true }
+        await store.refresh()
+        clock.advance(by: ReadingSmoother.window)
+        telemetry.outcome = .success(sample(at: clock.now, system: 30, battery: -30))
+        await store.refresh()
+        XCTAssertEqual(ReadingSmoother.window, 5, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 20, accuracy: 0.001)
+    }
+
+    func testSmoothReadingsOffPublishesEachSample() async {
+        let clock = FakeWattClock()
+        let telemetry = FakeTelemetryService(outcome: .success(sample(at: clock.now, system: 10, battery: -10)))
+        let store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: telemetry)
+        var smooth = true
+        store.setSmoothReadings { smooth }
+        await store.refresh()
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 20, battery: -20))
+        await store.refresh()
+        smooth = false
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 30, battery: -30))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 30, accuracy: 0.001)
+        smooth = true
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 50, battery: -50))
+        await store.refresh()
+        // t=2 (20), t=4 (30) and t=6 (50) are inside five seconds. t=0 has aged out.
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 100.0 / 3.0, accuracy: 0.001)
+    }
+
+    func testSmoothingDoesNotMixBatteryStatesOrChargerWithDraw() async {
+        let clock = FakeWattClock()
+        let telemetry = FakeTelemetryService(outcome: .success(sample(at: clock.now, system: 10, battery: -10)))
+        let store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: telemetry)
+        store.setSmoothReadings { true }
+        await store.refresh()
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 22, battery: 40, state: .charging, charger: 60))
+        await store.refresh()
+        XCTAssertEqual(store.currentReading.batteryState, .charging)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.watts), 40, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 22, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.chargerWatts), 60, accuracy: 0.001)
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 28, battery: 20, state: .charging, charger: 80))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.watts), 30, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 25, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.chargerWatts), 70, accuracy: 0.001)
+    }
+
+    func testMissingSystemWattsStayMissing() async {
+        let clock = FakeWattClock()
+        let telemetry = FakeTelemetryService(outcome: .success(sample(at: clock.now, system: 10, battery: -10)))
+        let store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: telemetry)
+        store.setSmoothReadings { true }
+        await store.refresh()
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: nil, battery: -12))
+        await store.refresh()
+        XCTAssertNil(store.currentReading.systemWatts)
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.watts), -11, accuracy: 0.001)
+    }
+
+    func testRestartDropsTheSmoothingWindow() async {
+        let clock = FakeWattClock()
+        let telemetry = FakeTelemetryService(outcome: .success(sample(at: clock.now, system: 10, battery: -10)))
+        let store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: telemetry)
+        store.setSmoothReadings { true }
+        await store.refresh()
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 20, battery: -20))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 15, accuracy: 0.001)
+        store.restart()
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 40, battery: -40))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 40, accuracy: 0.001)
+    }
+
+    func testRejectedSampleDoesNotEnterTheAverage() async {
+        let clock = FakeWattClock()
+        let telemetry = FakeTelemetryService(outcome: .success(sample(at: clock.now, system: 10, battery: -10)))
+        let store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: telemetry)
+        store.setSmoothReadings { true }
+        await store.refresh()
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 20, battery: -20))
+        await store.refresh()
+        let stale = clock.now.addingTimeInterval(-1)
+        telemetry.outcome = .success(sample(at: stale, system: 100, battery: -100))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 15, accuracy: 0.001)
+        clock.advance(by: 4)
+        telemetry.outcome = .success(sample(at: clock.now, system: 40, battery: -40))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 30, accuracy: 0.001)
+    }
+
+    func testWakeClearsTheSmoothingWindow() async {
+        let clock = FakeWattClock()
+        let telemetry = FakeTelemetryService(outcome: .success(sample(at: clock.now, system: 10, battery: -10)))
+        let store = PowerReadingStore(currentReading: .unavailable, clock: clock, telemetry: telemetry)
+        store.setSmoothReadings { true }
+        await store.refresh()
+        clock.advance(by: 2)
+        telemetry.outcome = .success(sample(at: clock.now, system: 20, battery: -20))
+        await store.refresh()
+        store.handleWake()
+        clock.advance(by: 1)
+        telemetry.outcome = .success(sample(at: clock.now, system: 8, battery: -8))
+        await store.refresh()
+        XCTAssertEqual(try XCTUnwrap(store.currentReading.systemWatts), 8, accuracy: 0.001)
+    }
+
+    func testSmoothingWindowMatchesTheSettingsCopy() throws {
+        XCTAssertEqual(ReadingSmoother.window, 5, accuracy: 0.001)
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+        let settings = try String(contentsOf: root.appendingPathComponent("Features/Settings/Views/SettingsRootView.swift"), encoding: .utf8)
+        XCTAssertTrue(settings.contains("averages the last 5 seconds"))
+        let app = try String(contentsOf: root.appendingPathComponent("App/WattApp.swift"), encoding: .utf8)
+        XCTAssertTrue(app.contains("setSmoothReadings { appPreferences.smoothReadings }"))
+        let store = try String(contentsOf: root.appendingPathComponent("Services/PowerReadingStore.swift"), encoding: .utf8)
+        XCTAssertTrue(store.contains("userInitiatedAllowingIdleSystemSleep"))
+        XCTAssertTrue(store.contains("beginActivity"))
+        XCTAssertTrue(store.contains("endActivity"))
+    }
+
+    func testAppNapExemptionAllowsIdleSleep() {
+        let options = ProcessMenuBarSamplingActivity.options
+        XCTAssertEqual(options, .userInitiatedAllowingIdleSystemSleep)
+        XCTAssertFalse(options.contains(.idleSystemSleepDisabled))
+        XCTAssertFalse(options.contains(.idleDisplaySleepDisabled))
+        XCTAssertFalse(options.contains(.latencyCritical))
+        let token = ProcessMenuBarSamplingActivity().begin()
+        token.end()
+        token.end()
+    }
+
+    private func sample(at date: Date, system: Double?, battery: Double,
+                        state: BatteryState = .discharging, charger: Double? = nil) -> PowerReading {
+        PowerReading(
+            mode: state == .discharging ? .onBattery : .charging,
+            watts: battery, batteryPercentage: 64, timestamp: date, batteryState: state,
+            capabilities: .init(battery: .available,
+                                charger: charger == nil ? .disconnected : .available,
+                                systemDraw: system == nil ? .unsupported : .available),
+            freshness: .fresh, source: .system, chargerWatts: charger, systemWatts: system)
     }
 }

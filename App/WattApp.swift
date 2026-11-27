@@ -387,6 +387,7 @@ struct WattApp: App {
             }
         }
         let appPreferences = PreferencesStore(storage: UserDefaultsStorage(defaults: .standard))
+        appPowerStore.setSmoothReadings { appPreferences.smoothReadings }
         _powerStore = StateObject(wrappedValue: appPowerStore)
         _preferences = StateObject(wrappedValue: appPreferences)
         // The fallback owns the visible production status item on hosts where

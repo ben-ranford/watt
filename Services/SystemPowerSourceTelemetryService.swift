@@ -26,6 +26,85 @@ struct SystemPowerSourceSnapshot {
     }
 }
 
+/// Menu-bar system draw, in watts.
+///
+/// `PowerTelemetryData` is one IORegistry dictionary on `AppleSmartBattery`.
+/// On an M5 Pro running macOS 27.2.1, on battery, `SystemLoad` sat unchanged
+/// for about 56 seconds and then stepped. `SystemPowerIn` and `BatteryPower`
+/// live in that same dictionary and move with it. Polling faster cannot make
+/// that bucket fresher. It remains the system-draw value on AC (pack current
+/// there is charge current, not the Mac's draw), on a Mac with no usable
+/// gauge, and whenever the gauge is missing or implausible.
+///
+/// These three `AppleSmartBattery` keys are the gas gauge. They are read with
+/// the same `IORegistryEntryCreateCFProperty` call the app already makes, so
+/// they add no entitlement, sandbox exception, or helper:
+///
+/// - `Voltage` is pack voltage in millivolts and updates about once a second.
+/// - `InstantAmperage` is the latest pack current in milliamps, signed
+///   (negative while discharging, positive while charging), at that same
+///   roughly 1 Hz cadence. It is the preferred live current.
+/// - `Amperage` is a short average of that current, still seconds rather than
+///   a minute, used when instant current is missing or stuck at zero.
+///
+/// On battery the pack is the only supply, so the live system draw is the
+/// pack power `|millivolts × milliamps| / 1_000_000`. A constant `SystemLoad`
+/// is indistinguishable from a stale one until the bucket steps, so a
+/// plausible gauge wins whenever the Mac is on battery instead of waiting for
+/// that step and jumping back to it. `SystemLoad` is the fallback, and the
+/// cross-check for a gauge whose current keys are present but stuck at 0
+/// while the telemetry bucket still reports real draw.
+///
+/// IOPS `Current` and `Voltage` are not used. On recent macOS that public
+/// copy is republished with the slow telemetry, not with the gauge. Adapter
+/// `Current` and `Voltage` describe the charger, not live system draw.
+enum SystemDrawResolver {
+    /// Below a MacBook series string in millivolts. A value in volts fails this.
+    static let minimumPackMillivolts = 3_000.0
+    /// Above a full series pack, with margin. A microvolt-scale value fails this.
+    static let maximumPackMillivolts = 20_000.0
+    /// Above a short burst on a high-power MacBook. Amps stored as if they were
+    /// milliamps still fit; microamps do not.
+    static let maximumPackMilliamps = 30_000.0
+    /// Above a laptop system draw. A desktop has no pack gauge and keeps `SystemLoad`.
+    static let maximumPackWatts = 500.0
+    /// Telemetry at or above this, with a zeroed gauge, means the current keys are stuck.
+    static let stuckGaugeSystemWatts = 0.5
+
+    static func systemWatts(systemLoad: Double?, batteryProperties: [String: Any]?, onBattery: Bool) -> Double? {
+        guard onBattery, let live = packWatts(batteryProperties) else { return systemLoad }
+        if live == 0, let systemLoad, systemLoad >= stuckGaugeSystemWatts { return systemLoad }
+        return live
+    }
+
+    /// `|Voltage × current|` in watts. Instant current wins when it is non-zero.
+    static func packWatts(_ properties: [String: Any]?) -> Double? {
+        guard let millivolts = finite(properties?["Voltage"]),
+              (minimumPackMillivolts...maximumPackMillivolts).contains(millivolts) else { return nil }
+        guard let milliamps = packMilliamps(instant: finite(properties?["InstantAmperage"]),
+                                             average: finite(properties?["Amperage"])) else { return nil }
+        let magnitude = abs(milliamps)
+        guard magnitude <= maximumPackMilliamps else { return nil }
+        let watts = millivolts * magnitude / 1_000_000
+        guard watts.isFinite, (0...maximumPackWatts).contains(watts) else { return nil }
+        return watts
+    }
+
+    private static func packMilliamps(instant: Double?, average: Double?) -> Double? {
+        if let instant, instant != 0 { return instant }
+        if let average, average != 0 { return average }
+        if instant == 0 || average == 0 { return 0 }
+        return nil
+    }
+
+    private static func finite(_ value: Any?) -> Double? {
+        guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID() else { return nil }
+        let value = number.doubleValue
+        guard value.isFinite else { return nil }
+        return value
+    }
+}
+
 // Pure parser: public IOPS keys determine state and time remaining. IORegistry
 // telemetry supplies measured watts. Adapter identity comes from AdapterDetails
 // or the external adapter dictionary. Missing and odd values stay hidden.
@@ -70,7 +149,12 @@ enum SystemPowerSourceParser {
             ? (adapterSubtitle ?? sourceDetail)
             : (PowerSourceCopy.timeDetail(minutes: minutes, state: state) ?? sourceDetail)
         let telemetry = measurement(snapshot.batteryProperties?["PowerTelemetryData"])
-        let systemWatts = watts(telemetry?["SystemLoad"])
+        // Battery watts stay on BatteryPower. Only system draw consults the gauge.
+        let onBattery = state == .discharging && snapshot.providingSource == kIOPSBatteryPowerValue
+        let systemWatts = SystemDrawResolver.systemWatts(
+            systemLoad: watts(telemetry?["SystemLoad"]),
+            batteryProperties: snapshot.batteryProperties,
+            onBattery: onBattery)
         let chargerWatts = watts(telemetry?["SystemPowerIn"])
         let hasSystemDraw = systemWatts != nil
         let hasChargerInput = chargerWatts != nil && snapshot.providingSource == kIOPSACPowerValue
@@ -297,9 +381,11 @@ final class SystemPowerSourceTelemetryService: TelemetryService {
 
         // Copy the keys the parser reads. The rest of the AppleSmartBattery
         // entry stays in the registry. A missing key is the same as a dictionary
-        // that does not contain it.
+        // that does not contain it. Voltage and the two current keys are the
+        // gas gauge; they are numbers, not a second copy of PowerTelemetryData.
         var properties: [String: Any] = [:]
-        for key in ["PowerTelemetryData", "AdapterDetails", "AppleRawAdapterDetails"] {
+        for key in ["PowerTelemetryData", "AdapterDetails", "AppleRawAdapterDetails",
+                    "Voltage", "InstantAmperage", "Amperage"] {
             guard let value = IORegistryEntryCreateCFProperty(
                 service, key as CFString, kCFAllocatorDefault, 0
             )?.takeRetainedValue() else { continue }
