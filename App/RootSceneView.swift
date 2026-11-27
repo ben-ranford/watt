@@ -120,7 +120,7 @@ enum SoftwareUpdateWindowMetrics {
 
     @MainActor
     static func makeWindow<Content: View>(content: Content) -> NSWindow {
-        let host = NSHostingView(rootView: content)
+        let host = SoftwareUpdateHostingView(rootView: content)
         let fitted = measuredSize(of: host)
         let visible = NSScreen.main?.visibleFrame.height ?? 900
         let size = contentSize(fitting: fitted, visibleHeight: visible)
@@ -200,29 +200,48 @@ private extension View {
         fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
+
+    func softwareUpdateColumn(_ width: CGFloat, alignment: Alignment = .center) -> some View {
+        frame(width: width, alignment: alignment)
+            .preference(key: SoftwareUpdateWidthKey.self, value: width)
+    }
 }
 
-/// Layout size of the SwiftUI update content, including a fixed width the
-/// window has not caught up with yet.
-private struct SoftwareUpdateSizeKey: PreferenceKey {
-    static let defaultValue = CGSize.zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        let next = nextValue()
-        if next.width > 1, next.height > 1 { value = next }
+/// The designed width of the visible update state. This is a constant, not the
+/// window's current bounds, so a 420 point host can still learn that the offer
+/// needs 520.
+private struct SoftwareUpdateWidthKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
+@MainActor
+protocol SoftwareUpdateSizingView: AnyObject {
+    func softwareUpdateIdealSize(width: CGFloat) -> CGSize
+}
+
+final class SoftwareUpdateHostingView<Content: View>: NSHostingView<Content>, SoftwareUpdateSizingView {
+    func softwareUpdateIdealSize(width: CGFloat) -> CGSize {
+        let probed = sizeThatFits(CGSize(width: width, height: 8_000))
+        var height = probed.height
+        if height < 1 || height >= 7_000 {
+            let fallback = fittingSize.height
+            height = (fallback > 1 && fallback < 7_000) ? fallback : SoftwareUpdateWindowMetrics.minimumHeight
+        }
+        return CGSize(width: width, height: height)
     }
 }
 
 @MainActor
 final class SoftwareUpdateSizeRelay: ObservableObject {
-    var size: CGSize = .zero
+    var width: CGFloat = 0
     var onChange: (@MainActor () -> Void)?
-    func update(_ size: CGSize) {
-        guard size.width > 1, size.height > 1 else { return }
-        // A background reader can report the whole screen before the fixed
-        // frame resolves. Ignore that and keep the measured content size.
-        guard size.width <= SoftwareUpdateWindowMetrics.offerWidth + 8, size.height < 8_000 else { return }
-        let changed = abs(self.size.width - size.width) > 0.5 || abs(self.size.height - size.height) > 0.5
-        self.size = size
+    func update(width: CGFloat) {
+        guard width > 1 else { return }
+        let changed = abs(self.width - width) > 0.5
+        self.width = width
         if changed { onChange?() }
     }
 }
@@ -234,22 +253,30 @@ private struct SoftwareUpdateWindowSizer: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView { Marker() }
     func updateNSView(_ view: NSView, context: Context) {
         guard let marker = view as? Marker else { return }
-        marker.latest = relay.size
+        marker.latestWidth = relay.width
         relay.onChange = { [weak marker, weak relay] in
-            marker?.latest = relay?.size ?? .zero
+            marker?.latestWidth = relay?.width ?? 0
             marker?.schedule()
         }
         marker.schedule()
     }
 
     final class Marker: NSView {
-        var latest: CGSize = .zero
+        var latestWidth: CGFloat = 0
         override var intrinsicContentSize: NSSize { .zero }
         func schedule() { DispatchQueue.main.async { [weak self] in self?.apply() } }
         func apply() {
             guard let window, window.identifier == SoftwareUpdateWindowMetrics.identifier,
                   let host = SoftwareUpdateWindowMetrics.hostingView(in: window) else { return }
-            let fitted = latest.width > 1 ? latest : SoftwareUpdateWindowMetrics.measuredSize(of: host)
+            let width = latestWidth > 1 ? latestWidth : SoftwareUpdateWindowMetrics.measuredSize(of: host).width
+            let fitted: CGSize
+            if let measuring = host as? SoftwareUpdateSizingView {
+                fitted = measuring.softwareUpdateIdealSize(width: width)
+            } else {
+                var measured = SoftwareUpdateWindowMetrics.measuredSize(of: host)
+                measured.width = width
+                fitted = measured
+            }
             let visible = window.screen?.visibleFrame.height ?? NSScreen.main?.visibleFrame.height ?? 900
             let size = SoftwareUpdateWindowMetrics.contentSize(fitting: fitted, visibleHeight: visible)
             SoftwareUpdateWindowMetrics.place(host: host, fitted: fitted, in: window, contentSize: size)
@@ -265,10 +292,7 @@ struct SoftwareUpdateContent: View {
     @StateObject private var sizing = SoftwareUpdateSizeRelay()
     var body: some View {
         content
-            .background(GeometryReader { proxy in
-                Color.clear.preference(key: SoftwareUpdateSizeKey.self, value: proxy.size)
-            })
-            .onPreferenceChange(SoftwareUpdateSizeKey.self) { sizing.update($0) }
+            .onPreferenceChange(SoftwareUpdateWidthKey.self) { sizing.update(width: $0) }
             .frame(minWidth: SoftwareUpdateWindowMetrics.compactWidth,
                    minHeight: SoftwareUpdateWindowMetrics.minimumHeight)
             .background(SoftwareUpdateWindowSizer(relay: sizing))
@@ -292,10 +316,10 @@ struct SoftwareUpdateContent: View {
                 Text("The update is ready. Administrator installation is required to update Watt? and its helper together. Use the Watt? installer, then launch the installed app.")
                     .softwareUpdateWrapped()
                 Button("Discard Download") { Task { if await router.cancelUpdateDownload() { dismiss() } } }
-            }.padding(SoftwareUpdateWindowMetrics.margin).frame(width: SoftwareUpdateWindowMetrics.compactWidth)
+            }.padding(SoftwareUpdateWindowMetrics.margin).softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
         } else if Self.isClosingAfterUpdate(store.state) {
             Text("Watt? will close while the update finishes.").softwareUpdateWrapped()
-                .padding(SoftwareUpdateWindowMetrics.margin).frame(width: SoftwareUpdateWindowMetrics.compactWidth)
+                .padding(SoftwareUpdateWindowMetrics.margin).softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
         } else if router.isUnattendedInstall, let version = router.downloadVersion {
             UpdateDownloadingContent(router: router, store: store, version: version)
         } else if router.pendingProtectedReceipt != nil {
@@ -304,7 +328,7 @@ struct SoftwareUpdateContent: View {
                     .softwareUpdateWrapped()
                 Button("Resume Install and Relaunch") { Task { await router.resumeProtectedUpdate() } }
                     .disabled(router.resumingProtectedUpdate)
-            }.padding(SoftwareUpdateWindowMetrics.margin).frame(width: SoftwareUpdateWindowMetrics.compactWidth)
+            }.padding(SoftwareUpdateWindowMetrics.margin).softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
         } else if let receipt = router.readyReceipt, let version = router.downloadVersion {
             UpdateReadyContent(router: router, store: store, version: version, receipt: receipt)
         } else if let version = router.downloadVersion {
@@ -377,7 +401,7 @@ struct UpdateAvailableContent: View {
             }
         }
         .padding(SoftwareUpdateWindowMetrics.margin)
-        .frame(width: SoftwareUpdateWindowMetrics.offerWidth)
+        .softwareUpdateColumn(SoftwareUpdateWindowMetrics.offerWidth)
         .frame(minHeight: 334)
     }
 
@@ -515,7 +539,7 @@ struct UpdateReadyContent: View {
                     .foregroundStyle(.secondary)
             }
         }.padding(SoftwareUpdateWindowMetrics.margin)
-            .frame(width: SoftwareUpdateWindowMetrics.compactWidth)
+            .softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
             .frame(minHeight: SoftwareUpdateWindowMetrics.minimumHeight)
         .onAppear {
             generation = store.generation
@@ -577,7 +601,7 @@ struct UpdateDownloadingContent: View {
                 Text("Download stopped. Cancel to clean up before retrying.").font(.caption)
             }
         }.padding(SoftwareUpdateWindowMetrics.margin)
-            .frame(width: SoftwareUpdateWindowMetrics.compactWidth)
+            .softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth)
             .frame(minHeight: SoftwareUpdateWindowMetrics.minimumHeight)
         .onDisappear {
             if case .downloading = store.state { Task { _ = await router.cancelUpdateDownload() } }
@@ -628,7 +652,7 @@ struct UpdateCheckingContent: View {
             }
         }
         .padding(SoftwareUpdateWindowMetrics.margin)
-        .frame(width: SoftwareUpdateWindowMetrics.compactWidth, alignment: .leading)
+        .softwareUpdateColumn(SoftwareUpdateWindowMetrics.compactWidth, alignment: .leading)
         .frame(minHeight: SoftwareUpdateWindowMetrics.minimumHeight)
         .onChange(of: store.state) { state in
             // Keep native result alerts in this scene.

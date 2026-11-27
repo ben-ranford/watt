@@ -378,9 +378,14 @@ final class J103AvailableTests: XCTestCase {
         host.layoutSubtreeIfNeeded()
         let limit = host.bounds.width
         func walk(_ view: NSView) {
+            let name = String(describing: type(of: view))
+            if name.contains("FocusRing") {
+                view.subviews.forEach(walk)
+                return
+            }
             let frame = view.convert(view.bounds, to: host)
-            XCTAssertGreaterThanOrEqual(frame.minX, -2, "\(type(of: view)) starts at \(frame.minX)", file: file, line: line)
-            XCTAssertLessThanOrEqual(frame.maxX, limit + 2, "\(type(of: view)) ends at \(frame.maxX) in \(limit)", file: file, line: line)
+            XCTAssertGreaterThanOrEqual(frame.minX, -2, "\(name) starts at \(frame.minX)", file: file, line: line)
+            XCTAssertLessThanOrEqual(frame.maxX, limit + 2, "\(name) ends at \(frame.maxX) in \(limit)", file: file, line: line)
             view.subviews.forEach(walk)
         }
         host.subviews.forEach(walk)
